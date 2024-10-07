@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|c:\\users\\mauriciorossoaboy\\desktop\\2\u00BA dam\\acceso a datos\\proyectoecommerce\\estudiomercado\\estudiomercado\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|solutionrelative:estudiomercado\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|c:\\users\\mauriciorossoaboy\\desktop\\2\u00BA dam\\acceso a datos\\proyectoecommerce\\estudiomercado\\estudiomercado\\estudiomercado.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|solutionrelative:estudiomercado\\estudiomercado.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|c:\\users\\mauriciorossoaboy\\desktop\\2\u00BA dam\\acceso a datos\\proyectoecommerce\\estudiomercado\\estudiomercado\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F57AEBE-88C6-421A-A479-D4BD159BB02B}|EstudioMercado\\EstudioMercado.csproj|solutionrelative:estudiomercado\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EstudioMercado.csproj",
+              "DocumentMoniker": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\EstudioMercado.csproj",
+              "RelativeDocumentMoniker": "EstudioMercado\\EstudioMercado.csproj",
+              "ToolTip": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\EstudioMercado.csproj",
+              "RelativeToolTip": "EstudioMercado\\EstudioMercado.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-10-07T15:11:12.177Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\Product.cs",
+              "RelativeDocumentMoniker": "EstudioMercado\\Product.cs",
+              "ToolTip": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\Product.cs",
+              "RelativeToolTip": "EstudioMercado\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-07T15:10:51.582Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\Program.cs",
+              "RelativeDocumentMoniker": "EstudioMercado\\Program.cs",
+              "ToolTip": "C:\\Users\\MauricioRossoAboy\\Desktop\\2\u00BA DAM\\Acceso a Datos\\ProyectoEcommerce\\EstudioMercado\\EstudioMercado\\Program.cs*",
+              "RelativeToolTip": "EstudioMercado\\Program.cs*",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAAB0AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-07T15:08:15.037Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
