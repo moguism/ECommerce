@@ -12,7 +12,9 @@ internal class Program
         {"pechuga de pollo", new List<Product>() },
         {"muslo de pollo",  new List<Product>()},
         {"solomillo de cerdo",  new List<Product>()},
-        {"cinta de lomo",  new List<Product>()}
+        {"cinta de lomo",  new List<Product>()},
+        {"chuleta de cordero",  new List<Product>()}
+
     };
 
     static async Task Main(string[] args)
@@ -40,7 +42,7 @@ internal class Program
         if (acceptButton != null) await acceptButton.ClickAsync();
         await Task.Delay(2000);
 
-
+        //Recorre la lista con todos los productos que queremos buscar
         foreach (var item in productos)
         {
 
@@ -53,11 +55,12 @@ internal class Program
             await searchButton.ClickAsync();
             await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-            await Task.Delay(2000);
+            await Task.Delay(1000); //Para poder ver los productos 
 
-            //Lista con los productos
+            //Lista con los productos en formato HTML
             IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync(".ajax_block_product");
 
+            //Recorre los productos 
             foreach(var element in productElements)
             {
                 try
