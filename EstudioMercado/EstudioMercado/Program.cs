@@ -40,8 +40,11 @@ namespace EstudioMercado;
             try
             {
                 Product product = await GetProductAsync(productElement);
-                if(product != null) products.Add(product);
-                Console.WriteLine(product);
+                if (product != null)
+                {
+                    products.Add(product);
+                    Console.WriteLine(product);
+                }
             }
             catch (Exception e)
             {
@@ -51,6 +54,8 @@ namespace EstudioMercado;
 
         Product cheapest = products.MinBy(p => p.Price);
         Console.WriteLine($"La oferta más barata es: {cheapest}");
+
+        await Task.Delay(-1);
     }
 
     private static async Task<Product> GetProductAsync(IElementHandle element) 
@@ -60,7 +65,7 @@ namespace EstudioMercado;
         string priceRaw = await priceElement.InnerTextAsync();
 
         priceRaw = priceRaw.Replace("/KILO", "", StringComparison.OrdinalIgnoreCase).Replace("€", "").Replace("(", "").Replace(")", "");
-        priceRaw = priceRaw.Replace(",", ".");
+        priceRaw = priceRaw.Replace(".", ",");
         priceRaw = priceRaw.Trim();
 
         decimal price = decimal.Parse(priceRaw);
