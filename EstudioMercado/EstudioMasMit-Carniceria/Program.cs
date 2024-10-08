@@ -32,17 +32,24 @@ internal class Program
         // Ir a la página de la carniceria Masmit
         await page.GotoAsync("https://masmit.com/");
 
+        // Para que salte la confirmacíón de cookies
+        await Task.Delay(1000);
+        IElementHandle? acceptButton = await page.QuerySelectorAsync(".accept-button");
+        if (acceptButton != null) await acceptButton.ClickAsync();
+        await Task.Delay(2000);
+
+
 
         // Escribimos en la barra de búsqueda lo que queremos buscar
         IElementHandle searchInput = await page.QuerySelectorAsync("#leo_search_query_top");
         await searchInput.FillAsync("pollo");
 
-        /*
+        
         // Le damos al botón de buscar
         IElementHandle searchButton = await page.QuerySelectorAsync(".fa-search");
         await searchButton.ClickAsync();
         await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-        */
+        
 
         /*
         // Recorremos la lista de productos y recolectamos los datos
