@@ -18,17 +18,29 @@ internal class Program
             Headless = false // Se indica falso para poder ver el navegador
         };
 
-        await using IBrowser browser = await playwright.Chromium.LaunchAsync(options);
+        await using IBrowser browser = await playwright.Firefox.LaunchAsync(options);
         await using IBrowserContext context = await browser.NewContextAsync();
         IPage page = await context.NewPageAsync();
 
         // Ir a la página de ebay
-        await page.GotoAsync("https://www.hipercor.es/supermercado/?gad_source=1&gclid=Cj0KCQjwsJO4BhDoARIsADDv4vARhSCsZmFi7rccsdRM9BTpZNylQtcYNaOg02BlwymNl1DpGohiNb0aAi5xEALw_wcB&gclsrc=aw.ds");
- 
+        await page.GotoAsync("https://www.hipercor.es/supermercado/");
+
+        await Task.Delay(1000);
+
+        IElementHandle? acceptButton = await page.QuerySelectorAsync("#onetrust-accept-btn-handler");
+        if (acceptButton != null) await acceptButton.ClickAsync();
 
         // Escribimos en la barra de búsqueda lo que queremos buscar
         IElementHandle searchInput = await page.QuerySelectorAsync(".search-input");
         await searchInput.FillAsync("patata");
+
+        await Task.Delay(1000);
+
+        IElementHandle searchButton = await page.QuerySelectorAsync("#desktopSearchForm > div > div.search-button-container > button.button.search-button.tl-click-lupa");
+        await searchButton.ClickAsync();
+
+        await Task.Delay(1000);
+        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
         /*
         // Le damos al botón de buscar
