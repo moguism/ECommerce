@@ -9,7 +9,7 @@ internal class Program
 
     public static Dictionary<string, List<Product>> productos = new Dictionary<string, List<Product>>()
     {
-        {"pechuga de pollo", new List<Product>()},
+        {"pechuga de pollo", new List<Product>() },
         {"muslo de pollo",  new List<Product>()},
         {"solomillo de cerdo",  new List<Product>()},
         {"cinta de lomo",  new List<Product>()}
@@ -41,43 +41,67 @@ internal class Program
         await Task.Delay(2000);
 
 
-
-        // Escribimos en la barra de búsqueda lo que queremos buscar
-        IElementHandle searchInput = await page.QuerySelectorAsync("#leo_search_query_top");
-        await searchInput.FillAsync("pollo");
-
-        
-        // Le damos al botón de buscar
-        IElementHandle searchButton = await page.QuerySelectorAsync(".fa-search");
-        await searchButton.ClickAsync();
-        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-        
-
-        /*
-        // Recorremos la lista de productos y recolectamos los datos
-        List<Product> products = new List<Product>();
-        IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("ul li.s-item");
-
-        //Recorre la lista con todos los elementos html de losproductos
-        foreach (IElementHandle productElement in productElements)
+        foreach (var item in productos)
         {
-            try
+
+            // Escribimos en la barra de búsqueda lo que queremos buscar
+            IElementHandle searchInput = await page.QuerySelectorAsync("#leo_search_query_top");
+            await searchInput.FillAsync(item.Key);
+
+            // Le damos al botón de buscar
+            IElementHandle searchButton = await page.QuerySelectorAsync(".fa-search");
+            await searchButton.ClickAsync();
+            await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+
+            await Task.Delay(2000);
+
+            //Lista con los productos
+            IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync(".ajax_block_product");
+
+            foreach(var element in productElements)
             {
-                //Añade la la lista con los productos el 
-                Product product = await GetProductAsync(productElement);
-                products.Add(product);
-                Console.WriteLine(product);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                try
+                {
+                    Product product = await GetProductAsync(element);
+                    if (product != null)
+                    {
+                        item.Value.Add(product); //Añade a la lista un nuevo producto
+                        Console.WriteLine(product);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Para poder monitorear excepciones
+                }
             }
 
-        */
+            Console.WriteLine("-----------------------------");
+
+        }
+
         // Espera infinita
         await Task.Delay(-1);
 
         // Cerrar el navegador
         await browser.CloseAsync();
     }
+
+    private static async Task<Product> GetProductAsync(IElementHandle element)
+    {
+        IElementHandle priceElement = await element.QuerySelectorAsync(".product-price");
+        string priceRaw = await priceElement.InnerTextAsync(); // Obtiene el texto de dentro de la etiqueta
+
+        priceRaw = priceRaw.Replace("€", "", StringComparison.OrdinalIgnoreCase);
+        //priceRaw = priceRaw.Replace(".", ",");
+        priceRaw = priceRaw.Trim();
+
+        decimal price = decimal.Parse(priceRaw);
+
+        IElementHandle nameElement = await element.QuerySelectorAsync(".product-name");
+        string name = await nameElement.InnerTextAsync();
+
+
+        return new Product(name, price);
+    }
+
 }
