@@ -7,10 +7,12 @@ namespace EstudioMasMit_Carniceria;
 internal class Program
 {
 
-    public static Dictionary<string, decimal> productos = new Dictionary<string, decimal>()
+    public static Dictionary<string, List<Product>> productos = new Dictionary<string, List<Product>>()
     {
-        {"pollo", 0},
-        {"ternera", 0}
+        {"pechuga de pollo", new List<Product>()},
+        {"muslo de pollo",  new List<Product>()},
+        {"solomillo de cerdo",  new List<Product>()},
+        {"cinta de lomo",  new List<Product>()}
     };
 
     static async Task Main(string[] args)
