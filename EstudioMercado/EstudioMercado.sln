@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioMercado", "EstudioMercado\EstudioMercado.csproj", "{8F57AEBE-88C6-421A-A479-D4BD159BB02B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstudioHipercor", "EstudioHipercor\EstudioHipercor.csproj", "{78FB7546-F9CF-4DAD-AD3A-95C8AAA00450}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioHipercor", "EstudioHipercor\EstudioHipercor.csproj", "{78FB7546-F9CF-4DAD-AD3A-95C8AAA00450}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

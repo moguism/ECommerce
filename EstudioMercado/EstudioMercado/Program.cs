@@ -1,10 +1,15 @@
 ﻿using Microsoft.Playwright;
-using System.Diagnostics;
 
 namespace EstudioMercado;
 
-    internal class Program
+internal class Program
+{
+    public static Dictionary<string, decimal> productos = new Dictionary<string, decimal>()
     {
+        {"patatas", 0},
+        {"lechuga", 0}
+    };
+
     static async Task Main(string[] args)
     {
         Microsoft.Playwright.Program.Main(["install"]);
@@ -13,7 +18,7 @@ namespace EstudioMercado;
         {
             Headless = false
         };
-        
+
         await using IBrowser browser = await playwright.Chromium.LaunchAsync(options);
         await using IBrowserContext context = await browser.NewContextAsync();
         IPage page = await context.NewPageAsync();
@@ -24,47 +29,49 @@ namespace EstudioMercado;
         IElementHandle? acceptButton = await page.QuerySelectorAsync("#onetrust-accept-btn-handler");
         if (acceptButton != null) await acceptButton.ClickAsync();
 
-        IElementHandle searchInput = await page.QuerySelectorAsync(".dia-search__bar");
-        await searchInput.FillAsync("patatas");
-
-        await Task.Delay(1000); // Necesario, por lo menos en DIA
-
-        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-
-        List<Product> products = new List<Product>();
-
-        IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("ul li.search-product-card-list__item-container");
-
-        foreach (IElementHandle productElement in productElements)
+        foreach(var item in productos)
         {
-            try
+            IElementHandle searchInput = await page.QuerySelectorAsync(".dia-search__bar");
+            await searchInput.FillAsync(item.Key);
+
+            await Task.Delay(1000); // Necesario, por lo menos en DIA
+            await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+
+            List<Product> products = new List<Product>();
+            IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("ul li.search-product-card-list__item-container");
+
+            foreach (IElementHandle productElement in productElements)
             {
-                Product product = await GetProductAsync(productElement);
-                if (product != null)
+                try
                 {
-                    products.Add(product);
-                    Console.WriteLine(product);
+                    Product product = await GetProductAsync(productElement);
+                    if (product != null)
+                    {
+                        products.Add(product);
+                        //Console.WriteLine(product);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // Para poder monitorear excepciones
                 }
             }
-            catch (Exception e)
-            {
-                // Para poder monitorear excepciones
-            }
-        }
 
-        Product cheapest = products.MinBy(p => p.Price);
-        Console.WriteLine($"La oferta más barata es: {cheapest}");
+            Product cheapest = products.MinBy(p => p.Price);
+            productos[item.Key] = cheapest.Price;
+            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS BARATO ES: \n{cheapest}"); // Aquí imprimo el producto entero, pero se puede imprimir directamente el valor del diccionario
+        }
 
         await Task.Delay(-1);
     }
 
-    private static async Task<Product> GetProductAsync(IElementHandle element) 
+    private static async Task<Product> GetProductAsync(IElementHandle element)
     {
         IElementHandle priceElement = await element.QuerySelectorAsync("p.search-product-card__active-price");
         if (priceElement == null) return null;
         string priceRaw = await priceElement.InnerTextAsync();
 
-        priceRaw = priceRaw.Replace("/KILO", "", StringComparison.OrdinalIgnoreCase).Replace("€", "").Replace("(", "").Replace(")", "");
+        priceRaw = priceRaw.Replace("€", "").Replace("(", "").Replace(")", "");
         priceRaw = priceRaw.Replace(".", ",");
         priceRaw = priceRaw.Trim();
 
