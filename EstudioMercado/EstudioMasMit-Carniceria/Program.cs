@@ -45,6 +45,7 @@ internal class Program
         //Recorre la lista con todos los productos que queremos buscar
         foreach (var item in productos)
         {
+            List<decimal> listaPrecios = new List<decimal>();
 
             // Escribimos en la barra de búsqueda lo que queremos buscar
             IElementHandle searchInput = await page.QuerySelectorAsync("#leo_search_query_top");
@@ -69,6 +70,7 @@ internal class Program
                     if (product != null)
                     {
                         item.Value.Add(product); //Añade a la lista un nuevo producto
+                        listaPrecios.Add(product.Price);
                         Console.WriteLine(product);
                     }
                 }
@@ -78,13 +80,16 @@ internal class Program
                 }
             }
 
-            Console.WriteLine("-----------------------------");
+            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine($"Maximo : {listaPrecios.Max()} ----- Mínimo : {listaPrecios.Min()} ------ Media : {listaPrecios.Average()}");
+            Console.WriteLine("--------------------------------------------------------------------------------");
+
+
 
         }
 
         // Espera infinita
         await Task.Delay(-1);
-
         // Cerrar el navegador
         await browser.CloseAsync();
     }
