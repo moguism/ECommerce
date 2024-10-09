@@ -4,10 +4,18 @@ namespace EstudioMercado;
 
 internal class Program
 {
-    public static Dictionary<string, decimal> productos = new Dictionary<string, decimal>()
+    public static Dictionary<string, Dictionary<string, decimal>> productos = new Dictionary<string, Dictionary<string, decimal>>()
     {
-        {"patatas", 0},
-        {"lechuga", 0}
+        {"manzana", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
+        }},
+        {"pechuga de pollo", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
+        }}
     };
 
     static async Task Main(string[] args)
@@ -40,14 +48,22 @@ internal class Program
             List<Product> products = new List<Product>();
             IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("ul li.search-product-card-list__item-container");
 
+            int productosVistos = 0;
+
             foreach (IElementHandle productElement in productElements)
             {
+                if(productosVistos == 10)
+                {
+                    break;
+                }
+
                 try
                 {
                     Product product = await GetProductAsync(productElement);
                     if (product != null)
                     {
                         products.Add(product);
+                        productosVistos++;
                         //Console.WriteLine(product);
                     }
                 }
@@ -58,8 +74,16 @@ internal class Program
             }
 
             Product cheapest = products.MinBy(p => p.Price);
-            productos[item.Key] = cheapest.Price;
-            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS BARATO ES: \n{cheapest}"); // Aquí imprimo el producto entero, pero se puede imprimir directamente el valor del diccionario
+            Product mostExpensive = products.MaxBy(p => p.Price);
+            decimal average = products.Average(p => p.Price);
+            productos[item.Key]["precioMinimo"] = cheapest.Price;
+            productos[item.Key]["precioMaximo"] = mostExpensive.Price;
+            productos[item.Key]["media"] = average;
+
+            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS BARATO ES: \n{cheapest}\nCuesta {productos[item.Key]["precioMinimo"]}");
+            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS CARO ES: \n{mostExpensive}\nCuesta {productos[item.Key]["precioMaximo"]}");
+            Console.WriteLine($"LA MEDIA DE PRECIOS DEL PRODUCTO \"{item.Key}\" ES: {productos[item.Key]["media"]}");
+            Console.WriteLine("");
         }
 
         await Task.Delay(-1);
