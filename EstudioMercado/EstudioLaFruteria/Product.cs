@@ -14,5 +14,14 @@ namespace EstudioLaFruteria {
             Price = price;
         }
 
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder(); // Para convertir a cadenas de texto de forma eficiente
+            stringBuilder.AppendLine($"Name: {Name}");
+            stringBuilder.AppendLine($"Price: {Price} euros");
+            return stringBuilder.ToString();
+
+        }
+
     }
 }
