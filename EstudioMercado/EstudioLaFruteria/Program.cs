@@ -28,45 +28,38 @@ internal class Program {
         await searchButton.ClickAsync();
         await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-        await Task.Delay(-1);
-
         // Recorremos la lista de productos y recolectamos los datos
         List<Product> products = new List<Product>();
-        IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("#center_column > ul");
+        IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("#ajax_block_product");
         foreach (IElementHandle productElement in productElements) {
             try {
                 Product product = await GetProductAsync(productElement);
                 products.Add(product);
                 Console.WriteLine(product);
-            } catch { }
+            } catch (Exception e)
+            { 
+            }
         }
 
         // Con los datos recolectados, buscamos el producto más barato
         Product cheapest = products.MinBy(p => p.Price);
         Console.WriteLine($"La oferta más barata es: {cheapest}");
 
-        // Abrimos el navegador con la oferta más barata
-        ProcessStartInfo processInfo = new ProcessStartInfo() {
-            FileName = cheapest.Url,
-            UseShellExecute = true
-        };
-        Process.Start(processInfo);
-
     }
 
     private static async Task<Product> GetProductAsync(IElementHandle element) {
-        IElementHandle priceElement = await element.QuerySelectorAsync(".s-item__price");
+        IElementHandle priceElement = await element.QuerySelectorAsync(".product-price");
         string priceRaw = await priceElement.InnerTextAsync();
-        priceRaw = priceRaw.Replace("EUR", "", StringComparison.OrdinalIgnoreCase);
+        priceRaw = priceRaw.Replace("kg", "", StringComparison.OrdinalIgnoreCase);
+        priceRaw = priceRaw.Replace("€", "", StringComparison.OrdinalIgnoreCase);
+        priceRaw = priceRaw.Replace("/", "", StringComparison.OrdinalIgnoreCase);
+        priceRaw = priceRaw.Replace(",", ".");
         priceRaw = priceRaw.Trim();
         decimal price = decimal.Parse(priceRaw);
 
-        IElementHandle nameElement = await element.QuerySelectorAsync(".s-item__title");
+        IElementHandle nameElement = await element.QuerySelectorAsync(".product-name title");
         string name = await nameElement.InnerTextAsync();
 
-        IElementHandle urlElement = await element.QuerySelectorAsync("a");
-        string url = await urlElement.GetAttributeAsync("href");
-
-        return new Product(name, url, price);
+        return new Product(name, price);
     }
 }

@@ -8,11 +8,9 @@ namespace EstudioLaFruteria {
     internal class Product {
 
         public string Name { get; init; }
-        public string Url { get; init; }
         public decimal Price { get; init; }
-        public Product(string name, string url, decimal price) {
+        public Product(string name, decimal price) {
             Name = name;
-            Url = url;
             Price = price;
         }
 
