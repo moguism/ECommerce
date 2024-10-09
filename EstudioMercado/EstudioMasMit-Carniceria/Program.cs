@@ -9,9 +9,9 @@ internal class Program
 
     public static Dictionary<string, List<Product>> productos = new Dictionary<string, List<Product>>()
     {
-        {"pechuga de pollo", new List<Product>() },
-        {"muslo de pollo",  new List<Product>()},
-        {"solomillo de cerdo",  new List<Product>()},
+        //{"pechuga de pollo", new List<Product>() },
+        //{"muslo de pollo",  new List<Product>()},
+        //{"solomillo de cerdo",  new List<Product>()},
         {"cinta de lomo",  new List<Product>()},
         {"chuleta de cordero",  new List<Product>()}
 
