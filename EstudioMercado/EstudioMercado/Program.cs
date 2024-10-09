@@ -11,7 +11,12 @@ internal class Program
             {"precioMaximo", 0},
             {"media", 0}
         }},
-        {"pechuga de pollo", new Dictionary<string, decimal>(){
+        {"cinta de lomo", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
+        }},
+        {"chuleta de cordero", new Dictionary<string, decimal>(){
             {"precioMinimo", 0},
             {"precioMaximo", 0},
             {"media", 0}
