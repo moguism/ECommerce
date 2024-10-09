@@ -20,6 +20,11 @@ internal class Program
             {"precioMinimo", 0},
             {"precioMaximo", 0},
             {"media", 0}
+        }},
+        {"pera", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
         }}
     };
 
