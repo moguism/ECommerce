@@ -4,7 +4,14 @@ using Microsoft.Playwright;
 namespace EstudioLaFruteria;
 
 internal class Program {
+    public static Dictionary<string, List<Product>> productos = new Dictionary<string, List<Product>>()
+    {
+        {"manzana",  new List<Product>()},
+        {"pera",  new List<Product>()}
+
+    };
     static async Task Main(string [] args) {
+
         // Necesario para instalar los navegadores
         Microsoft.Playwright.Program.Main(["install"]);
 
@@ -16,57 +23,62 @@ internal class Program {
         await using IBrowserContext context = await browser.NewContextAsync();
         IPage page = await context.NewPageAsync();
 
-        // Ir a la página de La Fruteria
-        await page.GotoAsync("https://www.lafruteria.es/");
+        foreach (var item in productos)
+        {
+            List<decimal> listaPrecios = new List<decimal>();
+            // Ir a la página de La Fruteria
+            await page.GotoAsync("https://www.lafruteria.es/buscar?search_query=" + item.Key + "&submit_search=&orderby=quantity&orderway=desc");
 
-        // Escribimos en la barra de búsqueda lo que queremos buscar
-        IElementHandle searchInput = await page.QuerySelectorAsync("#search_query_top");
-        await searchInput.FillAsync("manzana");
+            await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-        // Le damos al botón de buscar
-        IElementHandle searchButton = await page.QuerySelectorAsync("#searchbox > button");
-        await searchButton.ClickAsync();
-        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+            await Task.Delay(2000);
 
-        await Task.Delay(-1);
+            // Recorremos la lista de productos y recolectamos los datos
+            
+            IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync(".ajax_block_product");
+            foreach (IElementHandle productElement in productElements)
+            {
+                try
+                {
+                    Product product = await GetProductAsync(productElement);
+                    if (product != null && product.Name.ToLower().Contains(item.Key))
+                    {
+                        item.Value.Add(product);
+                        listaPrecios.Add(product.Price);
+                        Console.WriteLine(product);
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+            }
 
-        // Recorremos la lista de productos y recolectamos los datos
-        List<Product> products = new List<Product>();
-        IReadOnlyList<IElementHandle> productElements = await page.QuerySelectorAllAsync("#center_column > ul");
-        foreach (IElementHandle productElement in productElements) {
-            try {
-                Product product = await GetProductAsync(productElement);
-                products.Add(product);
-                Console.WriteLine(product);
-            } catch { }
+            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine($"Maximo : {listaPrecios.Max()} ----- Mínimo : {listaPrecios.Min()} ------ Media : {listaPrecios.Average()}");
+            Console.WriteLine("--------------------------------------------------------------------------------");
+
         }
-
-        // Con los datos recolectados, buscamos el producto más barato
-        Product cheapest = products.MinBy(p => p.Price);
-        Console.WriteLine($"La oferta más barata es: {cheapest}");
-
-        // Abrimos el navegador con la oferta más barata
-        ProcessStartInfo processInfo = new ProcessStartInfo() {
-            FileName = cheapest.Url,
-            UseShellExecute = true
-        };
-        Process.Start(processInfo);
+        
 
     }
 
-    private static async Task<Product> GetProductAsync(IElementHandle element) {
-        IElementHandle priceElement = await element.QuerySelectorAsync(".s-item__price");
-        string priceRaw = await priceElement.InnerTextAsync();
-        priceRaw = priceRaw.Replace("EUR", "", StringComparison.OrdinalIgnoreCase);
-        priceRaw = priceRaw.Trim();
-        decimal price = decimal.Parse(priceRaw);
+    private static async Task<Product>? GetProductAsync(IElementHandle element) {
+            IElementHandle priceElement = await element.QuerySelectorAsync(".product-price");
 
-        IElementHandle nameElement = await element.QuerySelectorAsync(".s-item__title");
-        string name = await nameElement.InnerTextAsync();
+            if (priceElement == null) { return null; }
 
-        IElementHandle urlElement = await element.QuerySelectorAsync("a");
-        string url = await urlElement.GetAttributeAsync("href");
+            string priceRaw = await priceElement.InnerTextAsync();
+            priceRaw = priceRaw.Replace("kg", "", StringComparison.OrdinalIgnoreCase);
+            priceRaw = priceRaw.Replace("€", "", StringComparison.OrdinalIgnoreCase);
+            priceRaw = priceRaw.Replace("/", "", StringComparison.OrdinalIgnoreCase);
+            //priceRaw = priceRaw.Replace(",", ".");
+            priceRaw = priceRaw.Trim();
+            decimal price = decimal.Parse(priceRaw);
 
-        return new Product(name, url, price);
+            IElementHandle nameElement = await element.QuerySelectorAsync(".product-name");
+            string name = await nameElement.InnerTextAsync();
+
+            return new Product(name, price);
+        
     }
 }
