@@ -43,13 +43,13 @@ internal class Program
         await Task.Delay(2000);
 
         //Recorre la lista con todos los productos que queremos buscar
-        foreach (var item in productos)
+        foreach (var item in productos.Keys)
         {
             List<decimal> listaPrecios = new List<decimal>();
 
             // Escribimos en la barra de búsqueda lo que queremos buscar
             IElementHandle searchInput = await page.QuerySelectorAsync("#leo_search_query_top");
-            await searchInput.FillAsync(item.Key);
+            await searchInput.FillAsync(item);
 
             // Le damos al botón de buscar
             IElementHandle searchButton = await page.QuerySelectorAsync(".fa-search");
@@ -69,7 +69,7 @@ internal class Program
                     Product product = await GetProductAsync(element);
                     if (product != null)
                     {
-                        item.Value.Add(product); //Añade a la lista un nuevo producto
+                        productos[item].Add(product); //Añade a la lista un nuevo producto
                         listaPrecios.Add(product.Price);
                         Console.WriteLine(product);
                     }
