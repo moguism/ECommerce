@@ -1,3 +1,4 @@
+using Server.Mappers;
 using System.Text.Json.Serialization;
 
 namespace Server
@@ -21,6 +22,10 @@ namespace Server
 
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
+
+            //
+            builder.Services.AddScoped<UserMapper>();
+
 
             var app = builder.Build();
 

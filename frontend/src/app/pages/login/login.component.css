@@ -1,0 +1,11 @@
+.container{
+    border: 2px solid black;
+    width: 800px;
+    height: 500px;
+    display: flex;
+}
+
+.container-form{
+    border: 2px solid green;
+    width: 100%;
+}
