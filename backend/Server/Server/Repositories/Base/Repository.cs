@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Server.Repositories.Base;
 
@@ -29,29 +30,34 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
         return asNoTracking ? entities.AsNoTracking() : entities; // "AsNoTracking" permite optimizar la consulta para que no se traten los datos
     }
 
-    public Task<TEntity> DeleteAsync(TEntity entity)
+    public async Task DeleteAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        _context.Set<TEntity>().Remove(entity);
+        await SaveAsync();
     }
 
-    public Task<bool> ExistAsync(TId id)
+    public async Task<bool> ExistAsync(TId id)
     {
-        throw new NotImplementedException();
+        return await GetByIdAsync(id) != null;
     }
 
-    public Task<TEntity> InsertAsync(TEntity entity)
+    public async Task<TEntity> InsertAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        EntityEntry<TEntity> entry = await _context.Set<TEntity>().AddAsync(entity);
+        await SaveAsync();
+        return entry.Entity;
     }
 
-    public Task<bool> SaveAsync()
+    public async Task<bool> SaveAsync()
     {
-        throw new NotImplementedException();
+        return await _context.SaveChangesAsync() > 0;
     }
 
-    public Task<TEntity> UpdateAsync(TEntity entity)
+    public async Task<TEntity> UpdateAsync(TEntity entity)
     {
-        throw new NotImplementedException();
+        EntityEntry<TEntity> entry = _context.Set<TEntity>().Update(entity);
+        await SaveAsync();
+        return entry.Entity;
     }
 }
 
