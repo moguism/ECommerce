@@ -9,7 +9,5 @@ namespace Server.Repositories
         public UserRepository (FarminhouseContext context) : base(context) { }
 
 
-      
-
     }
 }
