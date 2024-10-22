@@ -3,16 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\mappers\\usermapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\mappers\\usermapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\repositories\\base\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\repositories\\base\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\repositories\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\repositories\\orderrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\farminhousecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\farminhousecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|c:\\users\\galve\\onedrive\\documentos\\2dam\\2dam\\accesodatos\\t1\\proyectofinalecommerce\\ecommerce\\backend\\server\\server\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{45E08C37-3F43-4AB5-A2D0-FBA3304306DD}|Server\\Server.csproj|solutionrelative:server\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,24 +42,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "UserMapper.cs",
+              "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Mappers\\UserMapper.cs",
+              "RelativeDocumentMoniker": "Server\\Mappers\\UserMapper.cs",
+              "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Mappers\\UserMapper.cs",
+              "RelativeToolTip": "Server\\Mappers\\UserMapper.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T09:30:16.131Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "Server\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\UnitOfWork.cs",
+              "RelativeToolTip": "Server\\UnitOfWork.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T09:30:03.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\Base\\Repository.cs",
+              "RelativeDocumentMoniker": "Server\\Repositories\\Base\\Repository.cs",
+              "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\Base\\Repository.cs",
+              "RelativeToolTip": "Server\\Repositories\\Base\\Repository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T09:26:03.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "Server\\Repositories\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "Server\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T09:07:12.362Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Server\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Models\\User.cs",
+              "RelativeToolTip": "Server\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-22T08:40:57.672Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "OrderRepository.cs",
               "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\OrderRepository.cs",
               "RelativeDocumentMoniker": "Server\\Repositories\\OrderRepository.cs",
               "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\OrderRepository.cs",
               "RelativeToolTip": "Server\\Repositories\\OrderRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-22T07:59:49.935Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "ProductRepository.cs",
               "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\Repositories\\ProductRepository.cs",
               "RelativeDocumentMoniker": "Server\\Repositories\\ProductRepository.cs",
@@ -52,13 +137,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "FarminhouseContext.cs",
               "DocumentMoniker": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\FarminhouseContext.cs",
               "RelativeDocumentMoniker": "Server\\FarminhouseContext.cs",
               "ToolTip": "C:\\Users\\galve\\OneDrive\\Documentos\\2DAM\\2DAM\\AccesoDatos\\T1\\ProyectoFinalEcommerce\\ECommerce\\backend\\Server\\Server\\FarminhouseContext.cs",
               "RelativeToolTip": "Server\\FarminhouseContext.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAcwAoAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-22T08:00:02.502Z",
               "EditorCaption": ""
