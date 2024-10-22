@@ -11,7 +11,17 @@ internal class Program
             {"precioMaximo", 0},
             {"media", 0}
         }},
-        {"pechuga de pollo", new Dictionary<string, decimal>(){
+        {"cinta de lomo", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
+        }},
+        {"chuleta de cordero", new Dictionary<string, decimal>(){
+            {"precioMinimo", 0},
+            {"precioMaximo", 0},
+            {"media", 0}
+        }},
+        {"pera", new Dictionary<string, decimal>(){
             {"precioMinimo", 0},
             {"precioMaximo", 0},
             {"media", 0}
@@ -37,10 +47,10 @@ internal class Program
         IElementHandle? acceptButton = await page.QuerySelectorAsync("#onetrust-accept-btn-handler");
         if (acceptButton != null) await acceptButton.ClickAsync();
 
-        foreach(var item in productos)
+        foreach(var item in productos.Keys)
         {
             IElementHandle searchInput = await page.QuerySelectorAsync(".dia-search__bar");
-            await searchInput.FillAsync(item.Key);
+            await searchInput.FillAsync(item);
 
             await Task.Delay(1000); // Necesario, por lo menos en DIA
             await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
@@ -76,13 +86,13 @@ internal class Program
             Product cheapest = products.MinBy(p => p.Price);
             Product mostExpensive = products.MaxBy(p => p.Price);
             decimal average = products.Average(p => p.Price);
-            productos[item.Key]["precioMinimo"] = cheapest.Price;
-            productos[item.Key]["precioMaximo"] = mostExpensive.Price;
-            productos[item.Key]["media"] = average;
+            productos[item]["precioMinimo"] = cheapest.Price;
+            productos[item]["precioMaximo"] = mostExpensive.Price;
+            productos[item]["media"] = average;
 
-            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS BARATO ES: \n{cheapest}\nCuesta {productos[item.Key]["precioMinimo"]}");
-            Console.WriteLine($"EL PRODUCTO \"{item.Key}\" MÁS CARO ES: \n{mostExpensive}\nCuesta {productos[item.Key]["precioMaximo"]}");
-            Console.WriteLine($"LA MEDIA DE PRECIOS DEL PRODUCTO \"{item.Key}\" ES: {productos[item.Key]["media"]}");
+            Console.WriteLine($"EL PRODUCTO \"{item}\" MÁS BARATO ES: \n{cheapest}\nCuesta {productos[item]["precioMinimo"]}");
+            Console.WriteLine($"EL PRODUCTO \"{item}\" MÁS CARO ES: \n{mostExpensive}\nCuesta {productos[item]["precioMaximo"]}");
+            Console.WriteLine($"LA MEDIA DE PRECIOS DEL PRODUCTO \"{item}\" ES: {productos[item]["media"]}");
             Console.WriteLine("");
         }
 
