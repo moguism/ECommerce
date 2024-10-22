@@ -1,4 +1,3 @@
-
 namespace Server
 {
     public class Program
@@ -15,6 +14,7 @@ namespace Server
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<FarminhouseContext>();
+            builder.Services.AddScoped<UnitOfWork>();
 
             var app = builder.Build();
 
