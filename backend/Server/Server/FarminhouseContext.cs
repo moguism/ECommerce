@@ -55,8 +55,7 @@ public partial class FarminhouseContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            /* Da fallo
-            entity.HasMany(d => d.Orders).WithMany(p => p.Products)
+            entity.HasMany(d => d.Products).WithMany(p => p.Orders)
                 .UsingEntity<Dictionary<string, object>>(
                     "OrdersProduct",
                     r => r.HasOne<Product>().WithMany()
@@ -76,7 +75,6 @@ public partial class FarminhouseContext : DbContext
                             .HasColumnType("INT")
                             .HasColumnName("order_id");
                     });
-            */
         });
 
         modelBuilder.Entity<Payment>(entity =>

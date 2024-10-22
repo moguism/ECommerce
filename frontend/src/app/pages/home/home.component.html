@@ -1,18 +1,19 @@
 <div>
     <app-header></app-header>
 </div>
-<div class="main-container">
-    <!--<div class="sidebar">
-        <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#">Acerca de</a></li>
-        </ul>
-    </div>-->
+<div class="main-container" (scroll)="prueba()">
     <div class="centered-image"></div>
     <div class="content">
         <div style="height: 2000px;"></div>
-        <h1 style="color: white;">De la granja a tu casa</h1>
-        <p style="color: white;">Desde <i>Farm in House</i> nos importa tu tiempo</p>
+
+        @if (showText)
+        {
+            <div class="animated.section">
+                <h1 style="color: white;">De la granja a tu casa</h1>
+                <p style="color: white;">Desde <i>Farm in House</i> nos importa tu tiempo</p>
+            </div>
+        }
+
         <div style="height: 2000px;"></div>
         <h1 style="color: white;">TONTO EL QUE LO LEA</h1>
         <p style="color: white;">Ya pilláis de que va la idea</p>
