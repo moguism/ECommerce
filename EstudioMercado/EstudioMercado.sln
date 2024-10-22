@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioMasMit-Carniceria", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioLaFruteria", "EstudioLaFruteria\EstudioLaFruteria.csproj", "{42AFFC00-393A-4BB9-AFDE-281FE24D2815}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstudioEroski", "EstudioEroski\EstudioEroski.csproj", "{F0AABF35-7343-4E06-9E7C-96D8149093B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioEroski", "EstudioEroski\EstudioEroski.csproj", "{F0AABF35-7343-4E06-9E7C-96D8149093B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
