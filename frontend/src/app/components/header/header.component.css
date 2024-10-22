@@ -1,0 +1,48 @@
+/*div de parte principal*/
+#negro{
+    height: 50px;
+    background-color: black;
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.rojo{
+    height: 50px;
+    width: 5%;
+    background-color: #A82222;
+    display: flex;
+    align-items: center;
+}
+#icono-persona{
+    width: 70%;
+    color: white;
+    
+}
+.letras{
+    color: white;
+    padding: 20px;
+    font-size: 20px;
+}
+.camion{
+    height: 50px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+#icono-camion{
+    color: white;
+}
+/*div de busqueda*/
+#busqueda{
+background-color:#F5F5DC;
+height: 100px;
+}
+hr{
+    margin: 0;
+}
+/*div botones*/
+#botones{
+background-color: #F5F5DC;
+height: 50px;
+}
