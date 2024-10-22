@@ -1,8 +1,9 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
+import { window } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -25,22 +26,4 @@ import { CommonModule } from '@angular/common';
 export class HomeComponent {
   showText = false;
   private scrollPosition = 800; // Cambia este valor a la posición deseada
-
-  prueba()
-  {
-    console.log("hur hur hur hur hur")
-  }
-
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    console.log("Estoy bajando bobolón");
-    
-    const currentScroll = window.scrollY;
-    
-    if (currentScroll >= this.scrollPosition) {
-      this.showText = true;
-    } else {
-      this.showText = false;
-    }
-  }
 }
