@@ -11,8 +11,7 @@ public partial class FarminhouseContext : DbContext
     {
     }
 
-    public FarminhouseContext(DbContextOptions<FarminhouseContext> options)
-        : base(options)
+    public FarminhouseContext(DbContextOptions<FarminhouseContext> options) : base(options)
     {
     }
 
