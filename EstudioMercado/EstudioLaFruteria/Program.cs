@@ -23,11 +23,11 @@ internal class Program {
         await using IBrowserContext context = await browser.NewContextAsync();
         IPage page = await context.NewPageAsync();
 
-        foreach (var item in productos)
+        foreach (var item in productos.Keys)
         {
             List<decimal> listaPrecios = new List<decimal>();
             // Ir a la página de La Fruteria
-            await page.GotoAsync("https://www.lafruteria.es/buscar?search_query=" + item.Key + "&submit_search=&orderby=quantity&orderway=desc");
+            await page.GotoAsync("https://www.lafruteria.es/buscar?search_query=" + item + "&submit_search=&orderby=quantity&orderway=desc");
 
             await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
@@ -41,9 +41,9 @@ internal class Program {
                 try
                 {
                     Product product = await GetProductAsync(productElement);
-                    if (product != null && product.Name.ToLower().Contains(item.Key))
+                    if (product != null && product.Name.ToLower().Contains(item))
                     {
-                        item.Value.Add(product);
+                        productos[item].Add(product);
                         listaPrecios.Add(product.Price);
                         Console.WriteLine(product);
                     }
