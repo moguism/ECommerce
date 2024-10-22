@@ -12,16 +12,28 @@ namespace Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly UserMapper _userMapper;
-        private readonly Repository _repository
+        private readonly UnitOfWork _unitOfWork;
+
+        public UserController(UnitOfWork unitOfWork, UserMapper userMapper)
+        {
+            _unitOfWork = unitOfWork;
+            _userMapper = userMapper;
+        }
+
 
 
         [HttpGet]
-        public IEnumerable<UserDto> GetAllUsers()
+        public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
-            User[] users = _repository.GetAllAsync().Result;
+            //Obtener todos los usuarios
+            ICollection<User> users = await _unitOfWork.UserRepository.GetAllAsync();
 
+
+            //Paso a DTO
+            IEnumerable<UserDto> userDtos = _userMapper.ToDto(users);
+
+            return userDtos;
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using Server.Repositories.Base;
 using Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Repositories
 {
@@ -8,9 +9,7 @@ namespace Server.Repositories
         public UserRepository (FarminhouseContext context) : base(context) { }
 
 
-
-
-
+      
 
     }
 }
