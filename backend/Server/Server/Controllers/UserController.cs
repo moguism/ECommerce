@@ -15,9 +15,10 @@ namespace Server.Controllers
         private readonly UserMapper _userMapper;
         private readonly UnitOfWork _unitOfWork;
 
-        public UserController(UnitOfWork unitOfWork)
+        public UserController(UnitOfWork unitOfWork, UserMapper userMapper)
         {
             _unitOfWork = unitOfWork;
+            _userMapper = userMapper;
         }
 
 
