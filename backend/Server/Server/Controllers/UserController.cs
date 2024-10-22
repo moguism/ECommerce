@@ -46,12 +46,14 @@ namespace Server.Controllers
         {
             
             User usuario = new User();
-            usuario.Id = _context.Users.Count() == 0 ? 1 : _context.Users.Max(u => u.Id);
+            usuario.Id = _context.Users.Count() == 0 ? 1 : _context.Users.Max(u => u.Id) + 1;
             usuario.Name = name;
             usuario.Email = email;
             usuario.Password = password;
             usuario.Address = address;
-
+            usuario.Role = "admin";
+            await _unitOfWork.UserRepository.InsertAsync(usuario);
+            await _unitOfWork.SaveAsync();
         }
 
 
