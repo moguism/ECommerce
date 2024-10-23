@@ -40,6 +40,20 @@ namespace Server.Controllers
             return userDtos;
         }
 
+        
+        [HttpGet("byemail")]
+        public async Task<UserDto> GetUserByEmail(string email)
+        {
+            User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+
+
+            //Paso a DTO
+            UserDto userDto = _userMapper.ToDto(user);
+
+            return userDto;
+        }
+        
+
         [HttpPost]
         public async Task RegisterUserAsync 
             (string name, string email,string password, string address)
@@ -51,10 +65,28 @@ namespace Server.Controllers
             usuario.Email = email;
             usuario.Password = password;
             usuario.Address = address;
-            usuario.Role = "admin";
+            usuario.Role = "normal";
             await _unitOfWork.UserRepository.InsertAsync(usuario);
             await _unitOfWork.SaveAsync();
         }
+
+        [HttpDelete("byid")]
+        public async Task DeleteById(int id)
+        {
+            User user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.SaveAsync();
+        }
+
+        [HttpDelete("byemail")]
+        public async Task DeleteByEmail(string email)
+        {
+            User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+            _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.SaveAsync();
+        }
+
+        
 
 
     }
