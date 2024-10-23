@@ -1,11 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arbutus&family=Fjalla+One&family=Gravitas+One&family=Julius+Sans+One&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Arbutus&family=Fjalla+One&family=Gravitas+One&family=Julius+Sans+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Arbutus&family=Fjalla+One&family=Gravitas+One&family=Julius+Sans+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
 
+/*
+
+
+titulos
+font-family: "Fjalla One", sans-serif;
+
+Subtitulo
+font-family: "Julius Sans One", sans-serif;
+
+Texto
+font-family: "Open Sans", sans-serif;
+
+
+*/
 
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Julius Sans One", sans-serif;
+
 }
 
 body{
@@ -43,6 +60,8 @@ body{
 .container-form h2{
     font-size: 30px;
     margin-bottom: 20px;
+    font-family: "Fjalla One", sans-serif;
+
 }
 .social-networks{
     display: flex;
@@ -151,6 +170,8 @@ body{
 }
 .container-welcome h3{
     font-size: 40px;
+    font-family: "Fjalla One", sans-serif;
+
 }
 .container-welcome p{
     font-size: 14px;
