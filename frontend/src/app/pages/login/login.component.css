@@ -1,54 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Konkhmer+Sleokchher&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Konkhmer Sleokchher", system-ui;
+    font-family: "Montserrat", sans-serif;
 }
-.body{
-    border: 2px solid red;
+body{
     width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #F5F5DC;
+    background-color: #F0F4F3;
 }
-
 .container{
-    border: 2px solid black;
     width: 800px;
     height: 500px;
     display: flex;
+    position: relative;
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgb(0, 0,0,0.3)
 }
-
 .container-form{
-    border: 2px solid green;
     width: 100%;
     overflow: hidden;
 }
-
 .container-form form{
-    border: 2px solid red;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: transform 0.5s ease-in;
 }
-
 .container-form h2{
     font-size: 30px;
     margin-bottom: 20px;
 }
-
+.social-networks{
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.social-networks ion-icon{
+    border: 1px solid #C9CCCB;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+}
 .container-form span{
     font-size: 12px;
     margin-bottom: 15px;
 }
-
 .container-input{
-    width: 280px;
+    width: 300px;
     height: 40px;
     margin-bottom: 10px;
     display: flex;
@@ -58,7 +65,6 @@
     padding: 0 15px;
     background-color: #EEEEEE;
 }
-
 .container-input input{
     border: none;
     outline: none;
@@ -66,21 +72,12 @@
     height: 100%;
     background-color: inherit;
 }
-
-.remember{
-    width: 90%;
-    align-items: center;
+.container-form a{
+    color: black;
+    font-size:  14px;
     margin-bottom: 20px;
     margin-top: 5px;
-    display: flex;
 }
-
-.remember input{
-    margin-right: 5px;
-    width: 15px;
-    height: 15px;
-}
-
 .button{
     width: 170px;
     height: 45px;
@@ -88,20 +85,68 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
-    background-color: #9ED4CB;
+    margin-top: 10px;  
+    background-color: #3AB397;  
+    color: white;
 }
-
-/* Animacion de cambio de formulario */
+/*Animation form*/
 
 .sign-up{
     transform: translateX(-100%);
 }
-
 .container.toggle .sign-in{
     transform: translateX(100%);
 }
-
 .container.toggle .sign-up{
     transform: translateX(0);
+}
+
+/*Welcome*/
+.container-welcome{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transform: translateX(100%);
+    background-color: #3AB397;
+    transition: transform 0.5s ease-in-out, border-radius 0.5s ease-in-out;
+    overflow: hidden;
+    border-radius: 50% 0 0 50%;
+}
+.container.toggle .container-welcome{
+    transform: translateX(0);
+    border-radius: 0 50% 50% 0;
+    background-color: #3AA8AD;
+}
+.container-welcome .welcome{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 50px;
+    color: white;
+    transition: transform 0.5s ease-in-out;
+}
+.welcome-sign-in{
+    transform: translateX(100%);
+}
+.container-welcome h3{
+    font-size: 40px;
+}
+.container-welcome p{
+    font-size: 14px;
+    text-align: center;
+}
+.container-welcome .button{
+    border: 2px solid white;
+    background-color: transparent;
+}
+
+.container.toggle .welcome-sign-in{
+    transform: translateX(0);
+}
+.container.toggle .welcome-sign-up{
+    transform: translateX(-100%);
 }
