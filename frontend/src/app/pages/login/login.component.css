@@ -25,6 +25,7 @@
 .container-form{
     border: 2px solid green;
     width: 100%;
+    overflow: hidden;
 }
 
 .container-form form{
@@ -67,11 +68,11 @@
 }
 
 .remember{
-    width: 85%;
+    width: 90%;
     align-items: center;
-    justify-content: center;
     margin-bottom: 20px;
     margin-top: 5px;
+    display: flex;
 }
 
 .remember input{
@@ -92,6 +93,15 @@
 }
 
 /* Animacion de cambio de formulario */
-.sign-in{
-    transform: translateX(-50%);
+
+.sign-up{
+    transform: translateX(-100%);
+}
+
+.container.toggle .sign-in{
+    transform: translateX(100%);
+}
+
+.container.toggle .sign-up{
+    transform: translateX(0);
 }
