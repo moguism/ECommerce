@@ -21,7 +21,7 @@ export class HomeComponent {
     {
       const animatedSection = document.getElementById("animated-section")
       console.log(animatedSection == null)
-      document.getElementById("animated-section")?.classList.add("prueba");
+      document.getElementById("animated-section")?.classList.add("animation-class");
       this.reproducido = true
     }
 
