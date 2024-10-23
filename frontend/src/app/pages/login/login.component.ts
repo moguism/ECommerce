@@ -7,6 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
-
+export class LoginComponent 
+{
+  onButtonsClick(add : boolean)
+  {
+    if(add)
+    {
+      document.getElementById("container")?.classList.add("toggle")
+    }
+    else
+    {
+      document.getElementById("container")?.classList.remove("toggle")
+    }
+  }
 }
