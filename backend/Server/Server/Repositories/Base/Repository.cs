@@ -24,16 +24,17 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
         return await _context.Set<TEntity>().FindAsync(id);
     }
 
+    
+
     public IQueryable<TEntity> GetQueryable(bool asNoTracking = true)
     {
         DbSet<TEntity> entities = _context.Set<TEntity>();
         return asNoTracking ? entities.AsNoTracking() : entities; // "AsNoTracking" permite optimizar la consulta para que no se traten los datos
     }
 
-    public async Task DeleteAsync(TEntity entity)
+    public void Delete(TEntity entity)
     {
         _context.Set<TEntity>().Remove(entity);
-        await SaveAsync();
     }
 
     public async Task<bool> ExistAsync(TId id)
@@ -44,19 +45,12 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
     public async Task<TEntity> InsertAsync(TEntity entity)
     {
         EntityEntry<TEntity> entry = await _context.Set<TEntity>().AddAsync(entity);
-        await SaveAsync();
         return entry.Entity;
     }
 
-    public async Task<bool> SaveAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<TEntity> UpdateAsync(TEntity entity)
+    public TEntity Update(TEntity entity)
     {
         EntityEntry<TEntity> entry = _context.Set<TEntity>().Update(entity);
-        await SaveAsync();
         return entry.Entity;
     }
 }

@@ -2,48 +2,46 @@
     display: flex;
 }
 
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #333;
-    padding: 20px;
-    color: white;
-}
-
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin: 15px 0;
-}
-
-.sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.sidebar ul li a:hover {
-    text-decoration: underline;
-}
-
 .centered-image {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Ajusta la posición para que esté perfectamente centrada */
+    transform: translate(-50%, -50%); /* Para que esté centrada */
     z-index: 999;
-    margin-left: 125px; /* Compensa el menú lateral */
     width: 200px;
     height: 200px;
-    background-image: url("../../../../public/prueba1.png");
+    background-image: url("../../../../public/truck.png");
     background-size: cover; /* Ajusta la imagen para cubrir todo el div */
     background-position: center; /* Centra la imagen dentro del div */
+}
+
+@keyframes textAnimation
+{
+    from 
+    {
+        transform: translate(0, 0);
+    }
+    to 
+    {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+#animated-section
+{
+    position: absolute;
+    left: 0;
+}
+
+.prueba
+{
+    animation-name: textAnimation;
+    animation-duration: 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
 .content {
@@ -51,10 +49,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left: 250px;
-    width: calc(100% - 250px);
+    width: 100%;
     min-height: 100vh;
-    background-image: url("../../../../public/road.png");
+    background-image: url("../../../../public/prueba.png");
     background-repeat: repeat-y;
     background-size: 100% auto;
     background-position: top center;
