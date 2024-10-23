@@ -19,24 +19,21 @@
 {
     from 
     {
-        transform: translate(0, 0);
+        transform: translate(-25vw, 0);
     }
     to 
     {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(85vw, 0);
     }
 }
 
 #animated-section
 {
     position: absolute;
-    left: 0;
+    left: -25vw;
 }
 
-.prueba
+.animation-class
 {
     animation-name: textAnimation;
     animation-duration: 3s;
@@ -57,3 +54,4 @@
     background-position: top center;
     text-align: center;
 }
+
