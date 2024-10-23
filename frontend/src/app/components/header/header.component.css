@@ -13,11 +13,13 @@
     background-color: #A82222;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 #icono-persona{
-    width: 70%;
     color: white;
-    
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
 }
 .letras{
     color: white;
@@ -29,6 +31,7 @@
     width: 50%;
     display: flex;
     align-items: center;
+    margin-left: 2%;
 }
 #icono-camion{
     color: white;
@@ -37,7 +40,17 @@
 #busqueda{
 background-color:#F5F5DC;
 height: 100px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: row;
+justify-content: space-between;
 }
+img{
+    width: 8%;
+    
+}
+/*linea separatoria*/
 hr{
     margin: 0;
 }
@@ -45,4 +58,14 @@ hr{
 #botones{
 background-color: #F5F5DC;
 height: 50px;
+}
+@media (max-width: 900px){
+    .rojo{
+        width: 10%;
+    }
+}
+@media (max-width: 400px){
+    .rojo{
+        width: 14%;
+    }
 }
