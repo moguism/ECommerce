@@ -70,7 +70,14 @@ namespace Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
-        
+        [HttpDelete("byid")]
+        public async Task DeleteById(int id)
+        {
+            User user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.SaveAsync();
+        }
+
         [HttpDelete("byemail")]
         public async Task DeleteByEmail(string email)
         {
@@ -78,6 +85,8 @@ namespace Server.Controllers
             _unitOfWork.UserRepository.Delete(user);
             await _unitOfWork.SaveAsync();
         }
+
+        
 
 
     }
