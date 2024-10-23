@@ -11,8 +11,7 @@ public partial class FarminhouseContext : DbContext
     {
     }
 
-    public FarminhouseContext(DbContextOptions<FarminhouseContext> options)
-        : base(options)
+    public FarminhouseContext(DbContextOptions<FarminhouseContext> options) : base(options)
     {
     }
 
@@ -56,7 +55,7 @@ public partial class FarminhouseContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasMany(d => d.Orders).WithMany(p => p.Products)
+            entity.HasMany(d => d.Products).WithMany(p => p.Orders)
                 .UsingEntity<Dictionary<string, object>>(
                     "OrdersProduct",
                     r => r.HasOne<Product>().WithMany()
