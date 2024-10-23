@@ -46,9 +46,28 @@ justify-content: center;
 flex-direction: row;
 justify-content: space-between;
 }
-img{
+.logo{
     width: 8%;
-    
+}
+#campo-busqueda{
+    position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.campo-search{
+    height: 20px;
+    width: 100%;
+}
+#lupa-busqueda{
+    position: absolute;
+    transform: translateY(25%);
+    right: 5px;
+    font-size: 20px;
+}
+#carrito{
+    font-size: 35px;
+    margin-right: 3%;
+    margin-left: 3%;
 }
 /*linea separatoria*/
 hr{
@@ -58,10 +77,21 @@ hr{
 #botones{
 background-color: #F5F5DC;
 height: 50px;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-around;
 }
+h2{
+font-weight: normal;
+}
+/*Responsive*/
 @media (max-width: 900px){
     .rojo{
         width: 10%;
+    }
+    .logo{
+        width: 15%;
     }
 }
 @media (max-width: 400px){
