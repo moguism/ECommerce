@@ -1,10 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Montserrat", sans-serif;
 }
+
 body{
     width: 100%;
     height: 100vh;
@@ -12,6 +15,7 @@ body{
     justify-content: center;
     align-items: center;
     background-color: #F0F4F3;
+
 }
 .container{
     width: 800px;
@@ -22,6 +26,7 @@ body{
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 10px rgb(0, 0,0,0.3)
+
 }
 .container-form{
     width: 100%;
@@ -110,6 +115,13 @@ body{
     align-items: center;
     transform: translateX(100%);
     background-color: #3AB397;
+
+    /*Imagen fondo login*/
+    background-repeat: no-repeat;
+    background-image: url("./images/login-image.jpg");
+    background-size: cover;
+
+
     transition: transform 0.5s ease-in-out, border-radius 0.5s ease-in-out;
     overflow: hidden;
     border-radius: 50% 0 0 50%;
@@ -117,7 +129,12 @@ body{
 .container.toggle .container-welcome{
     transform: translateX(0);
     border-radius: 0 50% 50% 0;
-    background-color: #3AA8AD;
+
+    /*Imagen fondo crear cuenta*/
+    background-repeat: no-repeat;
+    background-image: url("./images/register-image.jpg");
+    background-size: cover;
+
 }
 .container-welcome .welcome{
     position: absolute;
