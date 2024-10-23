@@ -9,19 +9,22 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  showText = false;
-  private scrollPosition = 1544;
+  private scrollPosition = 2960;
+  private reproducido = false;
 
   @HostListener('window:scroll', [])
   checkScroll()
   {
     const currentScroll = window.scrollY;
 
-    if(currentScroll == this.scrollPosition)
+    if(currentScroll >= this.scrollPosition && !this.reproducido)
     {
-      document.getElementById("animatedSection")?.classList.add("mondongo");
+      const animatedSection = document.getElementById("animated-section")
+      console.log(animatedSection == null)
+      document.getElementById("animated-section")?.classList.add("prueba");
+      this.reproducido = true
     }
 
-    console.log(currentScroll)
+    //console.log(currentScroll)
   }
 }

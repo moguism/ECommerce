@@ -23,7 +23,10 @@
     }
     to 
     {
-        transform: translate(800px, 0);
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
@@ -31,9 +34,14 @@
 {
     position: absolute;
     left: 0;
+}
+
+.prueba
+{
     animation-name: textAnimation;
     animation-duration: 3s;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
 .content {
