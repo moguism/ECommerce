@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Models;
 
-public partial class Category
+[Index(nameof(Name), IsUnique = true)]
+public class Category
 {
     public string Name { get; set; }
 
     public int Id { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 }
