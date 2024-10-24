@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { __values } from 'tslib';
 
 @Component({
   selector: 'app-login',
@@ -29,10 +30,45 @@ export class LoginComponent implements OnInit
       sign_up_button.addEventListener("click",()=>{
         if(container != null)
           container.classList.add("toggle");
-    });
+      });
+    }
+
+    //Botón para registrar a un usuario
+    let register_button = document.getElementById("register_button");
+
+    
+    let name = document.getElementById("name");
+    let email = document.getElementById("email");
+    let password = document.getElementById("password");
+    let address = document.getElementById("address");
+    let role = "user";
+
+
+    if(register_button != null)
+    {
+      register_button.addEventListener("click", () =>
+      {
+        let user = {name,email,password,role,address};
+
+        
+      });
+    }
+
+
+
+
   }
 
+
+
+
+/*
+  ngOnDestroy(): void {
+    // Cuando este componente se destruye hay que cancelar la suscripción.
+    // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
+
+    this.routeParamMap$?.unsubscribe();
   }
   
-
+*/
 }
