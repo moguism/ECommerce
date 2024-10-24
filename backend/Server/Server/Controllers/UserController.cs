@@ -27,7 +27,7 @@ namespace Server.Controllers
 
 
         //Obtiene todos los usuarios sin contraseña
-        [HttpGet]
+        //[HttpGet]
         public async Task<IEnumerable<UserDto>> GetAllUsers()
         {
             //Obtener todos los usuarios
@@ -41,7 +41,7 @@ namespace Server.Controllers
         }
 
         
-        [HttpGet("byemail")]
+        //[HttpGet("byemail")]
         public async Task<UserDto> GetUserByEmail(string email)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
@@ -70,7 +70,7 @@ namespace Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
-        [HttpDelete("byid")]
+        //[HttpDelete("byid")]
         public async Task DeleteById(int id)
         {
             User user = await _unitOfWork.UserRepository.GetByIdAsync(id);
@@ -78,7 +78,7 @@ namespace Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
-        [HttpDelete("byemail")]
+        //[HttpDelete("byemail")]
         public async Task DeleteByEmail(string email)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
