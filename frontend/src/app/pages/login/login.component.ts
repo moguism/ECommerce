@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { __values } from 'tslib';
+import { User } from '../../models/user';
+import { RegisterServiceService } from '../../services/register.service';
+
 
 @Component({
   selector: 'app-login',
@@ -48,9 +51,9 @@ export class LoginComponent implements OnInit
     {
       register_button.addEventListener("click", () =>
       {
-        let user = {name,email,password,role,address};
+        let user = new User(name,email,password,address,role);
 
-        
+        RegisterServiceService.addUser(user);
       });
     }
 
