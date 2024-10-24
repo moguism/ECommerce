@@ -34,7 +34,6 @@ namespace Server
                     };
                 });
 
-
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -43,6 +42,26 @@ namespace Server
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
             builder.Services.AddScoped<PasswordService>();
+
+
+
+            //Permite CORS
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddCors(
+                    options =>
+                    options.AddDefaultPolicy(
+                        builder =>
+                        {
+                            builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                            ;
+                        })
+
+
+                    );
+            }
 
             var app = builder.Build();
 
@@ -66,6 +85,16 @@ namespace Server
                 dbContext.Database.EnsureCreated();
             }
 
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+
+                //Permite CORS
+                app.UseCors();
+
+            }
             app.Run();
         }
     }
