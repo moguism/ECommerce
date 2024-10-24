@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models;
 
-public partial class Product
+public class Product
 {
     public string Name { get; set; }
 
@@ -19,9 +19,9 @@ public partial class Product
 
     public int CategoryId { get; set; }
 
-    public virtual Category Category { get; set; }
+    public Category Category { get; set; }
 
-    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
