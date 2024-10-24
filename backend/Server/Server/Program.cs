@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Services;
@@ -19,7 +20,6 @@ namespace Server
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
 
-            /*
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -33,7 +33,6 @@ namespace Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
-            */
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -64,12 +63,6 @@ namespace Server
                     );
             }
 
-
-
-
-
-
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -86,6 +79,11 @@ namespace Server
 
             app.MapControllers();
 
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                FarminhouseContext dbContext = scope.ServiceProvider.GetService<FarminhouseContext>();
+                dbContext.Database.EnsureCreated();
+            }
 
             // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
@@ -97,8 +95,6 @@ namespace Server
                 app.UseCors();
 
             }
-
-
             app.Run();
         }
     }
