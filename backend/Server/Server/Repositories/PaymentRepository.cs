@@ -5,5 +5,8 @@ namespace Server.Repositories;
 
 public class PaymentRepository : Repository<Payment, int>
 {
-    public PaymentRepository(FarminhouseContext context) : base(context) { }
+    public PaymentRepository(FarminhouseContext context) : base(context) 
+    {
+
+    }
 }
