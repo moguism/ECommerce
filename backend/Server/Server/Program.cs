@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Services;
@@ -58,6 +59,12 @@ namespace Server
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                FarminhouseContext dbContext = scope.ServiceProvider.GetService<FarminhouseContext>();
+                dbContext.Database.EnsureCreated();
+            }
 
             app.Run();
         }

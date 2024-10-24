@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models;
 
-public partial class Payment
+public class Payment
 {
     public DateTime CreatedAt { get; set; }
 
@@ -17,7 +17,7 @@ public partial class Payment
 
     public int PaymentTypeId { get; set; }
 
-    public virtual Order Order { get; set; }
+    public Order Order { get; set; }
 
-    public virtual PaymentsType PaymentType { get; set; }
+    public PaymentsType PaymentType { get; set; }
 }
