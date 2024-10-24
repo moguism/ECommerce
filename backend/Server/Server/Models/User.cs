@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models;
 
 public partial class User
 {
-    public int Id { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; } = 0;
 
     public string Name { get; set; }
 
@@ -38,4 +42,13 @@ public partial class UserDto
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+}
+
+public partial class UserSignUpDto
+{
+    public string Name { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Role { get; set; } = null!;
+    public string Address { get; set; } = null!;
 }

@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
+using Server.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -39,9 +40,33 @@ namespace Server
 
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
-
-            //
             builder.Services.AddScoped<UserMapper>();
+            builder.Services.AddScoped<PasswordService>();
+
+
+
+            //Permite CORS
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddCors(
+                    options =>
+                    options.AddDefaultPolicy(
+                        builder =>
+                        {
+                            builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                            ;
+                        })
+
+
+                    );
+            }
+
+
+
+
+
 
 
             var app = builder.Build();
@@ -59,6 +84,19 @@ namespace Server
             app.UseAuthorization();
 
             app.MapControllers();
+
+
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+
+                //Permite CORS
+                app.UseCors();
+
+            }
+
 
             app.Run();
         }
