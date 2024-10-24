@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit
 {  
 
 
-  private constructor(private registerService : RegisterService){
+  constructor(private registerService : RegisterService){
 
   }
 
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit
     address = "";
     role = "user";
 
-    path = "Auth";
+    path = "Auth/signup";
 
   ngOnInit(): void {
 
