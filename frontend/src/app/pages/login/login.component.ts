@@ -1,15 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { __values } from 'tslib';
+import { User } from '../../models/user';
+import { FormsModule } from '@angular/forms';
+import { RegisterService } from '../../services/register.service';
+
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit
 {  
+
+
+  private constructor(private registerService : RegisterService){
+
+  }
+
+    name = "";
+    email = "";
+    password = "";
+    address = "";
+    role = "user";
+
+    path = "Auth";
 
   ngOnInit(): void {
 
@@ -37,19 +55,18 @@ export class LoginComponent implements OnInit
     let register_button = document.getElementById("register_button");
 
     
-    let name = document.getElementById("name");
-    let email = document.getElementById("email");
-    let password = document.getElementById("password");
-    let address = document.getElementById("address");
-    let role = "user";
 
+
+    
 
     if(register_button != null)
     {
       register_button.addEventListener("click", () =>
       {
-        let user = {name,email,password,role,address};
+        //Usuario con los datos introducidos
+        let user = new User(this.name,this.email,this.password,this.address,this.role);
 
+        this.registerService.registerUser(this.path,user);
         
       });
     }
