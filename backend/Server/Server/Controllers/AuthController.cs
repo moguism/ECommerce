@@ -27,16 +27,16 @@ namespace Server.Controllers
 
         [HttpPost]
         public async Task RegisterUserAsync
-            (string name, string email, string password, string address)
+            ([FromBody] User user)
         {
 
             User usuario = new User();
             usuario.Id = _context.Users.Count() == 0 ? 1 : _context.Users.Max(u => u.Id) + 1;
-            usuario.Name = name;
-            usuario.Email = email;
-            usuario.Password = password;
-            usuario.Address = address;
-            usuario.Role = "normal";
+            usuario.Name = user.Name;
+            usuario.Email = user.Email;
+            usuario.Password = user.Password;
+            usuario.Address = user.Address;
+            usuario.Role = user.Role;
             await _unitOfWork.UserRepository.InsertAsync(usuario);
             await _unitOfWork.SaveAsync();
         }
