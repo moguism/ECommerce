@@ -12,6 +12,7 @@ public class UnitOfWork
     private ProductRepository _productRepository;
     private ReviewRepository _reviewRepository;
     private UserRepository _userRepository;
+    private CategoryRepository _categoryRepository;
 
     public OrderRepository OrderRepository => _orderRepository ??= new OrderRepository(_context);
     public PaymentRepository PaymentRepository => _paymentRepository ??= new PaymentRepository(_context);
@@ -19,6 +20,7 @@ public class UnitOfWork
     public ProductRepository ProductRepository => _productRepository ??= new ProductRepository(_context);
     public ReviewRepository ReviewRepository => _reviewRepository ??= new ReviewRepository(_context);
     public UserRepository UserRepository => _userRepository ??= new UserRepository(_context);
+    public CategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
 
     public UnitOfWork(FarminhouseContext context)
     {

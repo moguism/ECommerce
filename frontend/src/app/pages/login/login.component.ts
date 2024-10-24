@@ -1,14 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import { __values } from 'tslib';
+import { User } from '../../models/user';
+import { FormsModule } from '@angular/forms';
+import { RegisterService } from '../../services/register.service';
+
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit
 {  
+
+
+  constructor(private registerService : RegisterService){
+
+  }
+
+    name = "";
+    email = "";
+    password = "";
+    address = "";
+    role = "user";
+
+    path = "Auth/signup";
 
   ngOnInit(): void {
 
@@ -29,10 +48,44 @@ export class LoginComponent implements OnInit
       sign_up_button.addEventListener("click",()=>{
         if(container != null)
           container.classList.add("toggle");
-    });
+      });
+    }
+
+    //Botón para registrar a un usuario
+    let register_button = document.getElementById("register_button");
+
+    
+
+
+    
+
+    if(register_button != null)
+    {
+      register_button.addEventListener("click", () =>
+      {
+        //Usuario con los datos introducidos
+        let user = new User(this.name,this.email,this.password,this.address,this.role);
+
+        this.registerService.registerUser(this.path,user);
+        
+      });
+    }
+
+
+
+
   }
 
+
+
+
+/*
+  ngOnDestroy(): void {
+    // Cuando este componente se destruye hay que cancelar la suscripción.
+    // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
+
+    this.routeParamMap$?.unsubscribe();
   }
   
-
+*/
 }

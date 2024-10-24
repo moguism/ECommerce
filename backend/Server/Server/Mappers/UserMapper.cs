@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Server.DTOs;
+using Server.Models;
 
 namespace Server.Mappers
 {
@@ -6,9 +7,9 @@ namespace Server.Mappers
     {
 
         //Pasar de usuario a dto
-        public UserDto ToDto(User user)
+        public UserAfterLoginDto ToDto(User user)
         {
-            return new UserDto
+            return new UserAfterLoginDto
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -18,20 +19,17 @@ namespace Server.Mappers
                 Orders = user.Orders,
                 Reviews = user.Reviews,
             };
-
         }
 
-
         //Pasar la lista de usuarios a dtos
-        public IEnumerable<UserDto> ToDto(IEnumerable<User> users)
+        public IEnumerable<UserAfterLoginDto> ToDto(IEnumerable<User> users)
         {
             return users.Select(ToDto);
-
         }
 
 
         //Pasar de Dto a usuario
-        public User ToEntity(UserDto userDto)
+        public User ToEntity(UserAfterLoginDto userDto)
         {
             return new User
             {
@@ -43,17 +41,31 @@ namespace Server.Mappers
                 Orders = userDto.Orders,
                 Reviews = userDto.Reviews,
             };
+        }
 
+        public User ToEntity(UserSignUpDto userDto)
+        {
+            return new User
+            {
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                Address = userDto.Address,
+                Role = userDto.Role,
+            };
         }
 
 
         //Pasar la lista de dtos a usuarios
-        public IEnumerable<User> ToEntity(IEnumerable<UserDto> usersDto)
+        public IEnumerable<User> ToEntity(IEnumerable<UserAfterLoginDto> usersDto)
         {
             return usersDto.Select(ToEntity);
-
         }
 
+        public IEnumerable<User> ToEntity(IEnumerable<UserSignUpDto> usersDto)
+        {
+            return usersDto.Select(ToEntity);
+        }
 
     }
 }
