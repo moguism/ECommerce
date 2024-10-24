@@ -1,8 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { User } from '../models/user';
-import { catchError, lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
 
 
@@ -17,7 +16,7 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
 
-  async addUser<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
+  async registerUser<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.post(url, body, {
       headers: this.getHeader(contentType),
