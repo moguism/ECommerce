@@ -26,6 +26,13 @@ CREATE TABLE payments_types
   PRIMARY KEY (id)
 );
 
+CREATE TABLE categories
+(
+  name VARCHAR(45) UNIQUE NOT NULL,
+  id INT NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE products
 (
   name VARCHAR(45) NOT NULL,
@@ -34,6 +41,8 @@ CREATE TABLE products
   price FLOAT NOT NULL,
   stock INT NOT NULL,
   average FLOAT NOT NULL,
+  category_id INT NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES categories(id),
   PRIMARY KEY (id)
 );
 
