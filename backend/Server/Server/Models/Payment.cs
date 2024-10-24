@@ -17,7 +17,7 @@ public partial class Payment
 
     public int PaymentTypeId { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    public virtual Order Order { get; set; }
 
-    public virtual PaymentsType PaymentType { get; set; } = null!;
+    public virtual PaymentsType PaymentType { get; set; }
 }
