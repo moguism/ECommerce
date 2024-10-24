@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
+using Server.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -39,10 +40,8 @@ namespace Server
 
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
-
-            //
             builder.Services.AddScoped<UserMapper>();
-
+            builder.Services.AddScoped<PasswordService>();
 
             var app = builder.Build();
 
