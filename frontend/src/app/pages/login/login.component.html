@@ -19,8 +19,6 @@
 
                 </div>
 
-
-
                 <button class="button">Iniciar sesión</button>
             </form>
         </div>
@@ -31,19 +29,19 @@
                 <span>Use su correo electrónico para registrarse</span>
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Nombre" id="name">
+                    <input type="text" placeholder="Nombre"  [(ngModel)]="name" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" placeholder="Email" id="email">
+                    <input type="text" placeholder="Email"  [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Contraseña" id="password">
+                    <input type="password" placeholder="Contraseña"  [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-compass"></i>
-                    <input type="text" placeholder="Dirección" id="address">
+                    <input type="text" placeholder="Dirección"  [(ngModel)]="address" [ngModelOptions]="{standalone: true}">
                 </div>
                 <button class="button" id="register_button">Registrarse</button>
             </form>

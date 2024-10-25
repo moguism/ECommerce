@@ -39,7 +39,7 @@ font-family: "Open Sans", sans-serif;
     height: 500px;
     display: flex;
     position: relative;
-    background-color: white;
+    background-color: #F5F5DC;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 10px rgb(0, 0,0,0.3)
@@ -62,17 +62,6 @@ font-family: "Open Sans", sans-serif;
     margin-bottom: 20px;
     font-family: "Fjalla One", sans-serif;
 
-}
-.social-networks{
-    display: flex;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-.social-networks ion-icon{
-    border: 1px solid #C9CCCB;
-    border-radius: 6px;
-    padding: 8px;
-    cursor: pointer;
 }
 .container-form span{
     font-size: 12px;
@@ -110,8 +99,8 @@ font-family: "Open Sans", sans-serif;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;  
-    background-color: #3AB397;  
-    color: white;
+    background-color: #9ED4CB;  
+    color: black;
 }
 /*Animation form*/
 
@@ -196,8 +185,7 @@ font-family: "Open Sans", sans-serif;
     text-align: center;
 }
 .container-welcome .button{
-    border: 2px solid white;
-    background-color: transparent;
+    background-color: #9ED4CB;
 }
 
 .container.toggle .welcome-sign-in{
