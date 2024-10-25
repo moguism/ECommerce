@@ -9,7 +9,7 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  private scrollPosition = 2960;
+  private scrollPosition = 2550;
   private reproducido = false;
 
   @HostListener('window:scroll', [])
@@ -25,6 +25,6 @@ export class HomeComponent {
       this.reproducido = true
     }
 
-    //console.log(currentScroll)
+    console.log(currentScroll)
   }
 }
