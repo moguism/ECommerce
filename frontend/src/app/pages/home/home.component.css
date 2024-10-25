@@ -12,7 +12,7 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
-    background-image: url("../../../../public/truck.png");
+    background-image: url("../../../../public/file.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -33,10 +33,10 @@
 /* ES POSIBLE QUE HAYA QUE HACER LA ANIMACIÓN AÚN MÁS RESPONSIVA */
 @media (max-width: 920px) 
 {
-    .animated-section-class
+    #animated-section
     {
         left: -50vw;
-        font-size: 5px;
+        font-size: 10px;
     }
     @keyframes textAnimation
     {
@@ -51,9 +51,8 @@
     }
 }
 
-.animated-section-class
+#animated-section
 {
-    /*Todos tienen el mismo estilo*/
     position: absolute;
     left: -25vw;
     background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
@@ -63,11 +62,6 @@
     text-align: center;
     color: white;
     font-family: 'Arial', sans-serif;
-
-    /*Para que todos tengan la misma animación*/
-    animation-duration: 3s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
 }
 
 .animation-class
@@ -91,4 +85,3 @@
     background-position: top center;
     text-align: center;
 }
-
