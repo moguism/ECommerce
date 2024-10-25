@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
@@ -13,7 +13,14 @@ export class RegisterService {
   private BASE_URL = environment.apiUrl;
   jwt : string = ""
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    console.log("HOLA")
+    let token : string | null = localStorage.getItem("token")
+    if(token)
+    {
+      this.jwt = token
+    }
+  }
 
   async registerUser<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
@@ -26,7 +33,7 @@ export class RegisterService {
     return this.sendRequest<T>(request$);
   }
 
-  private async sendRequest<T = void>(request$: Observable<HttpResponse<any>>): Promise<Result<T>> {
+  private async sendRequest<T = boolean>(request$: Observable<HttpResponse<any>>): Promise<Result<T>> {
     let result: Result<T>;
 
     try {
@@ -58,7 +65,8 @@ export class RegisterService {
     if(result.data)
     {
       this.jwt = result.data.toString();
-      console.log("HAY MI MADRE EL BICHO: ", this.jwt)
+      localStorage.setItem("token", this.jwt)
+      console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
   }
