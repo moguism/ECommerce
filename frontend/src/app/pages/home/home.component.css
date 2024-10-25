@@ -6,13 +6,16 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Para que esté centrada */
+    transform: translate(-50%, -50%);
     z-index: 999;
-    width: 200px;
-    height: 200px;
+    width: 15vw;
+    height: 15vw;
+    max-width: 200px;
+    max-height: 200px;
     background-image: url("../../../../public/truck.png");
-    background-size: cover; /* Ajusta la imagen para cubrir todo el div */
-    background-position: center; /* Centra la imagen dentro del div */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 @keyframes textAnimation
@@ -27,10 +30,38 @@
     }
 }
 
+/* ES POSIBLE QUE HAYA QUE HACER LA ANIMACIÓN AÚN MÁS RESPONSIVA */
+@media (max-width: 920px) 
+{
+    #animated-section
+    {
+        left: -50vw;
+        font-size: 10px;
+    }
+    @keyframes textAnimation
+    {
+        from 
+        {
+            transform: translate(-50vw, 0);
+        }
+        to 
+        {
+            transform: translate(1vw, 0);
+        }
+    }
+}
+
 #animated-section
 {
     position: absolute;
     left: -25vw;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra */
+    text-align: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
 }
 
 .animation-class

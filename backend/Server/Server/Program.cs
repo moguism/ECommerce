@@ -43,9 +43,7 @@ namespace Server
             builder.Services.AddScoped<UserMapper>();
             builder.Services.AddScoped<PasswordService>();
 
-
-
-            //Permite CORS
+            // Permite CORS
             if (builder.Environment.IsDevelopment())
             {
                 builder.Services.AddCors(
@@ -58,8 +56,6 @@ namespace Server
                             .AllowAnyMethod();
                             ;
                         })
-
-
                     );
             }
 
@@ -70,6 +66,9 @@ namespace Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                // Permite CORS
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();
@@ -85,16 +84,6 @@ namespace Server
                 dbContext.Database.EnsureCreated();
             }
 
-            // Configure the HTTP request pipeline
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-
-                //Permite CORS
-                app.UseCors();
-
-            }
             app.Run();
         }
     }
