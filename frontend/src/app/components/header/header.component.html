@@ -1,24 +1,16 @@
 <div id="negro">
+    @if(cambiodeboton){
+        <i (click)="funcionmostramenu()" id="menu" class="fa-solid fa-bars"></i>
+    }@else{
+        <i (click)="funcioncerrarmenu()" id="menu" class="fa-solid fa-xmark"></i>
+    }
+    <img class="logo" src="assets/imagenes/Logo.png" alt="Logo" [routerLink]="''">
+    <h2 class="texto">Fruta</h2>
+    <h2 class="texto">Verdura</h2>
+    <h2 class="texto">Carne</h2>
+    <h2 class="texto">Sobre nosotros</h2>
     <div class="rojo" [routerLink]="'login'">
         <i id="icono-persona" class="fa-solid fa-user"></i>
     </div>
-    <div class="camion">
-        <i id="icono-camion" class="fa-solid fa-truck fa-2xl"></i>
-        <p class="letras"> Envío gratuito a partir de 50€</p>
-    </div>
 </div>
-<div id="busqueda">
-    <img class="logo" src="assets/imagenes/Logo.png" alt="Logo">
-    <div id="campo-busqueda">
-        <input class="campo-search" type="text" name="nombre" placeholder="busqueda" size="100">
-        <i id="lupa-busqueda" class="fa-solid fa-magnifying-glass"></i>
-    </div>
-    <i id="carrito" class="fa-solid fa-cart-shopping"></i>
-</div>
-<hr>
-<div id="botones">
-    <h2>Fruta</h2>
-    <h2>Verdura</h2>
-    <h2>Carne</h2>
-    <h2>Sobre nosotros</h2>
-</div>
+

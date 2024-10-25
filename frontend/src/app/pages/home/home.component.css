@@ -12,7 +12,7 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
-    background-image: url("../../../../public/truck.png");
+    background-image: url("../../../../public/file.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -85,4 +85,3 @@
     background-position: top center;
     text-align: center;
 }
-
