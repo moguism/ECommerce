@@ -1,7 +1,8 @@
-﻿/*using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
@@ -28,31 +29,32 @@ namespace Server.Controllers
 
         //Obtiene todos los usuarios sin contraseña
         [HttpGet]
-        public async Task<IEnumerable<UserDto>> GetAllUsers()
+        public async Task<IEnumerable<UserAfterLoginDto>> GetAllUsers()
         {
             //Obtener todos los usuarios
             ICollection<User> users = await _unitOfWork.UserRepository.GetAllAsync();
 
 
             //Paso a DTO
-            IEnumerable<UserDto> userDtos = _userMapper.ToDto(users);
+            IEnumerable<UserAfterLoginDto> userDtos = _userMapper.ToDto(users);
 
             return userDtos;
         }
 
         
         [HttpGet("byemail")]
-        public async Task<UserDto> GetUserByEmail(string email)
+        public async Task<UserAfterLoginDto> GetUserByEmail(string email)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
 
 
             //Paso a DTO
-            UserDto userDto = _userMapper.ToDto(user);
+            UserAfterLoginDto userDto = _userMapper.ToDto(user);
 
             return userDto;
         }
         
+        /*
 
         [HttpPost]
         public async Task RegisterUserAsync 
@@ -78,6 +80,7 @@ namespace Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
+        
         [HttpDelete("byemail")]
         public async Task DeleteByEmail(string email)
         {
@@ -88,7 +91,6 @@ namespace Server.Controllers
 
         
 
-
+        */
     }
 }
-*/
