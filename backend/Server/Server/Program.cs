@@ -19,7 +19,8 @@ namespace Server
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
-            /*
+            
+
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -33,7 +34,7 @@ namespace Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
-            */
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
