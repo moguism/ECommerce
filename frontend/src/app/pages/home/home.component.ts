@@ -6,7 +6,7 @@ import { HeaderComponent } from '../../components/header/header.component';
   standalone: true,
   imports: [HeaderComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
   private scrollPosition = 2550;
@@ -19,12 +19,17 @@ export class HomeComponent {
 
     if(currentScroll >= this.scrollPosition && !this.reproducido)
     {
-      const animatedSection = document.getElementById("animated-section")
-      console.log(animatedSection == null)
-      document.getElementById("animated-section")?.classList.add("animation-class");
+      const animatedSections = document.querySelectorAll('.animated-section-class');
+
+      animatedSections.forEach((animatedSection) => {
+        animatedSection.classList.add("animation-class");
+      });
+      
       this.reproducido = true
     }
 
     console.log(currentScroll)
   }
+
+
 }
