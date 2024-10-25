@@ -1,4 +1,14 @@
 <div id="negro">
+    @if(cambiodeboton){
+        <i (click)="funcionmostramenu()" id="menu" class="fa-solid fa-bars"></i>
+    }@else{
+        <i (click)="funcioncerrarmenu()" id="menu" class="fa-solid fa-xmark"></i>
+    }
+    <img class="logo" src="assets/imagenes/Logo.png" alt="Logo" [routerLink]="''">
+    <h2 class="texto">Fruta</h2>
+    <h2 class="texto">Verdura</h2>
+    <h2 class="texto">Carne</h2>
+    <h2 class="texto">Sobre nosotros</h2>
     <div class="rojo" [routerLink]="'login'">
         <i id="icono-persona" class="fa-solid fa-user"></i>
     </div>
