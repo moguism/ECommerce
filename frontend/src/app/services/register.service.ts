@@ -14,7 +14,6 @@ export class RegisterService {
   jwt : string = ""
 
   constructor(private http: HttpClient) { 
-    console.log("HOLA")
     let token : string | null = localStorage.getItem("token")
     if(token)
     {
