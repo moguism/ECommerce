@@ -145,7 +145,7 @@ font-family: "Open Sans", sans-serif;
 
     /*Imagen fondo login*/
     background-repeat: no-repeat;
-    background-image: url("./images/login-image.jpg");
+    background-image: url("../../../../public/login-image.jpg");
     background-size: cover;
 
 
@@ -159,7 +159,7 @@ font-family: "Open Sans", sans-serif;
 
     /*Imagen fondo crear cuenta*/
     background-repeat: no-repeat;
-    background-image: url("./images/register-image.jpg");
+    background-image: url("../../../../public/register-image.jpg");
     background-size: cover;
 
 }

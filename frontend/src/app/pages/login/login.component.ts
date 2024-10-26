@@ -63,7 +63,14 @@ export class LoginComponent implements OnInit {
     if (this.email && this.password && this.email.trim() && this.password.trim()) {
       const login = new Login(this.email.trim(), this.password.trim())
       await this.registerService.registerUser(this.loginPath, login)
-      this.router.navigateByUrl("user");
+      if(this.registerService.jwt != "")
+      {
+        this.router.navigateByUrl("user")
+      }
+      else
+      {
+        alert("Los datos introducidos no son correctos")
+      }
     }
     else {
       alert("No puede haber campos vacíos")
@@ -74,7 +81,7 @@ export class LoginComponent implements OnInit {
     if (this.name && this.name.trim() && this.email && this.email.trim() && this.password && this.password.trim() && this.address && this.address.trim() && this.role && this.role.trim()) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.registerService.registerUser(this.signUpPath, user);
-      this.router.navigateByUrl("user");
+      this.loginUser()
     }
     else {
       alert("No puede haber campos vacíos")

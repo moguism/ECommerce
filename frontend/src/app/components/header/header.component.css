@@ -1,5 +1,5 @@
-/*div de parte principal*/
-#negro{
+/* Main section div */
+#black {
     height: 50px;
     background-color: black;
     width: 100%;
@@ -8,7 +8,7 @@
     justify-content: space-between;
     align-items: center;
 }
-.rojo{
+.red {
     height: 50px;
     width: 5%;
     background-color: #A82222;
@@ -17,41 +17,41 @@
     justify-content: center;
     cursor: pointer;
 }
-#icono-persona{
+#person-icon {
     color: white;
     margin: 0;
     padding: 0;
     font-size: 30px;
 }
-.texto{
+.text {
     font-weight: normal;
     transition: all 0.3s;
     cursor: pointer;
     color: white;
 }
-.texto:hover{
+.text:hover {
     margin-top: -5px;
 }
-.logo{
+.logo {
     width: 5%;
 }
-#menu{
+#menu {
     visibility: hidden;
     display: none;
     color: white;
 }
 
-/*Responsive*/
-@media (max-width: 900px){
-    .rojo{
+/* Responsive */
+@media (max-width: 900px) {
+    .red {
         width: 10%;
     }
-    .logo{
+    .logo {
         width: 9%;
     }
 }
-@media (max-width: 400px){
-    .rojo{
+@media (max-width: 400px) {
+    .red {
         width: 14%;
         height: 50px;
         background-color: #A82222;
@@ -60,29 +60,29 @@
         justify-content: center;
         cursor: pointer;
     }
-    .rojovisible{
+    .redVisible {
         display: none;
     }
-    .textovisible{
+    .textVisible {
         visibility: visible;
         transition: all 0s;
         font-weight: normal;
         color: white;
     }
-    .texto{
+    .text {
         visibility: hidden;
         display: none;
     }
-    #menu{
+    #menu {
         visibility: visible;
         display: flex;
         font-size: 25px;
     }
-    .logo{
+    .logo {
         visibility: hidden;
         display: none;
     }
-    #negrovisible{
+    #blackVisible {
         flex-direction: column;
         height: 300px;
         justify-content: space-around;
