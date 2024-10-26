@@ -1,1 +1,61 @@
-<p>login works!</p>
+<div class="body">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <div class="container">
+        <div class="container-form">
+            <form class="sign-in">
+                <h2>Iniciar Sesión</h2>
+                <span>Use su correo y contraseña</span>
+                <div class="container-input">
+                    <i class="fa-solid fa-envelope"></i> <!--Icono de sobre para el mail-->
+                    <input type="text" placeholder="Email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="container-input">
+                    <i class="fa-solid fa-lock"></i> <!--Icono de candado para la contraseña-->
+                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+                </div>
+            
+                <div class="remember">
+                    <input type="checkbox" name="" id=""> <p>Recuérdame</p>
+
+                </div>
+
+                <button class="button" id="loginButton" (click)="loginUser()">Iniciar sesión</button>
+            </form>
+        </div>
+    
+        <div class="container-form">
+            <form class="sign-up">
+                <h2>Registrarse</h2>
+                <span>Use su correo electrónico para registrarse</span>
+                <div class="container-input">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" placeholder="Nombre"  [(ngModel)]="name" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="container-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" placeholder="Email"  [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="container-input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+                </div>
+                <div class="container-input">
+                    <i class="fa-solid fa-compass"></i>
+                    <input type="text" placeholder="Dirección"  [(ngModel)]="address" [ngModelOptions]="{standalone: true}">
+                </div>
+                <button class="button" id="register_button" (click)="registerUser()">Registrarse</button>
+            </form>
+        </div>
+    
+        <div class="container-welcome">
+            <div class="welcome-sign-up welcome">
+                <h3>¿No tienes cuenta?</h3>
+                <button class="button" id="btn-sign-up">Registrarse</button>
+            </div>
+            <div class="welcome-sign-in welcome">
+                <h3>¿Ya tienes cuenta?</h3>
+                <button class="button" id="btn-sign-in">Iniciar Sesión</button>
+            </div>
+        </div>
+    </div>
+</div>    

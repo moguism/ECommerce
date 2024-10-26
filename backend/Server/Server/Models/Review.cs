@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Server.Models;
 
-public partial class Review
+public class Review
 {
     public int Id { get; set; }
 
-    public string Text { get; set; } = null!;
+    public string Text { get; set; }
 
     public int Score { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Review
 
     public int ProductId { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public Product Product { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public User User { get; set; }
 }

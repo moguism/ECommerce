@@ -1,1 +1,15 @@
-<p>header works!</p>
+<div id="black">
+    @if(buttonChange) {
+        <i (click)="showMenu()" id="menu" class="fa-solid fa-bars"></i>
+    } @else {
+        <i (click)="closeMenu()" id="menu" class="fa-solid fa-xmark"></i>
+    }
+    <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
+    <h2 class="text">Frutas</h2>
+    <h2 class="text">Verduras</h2>
+    <h2 class="text">Carnes</h2>
+    <h2 class="text">Sobre Nosotros</h2>
+    <div class="red" [routerLink]="'login'">
+        <i id="person-icon" class="fa-solid fa-user"></i>
+    </div>
+</div>

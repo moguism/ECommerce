@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
@@ -12,18 +14,83 @@ namespace Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly UserMapper _userMapper;
-        private readonly Repository _repository
+        private readonly UnitOfWork _unitOfWork;
+        FarminhouseContext _context;
 
-
-        [HttpGet]
-        public IEnumerable<UserDto> GetAllUsers()
+        public UserController(UnitOfWork unitOfWork, UserMapper userMapper, FarminhouseContext context)
         {
-            User[] users = _repository.GetAllAsync().Result;
-
+            _unitOfWork = unitOfWork;
+            _userMapper = userMapper;
+            _context = context;
         }
 
 
+
+        //Obtiene todos los usuarios sin contraseña
+        [HttpGet]
+        public async Task<IEnumerable<UserAfterLoginDto>> GetAllUsers()
+        {
+            //Obtener todos los usuarios
+            ICollection<User> users = await _unitOfWork.UserRepository.GetAllAsync();
+
+
+            //Paso a DTO
+            IEnumerable<UserAfterLoginDto> userDtos = _userMapper.ToDto(users);
+
+            return userDtos;
+        }
+
+        
+        [HttpGet("byemail")]
+        public async Task<UserAfterLoginDto> GetUserByEmail(string email)
+        {
+            User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+
+
+            //Paso a DTO
+            UserAfterLoginDto userDto = _userMapper.ToDto(user);
+
+            return userDto;
+        }
+        
+        /*
+
+        [HttpPost]
+        public async Task RegisterUserAsync 
+            (string name, string email,string password, string address)
+        {
+            
+            User usuario = new User();
+            usuario.Id = _context.Users.Count() == 0 ? 1 : _context.Users.Max(u => u.Id) + 1;
+            usuario.Name = name;
+            usuario.Email = email;
+            usuario.Password = password;
+            usuario.Address = address;
+            usuario.Role = "normal";
+            await _unitOfWork.UserRepository.InsertAsync(usuario);
+            await _unitOfWork.SaveAsync();
+        }
+
+        [HttpDelete("byid")]
+        public async Task DeleteById(int id)
+        {
+            User user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.SaveAsync();
+        }
+
+        
+        [HttpDelete("byemail")]
+        public async Task DeleteByEmail(string email)
+        {
+            User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+            _unitOfWork.UserRepository.Delete(user);
+            await _unitOfWork.SaveAsync();
+        }
+
+        
+
+        */
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Models;
 
-public partial class Order
+public class Order
 {
     public DateTime CreatedAt { get; set; }
 
@@ -13,9 +13,9 @@ public partial class Order
 
     public int UserId { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual User User { get; set; } = null!;
+    public User User { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public ICollection<Product> Products { get; set; } = new List<Product>();
 }
