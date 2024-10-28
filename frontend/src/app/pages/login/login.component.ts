@@ -26,6 +26,8 @@ export class LoginComponent implements OnInit {
   signUpPath = "Auth/signup";
   loginPath = "Auth/login";
 
+  rememberUser = false;
+
   async ngOnInit(): Promise<void> {
 
     if (this.registerService.jwt != "") {
@@ -63,7 +65,24 @@ export class LoginComponent implements OnInit {
     if (this.email && this.password && this.email.trim() && this.password.trim()) {
       const login = new Login(this.email.trim(), this.password.trim())
       await this.registerService.registerUser(this.loginPath, login)
-      this.router.navigateByUrl("user");
+      if(this.registerService.jwt != "")
+      {
+        if(this.rememberUser)
+        {
+          console.log("Recordando al usuario...")
+          localStorage.setItem("token", this.registerService.jwt)
+        }
+        else
+        {
+          console.log("No recordando al usuario...")
+          localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
+        }
+        this.router.navigateByUrl("user")
+      }
+      else
+      {
+        alert("Los datos introducidos no son correctos")
+      }
     }
     else {
       alert("No puede haber campos vacíos")
@@ -74,7 +93,7 @@ export class LoginComponent implements OnInit {
     if (this.name && this.name.trim() && this.email && this.email.trim() && this.password && this.password.trim() && this.address && this.address.trim() && this.role && this.role.trim()) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.registerService.registerUser(this.signUpPath, user);
-      this.router.navigateByUrl("user");
+      this.loginUser()
     }
     else {
       alert("No puede haber campos vacíos")

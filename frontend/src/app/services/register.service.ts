@@ -14,7 +14,6 @@ export class RegisterService {
   jwt : string = ""
 
   constructor(private http: HttpClient) { 
-    console.log("HOLA")
     let token : string | null = localStorage.getItem("token")
     if(token)
     {
@@ -65,7 +64,6 @@ export class RegisterService {
     if(result.data)
     {
       this.jwt = result.data.toString();
-      localStorage.setItem("token", this.jwt)
       console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
