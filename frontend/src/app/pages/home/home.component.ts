@@ -9,22 +9,24 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  private scrollPosition = 2960;
-  private reproducido = false;
-
   @HostListener('window:scroll', [])
   checkScroll()
   {
     const currentScroll = window.scrollY;
 
-    if(currentScroll >= this.scrollPosition && !this.reproducido)
+    if(currentScroll >= 100 && currentScroll <= 700)
     {
-      const animatedSection = document.getElementById("animated-section")
-      console.log(animatedSection == null)
       document.getElementById("animated-section")?.classList.add("animation-class");
-      this.reproducido = true
+    }
+    else if(currentScroll >= 2800 && currentScroll <= 3800)
+    {
+      document.getElementById("second-animated-section")?.classList.add("animation-class");
+    }
+    else if(currentScroll >= 5400 && currentScroll <= 6500)
+    {
+      document.getElementById("third-animated-section")?.classList.add("animation-class");
     }
 
-    //console.log(currentScroll)
+    console.log(currentScroll)
   }
 }

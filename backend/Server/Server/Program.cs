@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Services;
@@ -18,7 +19,7 @@ namespace Server
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
-
+            
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -32,8 +33,7 @@ namespace Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
-
-
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -43,6 +43,22 @@ namespace Server
             builder.Services.AddScoped<UserMapper>();
             builder.Services.AddScoped<PasswordService>();
 
+            // Permite CORS
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddCors(
+                    options =>
+                    options.AddDefaultPolicy(
+                        builder =>
+                        {
+                            builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                            ;
+                        })
+                    );
+            }
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,6 +66,9 @@ namespace Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+
+                // Permite CORS
+                app.UseCors();
             }
 
             app.UseHttpsRedirection();
@@ -58,6 +77,12 @@ namespace Server
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                FarminhouseContext dbContext = scope.ServiceProvider.GetService<FarminhouseContext>();
+                dbContext.Database.EnsureCreated();
+            }
 
             app.Run();
         }

@@ -1,16 +1,15 @@
-<div id="negro">
-    @if(cambiodeboton){
-        <i (click)="funcionmostramenu()" id="menu" class="fa-solid fa-bars"></i>
-    }@else{
-        <i (click)="funcioncerrarmenu()" id="menu" class="fa-solid fa-xmark"></i>
+<div id="black">
+    @if(buttonChange) {
+        <i (click)="showMenu()" id="menu" class="fa-solid fa-bars"></i>
+    } @else {
+        <i (click)="closeMenu()" id="menu" class="fa-solid fa-xmark"></i>
     }
-    <img class="logo" src="assets/imagenes/Logo.png" alt="Logo">
-    <h2 class="texto">Fruta</h2>
-    <h2 class="texto">Verdura</h2>
-    <h2 class="texto">Carne</h2>
-    <h2 class="texto">Sobre nosotros</h2>
-    <div class="rojo" [routerLink]="'login'">
-        <i id="icono-persona" class="fa-solid fa-user"></i>
+    <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
+    <h2 class="text">Frutas</h2>
+    <h2 class="text">Verduras</h2>
+    <h2 class="text">Carnes</h2>
+    <h2 class="text">Sobre Nosotros</h2>
+    <div class="red" [routerLink]="'login'">
+        <i id="person-icon" class="fa-solid fa-user"></i>
     </div>
 </div>
-

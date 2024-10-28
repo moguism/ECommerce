@@ -12,5 +12,10 @@ namespace Server.Services
             return Encoding.UTF8.GetString(inputHash);
         }
 
+        public bool IsPasswordCorrect(string realPassword, string receivedPassword)
+        {
+            receivedPassword = Hash(receivedPassword);
+            return receivedPassword.Equals(realPassword);
+        }
     }
 }

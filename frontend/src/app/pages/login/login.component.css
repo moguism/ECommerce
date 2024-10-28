@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Arbutus&family=Fjalla+One&family=Gravitas+One&family=Julius+Sans+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
 @import url('https://fonts.googleapis.com/css2?family=Arbutus&family=Fjalla+One&family=Gravitas+One&family=Julius+Sans+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet');
 
+
 /*
 
 
@@ -21,7 +22,7 @@ font-family: "Open Sans", sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Julius Sans One", sans-serif;
+    font-family: "Julius", sans-serif;
 
 }
 
@@ -39,7 +40,7 @@ font-family: "Open Sans", sans-serif;
     height: 500px;
     display: flex;
     position: relative;
-    background-color: white;
+    background-color: #F5F5DC;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 10px rgb(0, 0,0,0.3)
@@ -62,17 +63,6 @@ font-family: "Open Sans", sans-serif;
     margin-bottom: 20px;
     font-family: "Fjalla One", sans-serif;
 
-}
-.social-networks{
-    display: flex;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-.social-networks ion-icon{
-    border: 1px solid #C9CCCB;
-    border-radius: 6px;
-    padding: 8px;
-    cursor: pointer;
 }
 .container-form span{
     font-size: 12px;
@@ -110,8 +100,8 @@ font-family: "Open Sans", sans-serif;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;  
-    background-color: #3AB397;  
-    color: white;
+    background-color: #9ED4CB;  
+    color: black;
 }
 /*Animation form*/
 
@@ -155,7 +145,7 @@ font-family: "Open Sans", sans-serif;
 
     /*Imagen fondo login*/
     background-repeat: no-repeat;
-    background-image: url("./images/login-image.jpg");
+    background-image: url("../../../../public/login-image.jpg");
     background-size: cover;
 
 
@@ -169,7 +159,7 @@ font-family: "Open Sans", sans-serif;
 
     /*Imagen fondo crear cuenta*/
     background-repeat: no-repeat;
-    background-image: url("./images/register-image.jpg");
+    background-image: url("../../../../public/register-image.jpg");
     background-size: cover;
 
 }
@@ -191,13 +181,9 @@ font-family: "Open Sans", sans-serif;
     font-family: "Fjalla One", sans-serif;
 
 }
-.container-welcome p{
-    font-size: 14px;
-    text-align: center;
-}
+
 .container-welcome .button{
-    border: 2px solid white;
-    background-color: transparent;
+    background-color: #9ED4CB;
 }
 
 .container.toggle .welcome-sign-in{
@@ -206,3 +192,35 @@ font-family: "Open Sans", sans-serif;
 .container.toggle .welcome-sign-up{
     transform: translateX(-100%);
 }
+
+/* Responsive */
+
+@media (max-width: 800px){
+    .container{
+        width: 550px;
+    }
+    .container-input{
+        width: 100%;
+        height: 40px;
+    }
+    .remember{
+        width: 100%;
+    }
+    .container-welcome h3{
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 550px){
+    .container-welcome .welcome{
+        align-items: normal;
+        padding: 0 30px;
+    }
+}
+
+@media (max-width: 410px){
+    .container-welcome .welcome{
+        padding: 0 15px;
+    }
+}
+

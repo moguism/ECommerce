@@ -6,35 +6,96 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Para que esté centrada */
+    transform: translate(-50%, -50%);
     z-index: 999;
-    width: 200px;
-    height: 200px;
-    background-image: url("../../../../public/truck.png");
-    background-size: cover; /* Ajusta la imagen para cubrir todo el div */
-    background-position: center; /* Centra la imagen dentro del div */
+    width: 15vw;
+    height: 15vw;
+    max-width: 200px;
+    max-height: 200px;
+    background-image: url("../../../../public/truck.gif");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-@keyframes textAnimation
-{
-    from 
-    {
+@keyframes textAnimation {
+    from {
         transform: translate(-25vw, 0);
     }
-    to 
-    {
+
+    to {
         transform: translate(85vw, 0);
     }
 }
 
-#animated-section
-{
-    position: absolute;
-    left: -25vw;
+/* ES POSIBLE QUE HAYA QUE HACER LA ANIMACIÓN AÚN MÁS RESPONSIVA */
+@media (max-width: 920px) {
+    #animated-section {
+        left: -80vw;
+        font-size: 8px;
+    }
+
+    #second-animated-section {
+        left: -80vw;
+        font-size: 6px;
+    }
+
+    #third-animated-section {
+        left: -80vw;
+        font-size: 5px;
+    }
+
+    @keyframes textAnimation {
+        from {
+            transform: translate(-80vw, 0);
+        }
+
+        to {
+            transform: translate(1vw, 0);
+        }
+    }
 }
 
-.animation-class
-{
+#animated-section {
+    position: absolute;
+    left: -25vw;
+    top: 1000px;
+    background-color: rgba(0, 255, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+#second-animated-section {
+    position: absolute;
+    left: -25vw;
+    top: 3600px;
+    background-color: rgba(255, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+#third-animated-section {
+    position: absolute;
+    left: -25vw;
+    top: 6250px;
+    background-color: rgba(253, 221, 202, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+.animation-class {
     animation-name: textAnimation;
     animation-duration: 3s;
     animation-iteration-count: 1;
@@ -48,10 +109,37 @@
     align-items: center;
     width: 100%;
     min-height: 100vh;
-    background-image: url("../../../../public/prueba.png");
+    background-image: url("../../../../public/background.png");
     background-repeat: repeat-y;
     background-size: 100% auto;
     background-position: top center;
     text-align: center;
 }
 
+.btn-buy {
+    background-color: #4da8da;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.btn-buy:hover {
+    background-color: #3399cc;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-buy:active {
+    background-color: #2887b3;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+}
