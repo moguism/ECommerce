@@ -1,13 +1,14 @@
-/*div de parte principal*/
-#negro{
+/* Main section div */
+#black {
     height: 50px;
     background-color: black;
     width: 100%;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
-.rojo{
+.red {
     height: 50px;
     width: 5%;
     background-color: #A82222;
@@ -16,87 +17,79 @@
     justify-content: center;
     cursor: pointer;
 }
-#icono-persona{
+#person-icon {
     color: white;
     margin: 0;
     padding: 0;
     font-size: 30px;
 }
-.letras{
-    color: white;
-    padding: 20px;
-    font-size: 20px;
-}
-.camion{
-    height: 50px;
-    width: 50%;
-    display: flex;
-    align-items: center;
-    margin-left: 2%;
-}
-#icono-camion{
+.text {
+    font-weight: normal;
+    transition: all 0.3s;
+    cursor: pointer;
     color: white;
 }
-/*div de busqueda*/
-#busqueda{
-background-color:#F5F5DC;
-height: 100px;
-display: flex;
-align-items: center;
-justify-content: center;
-flex-direction: row;
-justify-content: space-between;
+.text:hover {
+    margin-top: -5px;
 }
-.logo{
-    width: 8%;
+.logo {
+    width: 5%;
 }
-#campo-busqueda{
-    position: relative;
-    display: flex;
-    flex-direction: row-reverse;
+#menu {
+    visibility: hidden;
+    display: none;
+    color: white;
 }
-.campo-search{
-    height: 20px;
-    width: 100%;
-}
-#lupa-busqueda{
-    position: absolute;
-    transform: translateY(25%);
-    right: 5px;
-    font-size: 20px;
-}
-#carrito{
-    font-size: 35px;
-    margin-right: 3%;
-    margin-left: 3%;
-}
-/*linea separatoria*/
-hr{
-    margin: 0;
-}
-/*div botones*/
-#botones{
-background-color: #F5F5DC;
-height: 50px;
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-around;
-}
-h2{
-font-weight: normal;
-}
-/*Responsive*/
-@media (max-width: 900px){
-    .rojo{
+
+/* Responsive */
+@media (max-width: 900px) {
+    .red {
         width: 10%;
     }
-    .logo{
-        width: 15%;
+    .logo {
+        width: 9%;
     }
 }
-@media (max-width: 400px){
-    .rojo{
+@media (max-width: 400px) {
+    .red {
         width: 14%;
+        height: 50px;
+        background-color: #A82222;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    .redVisible {
+        display: none;
+    }
+    .textVisible {
+        visibility: visible;
+        transition: all 0s;
+        font-weight: normal;
+        color: white;
+    }
+    .text {
+        visibility: hidden;
+        display: none;
+    }
+    #menu {
+        visibility: visible;
+        display: flex;
+        font-size: 25px;
+    }
+    .logo {
+        visibility: hidden;
+        display: none;
+    }
+    #blackVisible {
+        flex-direction: column;
+        height: 300px;
+        justify-content: space-around;
+        background-color: black;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 }

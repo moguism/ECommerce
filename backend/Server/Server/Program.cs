@@ -20,7 +20,6 @@ namespace Server
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
             
-
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
