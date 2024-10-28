@@ -4,12 +4,24 @@
     } @else {
         <i (click)="closeMenu()" id="menu" class="fa-solid fa-xmark"></i>
     }
+    
+    
     <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
     <h2 class="text">Frutas</h2>
     <h2 class="text">Verduras</h2>
     <h2 class="text">Carnes</h2>
     <h2 class="text">Sobre Nosotros</h2>
-    <div class="red" [routerLink]="'login'">
-        <i id="person-icon" class="fa-solid fa-user"></i>
-    </div>
+    @if(jwt != ""){ <!--Cambiar cuando termine a "==" -->
+        <div class="dropdown">
+            <i id="arrow" class="fa-solid fa-chevron-down"></i>
+            <ul class="dropdown-list">
+                <li class="dropdown-list-component">Cerrar sesión</li>
+            </ul>
+        </div>
+    }@else {
+        <div class="red" [routerLink]="'login'">
+            <i id="person-icon" class="fa-solid fa-user"></i>
+        </div>
+    }
+    
 </div>

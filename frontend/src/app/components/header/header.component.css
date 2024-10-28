@@ -41,6 +41,26 @@
     color: white;
 }
 
+.dropdown{
+    height: 50px;
+    width: 5%;
+    background-color: #99C080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#arrow{
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+}
+.dropdown-list{
+    display: none;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .red {
