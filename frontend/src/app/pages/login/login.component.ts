@@ -26,6 +26,8 @@ export class LoginComponent implements OnInit {
   signUpPath = "Auth/signup";
   loginPath = "Auth/login";
 
+  rememberUser = false;
+
   async ngOnInit(): Promise<void> {
 
     if (this.registerService.jwt != "") {
@@ -65,6 +67,16 @@ export class LoginComponent implements OnInit {
       await this.registerService.registerUser(this.loginPath, login)
       if(this.registerService.jwt != "")
       {
+        if(this.rememberUser)
+        {
+          console.log("Recordando al usuario...")
+          localStorage.setItem("token", this.registerService.jwt)
+        }
+        else
+        {
+          console.log("No recordando al usuario...")
+          localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
+        }
         this.router.navigateByUrl("user")
       }
       else

@@ -64,7 +64,6 @@ export class RegisterService {
     if(result.data)
     {
       this.jwt = result.data.toString();
-      localStorage.setItem("token", this.jwt)
       console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
