@@ -2,20 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { __values } from 'tslib';
 import { User } from '../../models/user';
 import { Login } from '../../models/login';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RegisterService } from '../../services/register.service';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  constructor(private registerService: RegisterService, private router: Router) {
+  constructor(private registerService: RegisterService, private router: Router, private formBuilder: FormBuilder) {
+    this.registerForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      address: ['', Validators.required]
+    })
+
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    })
   }
+
+  registerForm: FormGroup;
+  loginForm: FormGroup;
 
   name = "";
   email = "";
@@ -29,7 +44,6 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-
     if (this.registerService.jwt != "") {
       console.log(this.registerService.jwt)
       this.router.navigateByUrl("user")
@@ -52,7 +66,6 @@ export class LoginComponent implements OnInit {
     }
 
     if (sign_up_button != null) {
-
       sign_up_button.addEventListener("click", () => {
         if (container != null)
           container.classList.add("toggle");
@@ -61,8 +74,8 @@ export class LoginComponent implements OnInit {
   }
 
   async loginUser(): Promise<void> {
-    // Para que no sean nulos y eliminen los espacios en blanco
-    if (this.email && this.password && this.email.trim() && this.password.trim()) {
+    if(this.loginForm.valid)
+    {
       const login = new Login(this.email.trim(), this.password.trim())
       await this.registerService.registerUser(this.loginPath, login)
       if(this.registerService.jwt != "")
@@ -85,18 +98,18 @@ export class LoginComponent implements OnInit {
       }
     }
     else {
-      alert("No puede haber campos vacíos")
+      alert("Campos inválidos.")
     }
   }
 
   async registerUser(): Promise<void> {
-    if (this.name && this.name.trim() && this.email && this.email.trim() && this.password && this.password.trim() && this.address && this.address.trim() && this.role && this.role.trim()) {
+    if(this.registerForm.valid)
+    {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.registerService.registerUser(this.signUpPath, user);
-      this.loginUser()
     }
     else {
-      alert("No puede haber campos vacíos")
+      alert("Campos inválidos.")
     }
   }
 

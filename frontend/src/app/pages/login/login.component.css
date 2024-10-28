@@ -224,3 +224,7 @@ font-family: "Open Sans", sans-serif;
     }
 }
 
+.error 
+{
+    color: red;
+}
