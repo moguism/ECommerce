@@ -11,7 +11,12 @@ import { RouterModule } from '@angular/router';
 })
 export class HeaderComponent {
   protected buttonChange: boolean = true;
+  protected dropdownChange: boolean = true;
   jwt = localStorage.getItem("token");
+
+  showDropdown() {
+
+  }
   
   showMenu() {
     this.buttonChange = false;
