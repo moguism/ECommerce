@@ -1,0 +1,133 @@
+.main
+{
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+    background-position: top center;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.header {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    background-size: cover;
+}
+
+.content-box {
+    margin: 20px;
+    width: 50%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.image-box {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-box img {
+    width: 80%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+h2 {
+    color: #444;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.team {
+    text-align: center;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.team h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.team-member {
+    display: inline-block;
+    width: 200px;
+    margin: 20px;
+    text-align: center;
+    background-color: rgba(153, 192, 128, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.team-member img
+{
+    margin-top: 10px;
+}
+
+.team-member p
+{
+    color: black;
+}
+
+.team-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.prank
+{
+    display: flex;
+    justify-content: center;
+}
+
+.prank p
+{
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.test
+{
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .section
+    {
+        flex-direction: column;
+    }
+}

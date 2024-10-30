@@ -2,20 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { __values } from 'tslib';
 import { User } from '../../models/user';
 import { Login } from '../../models/login';
-import { FormsModule } from '@angular/forms';
-import { RegisterService } from '../../services/register.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  constructor(private registerService: RegisterService, private router: Router) {
+  constructor(private apiService: ApiService, private router: Router, private formBuilder: FormBuilder) {
+    this.registerForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', Validators.required],
+      password: ['', [Validators.required]],
+      address: ['', Validators.required]
+    })
+
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    })
   }
+
+  registerForm: FormGroup;
+  loginForm: FormGroup;
 
   name = "";
   email = "";
@@ -29,15 +44,13 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-
-    if (this.registerService.jwt != "") {
-      console.log(this.registerService.jwt)
+    if (this.apiService.jwt != "") {
+      console.log(this.apiService.jwt)
       this.router.navigateByUrl("user")
       return
     }
-    else
-    {
-      console.log(this.registerService.jwt)
+    else {
+      console.log(this.apiService.jwt)
     }
 
     let container = document.querySelector(".container")
@@ -52,7 +65,6 @@ export class LoginComponent implements OnInit {
     }
 
     if (sign_up_button != null) {
-
       sign_up_button.addEventListener("click", () => {
         if (container != null)
           container.classList.add("toggle");
@@ -61,53 +73,50 @@ export class LoginComponent implements OnInit {
   }
 
   async loginUser(): Promise<void> {
-    // Para que no sean nulos y eliminen los espacios en blanco
-    if (this.email && this.password && this.email.trim() && this.password.trim()) {
+    if (this.loginForm.valid) {
       const login = new Login(this.email.trim(), this.password.trim())
-      await this.registerService.registerUser(this.loginPath, login)
-      if(this.registerService.jwt != "")
-      {
-        if(this.rememberUser)
-        {
+      await this.apiService.post(this.loginPath, login)
+      if (this.apiService.jwt != "") {
+        if (this.rememberUser) {
           console.log("Recordando al usuario...")
-          localStorage.setItem("token", this.registerService.jwt)
+          localStorage.setItem("token", this.apiService.jwt)
         }
-        else
-        {
+        else {
           console.log("No recordando al usuario...")
           localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
         }
         this.router.navigateByUrl("user")
       }
-      else
-      {
+      else {
         alert("Los datos introducidos no son correctos")
       }
     }
     else {
-      alert("No puede haber campos vacíos")
+      alert("Campos inválidos.")
     }
   }
 
   async registerUser(): Promise<void> {
-    if (this.name && this.name.trim() && this.email && this.email.trim() && this.password && this.password.trim() && this.address && this.address.trim() && this.role && this.role.trim()) {
+    if (this.registerForm.valid) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
-      await this.registerService.registerUser(this.signUpPath, user);
-      this.loginUser()
+      await this.apiService.post(this.signUpPath, user);
+      if (this.apiService.jwt != "") {
+        this.router.navigateByUrl("user")
+      }
     }
     else {
-      alert("No puede haber campos vacíos")
+      alert("Campos inválidos.")
     }
   }
 
 
-    /*  
-    ngOnDestroy(): void {
-      // Cuando este componente se destruye hay que cancelar la suscripción.
-      // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
-  
-      this.routeParamMap$?.unsubscribe();
-    }
-    */
-  
+  /*  
+  ngOnDestroy(): void {
+    // Cuando este componente se destruye hay que cancelar la suscripción.
+    // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
+ 
+    this.routeParamMap$?.unsubscribe();
+  }
+  */
+
 }
