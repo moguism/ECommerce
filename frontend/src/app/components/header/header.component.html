@@ -11,22 +11,22 @@
         <h2 class="text">Frutas</h2>
         <h2 class="text">Verduras</h2>
         <h2 class="text">Carnes</h2>
-        <h2 class="text">Sobre Nosotros</h2>
+        <h2 class="text" (click)="goToAboutUs()">Sobre Nosotros</h2>
         @if(jwt != ""){
             <div class="dropdown">
                 @if(dropdownChange){
                     <i (click)="showDropdown()" id="arrow" class="fa-solid fa-chevron-down"></i>
                 }@else {
-                    <i (click)="closedropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
+                    <i (click)="closeDropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
                 <div class="dropdown-list">
                     <p>Bienvenido, {{ name }}</p>
-                    <p [routerLink]="'login'">Perfil</p>
+                    <p (click)="goToProfile()">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
             </div>
         }@else {
-            <div class="red" [routerLink]="'login'">
+            <div class="red" (click)="goToProfile()">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>
         }

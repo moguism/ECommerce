@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
+import { Member } from '../../models/member';
 
 @Component({
   selector: 'app-about-us',
@@ -11,6 +12,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 export class AboutUsComponent {
   readonly position : number = 1500
   setUp : boolean = false
+  readonly teamMembers : Member[] = []
 
   @HostListener('window:scroll', [])
   checkScroll() {
