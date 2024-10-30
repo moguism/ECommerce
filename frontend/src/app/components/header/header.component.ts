@@ -31,6 +31,21 @@ export class HeaderComponent {
     this.router.navigateByUrl("")
   }
 
+  goToAboutUs()
+  {
+    this.goToRoute("about-us")
+  }
+
+  goToProfile()
+  {
+    this.goToRoute("login")
+  }
+
+  goToRoute(route : string)
+  {
+    this.router.navigateByUrl(route)
+  }
+
   showDropdown() {
     this.dropdownChange = false;
     const dropdown = document.getElementsByClassName("dropdown");
@@ -39,7 +54,7 @@ export class HeaderComponent {
     dropdown[0].className = "view-dropdown";
   }
 
-  closedropdown(){
+  closeDropdown(){
     this.dropdownChange = true;
     const viewdropdown = document.getElementsByClassName("view-dropdown");
     const viewdropdownlist = document.getElementsByClassName("view-dropdown-list");
