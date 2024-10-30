@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { HeaderComponent } from '../../components/header/header.component';
+import { Product } from '../../models/product';
 
 @Component({
   selector: 'app-product-list',
@@ -10,5 +11,14 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent {
+
+
+
+
+  allPokemons: Product[] = [];
+  query: string = '';
+  filteredPokemons: Product[] = [];
+
+
 
 }
