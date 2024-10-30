@@ -1,6 +1,6 @@
 import { Component, HostListener, inject } from '@angular/core';
 import { LoginComponent } from '../../pages/login/login.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RegisterService } from '../../services/register.service';
 
 @Component({
@@ -16,18 +16,19 @@ export class HeaderComponent {
   protected jwt : string = "";
   protected name : string = "";
 
-  constructor(private registerService: RegisterService){
+
+  constructor(private registerService: RegisterService, private router: Router){
     this.jwt = this.registerService.jwt;
     if(this.jwt != "")
     {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
     }
-    
   }
 
   deleteToken()
   {
     this.registerService.deleteToken()
+    this.router.navigateByUrl("")
   }
 
   showDropdown() {
