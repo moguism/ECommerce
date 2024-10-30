@@ -9,10 +9,11 @@
         
         <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
       
-        <h2 class="text">Frutas</h2>
-        <h2 class="text">Verduras</h2>
-        <h2 class="text">Carnes</h2>
+        <h2 class="text"  (click)="goToRoute('product-list')">Frutas</h2>
+        <h2 class="text"  (click)="goToRoute('product-list')">Verduras</h2>
+        <h2 class="text"  (click)="goToRoute('product-list')">Carnes</h2>
         <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
+        
         @if(jwt != ""){
 
             <div class="dropdown">
