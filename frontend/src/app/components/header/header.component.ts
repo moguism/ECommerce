@@ -30,17 +30,7 @@ export class HeaderComponent {
     this.registerService.deleteToken()
     this.router.navigateByUrl("")
   }
-
-  goToAboutUs()
-  {
-    this.goToRoute("about-us")
-  }
-
-  goToProfile()
-  {
-    this.goToRoute("login")
-  }
-
+  
   goToRoute(route : string)
   {
     this.router.navigateByUrl(route)

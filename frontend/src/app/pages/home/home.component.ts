@@ -27,6 +27,6 @@ export class HomeComponent {
       document.getElementById("third-animated-section")?.classList.add("animation-class");
     }
 
-    console.log(currentScroll)
+    //console.log(currentScroll)
   }
 }

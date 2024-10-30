@@ -9,9 +9,8 @@
     height: 100%;
 }
 
-.img{
-    border: 5px solid red;
-    margin-left: 10%;
-    width: 40%;
-    height: 20%;
+
+.search-bar{
+    margin: 5% 0;
+    width: 100%;
 }
