@@ -2,48 +2,57 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <div class="container">
         <div class="container-form">
-            <form class="sign-in">
+            <form class="sign-in" [formGroup]="loginForm">
                 <h2>Iniciar Sesión</h2>
                 <span>Use su correo y contraseña</span>
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i> <!--Icono de sobre para el mail-->
-                    <input type="text" placeholder="Email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
+                    <input type="email" placeholder="Email" [(ngModel)]="email" formControlName="email">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i> <!--Icono de candado para la contraseña-->
-                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" formControlName="password">
                 </div>
             
                 <div class="remember">
                     <input type="checkbox" id="remember" (click)="rememberUser = !rememberUser"> <p>Recuérdame</p>
 
                 </div>
-
                 <button class="button" id="loginButton" (click)="loginUser()">Iniciar sesión</button>
+                <div *ngIf="loginForm.get('email')?.invalid" class="error">
+                    <div *ngIf="loginForm.get('email')?.hasError('email')">
+                      Tiene que ser un email.
+                    </div>
+                </div>
             </form>
         </div>
     
         <div class="container-form">
-            <form class="sign-up">
+            <form class="sign-up" [formGroup]="registerForm">
                 <h2>Registrarse</h2>
                 <span>Use su correo electrónico para registrarse</span>
                 <div class="container-input">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Nombre"  [(ngModel)]="name" [ngModelOptions]="{standalone: true}">
+                    <input type="text" placeholder="Nombre" [(ngModel)]="name" formControlName="name">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="text" placeholder="Email"  [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
+                    <input type="email" placeholder="Email" [(ngModel)]="email" formControlName="email">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+                    <input type="password" placeholder="Contraseña" [(ngModel)]="password" formControlName="password">
                 </div>
                 <div class="container-input">
                     <i class="fa-solid fa-compass"></i>
-                    <input type="text" placeholder="Dirección"  [(ngModel)]="address" [ngModelOptions]="{standalone: true}">
+                    <input type="text" placeholder="Dirección" [(ngModel)]="address" formControlName="address">
                 </div>
                 <button class="button" id="register_button" (click)="registerUser()">Registrarse</button>
+                <div *ngIf="registerForm.get('email')?.invalid" class="error">
+                    <div *ngIf="registerForm.get('email')?.hasError('email')">
+                      Tiene que ser un email.
+                    </div>
+                </div>
             </form>
         </div>
     
