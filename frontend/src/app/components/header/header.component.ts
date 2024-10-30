@@ -1,7 +1,7 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { LoginComponent } from '../../pages/login/login.component';
 import { Router, RouterModule } from '@angular/router';
-import { RegisterService } from '../../services/register.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +17,8 @@ export class HeaderComponent {
   protected name : string = "";
 
 
-  constructor(private registerService: RegisterService, private router: Router){
-    this.jwt = this.registerService.jwt;
+  constructor(private apiService: ApiService, private router: Router){
+    this.jwt = this.apiService.jwt;
     if(this.jwt != "")
     {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
@@ -27,10 +27,17 @@ export class HeaderComponent {
 
   deleteToken()
   {
-    this.registerService.deleteToken()
-    this.router.navigateByUrl("")
+    this.apiService.deleteToken()
+    if(this.router.url == "")
+    {
+      window.location.reload();
+    }
+    else 
+    {
+      this.router.navigateByUrl("")
+    }
   }
-  
+
   goToRoute(route : string)
   {
     this.router.navigateByUrl(route)

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { lastValueFrom, Observable } from 'rxjs';
@@ -7,30 +7,62 @@ import { Result } from '../models/result';
 @Injectable({
   providedIn: 'root'
 })
-export class RegisterService {
+export class ApiService {
 
   private BASE_URL = environment.apiUrl;
-  jwt : string = ""
+  jwt: string = ""
 
-  constructor(private http: HttpClient) { 
-    let token : string | null = localStorage.getItem("token")
-    if(token)
-    {
+  constructor(private http: HttpClient) {
+    let token: string | null = localStorage.getItem("token")
+    if (token) {
       this.jwt = token
     }
   }
 
-  deleteToken(){
+  deleteToken() {
     this.jwt = "";
     localStorage.removeItem("token");
   }
 
-  async registerUser<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
+  async get<T = void>(path: string, params: any = {}, responseType: any): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.get(url, {
+      params: new HttpParams({ fromObject: params }),
+      headers: this.getHeader(),
+      responseType: responseType,
+      observe: 'response',
+    });
+
+    return this.sendRequest<T>(request$);
+  }
+
+  async post<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.post(url, body, {
       headers: this.getHeader(null),
       observe: 'response',
       responseType: 'text'
+    });
+
+    return this.sendRequest<T>(request$);
+  }
+
+  async put<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.put(url, body, {
+      headers: this.getHeader(contentType),
+      observe: 'response'
+    });
+
+    return this.sendRequest<T>(request$);
+  }
+
+  async delete<T = void>(path: string, params: any = {}): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.delete(url, {
+      params: new HttpParams({ fromObject: params }),
+      headers: this.getHeader(),
+      observe: 'response'
     });
 
     return this.sendRequest<T>(request$);
@@ -55,7 +87,7 @@ export class RegisterService {
         result = result = Result.error(statusCode, response.statusText);
       }
 
-    } catch (exception : any) {
+    } catch (exception: any) {
       console.log("EXCEPCION: ", exception)
       if (exception instanceof HttpErrorResponse) {
         result = Result.error(exception.status, exception.statusText);
@@ -65,8 +97,7 @@ export class RegisterService {
     }
 
     console.log("RESULT: ", result)
-    if(result.data)
-    {
+    if (result.data) {
       this.jwt = result.data.toString();
       console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
