@@ -20,6 +20,7 @@
                     <i (click)="closedropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
                 <div class="dropdown-list">
+                    <p>Bienvenido, {{ name }}</p>
                     <p [routerLink]="'login'">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
