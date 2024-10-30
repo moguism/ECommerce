@@ -16,7 +16,7 @@ export class SearchBarComponent implements OnInit {
 
 
 
-  constructor(private searchBar : SearchBarComponent) {}
+  constructor() {}
 
 
   async ngOnInit(): Promise<void> {
@@ -25,18 +25,18 @@ export class SearchBarComponent implements OnInit {
   }
 
 
+  
   search() {
 
     const clearedQuery = this.query?.trim(); //Si la query es nula guarda null, sino, llama al trim y almacena lo que devuelva
 
-    // Si NO es nulo, vacío o solo tiene espacios en blanco
-    if (this.query && clearedQuery) {//trim quita espacios en blaco
+    if (this.query && clearedQuery) {
 
       this.filteredProducts = this.allProducts.filter(product => //filter ---> devuelve todos los elementos del array que coincidan con la busqueda
       product.name.includes(clearedQuery)); //devuelve todos los pokemons que en su nombre incluya la query
 
     } else {
-      //Si no se hace la busqueda, devuelve todos los pokemons
+      //Si no se hace la busqueda, devuelve todos los productos
       this.filteredProducts = this.allProducts; 
     }
   }
