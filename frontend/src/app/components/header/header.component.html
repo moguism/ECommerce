@@ -12,16 +12,17 @@
         <h2 class="text">Verduras</h2>
         <h2 class="text">Carnes</h2>
         <h2 class="text">Sobre Nosotros</h2>
-        @if(jwt == null){ <!--Cambiar cuando termine a "!=" -->
+        @if(jwt != ""){
             <div class="dropdown">
                 @if(dropdownChange){
-                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
+                    <i (click)="showDropdown()" id="arrow" class="fa-solid fa-chevron-down"></i>
                 }@else {
-                    <i id="arrow" class="fa-solid fa-chevron-up"></i>
+                    <i (click)="closedropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
-                <ul class="dropdown-list">
-                    <li class="dropdown-list-component">Cerrar sesión</li>
-                </ul>
+                <div class="dropdown-list">
+                    <p [routerLink]="'login'">Perfil</p>
+                    <p (click)="deleteToken()">Cerrar sesión</p>
+                </div>
             </div>
         }@else {
             <div class="red" [routerLink]="'login'">
