@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
+using Server.Models;
 using Server.Services;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -71,8 +72,6 @@ namespace Server
                 app.UseCors();
             }
 
-            app.UseStaticFiles();
-
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
@@ -83,8 +82,15 @@ namespace Server
             using (IServiceScope scope = app.Services.CreateScope())
             {
                 FarminhouseContext dbContext = scope.ServiceProvider.GetService<FarminhouseContext>();
-                dbContext.Database.EnsureCreated();
+                if (dbContext.Database.EnsureCreated())
+                {
+                    Product product = new Product { Name = "Miguel" };
+                    Product product1 = new Product { Name = "Atun" };
+                    dbContext.Products.Add(product);
+                    dbContext.SaveChanges();
+                }
             }
+
 
             app.Run();
         }
