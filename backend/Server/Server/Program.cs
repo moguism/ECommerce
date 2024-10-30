@@ -71,6 +71,8 @@ namespace Server
                 app.UseCors();
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
