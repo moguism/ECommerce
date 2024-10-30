@@ -7,7 +7,7 @@
 }
 
 .container {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     color: #333;
@@ -28,6 +28,7 @@
     display: flex;
     align-items: center;
     padding: 20px 0;
+    background-size: cover;
 }
 
 .content-box {
