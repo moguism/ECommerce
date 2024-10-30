@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SearchBarComponent } from '../components/search-bar/search-bar.component';
 import { Product } from '../models/product';
 import { Observable, forkJoin, lastValueFrom } from 'rxjs';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ProductService {
   readonly BASE_URL = 'https://localhost:7150/api/Product/' //URL desde donde se van a recoger todos los productos
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private apiService : ApiService) { }
 
 
   //Funcion para recoger todos los productos
@@ -21,7 +22,7 @@ export class ProductService {
     const requests: Observable<Object>[] = [];
 
 
-    requests.push(this.http.get(`${this.BASE_URL}`)); //almacena en el array anterior todos los productos
+    requests.push(this.apiService.get(`${this.BASE_URL}`)); //almacena en el array anterior todos los productos
 
     /*
      * Espera a que se terminen de hacer todas la peticiones a la URL
