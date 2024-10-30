@@ -5,8 +5,8 @@
             <img src="" alt="" class="header-image" />
         </div>
 
-        <div class="section" style="background-color: #f7f7f7;">
-            <div class="content-box" style="background-color: rgba(0, 255, 0, 0.5);">
+        <div class="section" style="background-color: #f7f7f7; background-image: url('assets/images/Finca_SierraMorena.jpg');">
+            <div class="content-box" style="background-color: rgb(21, 170, 230);">
                 <h2>Nuestra misión</h2>
                 <p>Queremos entregar productos frescos que estén a la altura del compromiso y la dedicación que tiene
                     con su familia.
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="section vision" style="background-color: #e7e7e7">
+        <div class="section vision" style="background-color: #e7e7e7; background-image: url('assets/images/granja-avicola_2.jpg');">
             <div class="image-box">
                 <img src="assets/aboutus_images/furgoneta.png" alt="Furgonetilla" />
             </div>
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="section values" style="background-color: #f7f7f7;">
+        <div class="section values" style="background-color: #f7f7f7; background-image: url('assets/images/franesunpesao.jpg');">
             <div class="content-box" style="background-color: #D9A72E;">
                 <h2>Nuestros valores</h2>
                 <p>La empresa se compromete a promover la sostenibilidad mediante prácticas que respeten el medio
@@ -82,18 +82,17 @@
         <div class="prank">
             <p>Ah, y estos somos nosotros:</p>
         </div>
-        <div style="height: 300px;"></div>
+        <div style="height: 100px;"></div>
 
-        @for (member of teamMembers; track $index)
-        {
-            <div class="team">
-                <h2>Farm in House - Productos Frescos y Ecológicos</h2>
+        <div class="team">
+            @for (member of teamMembers; track $index)
+            {
                 <div class="team-member">
                     <img [src]="member.image" alt="{{ member.name }}" class="team-photo" />
                     <h3>{{ member.name }}</h3>
                     <p>{{ member.description }}</p>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>
