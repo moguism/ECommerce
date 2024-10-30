@@ -1,6 +1,13 @@
+.main
+{
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+    background-position: top center;
+}
+
 .container {
     width: 90%;
-    max-width: 1200px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     color: #333;
@@ -23,18 +30,12 @@
     padding: 20px 0;
 }
 
-.mission,
-.values {
-    background-color: #f7f7f7;
-}
-
-.vision {
-    background-color: #e7e7e7;
-}
-
 .content-box {
+    margin: 20px;
     width: 50%;
-    padding: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .image-box {
@@ -64,6 +65,8 @@ p {
 .team {
     text-align: center;
     margin-top: 40px;
+    display: flex;
+    justify-content: center;
 }
 
 .team h2 {
@@ -76,6 +79,20 @@ p {
     width: 200px;
     margin: 20px;
     text-align: center;
+    background-color: rgba(153, 192, 128, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.team-member img
+{
+    margin-top: 10px;
+}
+
+.team-member p
+{
+    color: black;
 }
 
 .team-photo {
@@ -84,4 +101,32 @@ p {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
+}
+
+.prank
+{
+    display: flex;
+    justify-content: center;
+}
+
+.prank p
+{
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.test
+{
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .section
+    {
+        flex-direction: column;
+    }
 }

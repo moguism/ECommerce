@@ -8,23 +8,27 @@
         
         
         <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
-        <h2 class="text" [routerLink]="'product-view'">Frutas</h2>
-        <h2 class="text" [routerLink]="'product-view'" >Verduras</h2>
-        <h2 class="text" [routerLink]="'product-view'">Carnes</h2>
-        <h2 class="text" [routerLink]="'about-us'">Sobre Nosotros</h2>
-        @if(jwt == null){ <!--Cambiar cuando termine a "!=" -->
+      
+        <h2 class="text">Frutas</h2>
+        <h2 class="text">Verduras</h2>
+        <h2 class="text">Carnes</h2>
+        <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
+        @if(jwt != ""){
+
             <div class="dropdown">
                 @if(dropdownChange){
-                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
+                    <i (click)="showDropdown()" id="arrow" class="fa-solid fa-chevron-down"></i>
                 }@else {
-                    <i id="arrow" class="fa-solid fa-chevron-up"></i>
+                    <i (click)="closeDropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
-                <ul class="dropdown-list">
-                    <li class="dropdown-list-component">Cerrar sesión</li>
-                </ul>
+                <div class="dropdown-list">
+                    <p>Bienvenido, {{ name }}</p>
+                    <p (click)="goToRoute('login')">Perfil</p>
+                    <p (click)="deleteToken()">Cerrar sesión</p>
+                </div>
             </div>
         }@else {
-            <div class="red" [routerLink]="'login'">
+            <div class="red" (click)="goToRoute('login')">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>
         }

@@ -1,9 +1,8 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
-
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +18,11 @@ export class RegisterService {
     {
       this.jwt = token
     }
+  }
+
+  deleteToken(){
+    this.jwt = "";
+    localStorage.removeItem("token");
   }
 
   async registerUser<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
