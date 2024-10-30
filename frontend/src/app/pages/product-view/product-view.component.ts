@@ -12,8 +12,6 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 })
 export class ProductViewComponent {
 
-  constructor() {
-    
-  }
+  
 
 }
