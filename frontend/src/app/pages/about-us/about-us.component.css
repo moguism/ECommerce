@@ -1,0 +1,87 @@
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.header {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.mission,
+.values {
+    background-color: #f7f7f7;
+}
+
+.vision {
+    background-color: #e7e7e7;
+}
+
+.content-box {
+    width: 50%;
+    padding: 20px;
+}
+
+.image-box {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-box img {
+    width: 80%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+h2 {
+    color: #444;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.team {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.team h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.team-member {
+    display: inline-block;
+    width: 200px;
+    margin: 20px;
+    text-align: center;
+}
+
+.team-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
