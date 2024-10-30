@@ -17,6 +17,13 @@ namespace Server.Controllers
             _unitOfWork = unitOfWork;
             _context = context;
         }
+
+        [HttpGet]
+        public async Task<IEnumerable<Product>> GetAllProducts()
+        {
+            return await _unitOfWork.ProductRepository.GetAllAsync();
+        }
+
         [HttpGet("vegetables")]
         public async Task<IEnumerable<Product>> GetAllVegetables()
         {
