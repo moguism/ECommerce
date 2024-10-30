@@ -21,6 +21,11 @@ export class RegisterService {
     }
   }
 
+  deleteToken(){
+    this.jwt = "";
+    localStorage.removeItem("token");
+  }
+
   async registerUser<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.post(url, body, {

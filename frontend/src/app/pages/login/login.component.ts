@@ -19,13 +19,13 @@ export class LoginComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required]],
       address: ['', Validators.required]
     })
 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required]]
     })
   }
 
@@ -107,6 +107,10 @@ export class LoginComponent implements OnInit {
     {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.registerService.registerUser(this.signUpPath, user);
+      if(this.registerService.jwt != "")
+      {
+        this.router.navigateByUrl("user")
+      }
     }
     else {
       alert("Campos inválidos.")
