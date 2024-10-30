@@ -63,21 +63,26 @@ export class HeaderComponent {
   }
   
   showMenu() {
-    this.buttonChange = false;
-    const redElements = document.getElementsByClassName("red");
-    const textElements = document.querySelectorAll(".text");
-    const blackDiv = document.getElementById("black");
-    
-    for (let i = 0; i < redElements.length; i++) {
-      redElements[i].className = "redVisible";
-    }
-    
-    textElements.forEach((text) => {
-      text.className = "textVisible";
-    });
-    
-    if (blackDiv) {
-      blackDiv.id = "blackVisible";
+    if (this.dropdownChange) {
+      this.buttonChange = false;
+      const redElements = document.getElementsByClassName("red");
+      const textElements = document.querySelectorAll(".text");
+      const blackDiv = document.getElementById("black");
+      const dropdown = document.getElementsByClassName("dropdown");
+      
+      dropdown[0].className = "undisplay-dropdown";
+
+      for (let i = 0; i < redElements.length; i++) {
+        redElements[i].className = "redVisible";
+      }
+
+      textElements.forEach((text) => {
+        text.className = "textVisible";
+      });
+
+      if (blackDiv) {
+        blackDiv.id = "blackVisible";
+      }
     }
   }
 
@@ -86,7 +91,10 @@ export class HeaderComponent {
     const redVisibleElements = document.getElementsByClassName("redVisible");
     const textVisibleElements = document.querySelectorAll(".textVisible");
     const blackVisibleDiv = document.getElementById("blackVisible");
+    const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
     const screenWidth = window.innerWidth;
+
+    undisplaydropdown[0].className = "dropdown";
 
     if (screenWidth > 400) {
       for (let i = 0; i < redVisibleElements.length; i++) {
