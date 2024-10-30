@@ -11,7 +11,7 @@
         <h2 class="text">Frutas</h2>
         <h2 class="text">Verduras</h2>
         <h2 class="text">Carnes</h2>
-        <h2 class="text">Sobre Nosotros</h2>
+        <h2 class="text" [routerLink]="'about-us'">Sobre Nosotros</h2>
         @if(jwt == null){ <!--Cambiar cuando termine a "!=" -->
             <div class="dropdown">
                 @if(dropdownChange){
