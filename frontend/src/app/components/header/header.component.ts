@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { LoginComponent } from '../../pages/login/login.component';
 import { RouterModule } from '@angular/router';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +13,31 @@ import { RouterModule } from '@angular/router';
 export class HeaderComponent {
   protected buttonChange: boolean = true;
   protected dropdownChange: boolean = true;
-  jwt = localStorage.getItem("token");
+  protected jwt : string = "";
+
+  constructor(private registerService: RegisterService){
+    this.jwt = this.registerService.jwt
+  }
+
+  deleteToken()
+  {
+    this.registerService.deleteToken()
+  }
 
   showDropdown() {
+    this.dropdownChange = false;
+    const dropdown = document.getElementsByClassName("dropdown");
+    const dropdownlist = document.getElementsByClassName("dropdown-list");
+    dropdownlist[0].className = "view-dropdown-list";
+    dropdown[0].className = "view-dropdown";
+  }
 
+  closedropdown(){
+    this.dropdownChange = true;
+    const viewdropdown = document.getElementsByClassName("view-dropdown");
+    const viewdropdownlist = document.getElementsByClassName("view-dropdown-list");
+    viewdropdownlist[0].className = "dropdown-list";
+    viewdropdown[0].className = "dropdown";
   }
   
   showMenu() {
