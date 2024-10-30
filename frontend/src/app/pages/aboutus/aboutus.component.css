@@ -4,107 +4,70 @@
     flex-direction: row;
     justify-content: center;
     width: 100%;
-  }
-  
-  .sobre-nosotros .div {
-    background-color: #ffffff;
-    overflow: hidden;
-    width: 1920px;
-    height: 4952px;
-    position: relative;
-  }
-  
-  .sobre-nosotros .overlap {
+}
+
+.sobre-nosotros .overlap {
     position: absolute;
     width: 2190px;
     height: 1021px;
-    top: 0;
+    top: -470px;
     left: -118px;
-  }
-  
-  .sobre-nosotros .ellipse {
-    position: absolute;
-    width: 393px;
-    height: 84px;
-    top: 812px;
-    left: 0;
-    background-color: #d94e4a;
-    border-radius: 196.5px / 42px;
-  }
-  
-  .sobre-nosotros .ellipse-2 {
-    position: absolute;
-    width: 730px;
-    height: 418px;
-    top: 562px;
-    left: 273px;
-    background-color: #d94e4a;
-    border-radius: 365px / 209px;
-  }
-  
-  .sobre-nosotros .ellipse-3 {
-    position: absolute;
-    width: 1339px;
-    height: 418px;
-    top: 603px;
-    left: 851px;
-    background-color: #d94e4a;
-    border-radius: 669.5px / 209px;
-  }
-  
-  .sobre-nosotros .farm-horizontal {
+}
+
+
+.sobre-nosotros .farm-horizontal {
     position: absolute;
     width: 1919px;
     height: 317px;
     top: 537px;
     left: 119px;
     object-fit: cover;
-  }
-  
-  
-  .sobre-nosotros .overlap-group {
+}
+
+
+.sobre-nosotros .overlap-group {
     position: absolute;
     width: 1920px;
     height: 149px;
     top: 0;
     left: 0;
     background-color: #000000;
-  }
-  
-  .sobre-nosotros .overlap-2 {
+}
+
+.sobre-nosotros .overlap-2 {
     position: absolute;
     width: 295px;
     height: 149px;
     top: 0;
     left: 1625px;
-  }
-  
-  .sobre-nosotros .rectangle {
+}
+
+.sobre-nosotros .rectangle {
     position: absolute;
     width: 295px;
     height: 149px;
     top: 0;
     left: 0;
     background-color: #a72121;
-  }
-  
-  .sobre-nosotros .inicio-sesion {
+}
+
+.sobre-nosotros .inicio-sesion {
     position: absolute;
     width: 83px;
     height: 79px;
     top: 35px;
     left: 121px;
-  }
-  
-  .sobre-nosotros .overlap-group-2 {
+}
+
+.sobre-nosotros .overlap-group-2 {
     position: absolute;
     width: 754px;
     height: 90px;
     top: 30px;
     left: 36px;
-  }
-  
-  .sobre-nosotros .env-o-gratuito-a {
+}
+
+.sobre-nosotros .env-o-gratuito-a {
     position: absolute;
     top: 17px;
     left: 108px;
@@ -114,27 +77,27 @@
     font-size: 44.8px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .camion-blanco {
+}
+
+.sobre-nosotros .camion-blanco {
     position: absolute;
     width: 109px;
     height: 90px;
     top: 0;
     left: 0;
     object-fit: cover;
-  }
-  
-  .sobre-nosotros .logo {
+}
+
+.sobre-nosotros .logo {
     position: absolute;
     width: 213px;
     height: 127px;
     top: 199px;
     left: 36px;
     object-fit: cover;
-  }
-  
-  .sobre-nosotros .overlap-3 {
+}
+
+.sobre-nosotros .overlap-3 {
     position: absolute;
     width: 1223px;
     height: 67px;
@@ -143,9 +106,9 @@
     background-color: #ffffff;
     border: 0.93px solid;
     border-color: #000000;
-  }
-  
-  .sobre-nosotros .text-wrapper {
+}
+
+.sobre-nosotros .text-wrapper {
     position: absolute;
     top: 6px;
     left: 30px;
@@ -155,35 +118,35 @@
     font-size: 37.3px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .buscar {
+}
+
+.sobre-nosotros .buscar {
     position: absolute;
     width: 82px;
     height: 61px;
     top: 3px;
     left: 1107px;
     object-fit: cover;
-  }
-  
-  .sobre-nosotros .overlap-4 {
+}
+
+.sobre-nosotros .overlap-4 {
     position: absolute;
     width: 130px;
     height: 120px;
     top: 199px;
     left: 1723px;
-  }
-  
-  .sobre-nosotros .cesta {
+}
+
+.sobre-nosotros .cesta {
     position: absolute;
     width: 130px;
     height: 120px;
     top: 0;
     left: 0;
     object-fit: cover;
-  }
-  
-  .sobre-nosotros .ellipse-4 {
+}
+
+.sobre-nosotros .ellipse-4 {
     position: absolute;
     width: 48px;
     height: 44px;
@@ -191,9 +154,9 @@
     left: 61px;
     background-color: #a82222;
     border-radius: 24.24px / 21.91px;
-  }
-  
-  .sobre-nosotros .text-wrapper-2 {
+}
+
+.sobre-nosotros .text-wrapper-2 {
     position: absolute;
     top: 2px;
     left: 75px;
@@ -203,9 +166,9 @@
     font-size: 33.6px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-3 {
+}
+
+.sobre-nosotros .text-wrapper-3 {
     position: absolute;
     width: 234px;
     top: 454px;
@@ -216,9 +179,9 @@
     font-size: 44.8px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-4 {
+}
+
+.sobre-nosotros .text-wrapper-4 {
     position: absolute;
     width: 234px;
     top: 454px;
@@ -229,9 +192,9 @@
     font-size: 44.8px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-5 {
+}
+
+.sobre-nosotros .text-wrapper-5 {
     position: absolute;
     width: 234px;
     top: 454px;
@@ -242,9 +205,9 @@
     font-size: 44.8px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-6 {
+}
+
+.sobre-nosotros .text-wrapper-6 {
     position: absolute;
     width: 350px;
     top: 454px;
@@ -255,25 +218,25 @@
     font-size: 44.8px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .line {
+}
+
+.sobre-nosotros .line {
     position: absolute;
     width: 1920px;
     height: 5px;
     top: 414px;
     left: 0;
-  }
-  
-  .sobre-nosotros .nuestra-misin {
+}
+
+.sobre-nosotros .nuestra-misin {
     position: absolute;
     width: 1672px;
     height: 614px;
     top: 1120px;
     left: 116px;
-  }
-  
-  .sobre-nosotros .nuestra-visin {
+}
+
+.sobre-nosotros .nuestra-visin {
     position: absolute;
     width: 1921px;
     height: 809px;
@@ -283,41 +246,41 @@
     overflow: hidden;
     border: 1.5px solid;
     border-color: #000000;
-  }
-  
-  .sobre-nosotros .overlap-5 {
+}
+
+.sobre-nosotros .overlap-5 {
     position: relative;
     width: 3078px;
     height: 1015px;
     top: 25px;
     left: -383px;
-  }
-  
-  .sobre-nosotros .furgoneta {
+}
+
+.sobre-nosotros .furgoneta {
     position: absolute;
     width: 698px;
     height: 614px;
     top: 0;
     left: 484px;
-  }
-  
-  .sobre-nosotros .overlap-group-wrapper {
+}
+
+.sobre-nosotros .overlap-group-wrapper {
     position: absolute;
     width: 791px;
     height: 578px;
     top: 106px;
     left: 1464px;
-  }
-  
-  .sobre-nosotros .overlap-group-3 {
+}
+
+.sobre-nosotros .overlap-group-3 {
     position: relative;
     width: 787px;
     height: 578px;
     background-color: #d9a72e;
     border-radius: 50px;
-  }
-  
-  .sobre-nosotros .text-wrapper-7 {
+}
+
+.sobre-nosotros .text-wrapper-7 {
     position: absolute;
     top: 57px;
     left: 93px;
@@ -327,9 +290,9 @@
     font-size: 64px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .queremos-recompensar {
+}
+
+.sobre-nosotros .queremos-recompensar {
     position: absolute;
     width: 666px;
     top: 156px;
@@ -340,9 +303,9 @@
     font-size: 32px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .ellipse-5 {
+}
+
+.sobre-nosotros .ellipse-5 {
     position: absolute;
     width: 924px;
     height: 527px;
@@ -350,9 +313,9 @@
     left: 0;
     background-color: #6b8e23;
     border-radius: 462px / 263.5px;
-  }
-  
-  .sobre-nosotros .ellipse-6 {
+}
+
+.sobre-nosotros .ellipse-6 {
     position: absolute;
     width: 1815px;
     height: 310px;
@@ -360,9 +323,9 @@
     left: 436px;
     background-color: #6b8e23;
     border-radius: 907.5px / 155px;
-  }
-  
-  .sobre-nosotros .ellipse-7 {
+}
+
+.sobre-nosotros .ellipse-7 {
     position: absolute;
     width: 1033px;
     height: 363px;
@@ -370,33 +333,33 @@
     left: 2045px;
     background-color: #6b8e23;
     border-radius: 516.5px / 181.5px;
-  }
-  
-  .sobre-nosotros .tomates {
+}
+
+.sobre-nosotros .tomates {
     position: absolute;
     width: 698px;
     height: 614px;
     top: 2810px;
     left: 1081px;
-  }
-  
-  .sobre-nosotros .nuestros-valores {
+}
+
+.sobre-nosotros .nuestros-valores {
     position: absolute;
     width: 791px;
     height: 578px;
     top: 2822px;
     left: 101px;
-  }
-  
-  .sobre-nosotros .overlap-6 {
+}
+
+.sobre-nosotros .overlap-6 {
     position: relative;
     width: 787px;
     height: 578px;
     background-color: #4f7942;
     border-radius: 50px;
-  }
-  
-  .sobre-nosotros .la-empresa-se {
+}
+
+.sobre-nosotros .la-empresa-se {
     position: absolute;
     width: 666px;
     top: 180px;
@@ -407,9 +370,9 @@
     font-size: 32px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-8 {
+}
+
+.sobre-nosotros .text-wrapper-8 {
     position: absolute;
     top: 72px;
     left: 86px;
@@ -419,9 +382,9 @@
     font-size: 64px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .p {
+}
+
+.sobre-nosotros .p {
     position: absolute;
     top: 3676px;
     left: 160px;
@@ -432,17 +395,17 @@
     font-size: 70px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .integrantes {
+}
+
+.sobre-nosotros .integrantes {
     position: absolute;
     width: 854px;
     height: 468px;
     top: 3915px;
     left: 65px;
-  }
-  
-  .sobre-nosotros .text-wrapper-9 {
+}
+
+.sobre-nosotros .text-wrapper-9 {
     position: absolute;
     width: 354px;
     top: 117px;
@@ -454,9 +417,9 @@
     font-size: 32px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .text-wrapper-10 {
+}
+
+.sobre-nosotros .text-wrapper-10 {
     position: absolute;
     width: 316px;
     top: 0;
@@ -468,37 +431,36 @@
     font-size: 48px;
     letter-spacing: 0;
     line-height: normal;
-  }
-  
-  .sobre-nosotros .img {
+}
+
+.sobre-nosotros .img {
     position: absolute;
     width: 456px;
     height: 452px;
     top: 0;
     left: 0;
-  }
-  
-  .sobre-nosotros .integrantes-2 {
+}
+
+.sobre-nosotros .integrantes-2 {
     height: 468px;
     top: 3915px;
     left: 1005px;
     position: absolute;
     width: 854px;
-  }
-  
-  .sobre-nosotros .integrantes-3 {
+}
+
+.sobre-nosotros .integrantes-3 {
     height: 452px;
     top: 4484px;
     left: 65px;
     position: absolute;
     width: 854px;
-  }
-  
-  .sobre-nosotros .integrantes-4 {
+}
+
+.sobre-nosotros .integrantes-4 {
     height: 452px;
     top: 4484px;
     left: 1005px;
     position: absolute;
     width: 854px;
-  }
-  
+}
