@@ -13,11 +13,9 @@ import { Product } from '../../models/product';
 export class ProductListComponent {
 
 
-
-
-  allPokemons: Product[] = [];
+  allProducts: Product[] = [];
   query: string = '';
-  filteredPokemons: Product[] = [];
+  filteredProducts: Product[] = [];
 
 
 
