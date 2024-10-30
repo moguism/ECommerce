@@ -1,0 +1,32 @@
+* {
+    box-sizing: border-box;
+}
+
+.search-container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
+}
+
+
+.search-container input {
+    width: 500px; 
+    font-size: 17px;
+}
+
+
+.search-container button {
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    background: none;
+
+}
+
+.search-container button:hover {
+    background: #ccc;
+
+}
