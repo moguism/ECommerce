@@ -14,9 +14,15 @@ export class HeaderComponent {
   protected buttonChange: boolean = true;
   protected dropdownChange: boolean = true;
   protected jwt : string = "";
+  protected name : string = "";
+
 
   constructor(private registerService: RegisterService, private router: Router){
-    this.jwt = this.registerService.jwt
+    this.jwt = this.registerService.jwt;
+    if(this.jwt != "")
+    {
+      this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
+    }
   }
 
   deleteToken()
