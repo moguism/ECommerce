@@ -21,7 +21,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts(QueryDto query)
+        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery]QueryDto query)
         {
             IEnumerable<Product> products;
 
