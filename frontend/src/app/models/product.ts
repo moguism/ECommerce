@@ -1,3 +1,7 @@
+import { Category } from "./category";
+import { Order } from "./order";
+import { Review } from "./review";
+
 export interface Product {
     id: number,
     name: string,
@@ -5,6 +9,9 @@ export interface Product {
     price: number,
     stock: number,
     average: number,
+    image_url: string,
     categoryId: number,
-    image_url : string
+    category: Category,
+    reviews: Review,
+    orders: Order
 }
