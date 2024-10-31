@@ -67,7 +67,9 @@ export class HeaderComponent {
       const blackDiv = document.getElementById("black");
       const dropdown = document.getElementsByClassName("dropdown");
       
-      dropdown[0].className = "undisplay-dropdown";
+      if(this.jwt != ""){
+        dropdown[0].className = "undisplay-dropdown";
+      }
 
       for (let i = 0; i < redElements.length; i++) {
         redElements[i].className = "redVisible";
@@ -91,7 +93,9 @@ export class HeaderComponent {
     const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
     const screenWidth = window.innerWidth;
 
-    undisplaydropdown[0].className = "dropdown";
+    if(this.jwt != ""){
+      undisplaydropdown[0].className = "dropdown";
+    }
 
     if (screenWidth > 400) {
       for (let i = 0; i < redVisibleElements.length; i++) {
