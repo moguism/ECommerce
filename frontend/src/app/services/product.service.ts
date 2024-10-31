@@ -1,12 +1,37 @@
 import { Injectable } from '@angular/core';
+import { Product } from '../models/product';
+import { ApiService } from './api.service';
+import { Result } from '../models/result';
+import { forkJoin, lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  readonly BASE_URL = 'https://pokeapi.co/api/v2/' //URL desde donde se van a recoger los datos de los pokemoms
+
+  constructor(private api : ApiService) { }
 
 
-  constructor() { }
+  async getProductByName(name: string): Promise<Result<Product[]>>
+  {
+    return this.api.get<Product[]>("Search", name, 'json')
+  }
+  
+  async getAllProducts(): Promise<Result<Product[]>> {
+    return this.api.get<Product[]>("Product",{}, 'json');
+  }
+
+  async getAllVegetables(): Promise<Result<Product[]>> {
+    return this.api.get<Product[]>("Product/vegetables",null,'json');
+  }
+
+  async getAllFruits(): Promise<Result<Product[]>> {
+    return this.api.get<Product[]>("Product/fruits",null,'json');
+  }
+
+  async getAllMeats(): Promise<Result<Product[]>> {
+    return this.api.get<Product[]>("Product/meat",null,'json');
+  }
+
 }

@@ -17,6 +17,8 @@ public class Product
 
     public double Average { get; set; }
 
+    public string image {  get; set; }
+
     public int CategoryId { get; set; }
 
     public Category Category { get; set; }
