@@ -2,23 +2,34 @@
 using System.Text;
 using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
+using Server.Models;
 
 namespace Server.Services;
 
 public class SmartSearchService
 {
     private const double THRESHOLD = 0.75;
-    private static readonly string[] ITEMS = [
-        "Manzana",
-        "Apio",
-        "Carne"
-    ];
+    private readonly UnitOfWork _unitOfWork;
+
+    private static List<string> items = new List<string>();
 
     private readonly INormalizedStringSimilarity _stringSimilarityComparer;
 
-    public SmartSearchService()
+    public SmartSearchService(UnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
         _stringSimilarityComparer = new JaroWinkler();
+        AsignProductNames();
+    }
+
+    private async void AsignProductNames()
+    {
+        ICollection<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+        products.ToArray();
+        foreach(Product product in products)
+        {
+            items.Add(product.Name);
+        }
     }
 
     public IEnumerable<string> Search(string query)
@@ -28,7 +39,7 @@ public class SmartSearchService
         // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
         if (string.IsNullOrWhiteSpace(query))
         {
-            result = ITEMS;
+            result = items;
         }
         // En caso contrario, realizamos la búsqueda
         else
@@ -38,7 +49,7 @@ public class SmartSearchService
             // Aquí guardaremos los items que coincidan
             List<string> matches = new List<string>();
 
-            foreach (string item in ITEMS)
+            foreach (string item in items)
             {
                 // Limpiamos el item y lo separamos por espacios
                 string[] itemKeys = GetKeys(ClearText(item));
