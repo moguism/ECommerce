@@ -10,36 +10,40 @@ namespace Server.Controllers
     public class ProductController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly ProductMapper _productMapper;
         FarminhouseContext _context;
 
-        public ProductController(UnitOfWork unitOfWork, FarminhouseContext context)
+        public ProductController(UnitOfWork unitOfWork, FarminhouseContext context,ProductMapper productmapper)
         {
             _unitOfWork = unitOfWork;
             _context = context;
+            _productMapper = productmapper;
         }
 
         [HttpGet]
         public async Task<IEnumerable<Product>> GetAllProducts()
         {
-            return await _unitOfWork.ProductRepository.GetAllAsync();
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+            return _productMapper.AddCorrectPath(products);
         }
 
         [HttpGet("vegetables")]
         public async Task<IEnumerable<Product>> GetAllVegetables()
         {
-            return await _unitOfWork.ProductRepository.GetAllProductsByCategory("vegetables");
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllProductsByCategory("vegetables");
+            return _productMapper.AddCorrectPath(products);
         }
         [HttpGet("fruits")]
         public async Task<IEnumerable<Product>> GetAllFruits()
         {
-            return await _unitOfWork.ProductRepository.GetAllProductsByCategory("fruits");
-
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllProductsByCategory("fruits");
+            return _productMapper.AddCorrectPath(products);
         }
         [HttpGet("meat")]
         public async Task<IEnumerable<Product>> GetAllMeat()
         {
-            return await _unitOfWork.ProductRepository.GetAllProductsByCategory("meat");
-
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllProductsByCategory("meat");
+            return _productMapper.AddCorrectPath(products);
         }
     }
 }
