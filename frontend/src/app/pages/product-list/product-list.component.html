@@ -3,7 +3,7 @@
 </div>
 
 <div class="search-bar">
-    <app-search-bar></app-search-bar>
+    <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
 </div>
 
 <div  class="body">
