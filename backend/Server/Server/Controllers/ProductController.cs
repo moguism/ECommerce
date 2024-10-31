@@ -40,8 +40,6 @@ namespace Server.Controllers
                         ? products.OrderBy(product => product.Name)
                         : products.OrderByDescending(product => product.Name); 
                     break;
-
-
             }
 
             return _productMapper.AddCorrectPath(products);

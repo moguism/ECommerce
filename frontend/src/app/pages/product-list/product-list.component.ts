@@ -26,15 +26,15 @@ export class ProductListComponent implements OnInit, OnDestroy {
         switch(category)
         {
           case "frutas":
-            const fruits = await this.productService.getAllFruits();
+            const fruits = await this.productService.getAllProducts(0);
             this.allProducts = fruits.data
             break;
           case "verduras":
-            const vegatables = await this.productService.getAllVegetables();
+            const vegatables = await this.productService.getAllProducts(1);
             this.allProducts = vegatables.data
             break;
           case "carnes":
-            const meats = await this.productService.getAllMeats();
+            const meats = await this.productService.getAllProducts(2);
             this.allProducts = meats.data
             break;
         }

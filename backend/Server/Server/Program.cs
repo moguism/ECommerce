@@ -45,7 +45,7 @@ namespace Server
             builder.Services.AddScoped<UserMapper>();
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
-
+            builder.Services.AddScoped<SmartSearchService>();
 
             // Permite CORS
             if (builder.Environment.IsDevelopment())
