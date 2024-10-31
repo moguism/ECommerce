@@ -43,6 +43,14 @@ export class HeaderComponent {
     this.router.navigateByUrl(route)
   }
 
+  showAndClose(){
+    if(this.dropdownChange){
+      this.showDropdown();
+    }else{
+      this.closeDropdown();
+    }
+  }
+
   showDropdown() {
     this.dropdownChange = false;
     const dropdown = document.getElementsByClassName("dropdown");

@@ -13,17 +13,17 @@
         <h2 class="text"  (click)="goToRoute('product-list/verduras')">Verduras</h2>
         <h2 class="text"  (click)="goToRoute('product-list/carnes')">Carnes</h2>
         <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
-        
-        @if(jwt != ""){
 
-            <div class="dropdown">
+        @if(jwt != ""){
+            <h2 class="text-welcome">Bienvenido, {{ name }}</h2>
+            <div class="dropdown" (click)="showAndClose()">
                 @if(dropdownChange){
-                    <i (click)="showDropdown()" id="arrow" class="fa-solid fa-chevron-down"></i>
+                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
                 }@else {
-                    <i (click)="closeDropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
+                    <i id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
                 <div class="dropdown-list">
-                    <p>Bienvenido, {{ name }}</p>
+                    
                     <p (click)="goToRoute('login')">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
