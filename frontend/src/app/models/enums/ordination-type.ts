@@ -1,2 +1,4 @@
-export interface OrdinationType {
+export enum OrdinationType {
+    NAME,
+    PRICE
 }
