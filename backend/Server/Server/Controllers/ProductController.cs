@@ -33,20 +33,21 @@ namespace Server.Controllers
 
             switch (query.OrdinationType)
             {
-                case OrdinationType.PRICE:
-                    products = query.OrdinationDirection.Equals("ASC")
-                        ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); break;
                 case OrdinationType.NAME:
                     products = query.OrdinationDirection.Equals("ASC")
                         ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); 
+                        : products.OrderByDescending(product => product.Name)
+                        .ToArray();
+                    break;
+                case OrdinationType.PRICE:
+                    products = query.OrdinationDirection.Equals("ASC")
+                        ? products.OrderBy(product => product.Price)
+                        : products.OrderByDescending(product => product.Price)
+                        .ToArray();
                     break;
 
 
             }
-
-
 
 
 

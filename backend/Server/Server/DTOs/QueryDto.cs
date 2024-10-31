@@ -7,5 +7,6 @@ namespace Server.DTOs
         public ProductType ProductType { get; set; }
         public OrdinationType OrdinationType { get; set; }
         public OrdinationDirection OrdinationDirection { get; set; }
+        //añadir cantidad página, página actual y consulta
     }
 }
