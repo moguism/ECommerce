@@ -46,6 +46,7 @@ namespace Server
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
 
+
             // Permite CORS
             if (builder.Environment.IsDevelopment())
             {
@@ -63,6 +64,9 @@ namespace Server
             }
 
             var app = builder.Build();
+
+            //PA QUE FUNCIONE EL WWWROOT NO LO TOQUEIS HIJOS DE PUTA
+            app.UseStaticFiles();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
