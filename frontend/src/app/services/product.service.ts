@@ -8,8 +8,6 @@ import { Result } from '../models/result';
 })
 export class ProductService {
 
-  readonly BASE_URL = 'https://localhost:7150/api/Product/' //URL desde donde se van a recoger todos los productos
-
 
   constructor(private api : ApiService) { }
 
@@ -17,7 +15,7 @@ export class ProductService {
   async getAllProducts(): Promise<Result<Product[]>> {
 
 
-    return this.api.get<Product[]>("Product",null,null);
+    return this.api.get<Product[]>("Product",{}, 'json');
     
 
   }
