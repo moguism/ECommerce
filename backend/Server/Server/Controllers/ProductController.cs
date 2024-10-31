@@ -27,7 +27,25 @@ namespace Server.Controllers
         {
             IEnumerable<Product> products;
 
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(query.ProductType.ToString().ToLower());
+            string productType = query.ProductType.ToString().ToLower();
+
+            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType);
+
+            switch (query.OrdinationType)
+            {
+                case OrdinationType.PRICE:
+                    products = query.OrdinationDirection.Equals("ASC")
+                        ? products.OrderBy(product => product.Name)
+                        : products.OrderByDescending(product => product.Name); break;
+                case OrdinationType.NAME:
+                    products = query.OrdinationDirection.Equals("ASC")
+                        ? products.OrderBy(product => product.Name)
+                        : products.OrderByDescending(product => product.Name); 
+                    break;
+
+
+            }
+
 
 
 
