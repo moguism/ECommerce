@@ -24,7 +24,7 @@ export class ApiService {
     localStorage.removeItem("token");
   }
 
-  async get<T = void>(path: string, params: any = {}, responseType: any): Promise<Result<T>> {
+  async get<T = void>(path: string, params: any = {}, responseType: any = null): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.get(url, {
       params: new HttpParams({ fromObject: params }),
@@ -32,7 +32,6 @@ export class ApiService {
       responseType: responseType,
       observe: 'response',
     });
-
     return this.sendRequest<T>(request$);
   }
 
@@ -44,7 +43,14 @@ export class ApiService {
       responseType: 'text'
     });
 
-    return this.sendRequest<T>(request$);
+    if(path.includes("login") || path.includes("sign"))
+    {
+      return this.sendRequest<T>(request$, true);
+    }
+    else
+    {
+      return this.sendRequest<T>(request$);
+    }
   }
 
   async put<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
@@ -68,7 +74,7 @@ export class ApiService {
     return this.sendRequest<T>(request$);
   }
 
-  private async sendRequest<T = boolean>(request$: Observable<HttpResponse<any>>): Promise<Result<T>> {
+  private async sendRequest<T = boolean>(request$: Observable<HttpResponse<any>>, saveJwt: boolean = false): Promise<Result<T>> {
     let result: Result<T>;
 
     try {
@@ -97,9 +103,9 @@ export class ApiService {
     }
 
     console.log("RESULT: ", result)
-    if (result.data) {
+    if (result.data && saveJwt) {
       this.jwt = result.data.toString();
-      console.log("AY MI MADRE EL BICHO: ", this.jwt)
+      //console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
   }

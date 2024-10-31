@@ -13,12 +13,10 @@ namespace Server.Controllers
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
-        FarminhouseContext _context;
 
-        public ProductController(UnitOfWork unitOfWork, FarminhouseContext context,ProductMapper productmapper)
+        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper)
         {
             _unitOfWork = unitOfWork;
-            _context = context;
             _productMapper = productmapper;
         }
 
@@ -43,13 +41,7 @@ namespace Server.Controllers
                         ? products.OrderBy(product => product.Price)
                         : products.OrderByDescending(product => product.Price);
                     break;
-
-
             }
-
-
-
-
             return _productMapper.AddCorrectPath(products);
         }
 
