@@ -31,47 +31,51 @@ namespace Server.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task RegisterUserAsync([FromBody] UserSignUpDto receivedUser)
-        {           
+        public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto receivedUser)
+        {
             User user = _userMapper.ToEntity(receivedUser);
             user.Password = _passwordService.Hash(receivedUser.Password);
             await _unitOfWork.UserRepository.InsertAsync(user);
             await _unitOfWork.SaveAsync();
+            return obtainToken(user);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginUser([FromBody] LoginDto userLogin)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(userLogin.Email);
-            if(user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
+            if (user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
             {
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    // EL CONTENIDO DEL JWT
-                    Claims = new Dictionary<string, object>
-                    {
-                        { "id", user.Id },
-                        { ClaimTypes.Role, "admin" } // TODO: CAMBIAR ESTO
-                    },
-                    Expires = DateTime.UtcNow.AddYears(3),
-                    SigningCredentials = new SigningCredentials(
-                        _tokenParameters.IssuerSigningKey,
-                        SecurityAlgorithms.HmacSha256Signature
-                    )
-                };
-                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-                SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-                string stringToken = tokenHandler.WriteToken(token);
+                string stringToken = obtainToken(user);
                 return Ok(stringToken);
             }
             else
             {
                 return Unauthorized();
             }
-            
+
         }
 
-
-      
+        private string obtainToken(User user)
+        {
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                // EL CONTENIDO DEL JWT
+                Claims = new Dictionary<string, object>
+                    {
+                        { "id", user.Id },
+                        { "name", user.Name },
+                        { ClaimTypes.Role, "admin" } // TODO: CAMBIAR ESTO
+                    },
+                Expires = DateTime.UtcNow.AddYears(3),
+                SigningCredentials = new SigningCredentials(
+                        _tokenParameters.IssuerSigningKey,
+                        SecurityAlgorithms.HmacSha256Signature
+                    )
+            };
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
     }
 }
