@@ -13,9 +13,9 @@ export class ProductService {
   constructor(private api : ApiService) { }
 
 
-  async getProductByName(name: string): Promise<Result<Product[]>>
+  async getProductByName(name: string): Promise<Result<string[]>>
   {
-    return this.api.get<Product[]>("Search", name, 'json')
+    return this.api.get<string[]>(`smartSearch?query=${name}`)
   }
   
   async getAllProducts(): Promise<Result<Product[]>> {

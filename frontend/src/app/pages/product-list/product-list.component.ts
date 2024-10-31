@@ -14,13 +14,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-
-
   allProducts: Product[] | null = [];
-  query: string = '';
   filteredProducts: Product[] = [];
   routeParamMap$: Subscription | null = null;
-
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) { }
 
@@ -43,6 +39,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
             break;
         }
     });
+  }
+
+  getSearchedProducts(products: Product[] | null) {
+    this.allProducts = products;
   }
 
   /*async getProducts() {
