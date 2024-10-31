@@ -8,6 +8,13 @@ namespace Server.Controllers;
 [ApiController]
 public class SmartSearchController : ControllerBase
 {
+    private readonly UnitOfWork _unitOfWork;
+
+    public SmartSearchController(UnitOfWork unitOfWork)
+    {
+        _unitOfWork = unitOfWork;
+    }
+
     [HttpGet]
     public IEnumerable<string> Search([FromQuery] string query)
     {
