@@ -37,7 +37,7 @@ export class ProductListComponent implements OnInit {
       this.allProducts = request.data;
     }
 
-    console.log(this.allProducts); 
+    console.log(this.allProducts); //para pruebas
   }
 
 
