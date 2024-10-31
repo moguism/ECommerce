@@ -13,10 +13,11 @@ namespace Server.Controllers
         private readonly ProductMapper _productMapper;
         FarminhouseContext _context;
 
-        public ProductController(UnitOfWork unitOfWork, FarminhouseContext context)
+        public ProductController(UnitOfWork unitOfWork, FarminhouseContext context,ProductMapper productmapper)
         {
             _unitOfWork = unitOfWork;
             _context = context;
+            _productMapper = productmapper;
         }
 
         [HttpGet]

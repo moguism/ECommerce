@@ -43,6 +43,7 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
+            builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
 
             // Permite CORS
