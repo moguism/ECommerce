@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs;
+using Server.Enums;
 using Server.Mappers;
 using Server.Models;
 
@@ -20,12 +22,20 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAllProducts(QueryDto query)
         {
-            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+            IEnumerable<Product> products;
+
+            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(query.ProductType.ToString().ToLower());
+
+
+
+
+
             return _productMapper.AddCorrectPath(products);
         }
 
+        /*
         [HttpGet("vegetables")]
         public async Task<IEnumerable<Product>> GetAllVegetables()
         {
@@ -44,5 +54,6 @@ namespace Server.Controllers
             IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllProductsByCategory("meat");
             return _productMapper.AddCorrectPath(products);
         }
+        */
     }
 }
