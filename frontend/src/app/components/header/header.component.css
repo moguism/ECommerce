@@ -36,6 +36,7 @@
     width: 5%;
 }
 #menu {
+    margin-left: 2%;
     visibility: hidden;
     display: none;
     color: white;
