@@ -7,8 +7,27 @@
 </div>
 
 <div  class="body">
-    <h1 id="productType">Producto</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
+    <h1 id="productType">{{querySelector.productType}}</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
     
+    @if (allProducts != null && allProducts.length > 0){
+
+        @for (product of allProducts; track product.id) {
+
+            <a class="pokemon-card">
+                <div>{{product.name}}</div>
+
+            </a>
+
+            
+        }
+        @empty{
+            <div>No hay resultados...</div>
+        }
+
+    }@else {
+        <div>Cargando...</div>
+    }
+
 
     <div class="pagination">
         <button disabled><<</button>

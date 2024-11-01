@@ -28,6 +28,8 @@ namespace Server.Controllers
             string productType = query.ProductType.ToString().ToLower();
             /*String pageNumber=query*/
 
+            /*!!!Primero ordenar y despues paginar*/
+
             products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize);
 
             switch (query.OrdinationType)

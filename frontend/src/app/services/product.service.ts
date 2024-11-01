@@ -21,7 +21,6 @@ export class ProductService {
   async getAllProducts(querySelector : QuerySelector): Promise<Result<Product[]>> 
   {
 
-    
 
     return this.api.get<Product[]>("Product", {
       "ProductType" : querySelector.productType, 

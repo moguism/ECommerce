@@ -28,7 +28,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
     //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1,4,1);
+    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1,4,2);
   }
 
   async ngOnInit(): Promise<void> {
@@ -38,8 +38,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
         case "frutas":
           this.querySelector.productType = ProductType.FRUITS;
           const fruits = await this.productService.getAllProducts(this.querySelector);
-          console.log(fruits)
+          console.log("fruits",fruits)
           this.allProducts = fruits.data;
+          console.log(this.allProducts);
           break;
         case "verduras":
           this.querySelector.productType = ProductType.VEGETABLES;
@@ -56,6 +57,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
     console.log('Query Selector:', this.querySelector);
+    console.log("All products ",this.allProducts);
+
 
   }
 
