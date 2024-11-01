@@ -123,7 +123,40 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   }
 
- 
+
+
+  // Método para manejar la ordenación
+  sortBy(order: string) {
+
+    // Configurar la dirección y el tipo de ordenación
+    switch (order) {
+      case 'name-asc':
+        this.querySelector.ordinationType = OrdinationType.NAME;
+        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+        break;
+      case 'name-desc':
+        this.querySelector.ordinationType = OrdinationType.NAME;
+        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+        break;
+      case 'price-asc':
+        this.querySelector.ordinationType = OrdinationType.PRICE;
+        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+        break;
+      case 'price-desc':
+        this.querySelector.ordinationType = OrdinationType.PRICE;
+        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+        break;
+    }
+
+    // Volver a obtener los productos con la nueva ordenación
+    this.getAllProducts();
+  }
+
+
+
+
+
+
 
 
   getSearchedProducts(products: Product[] | null) {
