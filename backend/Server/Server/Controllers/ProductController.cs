@@ -21,13 +21,14 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery]QueryDto query)
+        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery] QueryDto query)
         {
             IEnumerable<Product> products;
 
             string productType = query.ProductType.ToString().ToLower();
+            /*String pageNumber=query*/
 
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType);
+            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType,query.pageNumber,pageSize);
 
             switch (query.OrdinationType)
             {
@@ -43,7 +44,7 @@ namespace Server.Controllers
                     break;
             }
             return _productMapper.AddCorrectPath(products);
-        }
+         }
 
         /*
         [HttpGet("vegetables")]
