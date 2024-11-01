@@ -89,6 +89,23 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts();
   }
 
+
+
+
+  nextPage() {
+
+    this.querySelector.actualPage += 1;
+
+    const currentPageElement = document.getElementById("pagination-numbers");
+
+    if (currentPageElement != null) {
+
+      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    }
+    
+    this.getAllProducts();
+  }
+
   previousPage() {
     this.querySelector.actualPage -= 1;
 
@@ -102,6 +119,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts();
   }
 
+
+  newNumberOfProducts(){
+    const productsPerPageElement = document.getElementById("products-per-page");
+    
+
+  }
 
 
   getSearchedProducts(products: Product[] | null) {
