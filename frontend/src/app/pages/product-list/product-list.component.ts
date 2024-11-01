@@ -3,8 +3,12 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { HeaderComponent } from '../../components/header/header.component';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
-import { Subscription, forkJoin, lastValueFrom } from 'rxjs';
+import { Subscription, catchError, forkJoin, lastValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { ProductType } from '../../models/enums/product-type';
+import { OrdinationType } from '../../models/enums/ordination-type';
+import { OrdinationDirection } from '../../models/enums/ordination-direction';
+import { QuerySelector } from '../../models/query-selector';
 
 @Component({
   selector: 'app-product-list',
@@ -18,28 +22,73 @@ export class ProductListComponent implements OnInit, OnDestroy {
   filteredProducts: Product[] = [];
   routeParamMap$: Subscription | null = null;
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) { }
+  querySelector: QuerySelector;
+  productTypeString : string = "Producto";
+
+
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
+    const FIRST_PAGE = 1;
+    const PRODUCT_PER_PAGE = 4;
+    //QuerySelector por defecto para pruebas
+    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1, PRODUCT_PER_PAGE, FIRST_PAGE);
+  }
 
   async ngOnInit(): Promise<void> {
-    this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
-        const category = paramMap.get('category') as unknown as string;
-        switch(category)
-        {
-          case "frutas":
-            const fruits = await this.productService.getAllProducts(0);
-            this.allProducts = fruits.data
-            break;
-          case "verduras":
-            const vegatables = await this.productService.getAllProducts(1);
-            this.allProducts = vegatables.data
-            break;
-          case "carnes":
-            const meats = await this.productService.getAllProducts(2);
-            this.allProducts = meats.data
-            break;
-        }
-    });
+
+    this.getAllProducts()
+
   }
+
+
+
+  getAllProducts() {
+
+    this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
+      const category = paramMap.get('category') as unknown as string;
+      switch (category) {
+        case "frutas":
+          this.querySelector.productType = ProductType.FRUITS;
+          const fruits = await this.productService.getAllProducts(this.querySelector);
+          console.log("fruits", fruits)
+          this.allProducts = fruits.data;
+          console.log(this.allProducts);
+          break;
+        case "verduras":
+          this.querySelector.productType = ProductType.VEGETABLES;
+          const vegatables = await this.productService.getAllProducts(this.querySelector);
+          this.allProducts = vegatables.data
+          break;
+        case "carnes":
+          this.querySelector.productType = ProductType.MEAT;
+          const meats = await this.productService.getAllProducts(this.querySelector);
+          this.allProducts = meats.data
+          break;
+      }
+    });
+
+
+    this.productTypeString = this.querySelector.productType.toString();
+
+
+    console.log("All products ", this.allProducts);
+  }
+
+
+
+  nextPage() {
+
+    this.querySelector.actualPage += 1;
+
+    const currentPageElement = document.getElementById("pagination-numbers");
+
+    if (currentPageElement != null) {
+
+      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    }
+    
+    this.getAllProducts();
+  }
+
 
 
 
@@ -92,8 +141,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     console.log(this.allProducts); //para pruebas
   }*/
 
-    ngOnDestroy(): void 
-    {
-      this.routeParamMap$?.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.routeParamMap$?.unsubscribe();
+  }
 }

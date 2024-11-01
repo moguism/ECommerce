@@ -10,7 +10,6 @@
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
     min-height: 100vh;
 }
 
@@ -48,7 +47,7 @@
     transition: background-color 0.3s;
 }
 
-.pagination-numbers {
+#pagination-numbers {
     padding: 8px 12px;
     font-size: 16px;
     font-weight: bold;
