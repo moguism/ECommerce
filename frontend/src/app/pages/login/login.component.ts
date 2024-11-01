@@ -111,16 +111,17 @@ export class LoginComponent implements OnInit {
   }
 
   async registerUser(): Promise<void> {
-    if (this.registerForm.valid) {
+    if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
+      alert("Las  contraseñas tienen que ser iguales");
+    }else if (this.registerForm.valid) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         this.router.navigateByUrl("user")
       }
-    }
-    else {
-      alert("Campos inválidos.")
-    }
+    }else {
+        alert("Campos inválidos.");
+      }
   }
 
 

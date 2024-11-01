@@ -23,7 +23,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   routeParamMap$: Subscription | null = null;
 
   querySelector: QuerySelector;
-  productTypeString : string = "Producto";
+  productTypeString: string = "Producto";
 
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
@@ -38,7 +38,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts()
 
   }
-
 
 
   getAllProducts() {
@@ -74,30 +73,27 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
 
-
-
-
-
   nextPage() {
 
     this.querySelector.actualPage += 1;
 
     const currentPageElement = document.getElementById("pagination-numbers");
 
-    if (currentPageElement != null) {
+    if (currentPageElement) {
 
       currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
     }
-    
+
     this.getAllProducts();
   }
+
 
   previousPage() {
     this.querySelector.actualPage -= 1;
 
     const currentPageElement = document.getElementById("pagination-numbers");
 
-    if (currentPageElement != null) {
+    if (currentPageElement) {
 
       currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
     }
@@ -106,17 +102,53 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
 
-  newNumberOfProducts(){
-    const productsPerPageElement = document.getElementById("products-per-page");
-    
+  newNumberOfProducts() {
+    // Obtener el elemento del DOM
+    const productsPerPageElement = document.getElementById("products-per-page") as HTMLInputElement | HTMLSelectElement;
+
+    // Asegurarnos de que el elemento existe y es del tipo correcto
+    if (productsPerPageElement) {
+      // Obtener el valor del input o select, y convertirlo a un número
+      const numberOfProducts = parseInt(productsPerPageElement.value, 10);
+      this.querySelector.productPageSize = numberOfProducts;
+      this.getAllProducts();
+
+    }
 
   }
-
 
   getSearchedProducts(query : string) {
     this.querySelector.search = query
     this.getAllProducts();
   }
+
+  // Método para manejar la ordenación
+  sortBy(order: string) {
+
+    // Configurar la dirección y el tipo de ordenación
+    switch (order) {
+      case 'name-asc':
+        this.querySelector.ordinationType = OrdinationType.NAME;
+        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+        break;
+      case 'name-desc':
+        this.querySelector.ordinationType = OrdinationType.NAME;
+        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+        break;
+      case 'price-asc':
+        this.querySelector.ordinationType = OrdinationType.PRICE;
+        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+        break;
+      case 'price-desc':
+        this.querySelector.ordinationType = OrdinationType.PRICE;
+        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+        break;
+    }
+
+    // Volver a obtener los productos con la nueva ordenación
+    this.getAllProducts();
+  }
+
 
   /*async getProducts() {
     const request = await this.productService.getAllProducts();
