@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Query } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { Product } from '../../models/product';
@@ -23,38 +23,25 @@ export class ProductListComponent implements OnInit, OnDestroy {
   routeParamMap$: Subscription | null = null;
 
   querySelector: QuerySelector;
-
+  productTypeString : string = "Producto";
 
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
+    const FIRST_PAGE = 1;
+    const PRODUCT_PER_PAGE = 4;
     //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1,4,2);
+    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1, PRODUCT_PER_PAGE, FIRST_PAGE);
   }
 
   async ngOnInit(): Promise<void> {
-    
+
     this.getAllProducts()
 
   }
 
 
 
-  getAllProducts(){
-
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-    const productsPerPageElement = document.getElementById("products-per-page");
-
-    
-    //Obtiene la página actual
-    if(currentPageElement != null){
-      this.querySelector.actualPage = parseInt(currentPageElement.innerText, 10); // Convertir texto a número
-    }
-    //Obtiene el número de productos que el usuario quiere
-    if(productsPerPageElement != null){
-      this.querySelector.actualPage = parseInt(productsPerPageElement.innerText, 10); // Convertir texto a número
-    }
-    
+  getAllProducts() {
 
     this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
       const category = paramMap.get('category') as unknown as string;
@@ -62,7 +49,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         case "frutas":
           this.querySelector.productType = ProductType.FRUITS;
           const fruits = await this.productService.getAllProducts(this.querySelector);
-          console.log("fruits",fruits)
+          console.log("fruits", fruits)
           this.allProducts = fruits.data;
           console.log(this.allProducts);
           break;
@@ -80,20 +67,38 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
 
 
-    console.log('Query Selector:', this.querySelector);
-    console.log("All products ",this.allProducts);
+    this.productTypeString = this.querySelector.productType.toString();
+
+
+    console.log("All products ", this.allProducts);
   }
 
 
 
-  nextPage(){
+  nextPage() {
+
+    this.querySelector.actualPage += 1;
+
     const currentPageElement = document.getElementById("pagination-numbers");
-    //Obtiene la página actual
-    if(currentPageElement != null){
-      const actualPage = parseInt(currentPageElement.innerText, 10) +1; // Convertir texto a número
-      currentPageElement.innerText = actualPage.toString(); // Actualizar el texto en el DOM
+
+    if (currentPageElement != null) {
+
+      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
     }
 
+  }
+
+  previousPage() {
+    this.querySelector.actualPage -= 1;
+
+    const currentPageElement = document.getElementById("pagination-numbers");
+
+    if (currentPageElement != null) {
+
+      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    }
+
+    this.getAllProducts();
   }
 
 
