@@ -85,7 +85,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
       currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
     }
-
+    
+    this.getAllProducts();
   }
 
   previousPage() {
