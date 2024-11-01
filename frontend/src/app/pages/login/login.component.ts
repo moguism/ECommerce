@@ -20,13 +20,27 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       name: ['', Validators.required],
       password: ['', [Validators.required]],
-      address: ['', Validators.required]
-    })
+      address: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    },
+    { validators: this.passwordMatchValidator })
 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     })
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPasswordControl = form.get('confirmPassword');
+    const confirmPassword = confirmPasswordControl?.value;
+     
+    if (confirmPasswordControl != null) {
+      if (password !== confirmPassword) {
+        confirmPasswordControl.setErrors({ mismatch: true });
+      }
+    }
   }
 
   registerForm: FormGroup;

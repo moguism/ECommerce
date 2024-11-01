@@ -4,6 +4,7 @@ using Server.DTOs;
 using Server.Enums;
 using Server.Mappers;
 using Server.Models;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -13,37 +14,42 @@ namespace Server.Controllers
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
+        private readonly SmartSearchService _smartSearchService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper)
+        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService)
         {
             _unitOfWork = unitOfWork;
             _productMapper = productmapper;
+            _smartSearchService = smartSearchService;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery]QueryDto query)
+        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery] QueryDto query)
         {
-            IEnumerable<Product> products;
+            // 1) Busca 2) Ordena 3) Pagina
 
-            string productType = query.ProductType.ToString().ToLower();
-
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType);
+            IEnumerable<Product> products = await _smartSearchService.Search(query.Search);
 
             switch (query.OrdinationType)
             {
-                case OrdinationType.PRICE:
-                    products = query.OrdinationDirection.Equals("ASC")
-                        ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); break;
                 case OrdinationType.NAME:
-                    products = query.OrdinationDirection.Equals("ASC")
+                    products = query.OrdinationDirection == OrdinationDirection.ASC
                         ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); 
+                        : products.OrderByDescending(product => product.Name);
+                    break;
+                case OrdinationType.PRICE:
+                    products = query.OrdinationDirection == OrdinationDirection.ASC
+                        ? products.OrderBy(product => product.Price)
+                        : products.OrderByDescending(product => product.Price);
                     break;
             }
 
+            string productType = query.ProductType.ToString().ToLower();
+
+            products = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+
             return _productMapper.AddCorrectPath(products);
-        }
+         }
 
         /*
         [HttpGet("vegetables")]

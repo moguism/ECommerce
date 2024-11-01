@@ -1,2 +1,5 @@
-export interface ProductType {
+export enum ProductType {
+    FRUITS,
+    VEGETABLES,
+    MEAT
 }

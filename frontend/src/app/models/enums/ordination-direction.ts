@@ -1,3 +1,4 @@
-export interface OrdinationDirection {
-    
+export enum OrdinationDirection {
+    ASC,
+    DESC
 }
