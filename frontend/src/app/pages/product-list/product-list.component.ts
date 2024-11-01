@@ -41,6 +41,21 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   getAllProducts(){
 
+
+    const currentPageElement = document.getElementById("pagination-numbers");
+    const productsPerPageElement = document.getElementById("products-per-page");
+
+    
+    //Obtiene la página actual
+    if(currentPageElement != null){
+      this.querySelector.actualPage = parseInt(currentPageElement.innerText, 10); // Convertir texto a número
+    }
+    //Obtiene el número de productos que el usuario quiere
+    if(productsPerPageElement != null){
+      this.querySelector.actualPage = parseInt(productsPerPageElement.innerText, 10); // Convertir texto a número
+    }
+    
+
     this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
       const category = paramMap.get('category') as unknown as string;
       switch (category) {
@@ -68,6 +83,19 @@ export class ProductListComponent implements OnInit, OnDestroy {
     console.log('Query Selector:', this.querySelector);
     console.log("All products ",this.allProducts);
   }
+
+
+
+  nextPage(){
+    const currentPageElement = document.getElementById("pagination-numbers");
+    //Obtiene la página actual
+    if(currentPageElement != null){
+      const actualPage = parseInt(currentPageElement.innerText, 10) +1; // Convertir texto a número
+      currentPageElement.innerText = actualPage.toString(); // Actualizar el texto en el DOM
+    }
+
+  }
+
 
 
   getSearchedProducts(products: Product[] | null) {

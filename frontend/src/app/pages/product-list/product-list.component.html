@@ -32,12 +32,12 @@
     <div class="pagination">
         <button disabled><<</button>
         <button disabled><</button>
-        <div class="pagination-numbers">1</div>
-        <button>></button>
+        <div id="pagination-numbers">1</div>
+        <button (click)="nextPage()">></button>
         <button>>></button>
 
         <!-- Selector para elegir el número de productos por página -->
-        <select class="products-per-page">
+        <select id="products-per-page">
             <option value="4">4</option>
             <option value="8">8</option>
             <option value="12">12</option>
