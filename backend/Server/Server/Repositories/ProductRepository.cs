@@ -8,9 +8,9 @@ namespace Server.Repositories
     {
         public ProductRepository(FarminhouseContext context) : base(context) { }
 
-        public  async Task<ICollection<Product>> GetAllProductsByCategory(string name,int pageNumber,int pageSize)
+        public  async Task<ICollection<Product>> GetAllProductsByCategory(string productCategory,int pageNumber,int pageSize)
         {
-            return await GetQueryable().Where(product => product.Category.Name.Equals(name)).Skip((pageNumber-1)*pageSize).Take(pageSize).ToArrayAsync();
+            return await GetQueryable().Where(product => product.Category.Name.Equals(productCategory)).Skip((pageNumber-1)*pageSize).Take(pageSize).ToArrayAsync();
         }
     }
 }

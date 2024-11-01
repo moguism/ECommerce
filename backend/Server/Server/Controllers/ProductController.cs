@@ -28,7 +28,7 @@ namespace Server.Controllers
             string productType = query.ProductType.ToString().ToLower();
             /*String pageNumber=query*/
 
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType,query.pageNumber,pageSize);
+            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize);
 
             switch (query.OrdinationType)
             {
