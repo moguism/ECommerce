@@ -75,20 +75,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
 
-  nextPage() {
-
-    this.querySelector.actualPage += 1;
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement != null) {
-
-      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
-    }
-    
-    this.getAllProducts();
-  }
-
 
 
 
