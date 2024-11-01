@@ -21,31 +21,32 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts(QueryDto query)
+        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery] QueryDto query)
         {
             IEnumerable<Product> products;
 
             string productType = query.ProductType.ToString().ToLower();
+            /*String pageNumber=query*/
 
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType);
+            /*!!!Primero ordenar y despues paginar*/
+
+            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize);
 
             switch (query.OrdinationType)
             {
-                case OrdinationType.PRICE:
-                    products = query.OrdinationDirection.Equals("ASC")
-                        ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); break;
                 case OrdinationType.NAME:
-                    products = query.OrdinationDirection.Equals("ASC")
+                    products = query.OrdinationDirection == OrdinationDirection.ASC
                         ? products.OrderBy(product => product.Name)
-                        : products.OrderByDescending(product => product.Name); 
+                        : products.OrderByDescending(product => product.Name);
                     break;
-
-
+                case OrdinationType.PRICE:
+                    products = query.OrdinationDirection == OrdinationDirection.ASC
+                        ? products.OrderBy(product => product.Price)
+                        : products.OrderByDescending(product => product.Price);
+                    break;
             }
-
             return _productMapper.AddCorrectPath(products);
-        }
+         }
 
         /*
         [HttpGet("vegetables")]

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { ApiService } from './api.service';
 import { Result } from '../models/result';
-import { forkJoin, lastValueFrom } from 'rxjs';
+import { QuerySelector } from '../models/query-selector';
 
 @Injectable({
   providedIn: 'root'
@@ -18,20 +18,18 @@ export class ProductService {
     return this.api.get<string[]>(`smartSearch?query=${name}`)
   }
   
-  async getAllProducts(): Promise<Result<Product[]>> {
-    return this.api.get<Product[]>("Product",{}, 'json');
-  }
+  async getAllProducts(querySelector : QuerySelector): Promise<Result<Product[]>> 
+  {
 
-  async getAllVegetables(): Promise<Result<Product[]>> {
-    return this.api.get<Product[]>("Product/vegetables",null,'json');
-  }
 
-  async getAllFruits(): Promise<Result<Product[]>> {
-    return this.api.get<Product[]>("Product/fruits",null,'json');
-  }
-
-  async getAllMeats(): Promise<Result<Product[]>> {
-    return this.api.get<Product[]>("Product/meat",null,'json');
+    return this.api.get<Product[]>("Product", {
+      "ProductType" : querySelector.productType, 
+      "OrdinationType" : querySelector.ordinationType, 
+      "OrdinationDirection" : querySelector.ordinationDirection,
+      "ProductPageName" : querySelector.productPageName,
+      "ProductPageSize" : querySelector.productPageSize,
+      "ActualPage" : querySelector.actualPage
+    }, 'json');
   }
 
 }

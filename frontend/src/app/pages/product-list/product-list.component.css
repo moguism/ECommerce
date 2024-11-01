@@ -5,12 +5,71 @@
 }
 
 .body{
-    width: 100%;
-    height: 100%;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 
 .search-bar{
     margin: 5% 0;
     width: 100%;
+}
+
+
+/****** Páginación ******/
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 20px;
+}
+
+.pagination button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: #99C080; 
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50%; /* Hace que los botones sean redondos */
+    transition: background-color 0.3s;
+}
+
+#pagination-numbers {
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.products-per-page {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #99C080;
+    background-color: #f1f1f1;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #88b070; 
+}
+
+/*botones desactivados */
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }

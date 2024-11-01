@@ -7,28 +7,47 @@
 </div>
 
 <div  class="body">
-    <h1>Productos</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
-    <div class="container">
-        <div class="container-row">
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-        </div>
-        <div class="container-row">
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-        </div>
-    </div>
+
+    <h1 id="productType">{{querySelector.productType}}</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
+    
+
+    @if (allProducts != null && allProducts.length > 0){
+
+        @for (product of allProducts; track product.id) {
+
+            <a class="product-card">
+                <div>{{product.name}} </div>
+                <div>{{product.price}} </div>
+
+
+
+            </a>
+
+            
+        }
+        @empty{
+            <div>No hay resultados...</div>
+        }
+
+    }@else {
+        <div>Cargando...</div>
+    }
+
 
     <div class="pagination">
-        <i class="fa-solid fa-angles-left"></i>
-        <i class="fa-solid fa-chevron-left"></i>
-        <div class="pagination-numbers"></div>
-        <i class="fa-solid fa-chevron-right"></i>
-        <i class="fa-solid fa-angles-right"></i>
+        <button disabled><<</button>
+        <button  (click)="previousPage()"><</button>
+        <div id="pagination-numbers">1</div>
+        <button (click)="nextPage()">></button>
+        <button>>></button>
+
+        <!-- Selector para elegir el número de productos por página -->
+        <select id="products-per-page">
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+        </select>
     </div>
 
 

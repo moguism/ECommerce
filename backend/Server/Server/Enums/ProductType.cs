@@ -2,8 +2,8 @@
 {
     public enum ProductType
     {
-        FRUIT,
-        VEGETABLE,
+        FRUITS,
+        VEGETABLES,
         MEAT
 
     }
