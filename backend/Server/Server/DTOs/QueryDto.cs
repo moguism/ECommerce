@@ -10,7 +10,6 @@ namespace Server.DTOs
         public int ProductPageName { get; set; }
         public int ProductPageSize { get; set; }
         public int ActualPage { get; set; }
-
-
+        public string Search { get; set; }
     }
 }
