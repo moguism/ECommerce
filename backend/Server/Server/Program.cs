@@ -98,47 +98,47 @@ namespace Server
                     // Frutas
                     var fruits = new List<Product>
                     {
-                        new Product { Name = "Manzana", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 2.5, Stock = 150, Average = 2.5, image = "manzana.jpg", CategoryId = 1 },
-                        new Product { Name = "Plátano", Description = "Una fuente rápida de energía, perfecta para llevar.", Price = 1.5, Stock = 200, Average = 4, image = "platano.jpg", CategoryId = 1 },
-                        new Product { Name = "Naranja", Description = "Cítrico jugoso y refrescante, rico en vitamina C.", Price = 3, Stock = 180, Average = 3.5, image = "naranja.jpg", CategoryId = 1 },
-                        new Product { Name = "Fresa", Description = "Fruta dulce y roja, excelente en postres y batidos.", Price = 4, Stock = 120, Average = 4.5, image = "fresa.jpg", CategoryId = 1 },
-                        new Product { Name = "Kiwi", Description = "Fruta exótica con un sabor único y refrescante.", Price = 3.5, Stock = 90, Average = 4, image = "kiwi.jpg", CategoryId = 1 },
-                        new Product { Name = "Pera", Description = "Fruta suave y jugosa, ideal para ensaladas.", Price = 2.8, Stock = 160, Average = 4.2, image = "pera.jpg", CategoryId = 1 },
-                        new Product { Name = "Arandano", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 2.5, Stock = 150, Average = 2.5, image = "manzana.jpg", CategoryId = 1 },
-                        new Product { Name = "Uva", Description = "Pequeñas frutas dulces, perfectas para picar o hacer vino.", Price = 5, Stock = 130, Average = 4.3, image = "uva.jpg", CategoryId = 1 },
-                        new Product { Name = "Sandía", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 6, Stock = 75, Average = 4.8, image = "sandia.jpg", CategoryId = 1 },
-                        new Product { Name = "Melón", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 4.5, Stock = 80, Average = 4.1, image = "melon.jpg", CategoryId = 1 },
-                        new Product { Name = "Mango", Description = "Fruta tropical dulce, perfecta para smoothies y postres.", Price = 3.2, Stock = 110, Average = 4.4, image = "mango.jpg", CategoryId = 1 }
+                        new Product { Name = "Manzana", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 2.5, Stock = 150, Average = 2.5, image = "manzana.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Plátano", Description = "Una fuente rápida de energía, perfecta para llevar.", Price = 1.5, Stock = 200, Average = 4, image = "platano.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Naranja", Description = "Cítrico jugoso y refrescante, rico en vitamina C.", Price = 3, Stock = 180, Average = 3.5, image = "naranja.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Fresa", Description = "Fruta dulce y roja, excelente en postres y batidos.", Price = 4, Stock = 120, Average = 4.5, image = "fresa.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Kiwi", Description = "Fruta exótica con un sabor único y refrescante.", Price = 3.5, Stock = 90, Average = 4, image = "kiwi.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Pera", Description = "Fruta suave y jugosa, ideal para ensaladas.", Price = 2.8, Stock = 160, Average = 4.2, image = "pera.jpg", CategoryId = 1, Category = fruitsCategory},
+                        new Product { Name = "Arandano", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 2.5, Stock = 150, Average = 2.5, image = "manzana.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Uva", Description = "Pequeñas frutas dulces, perfectas para picar o hacer vino.", Price = 5, Stock = 130, Average = 4.3, image = "uva.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Sandía", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 6, Stock = 75, Average = 4.8, image = "sandia.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Melón", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 4.5, Stock = 80, Average = 4.1, image = "melon.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Mango", Description = "Fruta tropical dulce, perfecta para smoothies y postres.", Price = 3.2, Stock = 110, Average = 4.4, image = "mango.jpg", CategoryId = 1, Category = fruitsCategory }
                     };
 
                     // Verduras
                     var vegetables = new List<Product>
                     {
-                        new Product { Name = "Apio", Description = "Vegetal crujiente, ideal para dips y ensaladas.", Price = 3, Stock = 200, Average = 4, image = "apio.jpg", CategoryId = 2 },
-                        new Product { Name = "Zanahoria", Description = "Dulce y crujiente, rica en vitamina A, perfecta para snacks.", Price = 1.5, Stock = 180, Average = 4.2, image = "zanahoria.jpg", CategoryId = 2 },
-                        new Product { Name = "Tomate", Description = "Versátil y jugoso, excelente para ensaladas y salsas.", Price = 2, Stock = 150, Average = 4.5, image = "tomate.jpg", CategoryId = 2 },
-                        new Product { Name = "Lechuga", Description = "Base fresca para ensaladas, ligera y nutritiva.", Price = 1.2, Stock = 220, Average = 4.1, image = "lechuga.jpg", CategoryId = 2 },
-                        new Product { Name = "Cebolla", Description = "Sabor fuerte y característico, ideal para sazonar.", Price = 1.8, Stock = 170, Average = 4.3, image = "cebolla.jpg", CategoryId = 2 },
-                        new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 2.5, Stock = 140, Average = 4, image = "pimiento.jpg", CategoryId = 2 },
-                        new Product { Name = "Brócoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 2.8, Stock = 100, Average = 4.6, image = "brocoli.jpg", CategoryId = 2 },
-                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 3.2, Stock = 90, Average = 4.4, image = "espinaca.jpg", CategoryId = 2 },
-                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 2.7, Stock = 80, Average = 4.3, image = "coliflor.jpg", CategoryId = 2 },
-                        new Product { Name = "Berenjena", Description = "Sabor único, excelente para asar y guisar.", Price = 3.5, Stock = 70, Average = 4.1, image = "berenjena.jpg", CategoryId = 2 }
+                        new Product { Name = "Apio", Description = "Vegetal crujiente, ideal para dips y ensaladas.", Price = 3, Stock = 200, Average = 4, image = "apio.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Zanahoria", Description = "Dulce y crujiente, rica en vitamina A, perfecta para snacks.", Price = 1.5, Stock = 180, Average = 4.2, image = "zanahoria.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Tomate", Description = "Versátil y jugoso, excelente para ensaladas y salsas.", Price = 2, Stock = 150, Average = 4.5, image = "tomate.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Lechuga", Description = "Base fresca para ensaladas, ligera y nutritiva.", Price = 1.2, Stock = 220, Average = 4.1, image = "lechuga.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Cebolla", Description = "Sabor fuerte y característico, ideal para sazonar.", Price = 1.8, Stock = 170, Average = 4.3, image = "cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 2.5, Stock = 140, Average = 4, image = "pimiento.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Brócoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 2.8, Stock = 100, Average = 4.6, image = "brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 3.2, Stock = 90, Average = 4.4, image = "espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 2.7, Stock = 80, Average = 4.3, image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Berenjena", Description = "Sabor único, excelente para asar y guisar.", Price = 3.5, Stock = 70, Average = 4.1, image = "berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
                     };
 
                     // Carnes
                     var meats = new List<Product>
                     {
-                        new Product { Name = "Ternera", Description = "Carne tierna y jugosa, ideal para guisos y asados.", Price = 5.5, Stock = 100, Average = 3, image = "ternera.jpg", CategoryId = 3 },
-                        new Product { Name = "Pollo", Description = "Carne magra, versátil y rica en proteínas.", Price = 4, Stock = 150, Average = 3.5, image = "pollo.jpg", CategoryId = 3 },
-                        new Product { Name = "Cerdo", Description = "Carne sabrosa, ideal para parrillas y guisos.", Price = 6, Stock = 80, Average = 3.8, image = "cerdo.jpg", CategoryId = 3 },
-                        new Product { Name = "Cordero", Description = "Carne rica y suculenta, perfecta para asados.", Price = 7, Stock = 60, Average = 4, image = "cordero.jpg", CategoryId = 3 },
-                        new Product { Name = "Pavo", Description = "Alternativa magra al pollo, ideal para celebraciones.", Price = 5.5, Stock = 90, Average = 3.9, image = "pavo.jpg", CategoryId = 3 },
-                        new Product { Name = "Conejo", Description = "Carne suave y saludable, ideal para guisos.", Price = 8, Stock = 50, Average = 4.2, image = "conejo.jpg", CategoryId = 3 },
-                        new Product { Name = "Salchicha", Description = "Deliciosa y jugosa, perfecta para barbacoas.", Price = 2.5, Stock = 200, Average = 3.7, image = "salchicha.jpg", CategoryId = 3 },
-                        new Product { Name = "Bacon", Description = "Crujiente y sabroso, ideal para desayunos y burgers.", Price = 4.5, Stock = 120, Average = 4.3, image = "bacon.jpg", CategoryId = 3 },
-                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para añadir sabor a tus platos.", Price = 5, Stock = 70, Average = 4, image = "panceta.jpg", CategoryId = 3 },
-                        new Product { Name = "Atún", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 6.5, Stock = 40, Average = 4.1, image = "atun.jpg", CategoryId = 3 }
+                        new Product { Name = "Ternera", Description = "Carne tierna y jugosa, ideal para guisos y asados.", Price = 5.5, Stock = 100, Average = 3, image = "ternera.jpg", CategoryId = 3, Category = meatCategory},
+                        new Product { Name = "Pollo", Description = "Carne magra, versátil y rica en proteínas.", Price = 4, Stock = 150, Average = 3.5, image = "pollo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Cerdo", Description = "Carne sabrosa, ideal para parrillas y guisos.", Price = 6, Stock = 80, Average = 3.8, image = "cerdo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Cordero", Description = "Carne rica y suculenta, perfecta para asados.", Price = 7, Stock = 60, Average = 4, image = "cordero.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Pavo", Description = "Alternativa magra al pollo, ideal para celebraciones.", Price = 5.5, Stock = 90, Average = 3.9, image = "pavo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Conejo", Description = "Carne suave y saludable, ideal para guisos.", Price = 8, Stock = 50, Average = 4.2, image = "conejo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Salchicha", Description = "Deliciosa y jugosa, perfecta para barbacoas.", Price = 2.5, Stock = 200, Average = 3.7, image = "salchicha.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Bacon", Description = "Crujiente y sabroso, ideal para desayunos y burgers.", Price = 4.5, Stock = 120, Average = 4.3, image = "bacon.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para añadir sabor a tus platos.", Price = 5, Stock = 70, Average = 4, image = "panceta.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Atún", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 6.5, Stock = 40, Average = 4.1, image = "atun.jpg", CategoryId = 3, Category = meatCategory }
                     };
 
                     // Añadir categorías y productos al contexto de la base de datos

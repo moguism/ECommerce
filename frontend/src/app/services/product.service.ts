@@ -20,15 +20,13 @@ export class ProductService {
   
   async getAllProducts(querySelector : QuerySelector): Promise<Result<Product[]>> 
   {
-
-
     return this.api.get<Product[]>("Product", {
       "ProductType" : querySelector.productType, 
       "OrdinationType" : querySelector.ordinationType, 
       "OrdinationDirection" : querySelector.ordinationDirection,
-      "ProductPageName" : querySelector.productPageName,
       "ProductPageSize" : querySelector.productPageSize,
-      "ActualPage" : querySelector.actualPage
+      "ActualPage" : querySelector.actualPage,
+      "Search" : querySelector.search
     }, 'json');
   }
 

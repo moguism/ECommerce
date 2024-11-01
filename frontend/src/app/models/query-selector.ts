@@ -6,21 +6,21 @@ export class QuerySelector {
     productType: ProductType;
     ordinationType: OrdinationType;
     ordinationDirection : OrdinationDirection;
-    productPageName : number;
     productPageSize : number;
     actualPage : number;
+    search: string;
 
 
 
-    public constructor(productType : ProductType, ordinationType : OrdinationType, ordinationDirection : OrdinationDirection,  
-        productPageName : number , productPageSize : number, actualPage : number )
+    public constructor(productType : ProductType, ordinationType : OrdinationType, ordinationDirection : OrdinationDirection,
+        productPageSize : number, actualPage : number, search: string )
     {
 
         this.productType = productType;
         this.ordinationType = ordinationType;
         this.ordinationDirection = ordinationDirection;
-        this.productPageName = productPageName;
         this.productPageSize = productPageSize;
         this.actualPage = actualPage;
+        this.search = search;
     }
 }
