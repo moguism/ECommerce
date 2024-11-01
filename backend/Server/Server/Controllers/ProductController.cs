@@ -4,6 +4,7 @@ using Server.DTOs;
 using Server.Enums;
 using Server.Mappers;
 using Server.Models;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -13,24 +14,21 @@ namespace Server.Controllers
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
+        private readonly SmartSearchService _smartSearchService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper)
+        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService)
         {
             _unitOfWork = unitOfWork;
             _productMapper = productmapper;
+            _smartSearchService = smartSearchService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<Product>> GetAllProducts([FromQuery] QueryDto query)
         {
-            IEnumerable<Product> products;
+            // 1) Busca 2) Ordena 3) Pagina
 
-            string productType = query.ProductType.ToString().ToLower();
-            /*String pageNumber=query*/
-
-            /*!!!Primero ordenar y despues paginar*/
-
-            products = await _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize);
+            IEnumerable<Product> products = await _smartSearchService.Search(query.Search);
 
             switch (query.OrdinationType)
             {
@@ -45,6 +43,11 @@ namespace Server.Controllers
                         : products.OrderByDescending(product => product.Price);
                     break;
             }
+
+            string productType = query.ProductType.ToString().ToLower();
+
+            products = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+
             return _productMapper.AddCorrectPath(products);
          }
 

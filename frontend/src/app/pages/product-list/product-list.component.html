@@ -8,8 +8,19 @@
 
 <div  class="body">
 
-    <h1 id="productType">{{querySelector.productType}}</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
     
+    <div class="sort-buttons">
+        <div class="ordinationPerName">
+          <button class="toggle-button" (click)="sortBy('name-asc')">Name asc</button>
+          <button class="toggle-button" (click)="sortBy('name-desc')">Name desc</button>
+        </div>
+        <!--
+        <div class="ordinationPerPrice">
+          <button class="toggle-button" (click)="sortBy('price-asc')">Price asc</button>
+          <button class="toggle-button" (click)="sortBy('price-desc')">Price desc</button>
+        </div>
+    </div>
+
 
     @if (allProducts != null && allProducts.length > 0){
 
@@ -42,9 +53,9 @@
         <button>>></button>
 
         <!-- Selector para elegir el número de productos por página -->
-        <select id="products-per-page">
+        <select id="products-per-page" (click)="newNumberOfProducts()">
             <option value="4">4</option>
-            <option value="8">8</option>
+            <option value="8" >8</option>
             <option value="12">12</option>
             <option value="16">16</option>
         </select>
