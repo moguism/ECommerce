@@ -32,6 +32,15 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
+    
+    this.getAllProducts()
+
+  }
+
+
+
+  getAllProducts(){
+
     this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
       const category = paramMap.get('category') as unknown as string;
       switch (category) {
@@ -58,9 +67,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     console.log('Query Selector:', this.querySelector);
     console.log("All products ",this.allProducts);
-
-
   }
+
 
   getSearchedProducts(products: Product[] | null) {
     this.allProducts = products;
