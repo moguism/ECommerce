@@ -75,6 +75,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
 
+
   nextPage() {
 
     this.querySelector.actualPage += 1;
@@ -88,7 +89,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     this.getAllProducts();
   }
-
 
 
 
@@ -124,9 +124,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
  
-
-
-
 
 
   getSearchedProducts(products: Product[] | null) {
