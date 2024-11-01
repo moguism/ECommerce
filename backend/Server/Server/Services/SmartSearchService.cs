@@ -3,6 +3,7 @@ using System.Text;
 using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Models;
 
 namespace Server.Services;
@@ -35,7 +36,7 @@ public class SmartSearchService
 
     public async Task<IEnumerable<Product>> Search(string query)
     {
-        ICollection<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+        ICollection<Product> products = await _unitOfWork.ProductRepository.GetQueryable().Include(product => product.Category).ToArrayAsync();
         IEnumerable<string> results = FindNames(query);
 
         List<Product> sendProducts = new List<Product>();

@@ -30,7 +30,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 4;
     //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1, PRODUCT_PER_PAGE, FIRST_PAGE);
+    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
   }
 
   async ngOnInit(): Promise<void> {
@@ -113,8 +113,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
 
-  getSearchedProducts(products: Product[] | null) {
-    this.allProducts = products;
+  getSearchedProducts(query : string) {
+    this.querySelector.search = query
+    this.getAllProducts();
   }
 
   /*async getProducts() {
