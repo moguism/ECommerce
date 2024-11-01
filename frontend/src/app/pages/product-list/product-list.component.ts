@@ -27,7 +27,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
-
+    //QuerySelector por defecto para pruebas
     this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1,4,1);
   }
 
@@ -36,19 +36,26 @@ export class ProductListComponent implements OnInit, OnDestroy {
       const category = paramMap.get('category') as unknown as string;
       switch (category) {
         case "frutas":
-          const fruits = await this.productService.getAllProducts(0);
+          this.querySelector.productType = ProductType.FRUITS;
+          const fruits = await this.productService.getAllProducts(this.querySelector);
+          console.log(fruits)
           this.allProducts = fruits.data;
           break;
         case "verduras":
-          const vegatables = await this.productService.getAllProducts(1);
+          this.querySelector.productType = ProductType.VEGETABLES;
+          const vegatables = await this.productService.getAllProducts(this.querySelector);
           this.allProducts = vegatables.data
           break;
         case "carnes":
-          const meats = await this.productService.getAllProducts(2);
+          this.querySelector.productType = ProductType.MEAT;
+          const meats = await this.productService.getAllProducts(this.querySelector);
           this.allProducts = meats.data
           break;
       }
     });
+
+
+    console.log('Query Selector:', this.querySelector);
 
   }
 

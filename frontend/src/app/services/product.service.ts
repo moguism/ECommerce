@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { ApiService } from './api.service';
 import { Result } from '../models/result';
+import { QuerySelector } from '../models/query-selector';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,19 @@ export class ProductService {
     return this.api.get<string[]>(`smartSearch?query=${name}`)
   }
   
-  async getAllProducts(category: number): Promise<Result<Product[]>> 
+  async getAllProducts(querySelector : QuerySelector): Promise<Result<Product[]>> 
   {
-    return this.api.get<Product[]>("Product", {"ProductType" : category, "OrdinationType" : 0, "OrdinationDirection" : 0}, 'json');
+
+    
+
+    return this.api.get<Product[]>("Product", {
+      "ProductType" : querySelector.productType, 
+      "OrdinationType" : querySelector.ordinationType, 
+      "OrdinationDirection" : querySelector.ordinationDirection,
+      "ProductPageName" : querySelector.productPageName,
+      "ProductPageSize" : querySelector.productPageSize,
+      "ActualPage" : querySelector.actualPage
+    }, 'json');
   }
 
 }
