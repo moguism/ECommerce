@@ -1,8 +1,8 @@
-import { OrdinationDirection } from "./enums/ordination-direction"
-import { OrdinationType } from "./enums/ordination-type"
-import { ProductType } from "./enums/product-type"
+import { OrdinationDirection } from "./enums/ordination-direction";
+import { OrdinationType } from "./enums/ordination-type";
+import { ProductType } from "./enums/product-type";
 
-export class Query {
+export class QuerySelector {
     productType: ProductType;
     ordinationType: OrdinationType;
     ordinationDirection : OrdinationDirection;
