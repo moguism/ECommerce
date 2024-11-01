@@ -25,6 +25,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   querySelector: QuerySelector;
   productTypeString: string = "Producto";
 
+  protected BtnPerName: boolean = true;
+  protected BtnPerPrice: boolean = true;
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
     const FIRST_PAGE = 1;
@@ -163,4 +165,43 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
   }
+
+  desBtnPerName(){ // Funcion para ordenar descendente
+    this.BtnPerName = false;
+    this.sortBy("name-desc");
+  }
+
+  ascBtnPerName(){
+    this.BtnPerName = true;
+    this.sortBy("name-asc");
+  }
+
+  togglePerName(){
+    if(this.BtnPerName){
+      this.desBtnPerName();
+    }else{
+      this.ascBtnPerName();
+    }
+  }
+
+  desBtnPerPrice(){
+    this.BtnPerPrice = false;
+    this.sortBy("price-desc");
+  }
+
+  ascBtnPerPrice(){
+    this.BtnPerPrice = true;
+    this.sortBy("price-asc");
+  }
+
+  togglePerPrice(){
+    if(this.BtnPerPrice){
+      this.desBtnPerPrice();
+    }else{
+      this.ascBtnPerPrice();
+    }
+  }
+
+
+
 }
