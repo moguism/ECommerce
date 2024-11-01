@@ -32,6 +32,13 @@
 .text:hover {
     margin-top: -5px;
 }
+.text-welcome{
+    font-size: 20px;
+    transition: all 0.3s;
+    color: rgb(255, 255, 255);
+    background-color: #99C080;
+    padding: 13.5px;
+}
 .logo {
     width: 5%;
 }
@@ -56,7 +63,7 @@
 
 .view-dropdown{
     margin-top: auto;
-    height: 200px;
+    height: 150px;
     width: 10%;
     background-color: #99C080;
     display: flex;
@@ -108,7 +115,7 @@
         width: 20%;
     }
 }
-@media (max-width: 550px) {
+@media (max-width: 850px) {
     .dropdown{
         width: 30%;
     }
