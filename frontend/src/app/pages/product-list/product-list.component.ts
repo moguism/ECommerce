@@ -25,6 +25,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
   querySelector: QuerySelector;
   productTypeString: string = "Producto";
 
+  protected BtnPerName: boolean = true;
+  protected BtnPerPrice: boolean = true;
 
   wasNextPage: boolean = false;
 
@@ -183,38 +185,38 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.routeParamMap$?.unsubscribe();
   }
 
-  desBtnPerName() { // Funcion para ordenar descendente
+  desBtnPerName(){ // Funcion para ordenar descendente
     this.BtnPerName = false;
     this.sortBy("name-desc");
   }
 
-  ascBtnPerName() {
+  ascBtnPerName(){
     this.BtnPerName = true;
     this.sortBy("name-asc");
   }
 
-  togglePerName() {
-    if (this.BtnPerName) {
+  togglePerName(){
+    if(this.BtnPerName){
       this.desBtnPerName();
-    } else {
+    }else{
       this.ascBtnPerName();
     }
   }
 
-  desBtnPerPrice() {
+  desBtnPerPrice(){
     this.BtnPerPrice = false;
     this.sortBy("price-desc");
   }
 
-  ascBtnPerPrice() {
+  ascBtnPerPrice(){
     this.BtnPerPrice = true;
     this.sortBy("price-asc");
   }
 
-  togglePerPrice() {
-    if (this.BtnPerPrice) {
+  togglePerPrice(){
+    if(this.BtnPerPrice){
       this.desBtnPerPrice();
-    } else {
+    }else{
       this.ascBtnPerPrice();
     }
   }
