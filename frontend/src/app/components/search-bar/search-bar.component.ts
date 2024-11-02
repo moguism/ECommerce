@@ -15,8 +15,6 @@ export class SearchBarComponent {
 
   async search() {
     const clearedQuery = this.query.trim(); //Si la query es nula guarda null, sino, llama al trim y almacena lo que devuelva
-    if (clearedQuery) {
-      this.newItemEvent.emit(clearedQuery);
-    }
+    this.newItemEvent.emit(clearedQuery);
   }
 }
