@@ -14,6 +14,10 @@
     margin: 0;
     padding: 0;
     justify-content: center;
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat;
+    background-size: 100% auto;
+    background-position: top center;
 }
 
 
@@ -75,6 +79,7 @@
     margin-bottom: 15px;
     transition: transform 0.2s;
     min-height: 350px;
+    background-color: white;
 }
 
 .product-card:hover {
