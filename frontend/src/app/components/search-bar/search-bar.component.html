@@ -1,0 +1,6 @@
+<div class="search-container">
+    <form (ngSubmit)="search()">
+        <input type="text" placeholder="Search..." name="search" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" size="40">
+        <button id="lupa-busqueda" type="submit"><i class="fa fa-search"></i></button>
+    </form>
+</div>

@@ -16,6 +16,8 @@ public class FarminhouseContext : DbContext
     public DbSet<Review> Reviews { get; set; }
     public DbSet<User> Users { get; set; }
 
+    public DbSet<Category> Categories { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         string baseDir = AppDomain.CurrentDomain.BaseDirectory;

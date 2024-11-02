@@ -1,7 +1,7 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { LoginComponent } from '../../pages/login/login.component';
-import { RouterModule } from '@angular/router';
-import { RegisterService } from '../../services/register.service';
+import { Router, RouterModule } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-header',
@@ -14,14 +14,35 @@ export class HeaderComponent {
   protected buttonChange: boolean = true;
   protected dropdownChange: boolean = true;
   protected jwt : string = "";
+  protected name : string = "";
 
-  constructor(private registerService: RegisterService){
-    this.jwt = this.registerService.jwt
+
+  constructor(private apiService: ApiService, private router: Router){
+    this.jwt = this.apiService.jwt;
+    if(this.jwt != "")
+    {
+      this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
+    }
   }
 
   deleteToken()
   {
-    this.registerService.deleteToken()
+    this.apiService.deleteToken();
+    this.router.navigateByUrl("");
+    window.location.reload();
+  }
+
+  goToRoute(route : string)
+  {
+    this.router.navigateByUrl(route)
+  }
+
+  showAndClose(){
+    if(this.dropdownChange){
+      this.showDropdown();
+    }else{
+      this.closeDropdown();
+    }
   }
 
   showDropdown() {
@@ -32,7 +53,7 @@ export class HeaderComponent {
     dropdown[0].className = "view-dropdown";
   }
 
-  closedropdown(){
+  closeDropdown(){
     this.dropdownChange = true;
     const viewdropdown = document.getElementsByClassName("view-dropdown");
     const viewdropdownlist = document.getElementsByClassName("view-dropdown-list");
@@ -41,21 +62,28 @@ export class HeaderComponent {
   }
   
   showMenu() {
-    this.buttonChange = false;
-    const redElements = document.getElementsByClassName("red");
-    const textElements = document.querySelectorAll(".text");
-    const blackDiv = document.getElementById("black");
-    
-    for (let i = 0; i < redElements.length; i++) {
-      redElements[i].className = "redVisible";
-    }
-    
-    textElements.forEach((text) => {
-      text.className = "textVisible";
-    });
-    
-    if (blackDiv) {
-      blackDiv.id = "blackVisible";
+    if (this.dropdownChange) {
+      this.buttonChange = false;
+      const redElements = document.getElementsByClassName("red");
+      const textElements = document.querySelectorAll(".text");
+      const blackDiv = document.getElementById("black");
+      const dropdown = document.getElementsByClassName("dropdown");
+      
+      if(this.jwt != ""){
+        dropdown[0].className = "undisplay-dropdown";
+      }
+
+      for (let i = 0; i < redElements.length; i++) {
+        redElements[i].className = "redVisible";
+      }
+
+      textElements.forEach((text) => {
+        text.className = "textVisible";
+      });
+
+      if (blackDiv) {
+        blackDiv.id = "blackVisible";
+      }
     }
   }
 
@@ -64,7 +92,12 @@ export class HeaderComponent {
     const redVisibleElements = document.getElementsByClassName("redVisible");
     const textVisibleElements = document.querySelectorAll(".textVisible");
     const blackVisibleDiv = document.getElementById("blackVisible");
+    const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
     const screenWidth = window.innerWidth;
+
+    if(this.jwt != ""){
+      undisplaydropdown[0].className = "dropdown";
+    }
 
     if (screenWidth > 400) {
       for (let i = 0; i < redVisibleElements.length; i++) {

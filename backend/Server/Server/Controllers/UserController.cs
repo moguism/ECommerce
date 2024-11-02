@@ -16,13 +16,11 @@ namespace Server.Controllers
     {
         private readonly UserMapper _userMapper;
         private readonly UnitOfWork _unitOfWork;
-        FarminhouseContext _context;
 
-        public UserController(UnitOfWork unitOfWork, UserMapper userMapper, FarminhouseContext context)
+        public UserController(UnitOfWork unitOfWork, UserMapper userMapper)
         {
             _unitOfWork = unitOfWork;
             _userMapper = userMapper;
-            _context = context;
         }
 
 

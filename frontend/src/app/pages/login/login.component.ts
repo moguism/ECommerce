@@ -3,7 +3,7 @@ import { __values } from 'tslib';
 import { User } from '../../models/user';
 import { Login } from '../../models/login';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RegisterService } from '../../services/register.service';
+import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 
@@ -15,18 +15,32 @@ import { NgIf } from '@angular/common';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  constructor(private registerService: RegisterService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private router: Router, private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', Validators.required],
       password: ['', [Validators.required]],
-      address: ['', Validators.required]
-    })
+      address: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    },
+    { validators: this.passwordMatchValidator })
 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     })
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPasswordControl = form.get('confirmPassword');
+    const confirmPassword = confirmPasswordControl?.value;
+     
+    if (confirmPasswordControl != null) {
+      if (password !== confirmPassword) {
+        confirmPasswordControl.setErrors({ mismatch: true });
+      }
+    }
   }
 
   registerForm: FormGroup;
@@ -44,14 +58,13 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-    if (this.registerService.jwt != "") {
-      console.log(this.registerService.jwt)
+    if (this.apiService.jwt != "") {
+      console.log(this.apiService.jwt)
       this.router.navigateByUrl("user")
       return
     }
-    else
-    {
-      console.log(this.registerService.jwt)
+    else {
+      console.log(this.apiService.jwt)
     }
 
     let container = document.querySelector(".container")
@@ -74,26 +87,21 @@ export class LoginComponent implements OnInit {
   }
 
   async loginUser(): Promise<void> {
-    if(this.loginForm.valid)
-    {
+    if (this.loginForm.valid) {
       const login = new Login(this.email.trim(), this.password.trim())
-      await this.registerService.registerUser(this.loginPath, login)
-      if(this.registerService.jwt != "")
-      {
-        if(this.rememberUser)
-        {
+      await this.apiService.post(this.loginPath, login)
+      if (this.apiService.jwt != "") {
+        if (this.rememberUser) {
           console.log("Recordando al usuario...")
-          localStorage.setItem("token", this.registerService.jwt)
+          localStorage.setItem("token", this.apiService.jwt)
         }
-        else
-        {
+        else {
           console.log("No recordando al usuario...")
           localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
         }
         this.router.navigateByUrl("user")
       }
-      else
-      {
+      else {
         alert("Los datos introducidos no son correctos")
       }
     }
@@ -103,28 +111,27 @@ export class LoginComponent implements OnInit {
   }
 
   async registerUser(): Promise<void> {
-    if(this.registerForm.valid)
-    {
+    if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
+      alert("Las  contraseñas tienen que ser iguales");
+    }else if (this.registerForm.valid) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
-      await this.registerService.registerUser(this.signUpPath, user);
-      if(this.registerService.jwt != "")
-      {
+      await this.apiService.post(this.signUpPath, user);
+      if (this.apiService.jwt != "") {
         this.router.navigateByUrl("user")
       }
-    }
-    else {
-      alert("Campos inválidos.")
-    }
+    }else {
+        alert("Campos inválidos.");
+      }
   }
 
 
-    /*  
-    ngOnDestroy(): void {
-      // Cuando este componente se destruye hay que cancelar la suscripción.
-      // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
-  
-      this.routeParamMap$?.unsubscribe();
-    }
-    */
-  
+  /*  
+  ngOnDestroy(): void {
+    // Cuando este componente se destruye hay que cancelar la suscripción.
+    // Si no se cancela se seguirá llamando aunque el usuario no esté ya en esta página
+ 
+    this.routeParamMap$?.unsubscribe();
+  }
+  */
+
 }

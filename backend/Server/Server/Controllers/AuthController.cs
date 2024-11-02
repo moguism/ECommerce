@@ -32,7 +32,7 @@ namespace Server.Controllers
 
         [HttpPost("signup")]
         public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto receivedUser)
-        {           
+        {
             User user = _userMapper.ToEntity(receivedUser);
             user.Password = _passwordService.Hash(receivedUser.Password);
             await _unitOfWork.UserRepository.InsertAsync(user);
@@ -44,7 +44,7 @@ namespace Server.Controllers
         public async Task<ActionResult<string>> LoginUser([FromBody] LoginDto userLogin)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(userLogin.Email);
-            if(user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
+            if (user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
             {
                 string stringToken = obtainToken(user);
                 return Ok(stringToken);
@@ -53,7 +53,7 @@ namespace Server.Controllers
             {
                 return Unauthorized();
             }
-            
+
         }
 
         private string obtainToken(User user)

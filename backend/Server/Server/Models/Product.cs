@@ -17,11 +17,11 @@ public class Product
 
     public double Average { get; set; }
 
+    public string image {  get; set; }
+
     public int CategoryId { get; set; }
 
     public Category Category { get; set; }
-
-    public string Image { get; set; }
 
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 

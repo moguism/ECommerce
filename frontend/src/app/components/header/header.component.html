@@ -8,24 +8,28 @@
         
         
         <img class="logo" src="assets/images/Logo.png" alt="Logo" [routerLink]="''">
-        <h2 class="text">Frutas</h2>
-        <h2 class="text">Verduras</h2>
-        <h2 class="text">Carnes</h2>
-        <h2 class="text">Sobre Nosotros</h2>
+      
+        <h2 class="text"  (click)="goToRoute('product-list/frutas')">Frutas</h2>
+        <h2 class="text"  (click)="goToRoute('product-list/verduras')">Verduras</h2>
+        <h2 class="text"  (click)="goToRoute('product-list/carnes')">Carnes</h2>
+        <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
+
         @if(jwt != ""){
-            <div class="dropdown">
+            <h2 class="text-welcome">Bienvenido, {{ name }}</h2>
+            <div class="dropdown" (click)="showAndClose()">
                 @if(dropdownChange){
-                    <i (click)="showDropdown()" id="arrow" class="fa-solid fa-chevron-down"></i>
+                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
                 }@else {
-                    <i (click)="closedropdown()" id="arrow" class="fa-solid fa-chevron-up"></i>
+                    <i id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
                 <div class="dropdown-list">
-                    <p [routerLink]="'login'">Perfil</p>
+                    
+                    <p (click)="goToRoute('login')">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
             </div>
         }@else {
-            <div class="red" [routerLink]="'login'">
+            <div class="red" (click)="goToRoute('login')">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>
         }

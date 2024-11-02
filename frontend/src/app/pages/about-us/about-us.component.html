@@ -2,48 +2,57 @@
 <div class="main">
     <div class="container">
         <div class="header">
-            <img src="" alt="" class="header-image"/>
+            <img src="" alt="" class="header-image" />
         </div>
-    
-        <div class="section" style="background-color: #f7f7f7;">
-            <div class="content-box" style="background-color: rgba(0, 255, 0, 0.5);">
+
+        <div class="section" style="background-color: #f7f7f7; background-image: url('assets/images/Finca_SierraMorena.jpg');">
+            <div class="content-box" style="background-color: rgb(21, 170, 230);">
                 <h2>Nuestra misión</h2>
-                <p>Queremos entregar productos frescos que estén a la altura del compromiso y la dedicación que tiene con su familia.
+                <p style="color: white;">Queremos entregar productos frescos que estén a la altura del compromiso y la dedicación que tiene
+                    con su familia.
                     <br><br>
-                Para lograrlo, colaboramos con agricultores locales que se preocupan por el medio ambiente y cultivan sus productos con cariño.</p>
+                    Para lograrlo, colaboramos con agricultores locales que se preocupan por el medio ambiente y
+                    cultivan sus productos con cariño.
+                </p>
             </div>
             <div class="image-box">
                 <img src="assets/aboutus_images/tomates.png" alt="Tomates" />
             </div>
         </div>
-    
-        <div class="section vision" style="background-color: #e7e7e7">
+
+        <div class="section" style="background-color: #e7e7e7; background-image: url('assets/images/granja-avicola_2.jpg');">
             <div class="image-box">
                 <img src="assets/aboutus_images/furgoneta.png" alt="Furgonetilla" />
             </div>
             <div class="content-box" style="background-color: #F5F5DC;">
                 <h2>Nuestra visión</h2>
-                <p>Queremos recompensar el duro trabajo de los agricultores pagándoles bien por sus productos, y asi ganarnos su favor.
+                <p>Queremos recompensar el duro trabajo de los agricultores pagándoles bien por sus productos, y asi
+                    ganarnos su favor.
                     <br><br>
-                Además, empezaremos con una furgoneta, pero iremos aumentando la flota de vehiculos con los beneficios recolectados de las ventas.</p>
+                    Además, empezaremos con una furgoneta, pero iremos aumentando la flota de vehiculos con los
+                    beneficios recolectados de las ventas.
+                </p>
             </div>
         </div>
-    
-        <div class="section values" style="background-color: #f7f7f7;">
+
+        <div class="section" style="background-color: #f7f7f7; background-image: url('assets/images/franesunpesao.jpg');">
             <div class="content-box" style="background-color: #D9A72E;">
                 <h2>Nuestros valores</h2>
-                <p>La empresa se compromete a promover la sostenibilidad mediante prácticas que respeten el medio ambiente y fomenten la agricultura responsable. 
+                <p>La empresa se compromete a promover la sostenibilidad mediante prácticas que respeten el medio
+                    ambiente y fomenten la agricultura responsable.
                     <br><br>
-                Nos esforzamos por ofrecer productos de alta calidad que satisfagan las expectativas de nuestros clientes.</p>
+                    Nos esforzamos por ofrecer productos de alta calidad que satisfagan las expectativas de nuestros
+                    clientes.
+                </p>
             </div>
             <div class="image-box">
-                <img src="assets/cultivo-de-maiz.jpg" alt="Cultivo de maíz"/>
+                <img src="assets/cultivo-de-maiz.jpg" alt="Cultivo de maíz" />
             </div>
         </div>
-    
-        <div style="height: 300px;"></div>
+
+        <!--<div style="height: 500px;"></div>
         <div class="prank">
-            <p>Así que... ¿has aprendido de qué va nuestra página?</p> 
+            <p>Así que... ¿has aprendido de qué va nuestra página?</p>
         </div>
         <div style="height: 300px;"></div>
         <div class="prank">
@@ -73,6 +82,21 @@
         <div class="prank">
             <p>Ah, y estos somos nosotros:</p>
         </div>
-        <div style="height: 300px;"></div>
+        <div style="height: 100px;"></div>-->
+
+        <div class="prank">
+            <p>Ah, y estos somos nosotros:</p>
+        </div>
+
+        <div class="team">
+            @for (member of teamMembers; track $index)
+            {
+                <div class="team-member">
+                    <img [src]="member.image" alt="{{ member.name }}" class="team-photo" />
+                    <h3>{{ member.name }}</h3>
+                    <p>{{ member.description }}</p>
+                </div>
+            }
+        </div>
     </div>
 </div>
