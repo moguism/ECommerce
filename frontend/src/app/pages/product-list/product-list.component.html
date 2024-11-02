@@ -39,10 +39,6 @@
         }
         @empty{
             <div class="loading">No hay resultados</div>
-            @if (wasNextPage) 
-            {
-                {{ previousPage() }}
-            }
         }
 
     }@else {
@@ -51,11 +47,11 @@
 
 
     <div class="pagination">
-        <button disabled><<</button>
+        <button (click)="goToFirstPage()" id="first-button"><<</button>
         <button id="prev-button" (click)="previousPage()"><</button>
-        <div id="pagination-numbers">1</div>
+        <div id="pagination-numbers">{{ currentPage }}</div>
         <button id="next-button" (click)="nextPage()">></button>
-        <button>>></button>
+        <button (click)="goToLastPage()" id="last-button">>></button>
 
         <!-- Selector para elegir el número de productos por página -->
         <select id="products-per-page" (click)="newNumberOfProducts()">

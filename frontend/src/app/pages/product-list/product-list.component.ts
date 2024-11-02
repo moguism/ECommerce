@@ -28,8 +28,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   protected BtnPerName: boolean = true;
   protected BtnPerPrice: boolean = true;
 
-  wasNextPage: boolean = false;
-
   totalProducts: number = 0;
   totalPages: number = 1;
   currentPage: number = 1;
