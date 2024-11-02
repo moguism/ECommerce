@@ -14,6 +14,10 @@
     margin: 0;
     padding: 0;
     justify-content: center;
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat;
+    background-size: 100% auto;
+    background-position: top center;
 }
 
 
@@ -24,12 +28,14 @@
 
 .sort-buttons {
     display: flex;
+    flex-direction: column-reverse;
     gap: 10px;
     margin-bottom: 20px;
+    align-items: center;
+    justify-content: center; /* Cambiar a center para centrar en pantallas más pequeñas */
 }
 
 .sort-buttons-button {
-    border: 1px solid #000;
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -38,23 +44,33 @@
     gap: 8px;
     padding: 8px;
     font-weight: bold;
-    background-color: #f0f0f0;
+    color: white;
+    background-color: #99C080;
     border-radius: 5px;
     transition: background-color 0.3s;
+    height: 30px;
 }
 
 .sort-buttons-button:hover {
-    background-color: #e0e0e0;
+    background-color: #88b070;
 }
 
 .sort-buttons-button i {
     font-size: 14px;
-    color: #555;
+    color: black;
+}
+
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px; 
+    padding: 20px;
 }
 
 .product-card {
     display: flex;
     flex-direction: column;
+    align-items: center;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -62,6 +78,8 @@
     color: #333;
     margin-bottom: 15px;
     transition: transform 0.2s;
+    min-height: 350px;
+    background-color: white;
 }
 
 .product-card:hover {
@@ -74,10 +92,26 @@
     font-weight: bold;
     margin-bottom: 8px;
 }
+.product-card-image {
+    width: 100%; 
+    max-width: 200px;
+    height: 50%; 
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .product-card-price {
     font-size: 14px;
     color: #777;
+}
+.product-card-description{
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .loading {
@@ -89,6 +123,11 @@
 }
 
 /****** Páginación ******/
+.pagination-position{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .pagination {
     display: flex;
     justify-content: center;
@@ -98,9 +137,7 @@
     background-color: #f1f1f1;
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    bottom: 20px;
-    margin-left: 43%; /* Esto hay que controlarlo en el responsive */
+    position: sticky;
 }
 
 .pagination button {
@@ -142,7 +179,13 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
-
+/*responsive*/
+@media (max-width: 700px) {
+    #product-list {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr); 
+    }
+}
 
 
 

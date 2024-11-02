@@ -2,11 +2,7 @@
     <app-header></app-header>
 </div>
 
-<div class="search-bar">
-    <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
-</div>
-
-<div  class="body">
+<div class="body">
 
     
     <div class="sort-buttons">
@@ -24,28 +20,33 @@
                 <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
             }
         </div>
+        <div class="search-bar">
+            <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
+        </div>
     </div>
 
 
     @if (allProducts != null){
-
+        <div id="product-list">
         @for (product of allProducts; track product.id) {
-
+            
             <a class="product-card">
                 
                 <div class="product-card-name">{{product.name}}</div>
-                <div class="product-card-price">{{product.price}}</div>
+                <div class="product-card-image"><img class="image" [src]="'https://localhost:7150/' + product.image"></div>
+                <div class="product-card-price">Precio : {{product.price}}€</div>
+                <div class="product-card-description">{{product.description}}</div>
             </a>
         }
-        @empty{
-            <div class="loading">No hay resultados</div>
-        }
-
+        </div>
     }@else {
         <div class="loading">Cargando...</div>
     }
+    @if (allProducts == null){
+        <div class="loading">No hay resultados</div>
+    }
 
-
+    <div class="pagination-position">
     <div class="pagination">
         <button (click)="goToFirstPage()" id="first-button"><<</button>
         <button id="prev-button" (click)="previousPage()"><</button>
@@ -60,5 +61,6 @@
             <option value="12">12</option>
             <option value="16">16</option>
         </select>
+    </div>
     </div>
 </div>
