@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.DTOs;
 using Server.Models;
 using Server.Repositories.Base;
 
@@ -8,9 +9,17 @@ namespace Server.Repositories
     {
         public ProductRepository(FarminhouseContext context) : base(context) { }
 
-        public  async Task<ICollection<Product>> GetAllProductsByCategory(string name)
+        public PagedDto GetAllProductsByCategory(string productCategory,int pageNumber,int pageSize, IEnumerable<Product> products)
         {
-            return await GetQueryable().Where(product => product.Category.Name.Equals(name)).ToArrayAsync();
+            IEnumerable<Product> productsByCategory = products.Where(product => product.Category.Name.Equals(productCategory));
+            int totalProducts = productsByCategory.Count();
+
+            IEnumerable<Product> filteredProducts = productsByCategory.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return new PagedDto
+            {
+                Products = filteredProducts,
+                TotalProducts = totalProducts
+            };
         }
     }
 }

@@ -2,59 +2,106 @@
 using System.Text;
 using F23.StringSimilarity;
 using F23.StringSimilarity.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Server.Models;
 
 namespace Server.Services;
 
 public class SmartSearchService
 {
     private const double THRESHOLD = 0.75;
-    private static readonly string[] ITEMS = [
-        "Manzana",
-        "Apio",
-        "Carne"
-    ];
+    private readonly UnitOfWork _unitOfWork;
+
+    private static List<string> items = new List<string>();
 
     private readonly INormalizedStringSimilarity _stringSimilarityComparer;
 
-    public SmartSearchService()
+    public SmartSearchService(UnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
         _stringSimilarityComparer = new JaroWinkler();
+        AsignProductNames();
     }
 
-    public IEnumerable<string> Search(string query)
+    private async void AsignProductNames()
     {
-        IEnumerable<string> result;
-
-        // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
-        if (string.IsNullOrWhiteSpace(query))
+        ICollection<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+        products.ToArray();
+        foreach(Product product in products)
         {
-            result = ITEMS;
+            items.Add(product.Name);
         }
-        // En caso contrario, realizamos la búsqueda
-        else
+    }
+
+    public async Task<IEnumerable<Product>> Search(string query)
+    {
+        ICollection<Product> products = await _unitOfWork.ProductRepository.GetQueryable().Include(product => product.Category).ToArrayAsync();
+
+        if(query == null || query.Equals(""))
         {
-            // Limpiamos la query y la separamos por espacios
-            string[] queryKeys = GetKeys(ClearText(query));
-            // Aquí guardaremos los items que coincidan
-            List<string> matches = new List<string>();
+            return products;
+        }
 
-            foreach (string item in ITEMS)
+        IEnumerable<string> results = FindNames(query);
+
+        List<Product> sendProducts = new List<Product>();
+
+        foreach (Product product in products)
+        {
+            if (results.Contains(product.Name))
             {
-                // Limpiamos el item y lo separamos por espacios
-                string[] itemKeys = GetKeys(ClearText(item));
+                sendProducts.Add(product);
+            }
+        }
 
-                // Si coincide alguna de las palabras de item con las de query
-                // entonces añadimos item a la lista de coincidencias
-                if (IsMatch(queryKeys, itemKeys))
+        return sendProducts;
+    }
+
+    public IEnumerable<string> FindNames(string query)
+    {
+        try
+        {
+            IEnumerable<string> result;
+
+            // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                result = items;
+            }
+            // En caso contrario, realizamos la búsqueda
+            else
+            {
+                // Limpiamos la query y la separamos por espacios
+                string[] queryKeys = GetKeys(ClearText(query));
+                // Aquí guardaremos los items que coincidan
+                List<string> matches = new List<string>();
+
+                foreach (string item in items)
                 {
-                    matches.Add(item);
+                    // Limpiamos el item y lo separamos por espacios
+                    string[] itemKeys = GetKeys(ClearText(item));
+
+                    // Si coincide alguna de las palabras de item con las de query
+                    // entonces añadimos item a la lista de coincidencias
+                    if (IsMatch(queryKeys, itemKeys))
+                    {
+                        matches.Add(item);
+                    }
                 }
+
+                result = matches;
             }
 
-            result = matches;
+            return result;
         }
-
-        return result;
+        catch
+        {
+            Console.WriteLine("Ha habido un cambio de contexto."); // Por si el usuario quiere darnos por culo y cambiar página mientras se busca
+            IEnumerable<string> result = [""];
+            return result;
+        }
+        
     }
 
     private bool IsMatch(string[] queryKeys, string[] itemKeys)
