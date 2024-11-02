@@ -1,42 +1,63 @@
-<div>
+<div class="header">
     <app-header></app-header>
 </div>
 
-<div class="search-bar">
-    <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
-</div>
-
 <div  class="body">
-    <h1>Productos</h1> <!-- Cambiar por un valor variable segun el tipo de producto-->
-    <div class="container">
-        <div class="container-row">
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-        </div>
-        <div class="container-row">
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-            <div class="container-row-product"></div>
-        </div>
-    </div>
-
-    <div class="pagination">
-        <!-- Aqui va las flechas dobles -->
-        <!-- Aqui va una flecha -->
-        <div class="pagination-numbers"></div>
-        <!-- Aqui va una flecha -->
-        <!-- Aqui va las flechas dobles -->
-    </div>
-
-
-
-
 
     
+    <div class="sort-buttons">
+        <div (click)="togglePerName()" class="sort-buttons-button">
+            @if(BtnPerName){
+                <span>Nombre</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Nombre</span><i class="fa-solid fa-chevron-down"></i>
+            }
+        </div>
+        <div (click)="togglePerPrice()" class="sort-buttons-button">
+            @if(BtnPerPrice){
+                <span>Precio</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
+            }
+        </div>
+        <div class="search-bar">
+            <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
+        </div>
+    </div>
 
 
+    @if (allProducts != null){
+
+        @for (product of allProducts; track product.id) {
+
+            <a class="product-card">
+                
+                <div class="product-card-name">{{product.name}}</div>
+                <div class="product-card-price">{{product.price}}</div>
+            </a>
+        }
+        @empty{
+            <div class="loading">No hay resultados</div>
+        }
+
+    }@else {
+        <div class="loading">Cargando...</div>
+    }
+
+
+    <div class="pagination">
+        <button (click)="goToFirstPage()" id="first-button"><<</button>
+        <button id="prev-button" (click)="previousPage()"><</button>
+        <div id="pagination-numbers">{{ currentPage }}</div>
+        <button id="next-button" (click)="nextPage()">></button>
+        <button (click)="goToLastPage()" id="last-button">>></button>
+
+        <!-- Selector para elegir el número de productos por página -->
+        <select id="products-per-page" (click)="newNumberOfProducts()">
+            <option value="4">4</option>
+            <option value="8" >8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+        </select>
+    </div>
 </div>
-

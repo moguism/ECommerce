@@ -27,20 +27,22 @@ export class HeaderComponent {
 
   deleteToken()
   {
-    this.apiService.deleteToken()
-    if(this.router.url == "")
-    {
-      window.location.reload();
-    }
-    else 
-    {
-      this.router.navigateByUrl("")
-    }
+    this.apiService.deleteToken();
+    this.router.navigateByUrl("");
+    window.location.reload();
   }
 
   goToRoute(route : string)
   {
     this.router.navigateByUrl(route)
+  }
+
+  showAndClose(){
+    if(this.dropdownChange){
+      this.showDropdown();
+    }else{
+      this.closeDropdown();
+    }
   }
 
   showDropdown() {

@@ -75,7 +75,6 @@ export class ApiService {
   }
 
   private async sendRequest<T = boolean>(request$: Observable<HttpResponse<any>>, saveJwt: boolean = false): Promise<Result<T>> {
-    console.log(request$)
     let result: Result<T>;
 
     try {

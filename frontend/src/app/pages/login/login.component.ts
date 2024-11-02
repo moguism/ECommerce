@@ -20,13 +20,27 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       name: ['', Validators.required],
       password: ['', [Validators.required]],
-      address: ['', Validators.required]
-    })
+      address: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    },
+    { validators: this.passwordMatchValidator })
 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     })
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPasswordControl = form.get('confirmPassword');
+    const confirmPassword = confirmPasswordControl?.value;
+     
+    if (confirmPasswordControl != null) {
+      if (password !== confirmPassword) {
+        confirmPasswordControl.setErrors({ mismatch: true });
+      }
+    }
   }
 
   registerForm: FormGroup;
@@ -97,16 +111,17 @@ export class LoginComponent implements OnInit {
   }
 
   async registerUser(): Promise<void> {
-    if (this.registerForm.valid) {
+    if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
+      alert("Las  contraseñas tienen que ser iguales");
+    }else if (this.registerForm.valid) {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         this.router.navigateByUrl("user")
       }
-    }
-    else {
-      alert("Campos inválidos.")
-    }
+    }else {
+        alert("Campos inválidos.");
+      }
   }
 
 
