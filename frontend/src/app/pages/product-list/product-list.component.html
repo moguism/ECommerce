@@ -1,4 +1,4 @@
-<div>
+<div class="header">
     <app-header></app-header>
 </div>
 
@@ -10,14 +10,19 @@
 
     
     <div class="sort-buttons">
-        <div class="ordinationPerName">
-          <button class="toggle-button">Name asc</button>
-          <button class="toggle-button">Name desc</button>
+        <div (click)="togglePerName()" class="sort-buttons-button">
+            @if(BtnPerName){
+                <span>Nombre</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Nombre</span><i class="fa-solid fa-chevron-down"></i>
+            }
         </div>
-        <!--
-        <div class="ordinationPerPrice">
-          <button class="toggle-button" (click)="sortBy('price-asc')">Price asc</button>
-          <button class="toggle-button" (click)="sortBy('price-desc')">Price desc</button>
+        <div (click)="togglePerPrice()" class="sort-buttons-button">
+            @if(BtnPerPrice){
+                <span>Precio</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
+            }
         </div>
     </div>
 
@@ -27,21 +32,19 @@
         @for (product of allProducts; track product.id) {
 
             <a class="product-card">
-                <div>{{product.name}} </div>
-                <div>{{product.price}} </div>
-
-
-
+                
+                <div class="product-card-name">{{product.name}}</div>
+                <div class="product-card-price">{{product.price}}</div>
             </a>
 
             
         }
         @empty{
-            <div>No hay resultados...</div>
+            <div class="loading">No hay resultados...</div>
         }
 
     }@else {
-        <div>Cargando...</div>
+        <div class="loading">Cargando...</div>
     }
 
 
