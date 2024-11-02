@@ -2,10 +2,6 @@
     <app-header></app-header>
 </div>
 
-<div class="search-bar">
-    <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
-</div>
-
 <div  class="body">
 
     
@@ -23,6 +19,9 @@
             }@else {
                 <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
             }
+        </div>
+        <div class="search-bar">
+            <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
         </div>
     </div>
 
