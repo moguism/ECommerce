@@ -27,7 +27,7 @@
     </div>
 
 
-    @if (allProducts != null && allProducts.length > 0){
+    @if (allProducts != null){
 
         @for (product of allProducts; track product.id) {
 
@@ -36,11 +36,9 @@
                 <div class="product-card-name">{{product.name}}</div>
                 <div class="product-card-price">{{product.price}}</div>
             </a>
-
-            
         }
         @empty{
-            <div class="loading">No hay resultados...</div>
+            <div class="loading">No hay resultados</div>
         }
 
     }@else {
@@ -49,11 +47,11 @@
 
 
     <div class="pagination">
-        <button disabled><<</button>
-        <button  (click)="previousPage()"><</button>
-        <div id="pagination-numbers">1</div>
-        <button (click)="nextPage()">></button>
-        <button>>></button>
+        <button (click)="goToFirstPage()" id="first-button"><<</button>
+        <button id="prev-button" (click)="previousPage()"><</button>
+        <div id="pagination-numbers">{{ currentPage }}</div>
+        <button id="next-button" (click)="nextPage()">></button>
+        <button (click)="goToLastPage()" id="last-button">>></button>
 
         <!-- Selector para elegir el número de productos por página -->
         <select id="products-per-page" (click)="newNumberOfProducts()">
@@ -63,13 +61,4 @@
             <option value="16">16</option>
         </select>
     </div>
-
-
-
-
-
-    
-
-
 </div>
-

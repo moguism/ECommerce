@@ -18,7 +18,7 @@ import { QuerySelector } from '../../models/query-selector';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-  allProducts: Product[] | null = [];
+  allProducts: Product[] | null | undefined = [];
   filteredProducts: Product[] = [];
   routeParamMap$: Subscription | null = null;
 
@@ -27,6 +27,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   protected BtnPerName: boolean = true;
   protected BtnPerPrice: boolean = true;
+
+  totalProducts: number = 0;
+  totalPages: number = 1;
+  currentPage: number = 1;
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
     const FIRST_PAGE = 1;
@@ -49,22 +53,22 @@ export class ProductListComponent implements OnInit, OnDestroy {
       switch (category) {
         case "frutas":
           this.querySelector.productType = ProductType.FRUITS;
-          const fruits = await this.productService.getAllProducts(this.querySelector);
-          console.log("fruits", fruits)
-          this.allProducts = fruits.data;
-          console.log(this.allProducts);
           break;
         case "verduras":
           this.querySelector.productType = ProductType.VEGETABLES;
-          const vegatables = await this.productService.getAllProducts(this.querySelector);
-          this.allProducts = vegatables.data
           break;
         case "carnes":
           this.querySelector.productType = ProductType.MEAT;
-          const meats = await this.productService.getAllProducts(this.querySelector);
-          this.allProducts = meats.data
           break;
       }
+
+      const result = await this.productService.getAllProducts(this.querySelector);
+
+      this.allProducts = result.data?.products;
+      this.totalProducts = result.data?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
+      this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize); // Para que redondee el resultado hacia arriba (como mi estrés)
+
+      this.updatePaginationButtons();
     });
 
 
@@ -74,35 +78,59 @@ export class ProductListComponent implements OnInit, OnDestroy {
     console.log("All products ", this.allProducts);
   }
 
+  updatePaginationButtons() {
+    const previousButton = document.getElementById("prev-button") as HTMLButtonElement;
+    const nextButton = document.getElementById("next-button") as HTMLButtonElement;
+    const firstButton = document.getElementById("first-button") as HTMLButtonElement;
+    const lastButton = document.getElementById("last-button") as HTMLButtonElement;
+
+    if (firstButton) firstButton.disabled = this.querySelector.actualPage <= 1;
+    if (previousButton) previousButton.disabled = this.querySelector.actualPage <= 1;
+    if (nextButton) nextButton.disabled = this.querySelector.actualPage >= this.totalPages;
+    if (lastButton) lastButton.disabled = this.querySelector.actualPage >= this.totalPages;
+  }
 
   nextPage() {
-
-    this.querySelector.actualPage += 1;
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) {
-
-      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    if (this.querySelector.actualPage < this.totalPages) {
+      this.querySelector.actualPage++;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
     }
-
-    this.getAllProducts();
   }
-
 
   previousPage() {
-    this.querySelector.actualPage -= 1;
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) {
-
-      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    if (this.querySelector.actualPage > 1) {
+      this.querySelector.actualPage--;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
     }
-
-    this.getAllProducts();
   }
 
+  goToFirstPage() {
+    if (this.querySelector.actualPage != 1) {
+      this.querySelector.actualPage = 1;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
+    }
+  }
+
+  goToLastPage() {
+    if (this.querySelector.actualPage != this.totalPages) {
+      this.querySelector.actualPage = this.totalPages;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
+    }
+  }
+
+  /*updatePageText() {
+    const currentPageElement = document.getElementById("pagination-numbers");
+
+    if (currentPageElement) currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+  }*/
 
   newNumberOfProducts() {
     // Obtener el elemento del DOM
@@ -119,7 +147,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   }
 
-  getSearchedProducts(query : string) {
+  getSearchedProducts(query: string) {
     this.querySelector.search = query
     this.getAllProducts();
   }
@@ -150,17 +178,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
     // Volver a obtener los productos con la nueva ordenación
     this.getAllProducts();
   }
-
-
-  /*async getProducts() {
-    const request = await this.productService.getAllProducts();
-
-    if (request.success) {
-      this.allProducts = request.data;
-    }
-
-    console.log(this.allProducts); //para pruebas
-  }*/
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
@@ -201,7 +218,5 @@ export class ProductListComponent implements OnInit, OnDestroy {
       this.ascBtnPerPrice();
     }
   }
-
-
 
 }
