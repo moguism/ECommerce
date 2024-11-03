@@ -114,6 +114,18 @@
     font-weight: bold;
 }
 
+.product-card-stock{
+    text-align: center;
+    font-size: 16px;
+    color: green;
+}
+
+.product-card-no-stock{
+    text-align: center;
+    font-size: 16px;
+    color: red;
+}
+
 .loading {
     display: block;
     color: #888;

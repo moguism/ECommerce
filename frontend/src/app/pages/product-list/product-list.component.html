@@ -36,6 +36,12 @@
                 <div class="product-card-image"><img class="image" [src]="'https://localhost:7150/' + product.image"></div>
                 <div class="product-card-price">Precio : {{product.price}}€</div>
                 <div class="product-card-description">{{product.description}}</div>
+                @if (product.stock > 0) {
+                    <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
+                }
+                @else {
+                    <div class="product-card-no-stock">No hay stock</div>
+                }
             </a>
         }
         </div>
