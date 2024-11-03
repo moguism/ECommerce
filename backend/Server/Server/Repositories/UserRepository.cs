@@ -15,5 +15,14 @@ namespace Server.Repositories
             return await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public async Task<User> GetAllInfoById(int id)
+        {
+            return await GetQueryable()
+                .Where(user => user.Id == id)
+                .Include(user => user.Orders)
+                .Include(user => user.Reviews)
+                .FirstOrDefaultAsync();
+        }
+
     }
 }
