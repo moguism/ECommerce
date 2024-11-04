@@ -33,7 +33,7 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<OrderDto> CreateOrder([FromBody] OrderDto orderDto, [FromBody] bool express)
+    public async Task<OrderDto> CreateOrder([FromBody] OrderDto orderDto, [FromQuery] bool express)
     {
         /* EL FLUJO IRÍA ASÍ:
          * 1) El usuario hace petición post para crear un pedido
