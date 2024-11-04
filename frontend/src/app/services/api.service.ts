@@ -114,7 +114,7 @@ export class ApiService {
     let header: any = {};
 
     // Para cuando haya que poner un JWT
-    //header['Authorization'] = `Bearer ${this.jwt}`;
+    header['Authorization'] = `Bearer ${this.jwt}`;
 
     if (accept)
       header['Accept'] = accept;

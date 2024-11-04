@@ -24,4 +24,6 @@ public class User
     public ICollection<ShoppingCart> ShoppingCart { get; set; } = new List<ShoppingCart>();
 
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

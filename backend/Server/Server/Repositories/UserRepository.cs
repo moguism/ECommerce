@@ -19,7 +19,7 @@ namespace Server.Repositories
         {
             return await GetQueryable()
                 .Where(user => user.Id == id)
-                //.Include(user => user.Orders)
+                .Include(user => user.Orders)
                 .Include(user => user.Reviews)
                 .FirstOrDefaultAsync();
         }

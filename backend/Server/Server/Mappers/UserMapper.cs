@@ -16,7 +16,7 @@ namespace Server.Mappers
                 Email = user.Email,
                 Role = user.Role,
                 Address = user.Address,
-                //Orders = user.Orders,
+                Orders = user.Orders,
                 Reviews = user.Reviews,
             };
         }
@@ -38,7 +38,7 @@ namespace Server.Mappers
                 Email = userDto.Email,
                 Role = userDto.Role,
                 Address = userDto.Address,
-                //Orders = userDto.Orders,
+                Orders = userDto.Orders,
                 Reviews = userDto.Reviews,
             };
         }

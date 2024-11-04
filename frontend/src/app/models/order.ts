@@ -1,5 +1,8 @@
+import { Product } from "./product";
+
 export interface Order {
     id: number,
     createdAt: Date,
-    isReserved: boolean
+    isReserved: boolean,
+    products: Product[]
 }

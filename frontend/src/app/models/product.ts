@@ -1,5 +1,4 @@
 import { Category } from "./category";
-import { Order } from "./order";
 import { Review } from "./review";
 
 export interface Product {
@@ -12,6 +11,5 @@ export interface Product {
     image: string,
     categoryId: number,
     category: Category,
-    reviews: Review,
-    orders: Order
+    reviews: Review[]
 }
