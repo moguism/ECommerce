@@ -142,7 +142,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       const numberOfProducts = parseInt(productsPerPageElement.value, 10);
       this.querySelector.productPageSize = numberOfProducts;
       this.getAllProducts();
-
+      this.goToFirstPage();
     }
 
   }
@@ -150,6 +150,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   getSearchedProducts(query: string) {
     this.querySelector.search = query
     this.getAllProducts();
+    this.goToFirstPage();
   }
 
   // Método para manejar la ordenación

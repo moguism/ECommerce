@@ -25,10 +25,10 @@ export class HeaderComponent {
     }
   }
 
-  deleteToken()
+  async deleteToken()
   {
     this.apiService.deleteToken();
-    this.router.navigateByUrl("");
+    await this.router.navigateByUrl("");
     window.location.reload();
   }
 
