@@ -36,6 +36,19 @@ namespace Server.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         private async Task<User> GetAuthorizedUser()
         {
             // Pilla el usuario autenticado según ASP

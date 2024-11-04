@@ -19,6 +19,7 @@ public class OrderController : ControllerBase
         _orderMapper = orderMapper;
     }
 
+    /*
     [Authorize]
     [HttpGet("all")]
     public async Task<IEnumerable<OrderDto>> GetOrders()
@@ -30,6 +31,8 @@ public class OrderController : ControllerBase
         }
         return _orderMapper.ToDto(user.Orders.Where(order => order.IsReserved == 0)); // Los pedidos normales
     }
+
+    */
 
     [Authorize]
     [HttpPost]
