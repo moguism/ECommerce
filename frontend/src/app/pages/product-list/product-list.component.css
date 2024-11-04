@@ -14,9 +14,11 @@
     margin: 0;
     padding: 0;
     justify-content: center;
-    /*background-image: ; Hay que añadirle la imagen de fondo del figma*/
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat;
+    background-size: 100% auto;
+    background-position: top center;
 }
-
 
 .search-bar{
     margin: 5% 0;
@@ -25,9 +27,11 @@
 
 .sort-buttons {
     display: flex;
+    flex-direction: column-reverse;
     gap: 10px;
     margin-bottom: 20px;
     align-items: center;
+    justify-content: center; /* Cambiar a center para centrar en pantallas más pequeñas */
 }
 
 .sort-buttons-button {
@@ -55,9 +59,17 @@
     color: black;
 }
 
+#product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px; 
+    padding: 20px;
+}
+
 .product-card {
     display: flex;
     flex-direction: column;
+    align-items: center;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -65,6 +77,9 @@
     color: #333;
     margin-bottom: 15px;
     transition: transform 0.2s;
+    min-height: 350px;
+    background-color: white;
+    justify-content: space-between;
 }
 
 .product-card:hover {
@@ -77,10 +92,38 @@
     font-weight: bold;
     margin-bottom: 8px;
 }
+.product-card-image {
+    width: 100%; 
+    max-width: 200px;
+    height: 50%; 
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .product-card-price {
     font-size: 14px;
     color: #777;
+}
+.product-card-description{
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.product-card-stock{
+    text-align: center;
+    font-size: 16px;
+    color: green;
+}
+
+.product-card-no-stock{
+    text-align: center;
+    font-size: 16px;
+    color: red;
 }
 
 .loading {
@@ -92,6 +135,11 @@
 }
 
 /****** Páginación ******/
+.pagination-position{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .pagination {
     display: flex;
     justify-content: center;
@@ -101,9 +149,7 @@
     background-color: #f1f1f1;
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    bottom: 20px;
-    margin-left: 43%; /* Esto hay que controlarlo en el responsive */
+    position: sticky;
 }
 
 .pagination button {
@@ -145,7 +191,38 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+/*responsive*/
+@media (max-width: 700px) {
+    #product-list {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr); 
+    }
+}
 
+.btn-buy {
+    background-color: #4da8da;
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
 
+.btn-buy:hover {
+    background-color: #3399cc;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
 
-
+.btn-buy:active {
+    background-color: #2887b3;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+}

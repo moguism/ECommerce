@@ -3,17 +3,19 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { HeaderComponent } from '../../components/header/header.component';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
-import { Subscription, catchError, forkJoin, lastValueFrom } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductType } from '../../models/enums/product-type';
 import { OrdinationType } from '../../models/enums/ordination-type';
 import { OrdinationDirection } from '../../models/enums/ordination-direction';
 import { QuerySelector } from '../../models/query-selector';
+import { AddToCartComponent } from '../../components/add-to-cart/add-to-cart.component';
+import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [HeaderComponent, SearchBarComponent],
+  imports: [HeaderComponent, SearchBarComponent, AddToCartComponent, EurosToCentsPipe],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -32,7 +34,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   totalPages: number = 1;
   currentPage: number = 1;
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private router: Router) {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 4;
     //QuerySelector por defecto para pruebas
@@ -43,6 +45,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     this.getAllProducts()
 
+  }
+
+  goToProduct(id: number)
+  {
+    let route: string = "product-view/" + id;
+    this.router.navigateByUrl(route)
   }
 
 
@@ -142,7 +150,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
       const numberOfProducts = parseInt(productsPerPageElement.value, 10);
       this.querySelector.productPageSize = numberOfProducts;
       this.getAllProducts();
-
+      this.goToFirstPage();
     }
 
   }
@@ -150,6 +158,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   getSearchedProducts(query: string) {
     this.querySelector.search = query
     this.getAllProducts();
+    this.goToFirstPage();
   }
 
   // Método para manejar la ordenación

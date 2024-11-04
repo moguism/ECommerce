@@ -9,7 +9,7 @@ export interface Product {
     price: number,
     stock: number,
     average: number,
-    image_url: string,
+    image: string,
     categoryId: number,
     category: Category,
     reviews: Review,

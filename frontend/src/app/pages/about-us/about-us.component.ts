@@ -10,8 +10,8 @@ import { Member } from '../../models/member';
   styleUrl: './about-us.component.css'
 })
 export class AboutUsComponent {
-  readonly position : number = 1500
-  setUp : boolean = false
+  /*readonly position : number = 1500
+  setUp : boolean = false*/
   readonly teamMembers : Member[] = [
     new Member("assets/aboutus_images/mauricio.png", "MAURICIO", "Mauricio es una de las fuerzas que mueve a la granja. Le encanta participar en el cultivo de productos orgánicos y en la educación sobre prácticas agrícolas sostenibles."),
     new Member("assets/aboutus_images/daniel.png", "DANIEL", "Daniel cuenta con varios años de experiencia como director comercial en el sector agrícola. Le encantan los desafíos y ha ayudado a la granja a crecer y prosperar."),
@@ -19,7 +19,7 @@ export class AboutUsComponent {
     new Member("assets/aboutus_images/francisco.png", "FRAN", "Francisco Siles tiene una amplia experiencia en agricultura sostenible. Su objetivo es garantizar la calidad y el éxito de nuestra granja.")
   ]
 
-  @HostListener('window:scroll', [])
+  /*@HostListener('window:scroll', [])
   checkScroll() {
     const currentScroll = window.scrollY;
 
@@ -29,5 +29,5 @@ export class AboutUsComponent {
       this.setUp = true;
     }
     //console.log(currentScroll)
-  }
+  }*/
 }
