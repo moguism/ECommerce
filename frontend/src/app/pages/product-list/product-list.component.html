@@ -1,56 +1,64 @@
-<div>
+<div class="header">
     <app-header></app-header>
 </div>
 
-<div class="search-bar">
-    <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
-</div>
-
-<div  class="body">
+<div class="body">
 
     
     <div class="sort-buttons">
-        <div class="ordinationPerName">
-          <button class="toggle-button">Name asc</button>
-          <button class="toggle-button">Name desc</button>
+        <div (click)="togglePerName()" class="sort-buttons-button">
+            @if(BtnPerName){
+                <span>Nombre</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Nombre</span><i class="fa-solid fa-chevron-down"></i>
+            }
         </div>
-        <!--
-        <div class="ordinationPerPrice">
-          <button class="toggle-button" (click)="sortBy('price-asc')">Price asc</button>
-          <button class="toggle-button" (click)="sortBy('price-desc')">Price desc</button>
+        <div (click)="togglePerPrice()" class="sort-buttons-button">
+            @if(BtnPerPrice){
+                <span>Precio</span><i class="fa-solid fa-chevron-up"></i>
+            }@else {
+                <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
+            }
+        </div>
+        <div class="search-bar">
+            <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
         </div>
     </div>
 
 
-    @if (allProducts != null && allProducts.length > 0){
-
+    @if (allProducts != null){
+        <div id="product-list">
         @for (product of allProducts; track product.id) {
-
-            <a class="product-card">
-                <div>{{product.name}} </div>
-                <div>{{product.price}} </div>
-
-
-
-            </a>
-
             
+            <a class="product-card">
+                
+                <div class="product-card-name">{{product.name}}</div>
+                <div class="product-card-image"><img class="image" [src]="'https://localhost:7150/' + product.image"></div>
+                <div class="product-card-price">Precio : {{product.price}}€</div>
+                <div class="product-card-description">{{product.description}}</div>
+                @if (product.stock > 0) {
+                    <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
+                }
+                @else {
+                    <div class="product-card-no-stock">No hay stock</div>
+                }
+            </a>
         }
-        @empty{
-            <div>No hay resultados...</div>
-        }
-
+        </div>
     }@else {
-        <div>Cargando...</div>
+        <div class="loading">Cargando...</div>
+    }
+    @if (allProducts == null){
+        <div class="loading">No hay resultados</div>
     }
 
-
+    <div class="pagination-position">
     <div class="pagination">
-        <button disabled><<</button>
-        <button  (click)="previousPage()"><</button>
-        <div id="pagination-numbers">1</div>
-        <button (click)="nextPage()">></button>
-        <button>>></button>
+        <button (click)="goToFirstPage()" id="first-button"><<</button>
+        <button id="prev-button" (click)="previousPage()"><</button>
+        <div id="pagination-numbers">{{ currentPage }}</div>
+        <button id="next-button" (click)="nextPage()">></button>
+        <button (click)="goToLastPage()" id="last-button">>></button>
 
         <!-- Selector para elegir el número de productos por página -->
         <select id="products-per-page" (click)="newNumberOfProducts()">
@@ -60,13 +68,5 @@
             <option value="16">16</option>
         </select>
     </div>
-
-
-
-
-
-    
-
-
+    </div>
 </div>
-

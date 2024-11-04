@@ -18,19 +18,25 @@ import { QuerySelector } from '../../models/query-selector';
   styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-  allProducts: Product[] | null = [];
+  allProducts: Product[] | null | undefined = [];
   filteredProducts: Product[] = [];
   routeParamMap$: Subscription | null = null;
 
   querySelector: QuerySelector;
   productTypeString: string = "Producto";
 
+  protected BtnPerName: boolean = true;
+  protected BtnPerPrice: boolean = true;
+
+  totalProducts: number = 0;
+  totalPages: number = 1;
+  currentPage: number = 1;
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 4;
     //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, 1, PRODUCT_PER_PAGE, FIRST_PAGE);
+    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
   }
 
   async ngOnInit(): Promise<void> {
@@ -40,7 +46,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
 
-
   getAllProducts() {
 
     this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
@@ -48,22 +53,22 @@ export class ProductListComponent implements OnInit, OnDestroy {
       switch (category) {
         case "frutas":
           this.querySelector.productType = ProductType.FRUITS;
-          const fruits = await this.productService.getAllProducts(this.querySelector);
-          console.log("fruits", fruits)
-          this.allProducts = fruits.data;
-          console.log(this.allProducts);
           break;
         case "verduras":
           this.querySelector.productType = ProductType.VEGETABLES;
-          const vegatables = await this.productService.getAllProducts(this.querySelector);
-          this.allProducts = vegatables.data
           break;
         case "carnes":
           this.querySelector.productType = ProductType.MEAT;
-          const meats = await this.productService.getAllProducts(this.querySelector);
-          this.allProducts = meats.data
           break;
       }
+
+      const result = await this.productService.getAllProducts(this.querySelector);
+
+      this.allProducts = result.data?.products;
+      this.totalProducts = result.data?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
+      this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize); // Para que redondee el resultado hacia arriba (como mi estrés)
+
+      this.updatePaginationButtons();
     });
 
 
@@ -73,38 +78,59 @@ export class ProductListComponent implements OnInit, OnDestroy {
     console.log("All products ", this.allProducts);
   }
 
+  updatePaginationButtons() {
+    const previousButton = document.getElementById("prev-button") as HTMLButtonElement;
+    const nextButton = document.getElementById("next-button") as HTMLButtonElement;
+    const firstButton = document.getElementById("first-button") as HTMLButtonElement;
+    const lastButton = document.getElementById("last-button") as HTMLButtonElement;
 
-
+    if (firstButton) firstButton.disabled = this.querySelector.actualPage <= 1;
+    if (previousButton) previousButton.disabled = this.querySelector.actualPage <= 1;
+    if (nextButton) nextButton.disabled = this.querySelector.actualPage >= this.totalPages;
+    if (lastButton) lastButton.disabled = this.querySelector.actualPage >= this.totalPages;
+  }
 
   nextPage() {
-
-    this.querySelector.actualPage += 1;
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) {
-
-      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    if (this.querySelector.actualPage < this.totalPages) {
+      this.querySelector.actualPage++;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
     }
-
-    this.getAllProducts();
   }
-
-
 
   previousPage() {
-    this.querySelector.actualPage -= 1;
-
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) {
-
-      currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+    if (this.querySelector.actualPage > 1) {
+      this.querySelector.actualPage--;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
     }
-
-    this.getAllProducts();
   }
 
+  goToFirstPage() {
+    if (this.querySelector.actualPage != 1) {
+      this.querySelector.actualPage = 1;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
+    }
+  }
+
+  goToLastPage() {
+    if (this.querySelector.actualPage != this.totalPages) {
+      this.querySelector.actualPage = this.totalPages;
+      this.currentPage = this.querySelector.actualPage;
+      //this.updatePageText();
+      this.getAllProducts();
+    }
+  }
+
+  /*updatePageText() {
+    const currentPageElement = document.getElementById("pagination-numbers");
+
+    if (currentPageElement) currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
+  }*/
 
   newNumberOfProducts() {
     // Obtener el elemento del DOM
@@ -116,14 +142,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
       const numberOfProducts = parseInt(productsPerPageElement.value, 10);
       this.querySelector.productPageSize = numberOfProducts;
       this.getAllProducts();
-
+      this.goToFirstPage();
     }
-
-
 
   }
 
-
+  getSearchedProducts(query: string) {
+    this.querySelector.search = query
+    this.getAllProducts();
+    this.goToFirstPage();
+  }
 
   // Método para manejar la ordenación
   sortBy(order: string) {
@@ -152,28 +180,44 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts();
   }
 
-
-
-
-
-
-
-
-  getSearchedProducts(products: Product[] | null) {
-    this.allProducts = products;
-  }
-
-  /*async getProducts() {
-    const request = await this.productService.getAllProducts();
-
-    if (request.success) {
-      this.allProducts = request.data;
-    }
-
-    console.log(this.allProducts); //para pruebas
-  }*/
-
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
   }
+
+  desBtnPerName(){ // Funcion para ordenar descendente
+    this.BtnPerName = false;
+    this.sortBy("name-desc");
+  }
+
+  ascBtnPerName(){
+    this.BtnPerName = true;
+    this.sortBy("name-asc");
+  }
+
+  togglePerName(){
+    if(this.BtnPerName){
+      this.desBtnPerName();
+    }else{
+      this.ascBtnPerName();
+    }
+  }
+
+  desBtnPerPrice(){
+    this.BtnPerPrice = false;
+    this.sortBy("price-desc");
+  }
+
+  ascBtnPerPrice(){
+    this.BtnPerPrice = true;
+    this.sortBy("price-asc");
+  }
+
+  togglePerPrice(){
+    if(this.BtnPerPrice){
+      this.desBtnPerPrice();
+    }else{
+      this.ascBtnPerPrice();
+    }
+  }
+
 }

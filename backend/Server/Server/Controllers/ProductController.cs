@@ -24,7 +24,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Product>> GetAllProducts([FromQuery] QueryDto query)
+        public async Task<PagedDto> GetAllProducts([FromQuery] QueryDto query)
         {
             // 1) Busca 2) Ordena 3) Pagina
 
@@ -46,9 +46,10 @@ namespace Server.Controllers
 
             string productType = query.ProductType.ToString().ToLower();
 
-            products = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+            PagedDto pagedDto = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+            pagedDto.Products = _productMapper.AddCorrectPath(pagedDto.Products);
 
-            return _productMapper.AddCorrectPath(products);
+            return pagedDto;
          }
 
         /*
