@@ -1,0 +1,48 @@
+<div class="body">
+
+    <div>
+        <h1>Tu carrito</h1>
+    </div>
+
+
+    <div>
+        <div>
+            <h3>Total ({{totalProducts}} productos): {{totalPrice}}€ </h3>
+        </div>
+        <div>
+            <button>Pago con tarjeta</button>
+            <button>Pago con Ethereum</button>
+        </div>
+    </div>
+
+
+    <div class="products">
+
+        @for (product of totalProducts; track $index) {
+
+            <div>
+                <div>
+                    <img src="" alt="">
+                </div>
+                <div>
+                    <div>
+                        <p>{{product.name}}</p>
+                        <p>{{product.price}}€</p>
+                        <p>{{product.description}}</p>
+                    </div>
+                    <div>
+                        <button>-</button>
+                        <p>1</p>
+                        <button>+</button>
+                    </div>
+                </div>
+
+            </div>
+
+        }
+
+    </div>
+
+
+
+</div>
