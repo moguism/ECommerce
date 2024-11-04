@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿/*using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.Mappers;
@@ -19,7 +19,6 @@ public class OrderController : ControllerBase
         _orderMapper = orderMapper;
     }
 
-    /*
     [Authorize]
     [HttpGet("all")]
     public async Task<IEnumerable<OrderDto>> GetOrders()
@@ -32,20 +31,18 @@ public class OrderController : ControllerBase
         return _orderMapper.ToDto(user.Orders.Where(order => order.IsReserved == 0)); // Los pedidos normales
     }
 
-    */
-
     [Authorize]
     [HttpPost]
     public async Task<OrderDto> CreateOrder([FromBody] OrderDto orderDto, [FromQuery] bool express)
     {
-        /* EL FLUJO IRÍA ASÍ:
+        EL FLUJO IRÍA ASÍ:
          * 1) El usuario hace petición post para crear un pedido
          * 2) Si no existen nada en el carro, se crea y se establece ese como el carro 
          * 3) Si el usuario paga, el carro se despeja, en la sección de pagos
          * 4) Si el usuario no paga e intenta crear un nuevo pedido, se agrega el contenido 
          * 5) En caso de que sea un "pago express" (es decir, el usuario se ha metido únicamente para comprar algo), se ignora el paso 4
          * 6) En el front habrá que poner que si ha iniciado sesión solo para pagar, no se llame a la función "GetShoppingCart"
-         */
+         
 
         User user = await GetAuthorizedUser();
         if (user == null)
@@ -132,3 +129,4 @@ public class OrderController : ControllerBase
         return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(idString));
     }
 }
+*/
