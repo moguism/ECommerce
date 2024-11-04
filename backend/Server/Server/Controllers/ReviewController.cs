@@ -17,9 +17,17 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Review>> GetAllReviews()
+        public async Task<IEnumerable<Review>> GetAllReviews(Product product)
         {
+            IEnumerable<Review> reviews;
 
+            foreach (Review review in reviews)
+            {
+                
+            }
+
+
+            return reviews;
         }
 
 
