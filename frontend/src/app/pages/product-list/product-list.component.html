@@ -31,10 +31,9 @@
         @for (product of allProducts; track product.id) {
             
             <a class="product-card">
-                
                 <div class="product-card-name">{{product.name}}</div>
                 <div class="product-card-image"><img class="image" [src]="'https://localhost:7150/' + product.image"></div>
-                <div class="product-card-price">Precio : {{product.price}}€</div>
+                <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
                 <div class="product-card-description">{{product.description}}</div>
                 @if (product.stock > 0) {
                     <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
@@ -42,6 +41,8 @@
                 @else {
                     <div class="product-card-no-stock">No hay stock</div>
                 }
+                <button class="btn-buy" (click)="goToProduct(product.id)">Acceder al producto</button>
+                <app-add-to-cart></app-add-to-cart>
             </a>
         }
         </div>
