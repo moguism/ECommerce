@@ -74,49 +74,57 @@ export class ProductListComponent implements OnInit, OnDestroy {
           const currentPage = sessionStorage.getItem("currentPage");
           if (currentPage) {
             this.currentPage = parseInt(currentPage);
+            sessionStorage.removeItem("currentPage")
           }
 
           const totalPages = sessionStorage.getItem("totalPages");
           if (totalPages) {
             this.totalPages = parseInt(totalPages);
+            sessionStorage.removeItem("totalPages")
           }
 
           const productsPerPage = sessionStorage.getItem("productsPerPage");
           if (productsPerPage) {
             this.querySelector.productPageSize = parseInt(productsPerPage)
+            sessionStorage.removeItem("productsPerPage")
           }
 
           const ordinationType = sessionStorage.getItem("ordinationType");
           const ordinationOrder = sessionStorage.getItem("ordinationOrder");
+          sessionStorage.removeItem("ordinationType")
+          sessionStorage.removeItem("ordinationOrder")
           if (ordinationType && ordinationOrder) {
-            /*this.querySelector.ordinationType = parseInt(ordinationType);
-            this.querySelector.ordinationDirection = parseInt(ordinationOrder);
-
-
-            console.log("Tipo: ", this.querySelector.ordinationType);
-            console.log("Direccion: ", this.querySelector.ordinationDirection);*/
-
             const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
             if (orderBy) {
               if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 0) {
                 orderBy.value = "name-asc";
+                this.querySelector.ordinationType = OrdinationType.NAME;
+                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
               }
 
               else if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 1) {
                 orderBy.value = "name-desc";
+                this.querySelector.ordinationType = OrdinationType.NAME;
+                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
               }
 
               else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 0) {
                 orderBy.value = "price-asc";
+                this.querySelector.ordinationType = OrdinationType.PRICE;
+                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
               }
 
               else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 1) {
                 orderBy.value = "price-desc";
+                this.querySelector.ordinationType = OrdinationType.PRICE;
+                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
               }
             }
           }
         }
       }
+
+      sessionStorage.removeItem("category")
 
       const result = await this.productService.getAllProducts(this.querySelector);
 
