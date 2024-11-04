@@ -9,13 +9,12 @@ import { ProductType } from '../../models/enums/product-type';
 import { OrdinationType } from '../../models/enums/ordination-type';
 import { OrdinationDirection } from '../../models/enums/ordination-direction';
 import { QuerySelector } from '../../models/query-selector';
-import { AddToCartComponent } from '../../components/add-to-cart/add-to-cart.component';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [HeaderComponent, SearchBarComponent, AddToCartComponent, EurosToCentsPipe],
+  imports: [HeaderComponent, SearchBarComponent, EurosToCentsPipe],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -36,19 +35,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private router: Router) {
     const FIRST_PAGE = 1;
-    const PRODUCT_PER_PAGE = 4;
+    const PRODUCT_PER_PAGE = 5;
     //QuerySelector por defecto para pruebas
     this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
   }
 
   async ngOnInit(): Promise<void> {
-
     this.getAllProducts()
-
   }
 
-  goToProduct(id: number)
-  {
+  goToProduct(id: number) {
     let route: string = "product-view/" + id;
     this.router.navigateByUrl(route)
   }
@@ -68,6 +64,58 @@ export class ProductListComponent implements OnInit, OnDestroy {
         case "carnes":
           this.querySelector.productType = ProductType.MEAT;
           break;
+      }
+
+      const savedCategory = sessionStorage.getItem("category");
+      if (savedCategory) {
+        const categoryNumber: number = parseInt(savedCategory)
+        if (categoryNumber == this.querySelector.productType) // Si la categoría es la misma
+        {
+          const currentPage = sessionStorage.getItem("currentPage");
+          if (currentPage) {
+            this.currentPage = parseInt(currentPage);
+          }
+
+          const totalPages = sessionStorage.getItem("totalPages");
+          if (totalPages) {
+            this.totalPages = parseInt(totalPages);
+          }
+
+          const productsPerPage = sessionStorage.getItem("productsPerPage");
+          if (productsPerPage) {
+            this.querySelector.productPageSize = parseInt(productsPerPage)
+          }
+
+          const ordinationType = sessionStorage.getItem("ordinationType");
+          const ordinationOrder = sessionStorage.getItem("ordinationOrder");
+          if (ordinationType && ordinationOrder) {
+            /*this.querySelector.ordinationType = parseInt(ordinationType);
+            this.querySelector.ordinationDirection = parseInt(ordinationOrder);
+
+
+            console.log("Tipo: ", this.querySelector.ordinationType);
+            console.log("Direccion: ", this.querySelector.ordinationDirection);*/
+
+            const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
+            if (orderBy) {
+              if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 0) {
+                orderBy.value = "name-asc";
+              }
+
+              else if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 1) {
+                orderBy.value = "name-desc";
+              }
+
+              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 0) {
+                orderBy.value = "price-asc";
+              }
+
+              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 1) {
+                orderBy.value = "price-desc";
+              }
+            }
+          }
+        }
       }
 
       const result = await this.productService.getAllProducts(this.querySelector);
@@ -155,6 +203,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   }
 
+  order() {
+    const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
+    if (orderBy) { this.sortBy(orderBy.value) }
+  }
+
   getSearchedProducts(query: string) {
     this.querySelector.search = query
     this.getAllProducts();
@@ -190,40 +243,47 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
+    sessionStorage.setItem("category", this.querySelector.productType.toString());
+    sessionStorage.setItem("currentPage", this.currentPage.toString());
+    sessionStorage.setItem("totalPages", this.totalPages.toString());
+    sessionStorage.setItem("productsPerPage", this.querySelector.productPageSize.toString());
+    sessionStorage.setItem("ordinationType", this.querySelector.ordinationType.toString());
+    sessionStorage.setItem("ordinationOrder", this.querySelector.ordinationDirection.toString());
+    sessionStorage.setItem("query", this.querySelector.search);
   }
 
-  desBtnPerName(){ // Funcion para ordenar descendente
+  desBtnPerName() { // Funcion para ordenar descendente
     this.BtnPerName = false;
     this.sortBy("name-desc");
   }
 
-  ascBtnPerName(){
+  ascBtnPerName() {
     this.BtnPerName = true;
     this.sortBy("name-asc");
   }
 
-  togglePerName(){
-    if(this.BtnPerName){
+  togglePerName() {
+    if (this.BtnPerName) {
       this.desBtnPerName();
-    }else{
+    } else {
       this.ascBtnPerName();
     }
   }
 
-  desBtnPerPrice(){
+  desBtnPerPrice() {
     this.BtnPerPrice = false;
     this.sortBy("price-desc");
   }
 
-  ascBtnPerPrice(){
+  ascBtnPerPrice() {
     this.BtnPerPrice = true;
     this.sortBy("price-asc");
   }
 
-  togglePerPrice(){
-    if(this.BtnPerPrice){
+  togglePerPrice() {
+    if (this.BtnPerPrice) {
       this.desBtnPerPrice();
-    }else{
+    } else {
       this.ascBtnPerPrice();
     }
   }
