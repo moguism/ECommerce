@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -8,10 +8,18 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements OnInit {
   query: string = '';
 
   @Output() newItemEvent = new EventEmitter<string>();
+
+  async ngOnInit(): Promise<void> {
+    const query = sessionStorage.getItem("query");
+    if (query) {
+      this.query = query;
+      await this.search();
+    }
+  }
 
   async search() {
     const clearedQuery = this.query.trim(); //Si la query es nula guarda null, sino, llama al trim y almacena lo que devuelva
