@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.ML;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
@@ -63,6 +64,10 @@ namespace Server
                         })
                     );
             }
+
+            // Para el modelo de IA
+            builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
+                .FromFile("IAFarminhouse.mlnet");
 
             var app = builder.Build();
 
