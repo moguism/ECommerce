@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
+using Server.Repositories;
 
 namespace Server.Controllers
 {
@@ -15,12 +16,14 @@ namespace Server.Controllers
 
         private readonly UnitOfWork _unitOfWork;
         private readonly FarminhouseContext _context;
+        private readonly CartContentRepository _cartContentRepository;
 
 
-        public ShoppingCartController(UnitOfWork unitOfWork, FarminhouseContext context) 
+        public ShoppingCartController(UnitOfWork unitOfWork, FarminhouseContext context, CartContentRepository cartContentRepository) 
         { 
             _unitOfWork = unitOfWork;
             _context = context;
+            _cartContentRepository = cartContentRepository;
         }
 
 
@@ -48,19 +51,30 @@ namespace Server.Controllers
 
         //Pruebas
         [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts(int id)
+        public async Task<IEnumerable<CartContent>> GetShoppingCart(int userId)
         {
 
-
+            //Recoge el carrito del usuario
             var shoppingCart = await _context.ShoppingCart
-            .Where(cart => cart.UserId == id)  // Filtra por el ID del usuario
-            .Include
-            .ToListAsync();
+            .Where(cart => cart.UserId == userId)  // Filtra por el ID del usuario
+            .FirstOrDefaultAsync();
 
-            return shoppingCart;
+            //Devuelve el contenido del carrito (Productos)
+            return await _cartContentRepository.GetByShoppingCartIdAsync(shoppingCart.Id);
+
+
 
 
         }
+
+
+
+
+
+
+
+
+
 
 
 
