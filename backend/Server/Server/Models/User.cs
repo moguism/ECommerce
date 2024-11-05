@@ -21,9 +21,6 @@ public class User
 
     public string Address { get; set; }
 
-    public ICollection<ShoppingCart> ShoppingCart { get; set; } = new List<ShoppingCart>();
-
+    public ICollection<ShoppingCart> ShoppingCarts { get; set; } = new List<ShoppingCart>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }
