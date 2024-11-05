@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Server.Models;
 using Server.Repositories.Base;
 
 namespace Server.Repositories
@@ -10,6 +11,14 @@ namespace Server.Repositories
 
 
 
+        public async Task<ICollection<ShoppingCart>> GetAllByUserIdAsync(int id)
+        {
+            ICollection<ShoppingCart> shoppingCart =  await GetAllAsync();
+
+            return shoppingCart
+                .Where(cart => cart.UserId == id)
+                .ToList();
+        }
 
     }
 }

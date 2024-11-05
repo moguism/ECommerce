@@ -24,7 +24,7 @@ namespace Server.Controllers
         }
 
 
-
+        /* Correcto
         [Authorize]
         [HttpGet]
         public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts()
@@ -44,8 +44,23 @@ namespace Server.Controllers
 
 
         }
+        */
+
+        //Pruebas
+        [HttpGet]
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts(int id)
+        {
 
 
+            var shoppingCart = await _context.ShoppingCart
+            .Where(cart => cart.UserId == id)  // Filtra por el ID del usuario
+            .Include
+            .ToListAsync();
+
+            return shoppingCart;
+
+
+        }
 
 
 
