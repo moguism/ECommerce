@@ -1,4 +1,5 @@
 ﻿using Server;
+using Server.Models;
 using Server.Repositories;
 
 
@@ -16,6 +17,8 @@ public class UnitOfWork
     //Nuevas tablas
     private ShoppingCartRepository _shoppingCartRepository;
     private TemporalOrderRepository _temporalOrderRepository;
+    private CartContentRepository _cartContentRepository;
+
 
     public OrderRepository OrderRepository => _orderRepository ??= new OrderRepository(_context);
     public PaymentsTypeRepository PaymentsTypeRepository => _paymentsTypeRepository ??= new PaymentsTypeRepository(_context);
@@ -27,6 +30,8 @@ public class UnitOfWork
     //Nuevas tablas
     public ShoppingCartRepository ShoppingCartRepository => _shoppingCartRepository ??= new ShoppingCartRepository(_context);
     public TemporalOrderRepository TemporalOrderRepository => _temporalOrderRepository ??= new TemporalOrderRepository(_context);
+    public CartContentRepository CartContentRepository => _cartContentRepository ??= new CartContentRepository(_context);
+
 
     public UnitOfWork(FarminhouseContext context)
     {

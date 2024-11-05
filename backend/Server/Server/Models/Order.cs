@@ -15,4 +15,5 @@ public class Order
     public int TemporalOrderId { get; set; }
     public int ShoppingCartId { get; set; }
 
+
 }
