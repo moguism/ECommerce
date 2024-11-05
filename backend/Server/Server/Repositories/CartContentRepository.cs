@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Server.Models;
 using Server.Repositories.Base;
 
 namespace Server.Repositories
@@ -7,6 +8,7 @@ namespace Server.Repositories
     {
 
         public CartContentRepository(FarminhouseContext context) : base(context) { }
+
 
     }
 }
