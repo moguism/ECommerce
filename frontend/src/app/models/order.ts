@@ -1,8 +1,16 @@
 import { Product } from "./product";
 
-export interface Order {
-    id: number,
-    createdAt: Date,
-    isReserved: boolean,
-    products: Product[]
+export class Order {
+    id: number;
+    createdAt: Date;
+    isReserved: number;
+    products: Product[];
+
+    constructor(id: number, createdAt: Date, isReserved: number, products: Product[])
+    {
+        this.id = id,
+        this.createdAt = createdAt,
+        this.isReserved = isReserved,
+        this.products = products
+    }
 }

@@ -33,8 +33,9 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<OrderDto> CreateOrder([FromBody] OrderDto orderDto, [FromQuery] bool express)
+    public async Task<OrderDto> CreateOrder([FromBody] OrderDto orderDto)
     {
+        bool express = false;
         /*
          * EL FLUJO IRÍA ASÍ:
          * 1) El usuario hace petición post para crear un pedido
@@ -62,13 +63,13 @@ public class OrderController : ControllerBase
             }
         }
 
-        Order order = _orderMapper.ToEntity(orderDto);
+        var order = _orderMapper.ToEntity(orderDto);
 
         // Fuerzo estos campos para evitar peticiones maliciosas (es decir, que venga Fran a cargarse el back)
         order.UserId = user.Id;
         order.IsReserved = 1;
-        order.Payments = null;
         order.CreatedAt = DateTime.Now;
+        order.User = user;
 
         // AQUÍ NO SE DESCUENTA EL STOCK, ESO SE HARÍA EN EL PAGO
 
@@ -87,7 +88,7 @@ public class OrderController : ControllerBase
         // Tan solo me interesa actualizar los productos (siento que esto habrá que ampliarlo, idk)
         foreach(Product product in orderDto.Products)
         {
-            shoppingCart.Products.Add(product);
+            //shoppingCart.Products.Add(product);
         }
 
         Order savedOrder = _unitOfWork.OrderRepository.Update(shoppingCart);
@@ -95,6 +96,31 @@ public class OrderController : ControllerBase
 
         return _orderMapper.ToDto(savedOrder);
     }
+
+    /*
+    [Authorize]
+    [HttpPut("update-cart")]
+    public async Task<OrderDto> UpdateCart([FromBody] OrderDto newCart)
+    {
+        User user = await GetAuthorizedUser();
+        if (user == null)
+        {
+            return null;
+        }
+
+        Order order = user.Orders.Where(getOrder => getOrder.Id == newCart.Id).FirstOrDefault();
+        if(order == null)
+        {
+            return null;
+        }
+
+        order.Products = newCart.Products;
+        Order savedOrder = _unitOfWork.OrderRepository.Update(order);
+        await _unitOfWork.SaveAsync();
+
+        return _orderMapper.ToDto(savedOrder);
+    }
+    */
 
     [Authorize]
     [HttpGet("shopping-cart")]
@@ -106,7 +132,14 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return _orderMapper.ToDto(ObtainCart(user)); // En teoría solo hay un pedido sin tramitar al mismo tiempo
+        Order order = ObtainCart(user);
+
+        if (order == null)
+        {
+            return null;
+        }
+
+        return _orderMapper.ToDto(order); // En teoría solo hay un pedido sin tramitar al mismo tiempo
     }
 
     private Order ObtainCart(User user)

@@ -114,6 +114,7 @@ export class ApiService {
     let header: any = {};
 
     // Para cuando haya que poner un JWT
+    console.log("JWT: ", this.jwt)
     header['Authorization'] = `Bearer ${this.jwt}`;
 
     if (accept)
@@ -122,6 +123,10 @@ export class ApiService {
     if (contentType)
       header['Content-Type'] = contentType;
 
-    return new HttpHeaders(header);
+    const headerObject = new HttpHeaders(header)
+
+    console.log("HEADER OBJECT: ", headerObject);
+
+    return headerObject;
   }
 }

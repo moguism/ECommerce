@@ -1,1 +1,20 @@
 <p>prueba-shopping-cart works!</p>
+<div>
+    <h1>CARRITO</h1>
+    @for (product of shoppingCart?.products; track product.id) 
+    {
+        <p>{{ product.name }}</p>
+    }
+    @empty 
+    {
+        <p>No hay productos en el carrito</p>
+    }
+</div>
+<div>
+    <h1>PRODUCTOS</h1>
+    @for (product of allProducts; track product.id) 
+    {
+        <p>{{ product.name }}</p>
+        <button (click)="addProductToCart(product)">Añadir al carrito</button>
+    }
+</div>
