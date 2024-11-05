@@ -151,6 +151,13 @@ namespace Server
                     dbContext.Products.AddRange(vegetables);
                     dbContext.Products.AddRange(meats);
 
+
+
+                    
+
+
+
+
                     // Guardar cambios en la base de datos
                     dbContext.SaveChanges();
 

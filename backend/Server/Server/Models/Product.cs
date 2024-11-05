@@ -23,7 +23,4 @@ public class Product
 
     public Category Category { get; set; }
 
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
