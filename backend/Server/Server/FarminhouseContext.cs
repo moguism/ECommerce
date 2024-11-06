@@ -19,6 +19,8 @@ public class FarminhouseContext : DbContext
 
     //Nuevas tablas
     public DbSet<ShoppingCart> ShoppingCart { get; set; }
+    public DbSet<CartContent> CartContent { get; set; }
+
     public DbSet<TemporalOrder> TemporalOrder { get; set; }
 
 

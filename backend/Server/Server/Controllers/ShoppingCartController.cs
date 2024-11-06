@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
+using Server.Repositories;
 
 namespace Server.Controllers
 {
@@ -14,6 +15,7 @@ namespace Server.Controllers
     {
 
         private readonly UnitOfWork _unitOfWork;
+
         private readonly CartContentMapper _cartContentMapper;
 
 
@@ -48,7 +50,7 @@ namespace Server.Controllers
 
         //Pruebas
         [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts(int id)
+        public async Task<IEnumerable<CartContentDto>> GetShoppingCart(int userId)
         {
 
             var shoppingCart = await _unitOfWork.ShoppingCartRepository.GetQueryable().Where(cart => cart.UserId == userId) .FirstOrDefaultAsync();
@@ -60,12 +62,15 @@ namespace Server.Controllers
             return shoppingCart;
 
 
-        }
+            //Devuelve el contenido del carrito (Productos y cantidad)
+            return await _cartContentMapper.ToDto(shoppingCart);
+
 
 
 
             // Verificar si existe un carrito del usuario
             var existingShoppingCar = await _unitOfWork.ShoppingCartRepository.GetQueryable().Where(cart => cart.Id == cartContentDto.Id).FirstOrDefaultAsync();
+
 
             //Si no hay ningún carrito creado por el usuario, lo crea
             if (existingShoppingCar == null)
@@ -77,10 +82,27 @@ namespace Server.Controllers
                 //Si existe el carrito, añade el producto a este
                 await _unitOfWork.CartContentRepository.AddProductToCartAsync(_cartContentMapper.ToEntity(cartContentDto));
 
+        [HttpPost]
+        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromQuery] User user)
+        {
 
+            // Verificar si existe un carrito del usuario
+            var existingShoppingCar = await _context.ShoppingCart
+                .FirstOrDefaultAsync(cart => cart.Id == cartContentDto.Id);
 
+            //Si no hay ningún carrito creado por el usuario, lo crea
+            if (existingShoppingCar == null)
+            {
+                _context.ShoppingCart.Add(new ShoppingCart() { UserId = user.Id});
+            }
+            else
+            {
+                //Si existe el carrito, añade el producto a este
+                await _cartContentRepository.AddProductToCartAsync(_cartContentMapper.ToEntity(cartContentDto));
 
+            }
 
+        }
 
 
 
