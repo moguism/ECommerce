@@ -7,6 +7,7 @@ namespace Server.Repositories
 {
     public class ProductRepository : Repository<Product, int>
     {
+
         public ProductRepository(FarminhouseContext context) : base(context) { }
 
         public PagedDto GetAllProductsByCategory(string productCategory,int pageNumber,int pageSize, IEnumerable<Product> products)
@@ -20,6 +21,15 @@ namespace Server.Repositories
                 Products = filteredProducts,
                 TotalProducts = totalProducts
             };
+        }
+
+        public async Task<Product> GetProductById(int id)
+        {
+            ICollection<Product> products = await GetAllAsync();
+
+            return products.Where(product => product.Id == id).FirstOrDefault();
+
+
         }
     }
 }
