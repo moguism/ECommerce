@@ -6,18 +6,17 @@ namespace Server.Mappers;
 
 public class CartContentMapper
 {
-    private readonly FarminhouseContext _context;
     private readonly CartContentRepository _cartContentRepository;
     private readonly ProductRepository _productRepository;
 
 
-    public CartContentMapper(FarminhouseContext context, CartContentRepository cartContentRepository, ProductRepository productRepository)
+    public CartContentMapper(CartContentRepository cartContentRepository, ProductRepository productRepository)
     {
-        _context = context;
         _cartContentRepository = cartContentRepository;
         _productRepository = productRepository;
     }
 
+    /*
     public CartContentDto ToDto(CartContent cartContent)
     {
         Product product = _context.Products
@@ -29,7 +28,7 @@ public class CartContentMapper
             Id = cartContent.ShoppingCartId,
             Quantity = cartContent.Quantity,
             Product = product,
-            CartContentId = cartContent.Id
+            ShoppingCartId = cartContent.ShoppingCartId
         };
     }
 
@@ -37,7 +36,7 @@ public class CartContentMapper
 
     public async Task<IEnumerable<CartContentDto>> ToDto(ShoppingCart cart)
     {
-        ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(cart.Id);
+        ICollection<CartContent> cartContent = await _cartContentRepository.GetAllAsync();
 
         IEnumerable<CartContentDto> shoppingCartDtos = new List<CartContentDto>();
 
@@ -75,4 +74,5 @@ public class CartContentMapper
         return cartContent;
 
     }
+    */
 }

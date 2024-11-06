@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { Result } from '../models/result';
 import { QuerySelector } from '../models/query-selector';
 import { PagedProducts } from '../models/paged-products';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,12 @@ export class ProductService {
       "ActualPage" : querySelector.actualPage,
       "Search" : querySelector.search
     }, 'json');
+  }
+
+  async getById(id: number): Promise<Result<Product>>
+  {
+    const path = "Product/" + id
+    return this.api.get<Product>(path, {}, 'json')
   }
 
 }

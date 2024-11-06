@@ -9,10 +9,10 @@ namespace Server.Repositories
 
         public CartContentRepository(FarminhouseContext context) : base(context) { }
 
-        /*public async Task<ICollection<ShoppingCart>> GetAllByCartIdAsync(int id)
+        public async Task AddProductsToShoppingCart(ShoppingCart shoppingCart)
         {
-            ICollection<ShoppingCart> shoppingCart = await GetAllAsync();
-        }*/
+            
+        }
 
 
     }
