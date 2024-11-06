@@ -54,7 +54,7 @@ namespace Server.Controllers
 
             var shoppingCart = await _context.ShoppingCart
             .Where(cart => cart.UserId == id)  // Filtra por el ID del usuario
-            .Include
+            //.Include
             .ToListAsync();
 
             return shoppingCart;
