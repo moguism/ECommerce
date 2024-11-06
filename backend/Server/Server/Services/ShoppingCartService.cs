@@ -29,7 +29,7 @@ namespace Server.Services
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
                     ShoppingCartId = shoppingCart.Id,
-                    Product = await _unitOfWork.ProductRepository.GetProductById(cartContentDto.ProductId)
+                    Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId)
 
                 });
             }
@@ -51,6 +51,7 @@ namespace Server.Services
             await _unitOfWork.ShoppingCartRepository.AddNewShoppingCart(user);
             await _unitOfWork.SaveAsync();
         }
+
 
         public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
         {

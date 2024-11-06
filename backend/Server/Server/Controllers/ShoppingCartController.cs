@@ -19,8 +19,7 @@ namespace Server.Controllers
         private readonly ShoppingCartService _shoppingCartService;
 
 
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, 
-            ShoppingCartRepository shoppingCartRepository, ShoppingCartService shoppingCartService) 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService) 
         { 
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
@@ -39,7 +38,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id)
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
 
             return _shoppingCartMapper.ToDto(shoppingCart);
