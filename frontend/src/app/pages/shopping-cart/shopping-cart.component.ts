@@ -7,6 +7,7 @@ import { QuerySelector } from '../../models/query-selector';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
 import { HeaderComponent } from '../../components/header/header.component';
+import { CartContent } from '../../models/cart-content';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -34,8 +35,8 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getShoppingCart();
-    await this.getAllProducts();
+    this.getShoppingCart();
+    this.getAllProducts();
   }
 
   async getShoppingCart() {
@@ -46,12 +47,14 @@ export class ShoppingCartComponent implements OnInit {
     else {
       // Si ha iniciado sesión, hago la petición y borro el carrito ya existente
       localStorage.removeItem("shoppingCart")
+      const result = await this.apiService.get("ShoppingCart", {}, 'json')
+      console.log("CARRITO: ", result)
     }
   }
 
   async getAllProducts() {
     const result = await this.productService.getAllProducts(this.querySelector);
-    this.allProducts = result.data?.products;
+    this.allProducts = result?.products;
   }
 
   getTotal(productName: string): number {
@@ -64,7 +67,7 @@ export class ShoppingCartComponent implements OnInit {
     return totalQuantity;
   }
 
-  addProductToCart(product: Product) {
+  async addProductToCart(product: Product) {
     const existingProduct = this.shoppingCartProducts.find(item => item.id === product.id);
 
     if (existingProduct) {
@@ -74,8 +77,16 @@ export class ShoppingCartComponent implements OnInit {
       this.shoppingCartProducts.push(productWithQuantity);
     }
 
-    if (this.apiService.jwt == "") {
+    if (this.apiService.jwt == "")
+    {
       localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+    }
+    else
+    {
+      localStorage.removeItem("shoppingCart")
+      const cartContent = new CartContent(this.getTotal(product.name), product.id)
+      await this.apiService.post("ShoppingCart", cartContent)
+      this.getShoppingCart()
     }
   }
 
