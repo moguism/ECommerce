@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Enums;
+using Server.Repositories;
 using Server.Models;
 
 namespace Server.Controllers
@@ -17,15 +18,17 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Review>> GetAllReviews(Product product)
+        public async Task<IEnumerable<Review>> GetAllProductReviews(int id)
         {
-            IEnumerable<Review> reviews;
+            IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetByProductIdAsync(id);
 
-            foreach (Review review in reviews)
-            {
-                
-            }
+            return reviews;
+        }
 
+        [HttpGet]
+        public async Task<IEnumerable<Review>> GetAllUserReviews(int id)
+        {
+            IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetByUserIdAsync(id);
 
             return reviews;
         }
