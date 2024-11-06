@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Server.DTOs;
 using Server.Models;
 using Server.Repositories.Base;
@@ -23,13 +24,13 @@ namespace Server.Repositories
             };
         }
 
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetFullProductById(int id)
         {
-            ICollection<Product> products = await GetAllAsync();
-
-            return products.Where(product => product.Id == id).FirstOrDefault();
-
-
+            Product product = await GetQueryable()
+            .Include(product => product.Category)
+            .Include(product => product.Reviews)
+            .FirstOrDefaultAsync(order => order.Id == id);
+            return product;
         }
     }
 }
