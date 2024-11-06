@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
+using Server.Repositories;
 using Server.Services;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -43,10 +44,11 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
-            builder.Services.AddScoped<ShoppingCartMapper>();
+            builder.Services.AddScoped<CartContentMapper>();
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
+
 
             // Permite CORS
             if (builder.Environment.IsDevelopment())

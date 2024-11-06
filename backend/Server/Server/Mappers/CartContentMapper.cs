@@ -2,78 +2,77 @@
 using Server.Models;
 using Server.Repositories;
 
-namespace Server.Mappers
+namespace Server.Mappers;
+
+public class CartContentMapper
 {
-    public class CartContentMapper
+    private readonly FarminhouseContext _context;
+    private readonly CartContentRepository _cartContentRepository;
+    private readonly ProductRepository _productRepository;
+
+
+    public CartContentMapper(FarminhouseContext context, CartContentRepository cartContentRepository, ProductRepository productRepository)
     {
-        private readonly FarminhouseContext _context;
-        private readonly CartContentRepository _cartContentRepository;
-        private readonly ProductRepository _productRepository;
+        _context = context;
+        _cartContentRepository = cartContentRepository;
+        _productRepository = productRepository;
+    }
 
+    public CartContentDto ToDto(CartContent cartContent)
+    {
+        Product product = _context.Products
+            .Where(p => p.Id == cartContent.ProductId)
+            .FirstOrDefault();
 
-        public CartContentMapper(FarminhouseContext context, CartContentRepository cartContentRepository, ProductRepository productRepository)
+        return new CartContentDto
         {
-            _context = context;
-            _cartContentRepository = cartContentRepository;
-            _productRepository = productRepository;
-        }
+            Id = cartContent.ShoppingCartId,
+            Quantity = cartContent.Quantity,
+            Product = product,
+            CartContentId = cartContent.Id
+        };
+    }
 
-        public CartContentDto ToDto(CartContent cartContent)
+
+
+    public async Task<IEnumerable<CartContentDto>> ToDto(ShoppingCart cart)
+    {
+        ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(cart.Id);
+
+        IEnumerable<CartContentDto> shoppingCartDtos = new List<CartContentDto>();
+
+        foreach (var item in cartContent)
         {
-            Product product = _context.Products
-                .Where(p => p.Id == cartContent.ProductId)
-                .FirstOrDefault();
-
-            return new CartContentDto
+            CartContentDto shoppingCartItem = new CartContentDto
             {
-                Id = cartContent.ShoppingCartId,
-                Quantity = cartContent.Quantity,
-                Product = product,
-                CartContentId = cartContent.Id
+                Id = cart.Id,
+                CartContentId = item.Id,
+                Product = await _productRepository.GetProductById(item.ProductId),
+                Quantity = item.Quantity
+
             };
         }
 
+        return shoppingCartDtos;
 
+    }
 
-        public async Task<IEnumerable<CartContentDto>> ToDto(ShoppingCart cart)
+    public CartContent ToEntity(CartContentDto cartContentDto)
+    {
+        return new CartContent
         {
-            ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(cart.Id);
+            Id = cartContentDto.Id,
+            Quantity = cartContentDto.Quantity,
+            ProductId = cartContentDto.Product.Id,
+            ShoppingCartId = cartContentDto.CartContentId
+        };
+    }
 
-            IEnumerable<CartContentDto> shoppingCartDtos = new List<CartContentDto>();
+    public async Task<IEnumerable<CartContent>> ToEntity(int shoppingCartId)
+    {
+        ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(shoppingCartId);
 
-            foreach (var item in cartContent)
-            {
-                CartContentDto shoppingCartItem = new CartContentDto
-                {
-                    Id = cart.Id,
-                    CartContentId = item.Id,
-                    Product = await _productRepository.GetProductById(item.ProductId),
-                    Quantity = item.Quantity
+        return cartContent;
 
-                };
-            }
-
-            return shoppingCartDtos;
-
-        }
-
-        public CartContent ToEntity(CartContentDto cartContentDto)
-        {
-            return new CartContent
-            {
-                Id = cartContentDto.Id,
-                Quantity = cartContentDto.Quantity,
-                ProductId = cartContentDto.Product.Id,
-                ShoppingCartId = cartContentDto.CartContentId
-            };
-        }
-
-        public async Task<IEnumerable<CartContent>> ToEntity(int shoppingCartId)
-        {
-            ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(shoppingCartId);
-
-            return cartContent;
-
-        }
     }
 }

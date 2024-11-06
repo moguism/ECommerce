@@ -70,7 +70,7 @@ namespace Server.Controllers
 
 
         [HttpPost]
-        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromBody] User user)
+        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromQuery] User user)
         {
 
             // Verificar si existe un carrito del usuario
