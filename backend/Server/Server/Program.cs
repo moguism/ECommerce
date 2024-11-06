@@ -49,6 +49,7 @@ namespace Server
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
+            builder.Services.AddScoped<ShoppingCartService>();
 
 
             // Permite CORS

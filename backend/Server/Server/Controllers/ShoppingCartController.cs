@@ -17,12 +17,13 @@ namespace Server.Controllers
 
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
+        private readonly UnitOfWork _unitOfWork;
 
-
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService) 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork) 
         { 
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -40,6 +41,10 @@ namespace Server.Controllers
 
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
+            if(shoppingCart == null)
+            {
+                return null;
+            }
 
             return _shoppingCartMapper.ToDto(shoppingCart);
           
@@ -55,6 +60,22 @@ namespace Server.Controllers
             {
                 return;
             }
+
+            /*ICollection<ShoppingCart> shoppingCarts = user.ShoppingCarts;
+            if(shoppingCarts.Count() == 0)
+            {
+                ShoppingCart cart = new ShoppingCart();
+                cart.UserId = user.Id;
+                
+                CartContent cartContent = new CartContent();
+                cartContent.ProductId = cartContentDto.ProductId;
+                cartContent.Quantity = cartContentDto.Quantity;
+
+                cart.CartContent.Append(cartContent);
+
+                await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+                await _unitOfWork.SaveAsync();
+            }*/
 
             //Añade un carrito si el usuario no tiene ninguno
             await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
