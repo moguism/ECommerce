@@ -51,7 +51,7 @@ export class ShoppingCartComponent implements OnInit {
 
   async getAllProducts() {
     const result = await this.productService.getAllProducts(this.querySelector);
-    this.allProducts = result.data?.products;
+    this.allProducts = result?.products;
   }
 
   getTotal(productName: string): number {
