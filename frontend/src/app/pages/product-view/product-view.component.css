@@ -128,5 +128,8 @@ justify-content: space-around;
     .products-description-price{
         gap: 25%;
     }
+    .review-input{
+        width: 95%;
+    }
     
 }

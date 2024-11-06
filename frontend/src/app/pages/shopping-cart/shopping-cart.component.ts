@@ -6,12 +6,12 @@ import { ProductType } from '../../models/enums/product-type';
 import { QuerySelector } from '../../models/query-selector';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
-import { HeaderComponent } from '../../components/header/header.component';
+import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderShopComponent],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
