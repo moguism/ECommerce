@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
@@ -11,7 +11,7 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
 })
-export class ProductViewComponent {
+export class ProductViewComponent implements OnInit {
 
   product: Product | null = null
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute){}
