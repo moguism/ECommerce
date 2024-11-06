@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
-import { ProductService } from '../../services/product.service';
+import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
-
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-view',
@@ -14,9 +14,21 @@ import { Product } from '../../models/product';
 export class ProductViewComponent implements OnInit {
 
   product: Product | null = null
-  constructor(private productService: ProductService){}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute){}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void
+  {
+    const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
+    this.getProduct(id)
+  }
+
+  async getProduct(id: number)
+  {
+    const result = await this.productService.getById(id)
+    if(result != null)
+    {
+      this.product = result
+    }
   }
 
 }

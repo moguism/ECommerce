@@ -128,8 +128,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
       const result = await this.productService.getAllProducts(this.querySelector);
 
-      this.allProducts = result.data?.products;
-      this.totalProducts = result.data?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
+      this.allProducts = result?.products;
+      this.totalProducts = result?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
       this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize); // Para que redondee el resultado hacia arriba (como mi estrés)
 
       this.updatePaginationButtons();
