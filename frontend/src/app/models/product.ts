@@ -11,5 +11,6 @@ export interface Product {
     image: string,
     categoryId: number,
     category: Category,
-    reviews: Review[]
+    reviews: Review[],
+    total: number // Para el carrito
 }
