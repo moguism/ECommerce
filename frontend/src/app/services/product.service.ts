@@ -44,11 +44,4 @@ export class ProductService {
     }
     return null
   }
-
-  async getById(id: number): Promise<Result<Product>>
-  {
-    const path = "Product/" + id
-    return this.api.get<Product>(path, {}, 'json')
-  }
-
 }
