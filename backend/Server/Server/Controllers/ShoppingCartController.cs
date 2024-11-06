@@ -67,7 +67,7 @@ namespace Server.Controllers
         public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromQuery] User user)
         {
 
-            bool existShoppingCart = await _shoppingCartRepository.AddNewShoppingCart(user.Id);
+            bool existShoppingCart = await _shoppingCartRepository.AddNewShoppingCart(user);
 
             
 

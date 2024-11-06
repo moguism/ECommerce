@@ -10,11 +10,9 @@ namespace Server.Repositories
 
         UserRepository _userRepository;
 
-        public ShoppingCartRepository(FarminhouseContext context, UserRepository userRepository) : base(context) 
+        public ShoppingCartRepository(FarminhouseContext context) : base(context) 
         { 
-            _userRepository = userRepository;
         }
-
 
 
         public async Task<ShoppingCart> GetAllByUserIdAsync(int id)
@@ -29,19 +27,19 @@ namespace Server.Repositories
 
         //Método que añade un nuevo carrito a un usuario si no tenía
         //Devuelve True si tenía carrito, False si no
-        public async Task<bool> AddNewShoppingCart(int id)
+        public async Task<bool> AddNewShoppingCart(User user)
         {
             // Verificar si existe un carrito del usuario
             var existingShoppingCart = await _context.ShoppingCart
-                .Where(cart => cart.Id == id)
+                .Where(cart => cart.UserId == user.Id)
                 .FirstOrDefaultAsync();
 
             //Si no existe, lo crea
             if(existingShoppingCart == null)
             {
                 _context.ShoppingCart.Add(new ShoppingCart {
-                    UserId = id,
-                    User = await _userRepository.GetAllInfoById(id),
+                    UserId = user.Id,
+                    User = user,
                 });
                 return false;
             }
@@ -64,7 +62,7 @@ namespace Server.Repositories
             else
             {
                 c.Quantity += cartContent.Quantity;
-                shoppingCart.CartContent.ToList().Update(c);
+                //shoppingCart.CartContent.ToList().Update(c);
 
             }
         }
