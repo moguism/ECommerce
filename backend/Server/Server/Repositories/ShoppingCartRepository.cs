@@ -27,7 +27,7 @@ namespace Server.Repositories
 
         //Método que añade un nuevo carrito a un usuario si no tenía
         //Devuelve True si tenía carrito, False si no
-        public async Task<bool> AddNewShoppingCart(User user)
+        public async Task AddNewShoppingCart(User user)
         {
             // Verificar si existe un carrito del usuario
             var existingShoppingCart = await _context.ShoppingCart
@@ -41,11 +41,9 @@ namespace Server.Repositories
                     UserId = user.Id,
                     User = user,
                 });
-                return false;
             }
 
 
-            return true;
         }
 
 

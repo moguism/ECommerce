@@ -14,6 +14,12 @@ public class ProductMapper
         return products;
     }
 
+    public Product AddCorrectPath(Product product)
+    {
+        product.Image = "images/" + product.Image; 
+        return product;
+    }
+
     public ProductDto ToDto(Product product)
     {
         return new ProductDto
