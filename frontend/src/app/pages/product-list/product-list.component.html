@@ -3,23 +3,13 @@
 </div>
 
 <div class="body">
-
-    
     <div class="sort-buttons">
-        <div (click)="togglePerName()" class="sort-buttons-button">
-            @if(BtnPerName){
-                <span>Nombre</span><i class="fa-solid fa-chevron-up"></i>
-            }@else {
-                <span>Nombre</span><i class="fa-solid fa-chevron-down"></i>
-            }
-        </div>
-        <div (click)="togglePerPrice()" class="sort-buttons-button">
-            @if(BtnPerPrice){
-                <span>Precio</span><i class="fa-solid fa-chevron-up"></i>
-            }@else {
-                <span>Precio</span><i class="fa-solid fa-chevron-down"></i>
-            }
-        </div>
+        <select id="order-by" (click)="order()">
+            <option value="name-asc">Nombre ascendente</option>
+            <option value="name-desc">Nombre descendiente</option>
+            <option value="price-asc">Precio ascendente</option>
+            <option value="price-desc">Precio descendiente</option>
+        </select>
         <div class="search-bar">
             <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
         </div>
@@ -27,9 +17,8 @@
 
 
     @if (allProducts != null){
-        <div id="product-list">
+    <div id="product-list">
         @for (product of allProducts; track product.id) {
-            
             <a class="product-card">
                 
                 <div class="product-card-name">{{product.name}}</div>
@@ -43,30 +32,51 @@
                     <div class="product-card-no-stock">No hay stock</div>
                 }
             </a>
+
+        <a class="product-card" (click)="goToProduct(product.id)">
+            <div class="product-card-name">{{product.name}}</div>
+            <div class="product-card-image"><img class="image" [src]="'https://localhost:7150/' + product.image"></div>
+            <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
+            @if (product.stock > 0) {
+            <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
+            }
+            @else {
+            <div class="product-card-no-stock">No hay stock</div>
+            }
+        </a>
         }
-        </div>
+    </div>
     }@else {
-        <div class="loading">Cargando...</div>
+    <div class="loading">Cargando...</div>
     }
     @if (allProducts == null){
-        <div class="loading">No hay resultados</div>
+    <div class="loading">No hay resultados</div>
     }
 
     <div class="pagination-position">
-    <div class="pagination">
-        <button (click)="goToFirstPage()" id="first-button"><<</button>
-        <button id="prev-button" (click)="previousPage()"><</button>
-        <div id="pagination-numbers">{{ currentPage }}</div>
-        <button id="next-button" (click)="nextPage()">></button>
-        <button (click)="goToLastPage()" id="last-button">>></button>
+        <div class="pagination">
+            <button (click)="goToFirstPage()" id="first-button">&lt;&lt;</button>
+            <button id="prev-button" (click)="previousPage()">&lt;</button>
+            <div id="pagination-numbers">
+                @if(totalPages == 0)
+                {
+                0 de 0
+                }
+                @else
+                {
+                {{ currentPage }} de {{ totalPages }}
+                }
+            </div>
+            <button id="next-button" (click)="nextPage()">&gt;</button>
+            <button (click)="goToLastPage()" id="last-button">&gt; &gt;</button>
 
-        <!-- Selector para elegir el número de productos por página -->
-        <select id="products-per-page" (click)="newNumberOfProducts()">
-            <option value="4">4</option>
-            <option value="8" >8</option>
-            <option value="12">12</option>
-            <option value="16">16</option>
-        </select>
-    </div>
+            <!-- Selector para elegir el número de productos por página -->
+            <select id="products-per-page" (click)="newNumberOfProducts()">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
     </div>
 </div>

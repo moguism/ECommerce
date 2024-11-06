@@ -3,17 +3,18 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { HeaderComponent } from '../../components/header/header.component';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
-import { Subscription, catchError, forkJoin, lastValueFrom } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductType } from '../../models/enums/product-type';
 import { OrdinationType } from '../../models/enums/ordination-type';
 import { OrdinationDirection } from '../../models/enums/ordination-direction';
 import { QuerySelector } from '../../models/query-selector';
+import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [HeaderComponent, SearchBarComponent],
+  imports: [HeaderComponent, SearchBarComponent, EurosToCentsPipe],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -32,17 +33,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
   totalPages: number = 1;
   currentPage: number = 1;
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute) {
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private router: Router) {
     const FIRST_PAGE = 1;
-    const PRODUCT_PER_PAGE = 4;
+    const PRODUCT_PER_PAGE = 5;
     //QuerySelector por defecto para pruebas
     this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
   }
 
   async ngOnInit(): Promise<void> {
-
     this.getAllProducts()
+  }
 
+  goToProduct(id: number) {
+    let route: string = "product-view/" + id;
+    this.router.navigateByUrl(route)
   }
 
 
@@ -61,6 +65,66 @@ export class ProductListComponent implements OnInit, OnDestroy {
           this.querySelector.productType = ProductType.MEAT;
           break;
       }
+
+      const savedCategory = sessionStorage.getItem("category");
+      if (savedCategory) {
+        const categoryNumber: number = parseInt(savedCategory)
+        if (categoryNumber == this.querySelector.productType) // Si la categoría es la misma
+        {
+          const currentPage = sessionStorage.getItem("currentPage");
+          if (currentPage) {
+            this.currentPage = parseInt(currentPage);
+            sessionStorage.removeItem("currentPage")
+          }
+
+          const totalPages = sessionStorage.getItem("totalPages");
+          if (totalPages) {
+            this.totalPages = parseInt(totalPages);
+            sessionStorage.removeItem("totalPages")
+          }
+
+          const productsPerPage = sessionStorage.getItem("productsPerPage");
+          if (productsPerPage) {
+            this.querySelector.productPageSize = parseInt(productsPerPage)
+            sessionStorage.removeItem("productsPerPage")
+          }
+
+          const ordinationType = sessionStorage.getItem("ordinationType");
+          const ordinationOrder = sessionStorage.getItem("ordinationOrder");
+          sessionStorage.removeItem("ordinationType")
+          sessionStorage.removeItem("ordinationOrder")
+          if (ordinationType && ordinationOrder) {
+            const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
+            if (orderBy) {
+              if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 0) {
+                orderBy.value = "name-asc";
+                this.querySelector.ordinationType = OrdinationType.NAME;
+                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+              }
+
+              else if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 1) {
+                orderBy.value = "name-desc";
+                this.querySelector.ordinationType = OrdinationType.NAME;
+                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+              }
+
+              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 0) {
+                orderBy.value = "price-asc";
+                this.querySelector.ordinationType = OrdinationType.PRICE;
+                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
+              }
+
+              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 1) {
+                orderBy.value = "price-desc";
+                this.querySelector.ordinationType = OrdinationType.PRICE;
+                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
+              }
+            }
+          }
+        }
+      }
+
+      sessionStorage.removeItem("category")
 
       const result = await this.productService.getAllProducts(this.querySelector);
 
@@ -147,6 +211,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   }
 
+  order() {
+    const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
+    if (orderBy) { this.sortBy(orderBy.value) }
+  }
+
   getSearchedProducts(query: string) {
     this.querySelector.search = query
     this.getAllProducts();
@@ -182,40 +251,47 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
+    sessionStorage.setItem("category", this.querySelector.productType.toString());
+    sessionStorage.setItem("currentPage", this.currentPage.toString());
+    sessionStorage.setItem("totalPages", this.totalPages.toString());
+    sessionStorage.setItem("productsPerPage", this.querySelector.productPageSize.toString());
+    sessionStorage.setItem("ordinationType", this.querySelector.ordinationType.toString());
+    sessionStorage.setItem("ordinationOrder", this.querySelector.ordinationDirection.toString());
+    sessionStorage.setItem("query", this.querySelector.search);
   }
 
-  desBtnPerName(){ // Funcion para ordenar descendente
+  desBtnPerName() { // Funcion para ordenar descendente
     this.BtnPerName = false;
     this.sortBy("name-desc");
   }
 
-  ascBtnPerName(){
+  ascBtnPerName() {
     this.BtnPerName = true;
     this.sortBy("name-asc");
   }
 
-  togglePerName(){
-    if(this.BtnPerName){
+  togglePerName() {
+    if (this.BtnPerName) {
       this.desBtnPerName();
-    }else{
+    } else {
       this.ascBtnPerName();
     }
   }
 
-  desBtnPerPrice(){
+  desBtnPerPrice() {
     this.BtnPerPrice = false;
     this.sortBy("price-desc");
   }
 
-  ascBtnPerPrice(){
+  ascBtnPerPrice() {
     this.BtnPerPrice = true;
     this.sortBy("price-asc");
   }
 
-  togglePerPrice(){
-    if(this.BtnPerPrice){
+  togglePerPrice() {
+    if (this.BtnPerPrice) {
       this.desBtnPerPrice();
-    }else{
+    } else {
       this.ascBtnPerPrice();
     }
   }

@@ -52,43 +52,6 @@ namespace Server.Controllers
             return userDto;
         }
         
-        /*
-
-        [HttpPost]
-        public async Task RegisterUserAsync 
-            (string name, string email,string password, string address)
-        {
-            
-            User usuario = new User();
-            usuario.Id = _context.Users.Count() == 0 ? 1 : _context.Users.Max(u => u.Id) + 1;
-            usuario.Name = name;
-            usuario.Email = email;
-            usuario.Password = password;
-            usuario.Address = address;
-            usuario.Role = "normal";
-            await _unitOfWork.UserRepository.InsertAsync(usuario);
-            await _unitOfWork.SaveAsync();
-        }
-
-        [HttpDelete("byid")]
-        public async Task DeleteById(int id)
-        {
-            User user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-            _unitOfWork.UserRepository.Delete(user);
-            await _unitOfWork.SaveAsync();
-        }
-
         
-        [HttpDelete("byemail")]
-        public async Task DeleteByEmail(string email)
-        {
-            User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
-            _unitOfWork.UserRepository.Delete(user);
-            await _unitOfWork.SaveAsync();
-        }
-
-        
-
-        */
     }
 }
