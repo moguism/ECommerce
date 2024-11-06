@@ -43,7 +43,7 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
-            builder.Services.AddScoped<OrderMapper>();
+            builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();

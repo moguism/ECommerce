@@ -68,7 +68,44 @@ namespace Server.Controllers
         }
 
 
-
+        [Authorize]
+        [HttpPost]
+        public async Task<ShoppingCartDto> CreateOrder([FromBody] ShoppingCartDto orderDto, [FromBody] bool express)
+        {
+            /* EL FLUJO IRÍA ASÍ:
+             * 1) El usuario hace petición post para crear un pedido
+             * 2) Si no existen nada en el carro, se crea y se establece ese como el carro 
+             * 3) Si el usuario paga, el carro se despeja, en la sección de pagos
+             * 4) Si el usuario no paga e intenta crear un nuevo pedido, se agrega el contenido 
+             * 5) En caso de que sea un "pago express" (es decir, el usuario se ha metido únicamente para comprar algo), se ignora el paso 4
+             * 6) En el front habrá que poner que si ha iniciado sesión solo para pagar, no se llame a la función "GetShoppingCart"
+             */
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return null;
+            }
+            if (!express)
+            {
+                // Actualiza el carrito
+                Order shoppingCart = ObtainCart(user);
+                if (shoppingCart != null)
+                {
+                    return await UpdateShoppingCart(orderDto, shoppingCart);
+                }
+            }
+            Order order = _orderMapper.ToEntity(orderDto);
+            // Fuerzo estos campos para evitar peticiones maliciosas (es decir, que venga Fran a cargarse el back)
+            order.UserId = user.Id;
+            order.IsReserved = 1;
+            order.Payments = null;
+            order.CreatedAt = DateTime.Now;
+            // AQUÍ NO SE DESCUENTA EL STOCK, ESO SE HARÍA EN EL PAGO
+            Order savedOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
+            await _unitOfWork.SaveAsync();
+            ShoppingCartDto returnedOrder = _orderMapper.ToDto(savedOrder);
+            return returnedOrder;
+        }
 
 
 
