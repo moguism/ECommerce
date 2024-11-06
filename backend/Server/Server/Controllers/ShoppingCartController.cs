@@ -15,19 +15,14 @@ namespace Server.Controllers
     public class ShoppingCartController : ControllerBase
     {
 
-        private readonly UnitOfWork _unitOfWork;
-
         private readonly ShoppingCartMapper _shoppingCartMapper;
-        private readonly ShoppingCartRepository _shoppingCartRepository;
         private readonly ShoppingCartService _shoppingCartService;
 
 
-        public ShoppingCartController(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper, 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, 
             ShoppingCartRepository shoppingCartRepository, ShoppingCartService shoppingCartService) 
         { 
-            _unitOfWork = unitOfWork;
             _shoppingCartMapper = shoppingCartMapper;
-            _shoppingCartRepository = shoppingCartRepository;
             _shoppingCartService = shoppingCartService;
         }
 
@@ -44,11 +39,9 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetQueryable()
-                .Where(cart => cart.UserId == user.Id)
-                .FirstOrDefaultAsync();
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id)
 
-            
+
             return _shoppingCartMapper.ToDto(shoppingCart);
           
         }
@@ -64,15 +57,14 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartRepository.AddNewShoppingCart(user);
-
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
-            
+            //Añade un carrito si el usuario no tiene ninguno
+            await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
+            //Recoge el carrito del usuario
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            //Añade los productos al carrito
             await _shoppingCartService.AddProductsToShoppingCart(shoppingCart, cartContentDto);
 
         }
-
-
 
 
         private async Task<User> GetAuthorizedUser()
@@ -82,7 +74,7 @@ namespace Server.Controllers
             string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
             // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(idString));
+            return await _shoppingCartService.GetUserFromDbByStringId(idString);
         }
 
     }
