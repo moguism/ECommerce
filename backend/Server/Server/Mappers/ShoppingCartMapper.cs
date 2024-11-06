@@ -1,4 +1,5 @@
-﻿using Server.DTOs;
+﻿using Microsoft.IdentityModel.Tokens;
+using Server.DTOs;
 using Server.Models;
 using Server.Repositories;
 
@@ -18,35 +19,26 @@ public class ShoppingCartMapper
     }
 
 
-    public async ShoppingCartDto ToDto(ShoppingCart cart)
+    public async Task<IEnumerable<ShoppingCartDto>> ToDto(ShoppingCart cart)
     {
-        IEnumerable<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(cart.Id);
-        IEnumerable<Product> products = await _productRepository.GetByIdAsync(cart.Id);
+        ICollection<CartContent> cartContent = await _cartContentRepository.GetByShoppingCartIdAsync(cart.Id);
 
-        return new ShoppingCartDto
+        IEnumerable<ShoppingCartDto> shoppingCartDtos = new List<ShoppingCartDto>();
+
+        foreach (var item in cartContent)
         {
-            Id = cart.Id,
-            Products = ,
-        };
+            ShoppingCartDto shoppingCartItem = new ShoppingCartDto
+            {
+                Id = item.Id,
+                Product = await _productRepository.GetProductById(cart.ProductId),
+                Quantity = item.Quantity
+
+            };
+        }
+
+        return shoppingCartDtos;
+
     }
 
-    public IEnumerable<ShoppingCartDto> ToDto(IEnumerable<Order> orders)
-    {
-        return orders.Select(ToDto);
-    }
-
-    public Order ToEntity(ShoppingCartDto orderDto)
-    {
-        return new Order
-        {
-            Id = orderDto.Id,
-            Products = orderDto.Products
-        };
-    }
-
-    public IEnumerable<Order> ToEntity(IEnumerable<ShoppingCartDto> ordersDto)
-    {
-        return ordersDto.Select(ToEntity);
-    }
     
 }

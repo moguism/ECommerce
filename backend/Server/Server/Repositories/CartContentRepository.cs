@@ -9,7 +9,7 @@ namespace Server.Repositories
 
         public CartContentRepository(FarminhouseContext context) : base(context) { }
 
-        public async Task<IEnumerable<CartContent>> GetByShoppingCartIdAsync(int id)
+        public async Task<ICollection<CartContent>> GetByShoppingCartIdAsync(int id)
         {
             return await _context.Set<CartContent>().ToArrayAsync();
         }

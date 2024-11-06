@@ -23,11 +23,11 @@ namespace Server.Repositories
             };
         }
 
-        public async Task<ICollection<Product>> GetProductById(int id)
+        public async Task<Product> GetProductById(int id)
         {
             ICollection<Product> products = await GetAllAsync();
 
-            return products.Where(product => product.Id == id).ToList();
+            return products.Where(product => product.Id == id).FirstOrDefault();
 
 
         }
