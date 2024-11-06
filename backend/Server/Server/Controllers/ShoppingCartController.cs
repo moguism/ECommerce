@@ -17,13 +17,15 @@ namespace Server.Controllers
         private readonly UnitOfWork _unitOfWork;
         private readonly FarminhouseContext _context;
         private readonly CartContentRepository _cartContentRepository;
+        private readonly CartContentMapper _cartContentMapper;
 
 
-        public ShoppingCartController(UnitOfWork unitOfWork, FarminhouseContext context, CartContentRepository cartContentRepository) 
+        public ShoppingCartController(UnitOfWork unitOfWork, FarminhouseContext context, CartContentRepository cartContentRepository, CartContentMapper cartContentMapper) 
         { 
             _unitOfWork = unitOfWork;
             _context = context;
             _cartContentRepository = cartContentRepository;
+            _cartContentMapper = cartContentMapper;
         }
 
 
@@ -51,16 +53,15 @@ namespace Server.Controllers
 
         //Pruebas
         [HttpGet]
-        public async Task<IEnumerable<CartContent>> GetShoppingCart(int userId)
+        public async Task<IEnumerable<CartContentDto>> GetShoppingCart(int userId)
         {
 
-            //Recoge el carrito del usuario
             var shoppingCart = await _context.ShoppingCart
-            .Where(cart => cart.UserId == userId)  // Filtra por el ID del usuario
+            .Where(cart => cart.UserId == userId) 
             .FirstOrDefaultAsync();
 
-            //Devuelve el contenido del carrito (Productos)
-            return await _cartContentRepository.GetByShoppingCartIdAsync(shoppingCart.Id);
+            //Devuelve el contenido del carrito (Productos y cantidad)
+            return await _cartContentMapper.ToDto(shoppingCart);
 
 
 
@@ -68,59 +69,27 @@ namespace Server.Controllers
         }
 
 
-        [Authorize]
         [HttpPost]
-        public async Task<ShoppingCartDto> CreateOrder([FromBody] ShoppingCartDto orderDto, [FromBody] bool express)
+        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromBody] User user)
         {
-            /* EL FLUJO IRÍA ASÍ:
-             * 1) El usuario hace petición post para crear un pedido
-             * 2) Si no existen nada en el carro, se crea y se establece ese como el carro 
-             * 3) Si el usuario paga, el carro se despeja, en la sección de pagos
-             * 4) Si el usuario no paga e intenta crear un nuevo pedido, se agrega el contenido 
-             * 5) En caso de que sea un "pago express" (es decir, el usuario se ha metido únicamente para comprar algo), se ignora el paso 4
-             * 6) En el front habrá que poner que si ha iniciado sesión solo para pagar, no se llame a la función "GetShoppingCart"
-             */
-            User user = await GetAuthorizedUser();
-            if (user == null)
+
+            // Verificar si existe un carrito del usuario
+            var existingShoppingCar = await _context.ShoppingCart
+                .FirstOrDefaultAsync(cart => cart.Id == cartContentDto.Id);
+
+            //Si no hay ningún carrito creado por el usuario, lo crea
+            if (existingShoppingCar == null)
             {
-                return null;
+                _context.ShoppingCart.Add(new ShoppingCart() { UserId = user.Id});
             }
-            if (!express)
+            else
             {
-                // Actualiza el carrito
-                Order shoppingCart = ObtainCart(user);
-                if (shoppingCart != null)
-                {
-                    return await UpdateShoppingCart(orderDto, shoppingCart);
-                }
+                //Si existe el carrito, añade el producto a este
+                await _cartContentRepository.AddProductToCartAsync(_cartContentMapper.ToEntity(cartContentDto));
+
             }
-            Order order = _orderMapper.ToEntity(orderDto);
-            // Fuerzo estos campos para evitar peticiones maliciosas (es decir, que venga Fran a cargarse el back)
-            order.UserId = user.Id;
-            order.IsReserved = 1;
-            order.Payments = null;
-            order.CreatedAt = DateTime.Now;
-            // AQUÍ NO SE DESCUENTA EL STOCK, ESO SE HARÍA EN EL PAGO
-            Order savedOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
-            await _unitOfWork.SaveAsync();
-            ShoppingCartDto returnedOrder = _orderMapper.ToDto(savedOrder);
-            return returnedOrder;
+
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
