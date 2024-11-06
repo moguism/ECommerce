@@ -5,17 +5,15 @@ namespace Server.Models;
 
 public class Order
 {
-    public DateTime CreatedAt { get; set; }
-
-    public int IsReserved { get; set; }
-
     public int Id { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
+    public decimal Total { get; set; }
     public int UserId { get; set; }
+    public int PaymentTypeId { get; set; }
+    public int TemporalOrderId { get; set; }
+    public int ShoppingCartId { get; set; }
 
-    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public User User { get; set; }
-
-    public ICollection<Product> Products { get; set; } = new List<Product>();
 }
