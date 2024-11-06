@@ -6,6 +6,7 @@ using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -18,21 +19,24 @@ namespace Server.Controllers
 
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartRepository _shoppingCartRepository;
+        private readonly ShoppingCartService _shoppingCartService;
 
 
         public ShoppingCartController(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper, 
-            ShoppingCartRepository shoppingCartRepository) 
+            ShoppingCartRepository shoppingCartRepository, ShoppingCartService shoppingCartService) 
         { 
             _unitOfWork = unitOfWork;
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartRepository = shoppingCartRepository;
+            _shoppingCartService = shoppingCartService;
         }
 
 
-        /* Correcto
+        
+
         [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts()
+        public async Task<ShoppingCartDto> GetShoppingCart()
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -40,37 +44,31 @@ namespace Server.Controllers
                 return null;
             }
 
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetQueryable()
+                .Where(cart => cart.UserId == user.Id)
+                .FirstOrDefaultAsync();
 
-            var shoppingCart = await _context.ShoppingCart
-            .Where(cart => cart.UserId == user.Id)  // Filtra por el ID del usuario
-            .ToListAsync();
-
-            return shoppingCart;
-
-
-        }
-        */
-
-        //Pruebas
-        [HttpGet]
-        public async Task<ShoppingCartDto> GetShoppingCart(int userId)
-        {
-
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetQueryable().Where(cart => cart.UserId == userId).FirstOrDefaultAsync();
-
-            //Devuelve el contenido del carrito (Productos y cantidad)
+            
             return _shoppingCartMapper.ToDto(shoppingCart);
           
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto, [FromQuery] User user)
+        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
         {
 
-            bool existShoppingCart = await _shoppingCartRepository.AddNewShoppingCart(user);
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
 
+            await _shoppingCartRepository.AddNewShoppingCart(user);
+
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             
-
+            await _shoppingCartService.AddProductsToShoppingCart(shoppingCart, cartContentDto);
 
         }
 
