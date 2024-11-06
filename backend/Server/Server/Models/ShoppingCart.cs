@@ -1,4 +1,6 @@
-﻿namespace Server.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Server.Models
 {
     public class ShoppingCart
     {

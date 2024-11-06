@@ -148,6 +148,8 @@ namespace Server
                     };
 
 
+                   
+
                     // Añadir categorías y productos al contexto de la base de datos
                     dbContext.Categories.Add(fruitsCategory);
                     dbContext.Categories.Add(vegetablesCategory);
@@ -155,6 +157,15 @@ namespace Server
                     dbContext.Products.AddRange(fruits);
                     dbContext.Products.AddRange(vegetables);
                     dbContext.Products.AddRange(meats);
+
+
+
+                    
+
+
+
+
+
 
                     // Guardar cambios en la base de datos
                     dbContext.SaveChanges();

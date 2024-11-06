@@ -4,6 +4,7 @@ using Server.Models;
 namespace Server.Mappers;
 public class OrderMapper
 {
+    /*
     public OrderDto ToDto(Order order)
     {
         return new OrderDto
@@ -31,4 +32,5 @@ public class OrderMapper
     {
         return ordersDto.Select(ToEntity);
     }
+    */
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
@@ -13,18 +14,20 @@ namespace Server.Controllers
     {
 
         private readonly UnitOfWork _unitOfWork;
+        private readonly FarminhouseContext _context;
 
 
-        public ShoppingCartController(UnitOfWork unitOfWork) 
+        public ShoppingCartController(UnitOfWork unitOfWork, FarminhouseContext context) 
         { 
             _unitOfWork = unitOfWork;
+            _context = context;
         }
 
 
-
+        /* Correcto
         [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetOrders()
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts()
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -32,10 +35,32 @@ namespace Server.Controllers
                 return null;
             }
 
-            return user.ShoppingCart; // Los pedidos normales
+
+            var shoppingCart = await _context.ShoppingCart
+            .Where(cart => cart.UserId == user.Id)  // Filtra por el ID del usuario
+            .ToListAsync();
+
+            return shoppingCart;
+
+
         }
+        */
+
+        //Pruebas
+        [HttpGet]
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts(int id)
+        {
 
 
+            var shoppingCart = await _context.ShoppingCart
+            .Where(cart => cart.UserId == id)  // Filtra por el ID del usuario
+            //.Include
+            .ToListAsync();
+
+            return shoppingCart;
+
+
+        }
 
 
 

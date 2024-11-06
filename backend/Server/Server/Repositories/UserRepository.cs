@@ -12,14 +12,16 @@ namespace Server.Repositories
         
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
+            return await GetQueryable()
+                .Where(user => user.Email == email)
+                .Include(user => user.Reviews)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<User> GetAllInfoById(int id)
         {
             return await GetQueryable()
                 .Where(user => user.Id == id)
-                //.Include(user => user.Orders)
                 .Include(user => user.Reviews)
                 .FirstOrDefaultAsync();
         }

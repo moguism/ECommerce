@@ -1,11 +1,10 @@
 ﻿namespace Server.Models
 {
-    public class TemporalOrder
+    public class CartContent
     {
-        public int Id { get; set; }
-        public int ShoppingCartId { get; set; }
-        public int userId { get; set; }
-        public int paymentType { get; set; }
 
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public int ShoppingCartId { get; set; }
     }
 }
