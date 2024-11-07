@@ -47,13 +47,12 @@ namespace Server.Repositories
 
         public async Task RemoveProductFromCartAsync(ShoppingCart cart, int productId)
         {
-            Product procutDel = _context.Products.FirstOrDefault(p => p.Id == productId);
-
-            if (procutDel != null)
+            CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ProductId == productId);
+            if(cartContent == null)
             {
-                CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ProductId == productId);
-                _context.CartContent.Remove(cartContent);
+                return;
             }
+            _context.CartContent.Remove(cartContent);
 
 
         }

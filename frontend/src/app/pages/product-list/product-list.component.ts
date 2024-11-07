@@ -247,6 +247,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     // Volver a obtener los productos con la nueva ordenación
     this.getAllProducts();
+    this.goToFirstPage();
   }
 
   ngOnDestroy(): void {

@@ -25,7 +25,7 @@
             <div class="product-card-image"><img class="image" [src]="product.image"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
             @if (product.stock > 0) {
-            <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
+            <div class="product-card-stock">Stock: {{ product.stock }} kilos</div>
             }
             @else {
             <div class="product-card-no-stock">No hay stock</div>
