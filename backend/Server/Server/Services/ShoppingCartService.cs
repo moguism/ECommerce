@@ -26,11 +26,8 @@ namespace Server.Services
                 cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
                 await _unitOfWork.SaveAsync();
             }
-            CartContent cartContent = new CartContent();
-            cartContent.ProductId = cartContentDto.ProductId;
-            cartContent.Quantity = cartContent.Quantity;
-            cartContent.ShoppingCartId = cart.Id;
-            await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
+            
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
 
             await _unitOfWork.SaveAsync();
 
