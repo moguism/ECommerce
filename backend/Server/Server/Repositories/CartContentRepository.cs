@@ -37,12 +37,13 @@ namespace Server.Repositories
             else
             {
                 //Sino, actualiza la cantidad
-                cartContent.Quantity += cartContentDto.Quantity;
+                cartContent.Quantity = cartContentDto.Quantity;
                 _context.CartContent.Update(cartContent);
             }
 
 
         }
+
 
         public async Task RemoveProductFromCartAsync(ShoppingCart cart, int productId)
         {
