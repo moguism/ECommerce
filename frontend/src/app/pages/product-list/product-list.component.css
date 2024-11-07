@@ -80,6 +80,7 @@
     min-height: 350px;
     background-color: white;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 .product-card:hover {

@@ -6,14 +6,14 @@ import { ProductType } from '../../models/enums/product-type';
 import { QuerySelector } from '../../models/query-selector';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
-import { HeaderComponent } from '../../components/header/header.component';
 import { CartContent } from '../../models/cart-content';
 import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderComponent, HeaderShopComponent],
+  imports: [HeaderShopComponent, FormsModule],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
@@ -26,6 +26,7 @@ export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   allProducts: Product[] | null | undefined = []
   querySelector: QuerySelector;
+  newQuantity: number = 1;
 
   // Estos servicios son para pruebas
   constructor(private productService: ProductService, private apiService: ApiService) {
@@ -41,23 +42,19 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async getShoppingCart() {
+    this.shoppingCartProducts = []
     const productsRaw = localStorage.getItem("shoppingCart")
     if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw)
-    if (this.apiService.jwt != "")
-    {
-      // Si ha iniciado sesión, hago la petición y borro el carrito ya existente
-      localStorage.removeItem("shoppingCart")
+    localStorage.removeItem("shoppingCart")
+    if (this.apiService.jwt != "") {
       const result = await this.apiService.get("ShoppingCart", {}, 'json')
-      if(result.data)
-      {
-        const data : any = result.data
+      if (result.data) {
+        const data: any = result.data
         const cartContent: any[] = data.cartContent
-        for(const product of cartContent)
-        {
+        for (const product of cartContent) {
           const result = await this.productService.getById(product.productId)
-          if(result != null)
-          {
-            const p : Product = {
+          if (result != null) {
+            const p: Product = {
               id: result.id,
               name: result.name,
               average: result.average,
@@ -85,38 +82,36 @@ export class ShoppingCartComponent implements OnInit {
     this.allProducts = result?.products;
   }
 
-  /*getTotal(productName: string): number {
-    // WARNING: Porrito bastísimo xD
-    // Suma las cantidades de los productos con el mismo nommbre
-    const totalQuantity = this.shoppingCartProducts
-      .filter(product => product.name === productName)
-      .reduce((total, product) => total + product.total, 0);
-
-    return totalQuantity;
-  }*/
-
   async addProductToCart(product: Product) {
-    /*const existingProduct = this.shoppingCartProducts.find(item => item.id === product.id);
-
-    if (existingProduct) {
-      existingProduct.total += 1;
-    } else {
-      const productWithQuantity = { ...product, total: 1 };
-      this.shoppingCartProducts.push(productWithQuantity);
-    }
-
-    const quantity = 1;*/
-
-    if (this.apiService.jwt == "")
-    {
+    if (this.apiService.jwt == "") {
       localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
     }
-    else
-    {
+    else {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(1, product.id)
       await this.apiService.post("ShoppingCart", cartContent)
       this.getShoppingCart()
+    }
+  }
+
+  async changeQuantity(product: Product) {
+    if(this.newQuantity == 0)
+    {
+      alert("Cantidad no válida")
+    }
+    else
+    {
+      if (this.apiService.jwt == "") {
+        const p = this.findProductInArray(product.id)
+        p.total = this.newQuantity;
+        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+      }
+      else {
+        localStorage.removeItem("shoppingCart")
+        const cartContent = new CartContent(this.newQuantity, product.id)
+        await this.apiService.post("ShoppingCart", cartContent)
+        this.getShoppingCart()
+      }
     }
   }
 
@@ -133,40 +128,43 @@ export class ShoppingCartComponent implements OnInit {
       }
 
       if (this.apiService.jwt == "") {
+        const product = this.findProductInArray(productId);
         localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
       }
       else {
-        await this.apiService.delete("ShoppingCart", productId)
+        await this.apiService.delete("ShoppingCart", { productId })
         this.getShoppingCart()
       }
     }
   }
 
-  async pay()
+  findProductInArray(id: number): Product
   {
-    for(const product of this.shoppingCartProducts)
-    {
+    const index = this.shoppingCartProducts.findIndex(product => product.id === id);
+    const product = this.shoppingCartProducts[index];
+    return product;
+  }
+
+  async pay() {
+    for (const product of this.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
-      if(newProduct)
-      {
+      if (newProduct) {
         const difference = newProduct.stock - product.stock;
-        if(difference < 0)
-        {
+        if (difference < 0) {
           this.deleteFromArray(product)
         }
       }
-      else
-      {
+      else {
         this.deleteFromArray(product)
       }
     }
   }
 
-  deleteFromArray(product: Product)
-  {
+  deleteFromArray(product: Product) {
     const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
     this.shoppingCartProducts.splice(index, 1);
-    alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
+    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
+    //alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
   }
 
 }

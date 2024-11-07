@@ -2,6 +2,7 @@
 <div class="main">
     <div class="information">
         <div class="basket">
+
         </div>
         <div class="final-price">
 
@@ -9,16 +10,15 @@
     </div>
 </div>
 <div>
-<!--<div>
  funcionalidades no tocar o si? <h1>CARRITO</h1>
     @for (product of shoppingCartProducts; track product.id) 
     {
         <div style="display: flex;">
             <h2>{{ product.name }}</h2>
             <p>Cantidad: {{ product.total }} </p>
-            <p>Cantidad: {{ getTotal(product.name)}} </p>
-            <button (click)="addProductToCart(product)">Agregar</button>
+            <button (click)="changeQuantity(product)">Cambiar cantidad</button>
             <button (click)="deleteProduct(product.id)">Borrar</button>
+            <input id="newQuantity" type="number" [(ngModel)]="newQuantity" [ngModelOptions]="{standalone: true}">
         </div>
     }
     @empty 
@@ -26,6 +26,7 @@
         <p>No hay productos en el carrito</p>
     }
 </div>
+<!-- Esta parte habrá que quitarla -->
 <div>
     <h1>PRODUCTOS</h1>
     @for (product of allProducts; track product.id) 
@@ -33,7 +34,6 @@
         <p>{{ product.name }}</p>
         <button (click)="addProductToCart(product)">Añadir al carrito</button>
     }
-</div>
 </div>
 
 -->

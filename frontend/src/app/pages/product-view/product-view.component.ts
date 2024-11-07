@@ -3,12 +3,13 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
-import { ShoppingCartComponent } from '../shopping-cart/shopping-cart.component';
-
+import { ApiService } from '../../services/api.service';
+import { CartContent } from '../../models/cart-content';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-product-view',
   standalone: true,
-  imports: [HeaderComponent,ShoppingCartComponent],
+  imports: [HeaderComponent, FormsModule],
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
 })
@@ -16,7 +17,7 @@ export class ProductViewComponent implements OnInit {
 
   protected count=0;
   product: Product | null = null
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute){}
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService){}
 
   ngOnInit(): void
   {
@@ -32,6 +33,7 @@ export class ProductViewComponent implements OnInit {
       this.product = result
     }
   }
+
   sumar(){
     this.count++;
   }
@@ -42,4 +44,26 @@ export class ProductViewComponent implements OnInit {
   }
 
   
+  async addToCart(product: Product)
+  {
+    const productsLocalStore = localStorage.getItem("shoppingCart")
+    if(this.apiService.jwt == "")
+    {
+        let allProducts : Product[] = []
+        const productsLocalStore = localStorage.getItem("shoppingCart")
+        if(productsLocalStore)
+        {
+          allProducts = JSON.parse(productsLocalStore)
+          allProducts.push(product)
+          localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+        }
+    }
+    else
+    {
+      localStorage.removeItem("shoppingCart")
+      const cartContent = new CartContent(1, product.id)
+      await this.apiService.post("ShoppingCart", cartContent)
+    }
+  }
+
 }
