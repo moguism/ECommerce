@@ -45,7 +45,6 @@ export class ProductViewComponent implements OnInit {
 
   async addToCart(product: Product)
   {
-    const productsLocalStore = localStorage.getItem("shoppingCart")
     if(this.apiService.jwt == "")
     {
         let allProducts : Product[] = []
