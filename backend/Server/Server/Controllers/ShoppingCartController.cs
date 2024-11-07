@@ -37,7 +37,8 @@ namespace Server.Controllers
                 return null;
             }
 
-            return await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            return _shoppingCartMapper.ToDto(shoppingCart);
           
         }
 

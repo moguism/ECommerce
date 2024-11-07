@@ -8,12 +8,10 @@ namespace Server.Services
     {
 
         UnitOfWork _unitOfWork;
-        ShoppingCartMapper _shoppingCartMapper;
 
         public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
         {
             _unitOfWork = unitOfWork;
-            _shoppingCartMapper = shoppingCartMapper;
         }
 
         public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
@@ -43,7 +41,7 @@ namespace Server.Services
         }
 
 
-        public async Task<ShoppingCartDto> GetShoppingCartByUserIdAsync(int id)
+        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
         {
             ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
 
@@ -52,7 +50,7 @@ namespace Server.Services
                 return null;
             }
 
-            return _shoppingCartMapper.ToDto(shoppingCart);
+            return shoppingCart;
         }
 
         public async Task<User> GetUserFromDbByStringId(string stringId)
