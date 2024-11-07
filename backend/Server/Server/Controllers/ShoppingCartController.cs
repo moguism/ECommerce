@@ -38,10 +38,11 @@ namespace Server.Controllers
             {
                 return null;
             }
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
 
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            return _shoppingCartMapper.ToDto(shoppingCart);
           
-        }+
+        }
 
         [Authorize]
         [HttpPost]
