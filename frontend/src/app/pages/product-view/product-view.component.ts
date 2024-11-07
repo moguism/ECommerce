@@ -40,4 +40,6 @@ export class ProductViewComponent implements OnInit {
       this.count--
     }
   }
+
+  
 }

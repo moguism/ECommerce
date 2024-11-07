@@ -44,6 +44,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts()
   }
 
+    
+
   goToProduct(id: number) {
     let route: string = "product-view/" + id;
     this.router.navigateByUrl(route)
