@@ -38,13 +38,10 @@ namespace Server.Controllers
             {
                 return null;
             }
-
-            //ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
-            return await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
 
           
-        }
+        }+
 
         [Authorize]
         [HttpPost]
@@ -58,6 +55,7 @@ namespace Server.Controllers
             }
 
             await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
+            
         }
 
 
