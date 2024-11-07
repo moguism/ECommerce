@@ -39,9 +39,11 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            //ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
-            if(shoppingCart == null)
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+
+            if (shoppingCart == null)
             {
                 return null;
             }
@@ -61,29 +63,45 @@ namespace Server.Controllers
                 return;
             }
 
-            /*ICollection<ShoppingCart> shoppingCarts = user.ShoppingCarts;
-            if(shoppingCarts.Count() == 0)
+            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            if(cart == null)
+            {
+                cart = new ShoppingCart();
+                cart.UserId = user.Id;
+                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+                await _unitOfWork.SaveAsync();
+            }
+            /*if(shoppingCarts.Count() == 0)
             {
                 ShoppingCart cart = new ShoppingCart();
                 cart.UserId = user.Id;
-                
-                CartContent cartContent = new CartContent();
-                cartContent.ProductId = cartContentDto.ProductId;
-                cartContent.Quantity = cartContentDto.Quantity;
-
-                cart.CartContent.Append(cartContent);
+                shoppingCarts.Add(cart);
 
                 await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
                 await _unitOfWork.SaveAsync();
+
+                user.ShoppingCarts.Add(cart);
+                _unitOfWork.UserRepository.Update(user);
+
+                await _unitOfWork.SaveAsync();
+            }
+            else if(shoppingCarts.Count() > 1)
+            {
+                throw new Exception("MAMONAZOS, SOLO UN CARRO POR USUARIO");
             }*/
 
             //Añade un carrito si el usuario no tiene ninguno
-            await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
+            //await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
             //Recoge el carrito del usuario
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            //ShoppingCart shoppingCart = shoppingCarts.FirstOrDefault();
             //Añade los productos al carrito
-            await _shoppingCartService.AddProductsToShoppingCart(shoppingCart, cartContentDto);
-
+            CartContent cartContent = new CartContent();
+            cartContent.ProductId = cartContentDto.ProductId;
+            cartContent.Quantity = cartContent.Quantity;
+            cartContent.ShoppingCartId = cart.Id;
+            await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
+            await _unitOfWork.SaveAsync();
+            //await _shoppingCartService.AddProductsToShoppingCart(cart, cartContentDto);
         }
 
 
