@@ -1,0 +1,36 @@
+<app-header-shop></app-header-shop>
+<div class="main">
+    <div class="information">
+        <div class="basket">
+
+        </div>
+        <div class="final-price">
+
+        </div>
+    </div>
+</div>
+<div>
+ funcionalidades no tocar o si? <h1>CARRITO</h1>
+    @for (product of shoppingCartProducts; track product.id) 
+    {
+        <div style="display: flex;">
+            <h2>{{ product.name }}</h2>
+            <p>Cantidad: {{ product.total }} </p>
+            <button (click)="addProductToCart(product)">Agregar</button>
+            <button (click)="deleteProduct(product.id)">Borrar</button>
+        </div>
+    }
+    @empty 
+    {
+        <p>No hay productos en el carrito</p>
+    }
+</div>
+<div>
+    <h1>PRODUCTOS</h1>
+    @for (product of allProducts; track product.id) 
+    {
+        <p>{{ product.name }}</p>
+        <button (click)="addProductToCart(product)">Añadir al carrito</button>
+    }
+</div>
+
