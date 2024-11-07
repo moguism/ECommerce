@@ -34,9 +34,11 @@ namespace Server.Services
 
         }
 
-        public async Task AddNewShoppingCartByUserAsync(User user)
+
+        public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
-            await _unitOfWork.ShoppingCartRepository.AddNewShoppingCart(user);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
             await _unitOfWork.SaveAsync();
         }
 
@@ -59,6 +61,8 @@ namespace Server.Services
             // Pilla el usuario de la base de datos
             return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
         }
+
+
 
     }
 }
