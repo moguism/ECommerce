@@ -1,4 +1,5 @@
 ﻿using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 
 namespace Server.Services
@@ -7,42 +8,32 @@ namespace Server.Services
     {
 
         UnitOfWork _unitOfWork;
+        ShoppingCartMapper _shoppingCartMapper;
 
-        public ShoppingCartService(UnitOfWork unitOfWork) 
+        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
         {
             _unitOfWork = unitOfWork;
+            _shoppingCartMapper = shoppingCartMapper;
         }
 
-        public async Task AddProductsToShoppingCart(ShoppingCart shoppingCart, CartContentDto cartContentDto)
+        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
         {
-            IEnumerable<CartContent> cartContents = await _unitOfWork.CartContentRepository
-                .GetCartContentByShoppingCartIdAsync(shoppingCart.Id);
-
-            CartContent cartContent = cartContents.Where(c => c.ProductId == shoppingCart.Id)
-                .FirstOrDefault();
-
-            //Si el producto no se ha añadido anteriormente, crea un contenido nuevo al carrito
-            if (cartContent == null)
+            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            if (cart == null)
             {
-                _unitOfWork.CartContentRepository.Add(new CartContent()
-                {
-                    ProductId = cartContentDto.ProductId,
-                    Quantity = cartContentDto.Quantity,
-                    ShoppingCartId = shoppingCart.Id,
-                    //Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId)
-
-                });
+                cart = new ShoppingCart();
+                cart.UserId = user.Id;
+                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+                await _unitOfWork.SaveAsync();
             }
-            //Sino, actualiza la canitdad
-            else
-            {
-                cartContent.Quantity += cartContentDto.Quantity;
-                _unitOfWork.CartContentRepository.Update(cartContent);
-
-
-            }
+            CartContent cartContent = new CartContent();
+            cartContent.ProductId = cartContentDto.ProductId;
+            cartContent.Quantity = cartContent.Quantity;
+            cartContent.ShoppingCartId = cart.Id;
+            await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
 
             await _unitOfWork.SaveAsync();
+
 
         }
 
@@ -53,9 +44,16 @@ namespace Server.Services
         }
 
 
-        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
+        public async Task<ShoppingCartDto> GetShoppingCartByUserIdAsync(int id)
         {
-            return await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
+
+            if (shoppingCart == null)
+            {
+                return null;
+            }
+
+            return _shoppingCartMapper.ToDto(shoppingCart);
         }
 
         public async Task<User> GetUserFromDbByStringId(string stringId)
