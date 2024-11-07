@@ -41,14 +41,8 @@ namespace Server.Controllers
 
             //ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            return await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
-            if (shoppingCart == null)
-            {
-                return null;
-            }
-
-            return _shoppingCartMapper.ToDto(shoppingCart);
           
         }
 
@@ -63,45 +57,7 @@ namespace Server.Controllers
                 return;
             }
 
-            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
-            if(cart == null)
-            {
-                cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-                await _unitOfWork.SaveAsync();
-            }
-            /*if(shoppingCarts.Count() == 0)
-            {
-                ShoppingCart cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                shoppingCarts.Add(cart);
-
-                await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-                await _unitOfWork.SaveAsync();
-
-                user.ShoppingCarts.Add(cart);
-                _unitOfWork.UserRepository.Update(user);
-
-                await _unitOfWork.SaveAsync();
-            }
-            else if(shoppingCarts.Count() > 1)
-            {
-                throw new Exception("MAMONAZOS, SOLO UN CARRO POR USUARIO");
-            }*/
-
-            //Añade un carrito si el usuario no tiene ninguno
-            //await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
-            //Recoge el carrito del usuario
-            //ShoppingCart shoppingCart = shoppingCarts.FirstOrDefault();
-            //Añade los productos al carrito
-            CartContent cartContent = new CartContent();
-            cartContent.ProductId = cartContentDto.ProductId;
-            cartContent.Quantity = cartContent.Quantity;
-            cartContent.ShoppingCartId = cart.Id;
-            await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
-            await _unitOfWork.SaveAsync();
-            //await _shoppingCartService.AddProductsToShoppingCart(cart, cartContentDto);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
         }
 
 
