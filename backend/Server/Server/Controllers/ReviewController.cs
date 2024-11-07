@@ -17,6 +17,7 @@ namespace Server.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        /*
         [HttpGet]
         public async Task<IEnumerable<Review>> GetAllProductReviews(int id)
         {
@@ -32,7 +33,7 @@ namespace Server.Controllers
 
             return reviews;
         }
-
+  
         [HttpPost]
 
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.DTOs;
 using Server.Models;
 using Server.Repositories.Base;
 
@@ -9,10 +10,11 @@ namespace Server.Repositories
 
         public CartContentRepository(FarminhouseContext context) : base(context) { }
 
-        /*public async Task<ICollection<ShoppingCart>> GetAllByCartIdAsync(int id)
+
+        public async Task<IEnumerable<CartContent>> GetCartContentByShoppingCartIdAsync(int shopCartId)
         {
-            ICollection<ShoppingCart> shoppingCart = await GetAllAsync();
-        }*/
+            return _context.CartContent.Where(c => c.ShoppingCartId == shopCartId).ToList();
+        }
 
 
     }
