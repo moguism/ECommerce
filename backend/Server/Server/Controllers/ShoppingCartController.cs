@@ -18,14 +18,14 @@ namespace Server.Controllers
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
 
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork) 
-        { 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+        {
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
         }
 
 
-        
+
 
         [Authorize]
         [HttpGet]
@@ -38,7 +38,7 @@ namespace Server.Controllers
             }
 
             return await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-          
+
         }
 
         [Authorize]
@@ -53,12 +53,12 @@ namespace Server.Controllers
             }
 
             await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
-            
+
         }
 
         [Authorize]
         [HttpDelete]
-        public async Task RemoveProductFromShoppingCart([FromBody] int productId)
+        public async Task RemoveProductFromShoppingCart([FromQuery] int productId)
         {
 
             User user = await GetAuthorizedUser();
