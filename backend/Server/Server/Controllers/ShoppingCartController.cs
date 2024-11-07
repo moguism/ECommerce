@@ -58,23 +58,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete("all")]
+        [HttpDelete]
         public async Task RemoveProductFromShoppingCart([FromBody] int productId)
-        {
-
-            User user = await GetAuthorizedUser();
-            if (user == null)
-            {
-                return;
-            }
-
-            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
-
-        }
-
-        [Authorize]
-        [HttpDelete("one")]
-        public async Task RemoveOneProductFromShoppingCart([FromBody] int productId)
         {
 
             User user = await GetAuthorizedUser();
