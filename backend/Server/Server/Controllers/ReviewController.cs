@@ -10,6 +10,7 @@ namespace Server.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
+        /*
         private readonly UnitOfWork _unitOfWork;
 
         public ReviewController(UnitOfWork unitOfWork)
@@ -17,7 +18,7 @@ namespace Server.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        /*
+        
         [HttpGet]
         public async Task<IEnumerable<Review>> GetAllProductReviews(int id)
         {
@@ -35,6 +36,6 @@ namespace Server.Controllers
         }
   
         [HttpPost]
-
+        */
     }
 }
