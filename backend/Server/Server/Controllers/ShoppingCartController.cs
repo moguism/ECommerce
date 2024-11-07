@@ -39,8 +39,6 @@ namespace Server.Controllers
                 return null;
             }
 
-            //ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
             ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
 
             if (shoppingCart == null)
@@ -95,13 +93,14 @@ namespace Server.Controllers
             //Recoge el carrito del usuario
             //ShoppingCart shoppingCart = shoppingCarts.FirstOrDefault();
             //Añade los productos al carrito
+
             CartContent cartContent = new CartContent();
             cartContent.ProductId = cartContentDto.ProductId;
-            cartContent.Quantity = cartContent.Quantity;
+            cartContent.Quantity = cartContentDto.Quantity;
             cartContent.ShoppingCartId = cart.Id;
+
             await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
             await _unitOfWork.SaveAsync();
-            //await _shoppingCartService.AddProductsToShoppingCart(cart, cartContentDto);
         }
 
 
