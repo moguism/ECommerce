@@ -48,6 +48,11 @@ export class ShoppingCartComponent implements OnInit {
       // Si ha iniciado sesión, hago la petición y borro el carrito ya existente
       localStorage.removeItem("shoppingCart")
       const result = await this.apiService.get("ShoppingCart", {}, 'json')
+      if(result.data)
+      {
+        const data : any = result.data
+        this.shoppingCartProducts = data.cartContent
+      }
       console.log("CARRITO: ", result)
     }
   }
@@ -109,6 +114,10 @@ export class ShoppingCartComponent implements OnInit {
 
       }
     }
+  }
+
+  pay()
+  {
   }
 
 }

@@ -39,8 +39,6 @@ namespace Server.Controllers
                 return null;
             }
 
-            //ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
             ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
 
             if (shoppingCart == null)
@@ -103,9 +101,6 @@ namespace Server.Controllers
 
             await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
             await _unitOfWork.SaveAsync();
-
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
-            Console.WriteLine("");
         }
 
 
