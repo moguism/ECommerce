@@ -18,14 +18,17 @@
                         <h2>{{ product.price}}</h2>
                         <h2 class="stock">Stock: {{ product.stock}}</h2>
                     </div>
-                    <div class="products-description-anadir">
-                        <button class="button-menos" (click)="restar()">-</button>
-                        <p class="count">{{count}}</p>
-                        <button class="button-mas" (click)="sumar()">+</button>
-                    </div>
-                    <div class="image-anadir-carrito">
-                        <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
-                    </div>
+                    @if(product.stock > 0)
+                    {
+                        <div class="products-description-anadir">
+                            <button class="button-menos" (click)="restar()">-</button>
+                            <p class="count">{{count}}</p>
+                            <button class="button-mas" (click)="sumar()">+</button>
+                        </div>
+                        <div class="image-anadir-carrito">
+                            <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

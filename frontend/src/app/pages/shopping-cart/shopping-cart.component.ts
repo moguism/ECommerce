@@ -26,8 +26,7 @@ export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   allProducts: Product[] | null | undefined = []
   querySelector: QuerySelector;
-  newQuantity: number = 1;
-
+  
   // Estos servicios son para pruebas
   constructor(private productService: ProductService, private apiService: ApiService) {
     const FIRST_PAGE = 1;
@@ -95,20 +94,22 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async changeQuantity(product: Product) {
-    if(this.newQuantity == 0)
+    const input = document.getElementById(product.id.toString()) as HTMLInputElement
+    if(input && parseInt(input.value) == 0)
     {
       alert("Cantidad no válida")
+      return
     }
-    else
+    else if(input)
     {
       if (this.apiService.jwt == "") {
         const p = this.findProductInArray(product.id)
-        p.total = this.newQuantity;
+        p.total = parseInt(input.value);
         localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
       }
       else {
         localStorage.removeItem("shoppingCart")
-        const cartContent = new CartContent(this.newQuantity, product.id)
+        const cartContent = new CartContent(parseInt(input.value), product.id)
         await this.apiService.post("ShoppingCart", cartContent)
         this.getShoppingCart()
       }
@@ -128,8 +129,7 @@ export class ShoppingCartComponent implements OnInit {
       }
 
       if (this.apiService.jwt == "") {
-        const product = this.findProductInArray(productId);
-        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+        this.deleteFromArray(product)
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })
