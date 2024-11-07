@@ -29,7 +29,7 @@ namespace Server.Services
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
                     ShoppingCartId = shoppingCart.Id,
-                    Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId)
+                    //Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId)
 
                 });
             }
