@@ -51,6 +51,10 @@
                     <i class="fa-solid fa-compass"></i>
                     <input type="text" placeholder="Dirección" [(ngModel)]="address" formControlName="address">
                 </div>
+                <div class="remember">
+                    <input type="checkbox" id="remember" (click)="rememberUser = !rememberUser"> <p>Recuérdame</p>
+
+                </div>
                 <button class="button" id="register_button" (click)="registerUser()">Registrarse</button>
                 <div *ngIf="registerForm.get('email')?.invalid" class="error">
                     <div *ngIf="registerForm.get('email')?.hasError('email')">

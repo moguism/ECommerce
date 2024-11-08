@@ -38,6 +38,10 @@ namespace Server.Controllers
             }
 
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            if(shoppingCart == null)
+            {
+                return null;
+            }
             return _shoppingCartMapper.ToDto(shoppingCart);
           
 
@@ -54,7 +58,22 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, false);
+
+        }
+
+        [Authorize]
+        [HttpPost("add")]
+        public async Task ChangeShoppingCartQuantity([FromBody] CartContentDto cartContentDto)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, true);
 
         }
 
