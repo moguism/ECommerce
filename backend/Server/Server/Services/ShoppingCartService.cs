@@ -14,7 +14,7 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
+        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto, bool add)
         {
             ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             if (cart == null)
@@ -25,7 +25,7 @@ namespace Server.Services
                 await _unitOfWork.SaveAsync();
             }
             
-            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
 
             await _unitOfWork.SaveAsync();
 

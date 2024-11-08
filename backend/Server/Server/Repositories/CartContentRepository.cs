@@ -11,12 +11,12 @@ namespace Server.Repositories
         public CartContentRepository(FarminhouseContext context) : base(context) { }
 
 
-        public async Task<IEnumerable<CartContent>> GetCartContentByShoppingCartIdAsync(int shopCartId)
+        /*public async Task<IEnumerable<CartContent>> GetCartContentByShoppingCartIdAsync(int shopCartId)
         {
-            return _context.CartContent.Where(c => c.ShoppingCartId == shopCartId).ToList();
-        }
+            return await _context.CartContent.Where(c => c.ShoppingCartId == shopCartId).ToListAsync();
+        }*/
 
-        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
+        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto, bool add)
         {
             CartContent cartContent = await _context.CartContent
                 .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id 
@@ -37,7 +37,14 @@ namespace Server.Repositories
             else
             {
                 //Sino, actualiza la cantidad
-                cartContent.Quantity = cartContentDto.Quantity;
+                if(add)
+                {
+                    cartContent.Quantity += cartContentDto.Quantity;
+                }
+                else
+                {
+                    cartContent.Quantity = cartContentDto.Quantity;
+                }
                 _context.CartContent.Update(cartContent);
             }
 
