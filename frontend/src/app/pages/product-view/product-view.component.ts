@@ -38,6 +38,17 @@ export class ProductViewComponent implements OnInit {
 
   }
 
+  getReview(){
+    const reviewText = document.getElementsByClassName("review-input-text")[0];
+
+    if(reviewText.ariaValueText == ""){
+      alert("No has hecho ningun comentario");
+    }else{
+      alert("Bien has comentado");
+    }
+
+  }
+
   sumar() {
     this.count++;
   }
