@@ -45,6 +45,11 @@ export class ProductViewComponent implements OnInit {
 
   async addToCart(product: Product)
   {
+    if(this.count <= 0)
+    {
+      alert("Cantidad no válida")
+      return
+    }
     if(this.apiService.jwt == "")
     {
         let allProducts : Product[] = []
@@ -52,15 +57,22 @@ export class ProductViewComponent implements OnInit {
         if(productsLocalStore)
         {
           allProducts = JSON.parse(productsLocalStore)
-          allProducts.push(product)
-          localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+          const index = allProducts.findIndex(p => p.id === product.id);
+          const newProduct = allProducts[index]
+          newProduct.total += this.count
         }
+        else
+        {
+          product.total = this.count
+          allProducts.push(product)
+        }
+        localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
     }
     else
     {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(1, product.id)
-      await this.apiService.post("ShoppingCart", cartContent)
+      const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
+      await this.apiService.post("ShoppingCart/add", cartContent)
     }
   }
 
