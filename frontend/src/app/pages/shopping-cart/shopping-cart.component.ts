@@ -26,8 +26,7 @@ export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   allProducts: Product[] | null | undefined = []
   querySelector: QuerySelector;
-  newQuantity: number = 1;
-
+  
   // Estos servicios son para pruebas
   constructor(private productService: ProductService, private apiService: ApiService) {
     const FIRST_PAGE = 1;
@@ -42,38 +41,48 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async getShoppingCart() {
-    this.shoppingCartProducts = []
-    const productsRaw = localStorage.getItem("shoppingCart")
-    if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw)
-    localStorage.removeItem("shoppingCart")
-    if (this.apiService.jwt != "") {
-      const result = await this.apiService.get("ShoppingCart", {}, 'json')
-      if (result.data) {
-        const data: any = result.data
-        const cartContent: any[] = data.cartContent
-        for (const product of cartContent) {
-          const result = await this.productService.getById(product.productId)
-          if (result != null) {
-            const p: Product = {
-              id: result.id,
-              name: result.name,
-              average: result.average,
-              category: result.category,
-              categoryId: result.categoryId,
-              description: result.description,
-              image: result.image,
-              price: result.price,
-              reviews: result.reviews,
-              stock: result.stock,
-              total: product.quantity
-            }
+    this.shoppingCartProducts = [];
+    const productsRaw = localStorage.getItem("shoppingCart");
+    if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
 
-            this.shoppingCartProducts.push(p)
+    if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
+      console.log("Sincronizando productos locales al carrito del backend...");
+  
+      for (const product of this.shoppingCartProducts) {
+        const cartContent = new CartContent(product.total, product.id);
+        await this.apiService.post("ShoppingCart/add", cartContent);
+      }
+  
+      localStorage.removeItem("shoppingCart");
+      this.shoppingCartProducts = [];
+    }
+  
+    if (this.apiService.jwt !== "") {
+      const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      if (result.data) {
+        const data: any = result.data;
+        const cartContent: any[] = data.cartContent;
+        for (const product of cartContent) {
+          const productResult = await this.productService.getById(product.productId);
+          if (productResult != null) {
+            const p: Product = {
+              id: productResult.id,
+              name: productResult.name,
+              average: productResult.average,
+              category: productResult.category,
+              categoryId: productResult.categoryId,
+              description: productResult.description,
+              image: productResult.image,
+              price: productResult.price,
+              reviews: productResult.reviews,
+              stock: productResult.stock,
+              total: product.quantity
+            };
+            this.shoppingCartProducts.push(p);
           }
         }
       }
-      console.log("CARRITO: ", result)
-      console.log("SHOPPING CART: ", this.shoppingCartProducts)
+      console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
     }
   }
 
@@ -82,33 +91,38 @@ export class ShoppingCartComponent implements OnInit {
     this.allProducts = result?.products;
   }
 
+  // ESTO HABRÁ QUE BORRARLO
   async addProductToCart(product: Product) {
     if (this.apiService.jwt == "") {
+      product.total = 1
+      this.shoppingCartProducts.push(product)
       localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
     }
     else {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(1, product.id)
-      await this.apiService.post("ShoppingCart", cartContent)
+      await this.apiService.post("ShoppingCart/add", cartContent)
       this.getShoppingCart()
     }
   }
 
   async changeQuantity(product: Product) {
-    if(this.newQuantity == 0)
+    const input = document.getElementById(product.id.toString()) as HTMLInputElement
+    if(input && parseInt(input.value) <= 0)
     {
       alert("Cantidad no válida")
+      return
     }
-    else
+    else if(input)
     {
       if (this.apiService.jwt == "") {
         const p = this.findProductInArray(product.id)
-        p.total = this.newQuantity;
+        p.total = parseInt(input.value);
         localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
       }
       else {
         localStorage.removeItem("shoppingCart")
-        const cartContent = new CartContent(this.newQuantity, product.id)
+        const cartContent = new CartContent(parseInt(input.value), product.id)
         await this.apiService.post("ShoppingCart", cartContent)
         this.getShoppingCart()
       }
@@ -128,8 +142,7 @@ export class ShoppingCartComponent implements OnInit {
       }
 
       if (this.apiService.jwt == "") {
-        const product = this.findProductInArray(productId);
-        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+        this.deleteFromArray(product)
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })

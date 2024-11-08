@@ -18,7 +18,7 @@
             <p>Cantidad: {{ product.total }} </p>
             <button (click)="changeQuantity(product)">Cambiar cantidad</button>
             <button (click)="deleteProduct(product.id)">Borrar</button>
-            <input id="newQuantity" type="number" [(ngModel)]="newQuantity" [ngModelOptions]="{standalone: true}">
+            <input [id]="product.id" type="number" [placeholder]="product.total">
         </div>
     }
     @empty 
