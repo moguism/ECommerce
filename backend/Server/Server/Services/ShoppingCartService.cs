@@ -1,4 +1,5 @@
 ﻿using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 
 namespace Server.Services
@@ -8,54 +9,48 @@ namespace Server.Services
 
         UnitOfWork _unitOfWork;
 
-        public ShoppingCartService(UnitOfWork unitOfWork) 
+        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(ShoppingCart shoppingCart, CartContentDto cartContentDto)
+        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto, bool add)
         {
-            IEnumerable<CartContent> cartContents = await _unitOfWork.CartContentRepository
-                .GetCartContentByShoppingCartIdAsync(shoppingCart.Id);
-
-            CartContent cartContent = cartContents.Where(c => c.ProductId == shoppingCart.Id)
-                .FirstOrDefault();
-
-            //Si el producto no se ha añadido anteriormente, crea un contenido nuevo al carrito
-            if (cartContent == null)
+            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            if (cart == null)
             {
-                _unitOfWork.CartContentRepository.Add(new CartContent()
-                {
-                    ProductId = cartContentDto.ProductId,
-                    Quantity = cartContentDto.Quantity,
-                    ShoppingCartId = shoppingCart.Id,
-                    Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId)
-
-                });
+                cart = new ShoppingCart();
+                cart.UserId = user.Id;
+                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+                await _unitOfWork.SaveAsync();
             }
-            //Sino, actualiza la canitdad
-            else
-            {
-                cartContent.Quantity += cartContentDto.Quantity;
-                _unitOfWork.CartContentRepository.Update(cartContent);
-
-
-            }
+            
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
 
             await _unitOfWork.SaveAsync();
 
+
         }
 
-        public async Task AddNewShoppingCartByUserAsync(User user)
+
+        public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
-            await _unitOfWork.ShoppingCartRepository.AddNewShoppingCart(user);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
             await _unitOfWork.SaveAsync();
         }
 
 
         public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
         {
-            return await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
+
+            if (shoppingCart == null)
+            {
+                return null;
+            }
+
+            return shoppingCart;
         }
 
         public async Task<User> GetUserFromDbByStringId(string stringId)
@@ -64,6 +59,8 @@ namespace Server.Services
             // Pilla el usuario de la base de datos
             return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
         }
+
+
 
     }
 }

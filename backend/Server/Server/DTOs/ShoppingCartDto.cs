@@ -6,6 +6,6 @@ namespace Server.DTOs
     {
         public int Id { get; set; }
         public User User { get; set; }
-        public IEnumerable<CartContent> CartContent { get; set; }
+        public ICollection<CartContent> CartContent { get; set; }
     }
 }

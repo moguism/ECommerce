@@ -91,14 +91,7 @@ export class LoginComponent implements OnInit {
       const login = new Login(this.email.trim(), this.password.trim())
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
-        if (this.rememberUser) {
-          console.log("Recordando al usuario...")
-          localStorage.setItem("token", this.apiService.jwt)
-        }
-        else {
-          console.log("No recordando al usuario...")
-          localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
-        }
+        this.rememberFunction()
         this.router.navigateByUrl("user")
       }
       else {
@@ -110,6 +103,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  rememberFunction()
+  {
+    if (this.rememberUser) {
+      console.log("Recordando al usuario...")
+      localStorage.setItem("token", this.apiService.jwt)
+      localStorage.setItem("remember", "true")
+    }
+    else {
+      console.log("No recordando al usuario...")
+      localStorage.setItem("token", this.apiService.jwt)
+      localStorage.setItem("remember", "false")
+      //localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
+    }
+  }
+
   async registerUser(): Promise<void> {
     if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
       alert("Las  contraseñas tienen que ser iguales");
@@ -117,6 +125,7 @@ export class LoginComponent implements OnInit {
       let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
+        this.rememberFunction()
         this.router.navigateByUrl("user")
       }
     }else {

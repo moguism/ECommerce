@@ -44,6 +44,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.getAllProducts()
   }
 
+    
+
   goToProduct(id: number) {
     let route: string = "product-view/" + id;
     this.router.navigateByUrl(route)
@@ -247,6 +249,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     // Volver a obtener los productos con la nueva ordenación
     this.getAllProducts();
+    this.goToFirstPage();
   }
 
   ngOnDestroy(): void {

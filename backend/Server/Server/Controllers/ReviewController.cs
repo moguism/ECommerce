@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.Enums;
 using Server.Repositories;
@@ -12,6 +12,7 @@ namespace Server.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
+        
         private readonly UnitOfWork _unitOfWork;
         private readonly PredictionEnginePool<ModelInput, ModelOutput> _model;
 
@@ -62,6 +63,5 @@ namespace Server.Controllers
 
             await _unitOfWork.SaveAsync();
         }
-
     }
 }

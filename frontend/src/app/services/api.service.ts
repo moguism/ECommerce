@@ -17,6 +17,19 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
+    window.onbeforeunload = this.closeWindow
+  }
+
+  closeWindow()
+  {
+    const remember = localStorage.getItem("remember")
+    if(remember)
+    {
+      if(remember == "false")
+      {
+        localStorage.removeItem("token")
+      }
+    }
   }
 
   deleteToken() {

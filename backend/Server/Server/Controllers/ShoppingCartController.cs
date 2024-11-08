@@ -17,17 +17,15 @@ namespace Server.Controllers
 
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
-        private readonly UnitOfWork _unitOfWork;
 
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork) 
-        { 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+        {
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
-            _unitOfWork = unitOfWork;
         }
 
 
-        
+
 
         [Authorize]
         [HttpGet]
@@ -40,14 +38,13 @@ namespace Server.Controllers
             }
 
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
             if(shoppingCart == null)
             {
                 return null;
             }
-
             return _shoppingCartMapper.ToDto(shoppingCart);
           
+
         }
 
         [Authorize]
@@ -61,28 +58,37 @@ namespace Server.Controllers
                 return;
             }
 
-            /*ICollection<ShoppingCart> shoppingCarts = user.ShoppingCarts;
-            if(shoppingCarts.Count() == 0)
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, false);
+
+        }
+
+        [Authorize]
+        [HttpPost("add")]
+        public async Task ChangeShoppingCartQuantity([FromBody] CartContentDto cartContentDto)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
             {
-                ShoppingCart cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                
-                CartContent cartContent = new CartContent();
-                cartContent.ProductId = cartContentDto.ProductId;
-                cartContent.Quantity = cartContentDto.Quantity;
+                return;
+            }
 
-                cart.CartContent.Append(cartContent);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, true);
 
-                await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-                await _unitOfWork.SaveAsync();
-            }*/
+        }
 
-            //Añade un carrito si el usuario no tiene ninguno
-            await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
-            //Recoge el carrito del usuario
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-            //Añade los productos al carrito
-            await _shoppingCartService.AddProductsToShoppingCart(shoppingCart, cartContentDto);
+        [Authorize]
+        [HttpDelete]
+        public async Task RemoveProductFromShoppingCart([FromQuery] int productId)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
 
         }
 
