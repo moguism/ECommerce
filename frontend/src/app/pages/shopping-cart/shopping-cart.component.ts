@@ -108,7 +108,7 @@ export class ShoppingCartComponent implements OnInit {
 
   async changeQuantity(product: Product) {
     const input = document.getElementById(product.id.toString()) as HTMLInputElement
-    if(input && parseInt(input.value) == 0)
+    if(input && parseInt(input.value) <= 0)
     {
       alert("Cantidad no válida")
       return
