@@ -17,6 +17,11 @@
     justify-content: center;
     cursor: pointer;
 }
+.red:hover
+{
+    background-color: rgb(99, 29, 29);
+}
+
 #person-icon {
     color: white;
     margin: 0;
@@ -30,7 +35,8 @@
     color: rgb(255, 255, 255);
 }
 .text:hover {
-    box-shadow: rgba(255, 255, 255);
+
+    color: rgb(170, 161, 161);
 }
 .text-welcome{
     font-size: 20px;
