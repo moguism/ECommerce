@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs;
 using Server.Enums;
 using Server.Repositories;
+using Server.Mappers;
 using Server.Models;
 using Server.Services;
 using Microsoft.Extensions.ML;
@@ -15,14 +17,16 @@ namespace Server.Controllers
     {
 
         private readonly ReviewService _reviewService;
+        private readonly ReviewMapper _reviewMapper;
 
-        public ReviewController(ReviewService reviewService)
+        public ReviewController(ReviewService reviewService, UnitOfWork unitOfWork, ReviewMapper reviewMapper)
         {
             _reviewService = reviewService;
+            _reviewMapper = reviewMapper;
         }
 
         [HttpGet("AllProductReviews")]
-        public async Task<IEnumerable<Review>> GetAllProductReviews(int id)
+        public async Task<IEnumerable<Review>> GetAllProductReviews([FromBody] int id)
         {
             IEnumerable<Review> reviews = await _reviewService.GetAllProductReviewsAsync(id);
 
@@ -37,9 +41,16 @@ namespace Server.Controllers
             return reviews;
         }
 
-        [HttpPost]
-        public async Task AddReviewAsync([FromBody] Review review)
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<Review>> GetReviewByProductId(int id)
         {
+            return await _reviewService.GetAllProductReviewsAsync(id);
+        }
+
+        [HttpPost]
+        public async Task AddReviewAsync([FromBody] ReviewDto reviewDto)
+        {
+            Review review = _reviewMapper.ToEntity(reviewDto);
             await  _reviewService.RateReview(review);
         }
     }
