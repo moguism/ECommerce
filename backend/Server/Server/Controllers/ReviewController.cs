@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Server.DTOs;
 using Server.Enums;
 using Server.Repositories;
+using Server.Mappers;
 using Server.Models;
+using Server.Services;
 using Microsoft.Extensions.ML;
 using System.Text.RegularExpressions;
 
@@ -12,20 +15,20 @@ namespace Server.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
-        
-        private readonly UnitOfWork _unitOfWork;
-        private readonly PredictionEnginePool<ModelInput, ModelOutput> _model;
 
-        public ReviewController(UnitOfWork unitOfWork, PredictionEnginePool<ModelInput, ModelOutput> model)
+        private readonly ReviewService _reviewService;
+        private readonly ReviewMapper _reviewMapper;
+
+        public ReviewController(ReviewService reviewService, UnitOfWork unitOfWork, ReviewMapper reviewMapper)
         {
-            _unitOfWork = unitOfWork;
-            _model = model;
+            _reviewService = reviewService;
+            _reviewMapper = reviewMapper;
         }
 
         [HttpGet("AllProductReviews")]
-        public async Task<IEnumerable<Review>> GetAllProductReviews(int id)
+        public async Task<IEnumerable<Review>> GetAllProductReviews([FromBody] int id)
         {
-            IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetByProductIdAsync(id);
+            IEnumerable<Review> reviews = await _reviewService.GetAllProductReviewsAsync(id);
 
             return reviews;
         }
@@ -33,35 +36,22 @@ namespace Server.Controllers
         [HttpGet("AllUserReviews")]
         public async Task<IEnumerable<Review>> GetAllUserReviews(int id)
         {
-            IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetByUserIdAsync(id);
+            IEnumerable<Review> reviews = await _reviewService.GetAllUserReviewsAsync(id);
 
             return reviews;
         }
 
-        [HttpGet("Predict")]
-        public ModelOutput Predict(string text)
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<Review>> GetReviewByProductId(int id)
         {
-            ModelInput input = new ModelInput
-            {
-                Text = text
-            };
-
-            ModelOutput output = _model.Predict(input);
-
-            return output;
+            return await _reviewService.GetAllProductReviewsAsync(id);
         }
 
         [HttpPost]
-        public async Task AddReviewAsync([FromBody] Review review)
+        public async Task AddReviewAsync([FromBody] ReviewDto reviewDto)
         {
-            string finalText = Regex.Replace(text, @"\s{2,}", " "); // Si tiene más de un espacio lo combierte en uno solo
-            finalText = _unitOfWork.ReviewRepository.DeleteAcents(finalText);
-            review.Text = text;
-            ModelOutput modelOutput = Predict(finalText);
-            review.Score = (int) modelOutput.PredictedLabel;
-            await _unitOfWork.ReviewRepository.InsertAsync(review);
-
-            await _unitOfWork.SaveAsync();
+            Review review = _reviewMapper.ToEntity(reviewDto);
+            await  _reviewService.RateReview(review);
         }
     }
 }
