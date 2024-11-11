@@ -18,15 +18,14 @@ namespace Server.Controllers
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
 
-
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService) 
-        { 
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+        {
             _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
         }
 
 
-        
+
 
         [Authorize]
         [HttpGet]
@@ -39,10 +38,13 @@ namespace Server.Controllers
             }
 
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
-
+            if(shoppingCart == null)
+            {
+                return null;
+            }
             return _shoppingCartMapper.ToDto(shoppingCart);
           
+
         }
 
         [Authorize]
@@ -56,12 +58,37 @@ namespace Server.Controllers
                 return;
             }
 
-            //Añade un carrito si el usuario no tiene ninguno
-            await _shoppingCartService.AddNewShoppingCartByUserAsync(user);
-            //Recoge el carrito del usuario
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-            //Añade los productos al carrito
-            await _shoppingCartService.AddProductsToShoppingCart(shoppingCart, cartContentDto);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, false);
+
+        }
+
+        [Authorize]
+        [HttpPost("add")]
+        public async Task ChangeShoppingCartQuantity([FromBody] CartContentDto cartContentDto)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, true);
+
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task RemoveProductFromShoppingCart([FromQuery] int productId)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
 
         }
 
