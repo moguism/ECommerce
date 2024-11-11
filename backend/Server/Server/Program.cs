@@ -173,8 +173,9 @@ namespace Server
 
                     if (arandanoProduct != null)
                     {
+                        PasswordService passwordService = new PasswordService();
                         // Crear usuarios de ejemplo
-                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = "pass123", Role = "Customer", Address = "Calle 123" };
+                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
                         var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
 
                         // Asegurarse de que los usuarios están añadidos al contexto

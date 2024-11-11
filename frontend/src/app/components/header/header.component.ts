@@ -1,12 +1,11 @@
 import { Component, HostListener } from '@angular/core';
-import { LoginComponent } from '../../pages/login/login.component';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [LoginComponent, RouterModule],
+  imports: [RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
