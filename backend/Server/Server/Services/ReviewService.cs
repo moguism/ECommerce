@@ -79,10 +79,7 @@ namespace Server.Services
             ModelInput modelInput = new ModelInput { Text = finalText };
             ModelOutput modelOutput = Predict(finalText);
 
-            // Obtiene el índice del valor más alto que ha devuelto la IA
-            // 1 | 0 | -1
-            int maxIndex = Array.IndexOf(modelOutput.Score, modelOutput.Score.Max());
-            review.Score = maxIndex;
+            review.Score = (int)modelOutput.PredictedLabel;
 
             //Almacena el producto como objeto por su ID
             review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
