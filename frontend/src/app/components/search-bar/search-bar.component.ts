@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,8 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent implements OnInit {
-  query: string = '';
-
+  @Input() query : string = '';
   @Output() newItemEvent = new EventEmitter<string>();
 
   async ngOnInit(): Promise<void> {

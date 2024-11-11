@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ReviewService } from '../../services/review.service';
 import { NewReview } from '../../models/newReview';
+import { Review } from '../../models/review';
 @Component({
   selector: 'app-product-view',
   standalone: true,
@@ -21,6 +22,8 @@ export class ProductViewComponent implements OnInit {
   protected count = 0;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
+  reviews : Review[] = []
+
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
