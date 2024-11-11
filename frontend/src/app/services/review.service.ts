@@ -16,7 +16,7 @@ export class ReviewService {
     const reviewPath = "Review/AddReview";
 
     try {
-      await this.api.post<Review>(reviewPath, {newReview}); // Enviar directamente el objeto newReview
+      await this.api.post<Review>(reviewPath, newReview); // Enviar directamente el objeto newReview
       // Aquí puedes agregar una notificación o actualizar la UI
     } catch (error) {
       console.error("Error al añadir la reseña", error);
