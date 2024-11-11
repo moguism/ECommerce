@@ -52,7 +52,7 @@ namespace Server.Services
 
             return shoppingCart;
         }
-
+        
         public async Task<User> GetUserFromDbByStringId(string stringId)
         {
 
