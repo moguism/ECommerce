@@ -7,13 +7,13 @@ namespace Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModelController : ControllerBase
+    public class IAController : ControllerBase
     {
         private readonly PredictionEnginePool<ModelInput, ModelOutput> _model;
 
-        public ModelController(PredictionEnginePool<ModelInput, ModelOutput> model)
-        {
-            _model = model;
+        public IAController( PredictionEnginePool<ModelInput,ModelOutput> predictionEnginePool) 
+        { 
+            _model = predictionEnginePool;
         }
 
         [HttpGet]

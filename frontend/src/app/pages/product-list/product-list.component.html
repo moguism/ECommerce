@@ -4,14 +4,14 @@
 
 <div class="body">
     <div class="sort-buttons">
-        <select id="order-by" (click)="order()">
+        <select id="order-by" (change)="order()">
             <option value="name-asc">Nombre ascendente</option>
             <option value="name-desc">Nombre descendiente</option>
             <option value="price-asc">Precio ascendente</option>
             <option value="price-desc">Precio descendiente</option>
         </select>
         <div class="search-bar">
-            <app-search-bar (newItemEvent)="getSearchedProducts($event)"></app-search-bar>
+            <app-search-bar (newItemEvent)="getSearchedProducts($event)" [query]="this.querySelector.search"></app-search-bar>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
             <div class="product-card-image"><img class="image" [src]="product.image"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
             @if (product.stock > 0) {
-            <div class="product-card-stock">Stock: {{ product.stock }} unidades</div>
+            <div class="product-card-stock">Stock: {{ product.stock }} KG</div>
             }
             @else {
             <div class="product-card-no-stock">No hay stock</div>
@@ -58,7 +58,7 @@
             <button (click)="goToLastPage()" id="last-button">&gt; &gt;</button>
 
             <!-- Selector para elegir el número de productos por página -->
-            <select id="products-per-page" (click)="newNumberOfProducts()">
+            <select id="products-per-page" (change)="newNumberOfProducts()">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>

@@ -50,8 +50,14 @@ namespace Server.Controllers
             pagedDto.Products = _productMapper.AddCorrectPath(pagedDto.Products);
 
             return pagedDto;
-         }
+        }
 
+        [HttpGet("{id}")]
+        public async Task<Product> GetProductById(int id)
+        {
+            Product product = await _unitOfWork.ProductRepository.GetFullProductById(id);
+            return _productMapper.AddCorrectPath(product);
+        }
        
     }
 }

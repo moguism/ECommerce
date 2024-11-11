@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
+using Server.Repositories;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -13,21 +15,21 @@ namespace Server.Controllers
     public class ShoppingCartController : ControllerBase
     {
 
-        private readonly UnitOfWork _unitOfWork;
-        private readonly CartContentMapper _cartContentMapper;
+        private readonly ShoppingCartMapper _shoppingCartMapper;
+        private readonly ShoppingCartService _shoppingCartService;
 
-
-        public ShoppingCartController(UnitOfWork unitOfWork, CartContentMapper cartContentMapper) 
-        { 
-            _unitOfWork = unitOfWork;
-            _cartContentMapper = cartContentMapper;
+        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+        {
+            _shoppingCartMapper = shoppingCartMapper;
+            _shoppingCartService = shoppingCartService;
         }
 
 
-        /* Correcto
+
+
         [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts()
+        public async Task<ShoppingCartDto> GetShoppingCart()
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -35,54 +37,60 @@ namespace Server.Controllers
                 return null;
             }
 
-
-            var shoppingCart = await _context.ShoppingCart
-            .Where(cart => cart.UserId == user.Id)  // Filtra por el ID del usuario
-            .ToListAsync();
-
-            return shoppingCart;
-
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            if(shoppingCart == null)
+            {
+                return null;
+            }
+            return _shoppingCartMapper.ToDto(shoppingCart);
+          
 
         }
-        */
 
-        //Pruebas
-        [HttpGet]
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartProducts(int id)
+        [Authorize]
+        [HttpPost]
+        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
         {
 
-            var shoppingCart = await _unitOfWork.ShoppingCartRepository.GetQueryable().Where(cart => cart.UserId == userId) .FirstOrDefaultAsync();
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
 
-            //Devuelve el contenido del carrito (Productos y cantidad)
-            return await _cartContentMapper.ToDto(shoppingCart);
-
-
-            return shoppingCart;
-
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, false);
 
         }
 
+        [Authorize]
+        [HttpPost("add")]
+        public async Task ChangeShoppingCartQuantity([FromBody] CartContentDto cartContentDto)
+        {
 
-
-            // Verificar si existe un carrito del usuario
-            var existingShoppingCar = await _unitOfWork.ShoppingCartRepository.GetQueryable().Where(cart => cart.Id == cartContentDto.Id).FirstOrDefaultAsync();
-
-            //Si no hay ningún carrito creado por el usuario, lo crea
-            if (existingShoppingCar == null)
+            User user = await GetAuthorizedUser();
+            if (user == null)
             {
-                await _unitOfWork.ShoppingCartRepository.InsertAsync(new ShoppingCart() { UserId = user.Id });
+                return;
             }
-            else
+
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, true);
+
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task RemoveProductFromShoppingCart([FromQuery] int productId)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
             {
-                //Si existe el carrito, añade el producto a este
-                await _unitOfWork.CartContentRepository.AddProductToCartAsync(_cartContentMapper.ToEntity(cartContentDto));
+                return;
+            }
 
+            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
 
-
-
-
-
-
+        }
 
 
         private async Task<User> GetAuthorizedUser()
@@ -92,7 +100,7 @@ namespace Server.Controllers
             string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
             // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(idString));
+            return await _shoppingCartService.GetUserFromDbByStringId(idString);
         }
 
     }

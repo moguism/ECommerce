@@ -3,6 +3,7 @@ using Microsoft.Extensions.ML;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
+using Server.Repositories;
 using Server.Services;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -41,13 +42,23 @@ namespace Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Para el modelo de IA
+            builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
+                .FromFile("IAFarminhouse.mlnet");
+
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
-            builder.Services.AddScoped<OrderMapper>();
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
+            builder.Services.AddScoped<ShoppingCartMapper>();
+            builder.Services.AddScoped<ShoppingCartService>();
+            builder.Services.AddScoped<ReviewService>();
+            builder.Services.AddScoped<ReviewMapper>();
+
+
+
 
             // Permite CORS
             if (builder.Environment.IsDevelopment())
@@ -65,9 +76,6 @@ namespace Server
                     );
             }
 
-            // Para el modelo de IA
-            builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
-                .FromFile("IAFarminhouse.mlnet");
 
             var app = builder.Build();
 
@@ -160,7 +168,58 @@ namespace Server
 
 
 
-                    
+                    // Obtener el producto de Arándano
+                    var arandanoProduct = fruits.FirstOrDefault(p => p.Name == "Arandano");
+
+                    if (arandanoProduct != null)
+                    {
+                        PasswordService passwordService = new PasswordService();
+                        // Crear usuarios de ejemplo
+                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
+                        var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
+
+                        // Asegurarse de que los usuarios están añadidos al contexto
+                        dbContext.Users.Add(user1);
+                        dbContext.Users.Add(user2);
+
+                        // Crear reseñas para el producto de arándano
+                        var review1 = new Review
+                        {
+                            Text = "Los mejores arándanos que he probado, muy frescos y jugosos.",
+                            Score = 5,
+                            UserId = user1.Id,
+                            ProductId = arandanoProduct.Id,
+                            Product = arandanoProduct,
+                            User = user1
+                        };
+
+                        var review2 = new Review
+                        {
+                            Text = "Buen sabor, pero algunos estaban un poco blandos.",
+                            Score = 3,
+                            UserId = user2.Id,
+                            ProductId = arandanoProduct.Id,
+                            Product = arandanoProduct,
+                            User = user2
+                        };
+
+                        // Añadir reseñas al contexto de la base de datos
+                        dbContext.Reviews.Add(review1);
+                        dbContext.Reviews.Add(review2);
+
+                        // Añadir reseñas a la colección de Reviews del producto de arándano
+                        arandanoProduct.Reviews.Add(review1);
+                        arandanoProduct.Reviews.Add(review2);
+
+                        // Añadir reseñas a la colección de Reviews de cada usuario
+                        user1.Reviews.Add(review1);
+                        user2.Reviews.Add(review2);
+
+                        dbContext.SaveChanges();
+
+                    }
+
+
 
 
 
