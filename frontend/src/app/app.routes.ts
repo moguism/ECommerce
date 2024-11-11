@@ -6,7 +6,7 @@ import { UserComponent } from './pages/user/user.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
 import { ProductViewComponent } from './pages/product-view/product-view.component';
 import { ProductListComponent } from './pages/product-list/product-list.component';
-
+import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
@@ -14,5 +14,6 @@ export const routes: Routes = [
     {path: "user", component: UserComponent},
     {path: "about-us", component: AboutUsComponent},
     {path: "product-view/:id", component: ProductViewComponent},
-    {path: "product-list/:category", component: ProductListComponent}
+    {path: "product-list/:category", component: ProductListComponent},
+    {path: "shopping-cart", component: ShoppingCartComponent}
 ];

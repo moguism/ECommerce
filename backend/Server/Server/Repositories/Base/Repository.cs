@@ -32,6 +32,11 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
         return asNoTracking ? entities.AsNoTracking() : entities; // "AsNoTracking" permite optimizar la consulta para que no se traten los datos
     }
 
+    public void Add(TEntity entity)
+    {
+        _context.Set<TEntity>().Add(entity);
+    }
+
     public void Delete(TEntity entity)
     {
         _context.Set<TEntity>().Remove(entity);

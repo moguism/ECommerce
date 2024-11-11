@@ -1,39 +1,34 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
-import { HeaderComponent } from '../../components/header/header.component';
+import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
-import { ProductService } from '../../services/product.service';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProductType } from '../../models/enums/product-type';
-import { OrdinationType } from '../../models/enums/ordination-type';
 import { OrdinationDirection } from '../../models/enums/ordination-direction';
+import { OrdinationType } from '../../models/enums/ordination-type';
+import { ProductType } from '../../models/enums/product-type';
 import { QuerySelector } from '../../models/query-selector';
-import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { ProductService } from '../../services/product.service';
+import { ApiService } from '../../services/api.service';
+import { CartContent } from '../../models/cart-content';
+import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-product-list',
+  selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderComponent, SearchBarComponent, EurosToCentsPipe],
-  templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  imports: [HeaderShopComponent, FormsModule],
+  templateUrl: './shopping-cart.component.html',
+  styleUrl: './shopping-cart.component.css'
 })
-export class ProductListComponent implements OnInit, OnDestroy {
-  allProducts: Product[] | null | undefined = [];
-  filteredProducts: Product[] = [];
-  routeParamMap$: Subscription | null = null;
+export class ShoppingCartComponent implements OnInit {
+  /*numOfTotalProducts = 0;
+  totalPrice = 0.0;
+  totalProducts : Product[] = []
+  numOfIndividualProduct = 0*/
 
+  shoppingCartProducts: Product[] = []
+  allProducts: Product[] | null | undefined = []
   querySelector: QuerySelector;
-  productTypeString: string = "Producto";
-
-  protected BtnPerName: boolean = true;
-  protected BtnPerPrice: boolean = true;
-
-  totalProducts: number = 0;
-  totalPages: number = 1;
-  currentPage: number = 1;
-
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private router: Router) {
+  
+  // Estos servicios son para pruebas
+  constructor(private productService: ProductService, private apiService: ApiService) {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 5;
     //QuerySelector por defecto para pruebas
@@ -41,259 +36,148 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.getAllProducts()
+    this.getShoppingCart();
+    this.getAllProducts();
   }
 
-  goToProduct(id: number) {
-    let route: string = "product-view/" + id;
-    this.router.navigateByUrl(route)
-  }
+  async getShoppingCart() {
+    this.shoppingCartProducts = [];
+    const productsRaw = localStorage.getItem("shoppingCart");
+    if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
 
-
-  getAllProducts() {
-
-    this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
-      const category = paramMap.get('category') as unknown as string;
-      switch (category) {
-        case "frutas":
-          this.querySelector.productType = ProductType.FRUITS;
-          break;
-        case "verduras":
-          this.querySelector.productType = ProductType.VEGETABLES;
-          break;
-        case "carnes":
-          this.querySelector.productType = ProductType.MEAT;
-          break;
+    if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
+      console.log("Sincronizando productos locales al carrito del backend...");
+  
+      for (const product of this.shoppingCartProducts) {
+        const cartContent = new CartContent(product.total, product.id);
+        await this.apiService.post("ShoppingCart/add", cartContent);
       }
-
-      const savedCategory = sessionStorage.getItem("category");
-      if (savedCategory) {
-        const categoryNumber: number = parseInt(savedCategory)
-        if (categoryNumber == this.querySelector.productType) // Si la categoría es la misma
-        {
-          const currentPage = sessionStorage.getItem("currentPage");
-          if (currentPage) {
-            this.currentPage = parseInt(currentPage);
-            sessionStorage.removeItem("currentPage")
-          }
-
-          const totalPages = sessionStorage.getItem("totalPages");
-          if (totalPages) {
-            this.totalPages = parseInt(totalPages);
-            sessionStorage.removeItem("totalPages")
-          }
-
-          const productsPerPage = sessionStorage.getItem("productsPerPage");
-          if (productsPerPage) {
-            this.querySelector.productPageSize = parseInt(productsPerPage)
-            sessionStorage.removeItem("productsPerPage")
-          }
-
-          const ordinationType = sessionStorage.getItem("ordinationType");
-          const ordinationOrder = sessionStorage.getItem("ordinationOrder");
-          sessionStorage.removeItem("ordinationType")
-          sessionStorage.removeItem("ordinationOrder")
-          if (ordinationType && ordinationOrder) {
-            const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
-            if (orderBy) {
-              if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 0) {
-                orderBy.value = "name-asc";
-                this.querySelector.ordinationType = OrdinationType.NAME;
-                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-              }
-
-              else if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 1) {
-                orderBy.value = "name-desc";
-                this.querySelector.ordinationType = OrdinationType.NAME;
-                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-              }
-
-              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 0) {
-                orderBy.value = "price-asc";
-                this.querySelector.ordinationType = OrdinationType.PRICE;
-                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-              }
-
-              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 1) {
-                orderBy.value = "price-desc";
-                this.querySelector.ordinationType = OrdinationType.PRICE;
-                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-              }
-            }
+  
+      localStorage.removeItem("shoppingCart");
+      this.shoppingCartProducts = [];
+    }
+  
+    if (this.apiService.jwt !== "") {
+      const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      if (result.data) {
+        const data: any = result.data;
+        const cartContent: any[] = data.cartContent;
+        for (const product of cartContent) {
+          const productResult = await this.productService.getById(product.productId);
+          if (productResult != null) {
+            const p: Product = {
+              id: productResult.id,
+              name: productResult.name,
+              average: productResult.average,
+              category: productResult.category,
+              categoryId: productResult.categoryId,
+              description: productResult.description,
+              image: productResult.image,
+              price: productResult.price,
+              reviews: productResult.reviews,
+              stock: productResult.stock,
+              total: product.quantity
+            };
+            this.shoppingCartProducts.push(p);
           }
         }
       }
-
-      sessionStorage.removeItem("category")
-
-      const result = await this.productService.getAllProducts(this.querySelector);
-
-      this.allProducts = result.data?.products;
-      this.totalProducts = result.data?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
-      this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize); // Para que redondee el resultado hacia arriba (como mi estrés)
-
-      this.updatePaginationButtons();
-    });
-
-
-    this.productTypeString = this.querySelector.productType.toString();
-
-
-    console.log("All products ", this.allProducts);
-  }
-
-  updatePaginationButtons() {
-    const previousButton = document.getElementById("prev-button") as HTMLButtonElement;
-    const nextButton = document.getElementById("next-button") as HTMLButtonElement;
-    const firstButton = document.getElementById("first-button") as HTMLButtonElement;
-    const lastButton = document.getElementById("last-button") as HTMLButtonElement;
-
-    if (firstButton) firstButton.disabled = this.querySelector.actualPage <= 1;
-    if (previousButton) previousButton.disabled = this.querySelector.actualPage <= 1;
-    if (nextButton) nextButton.disabled = this.querySelector.actualPage >= this.totalPages;
-    if (lastButton) lastButton.disabled = this.querySelector.actualPage >= this.totalPages;
-  }
-
-  nextPage() {
-    if (this.querySelector.actualPage < this.totalPages) {
-      this.querySelector.actualPage++;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
-      this.getAllProducts();
+      console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
     }
   }
 
-  previousPage() {
-    if (this.querySelector.actualPage > 1) {
-      this.querySelector.actualPage--;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
-      this.getAllProducts();
+  async getAllProducts() {
+    const result = await this.productService.getAllProducts(this.querySelector);
+    this.allProducts = result?.products;
+  }
+
+  // ESTO HABRÁ QUE BORRARLO
+  async addProductToCart(product: Product) {
+    if (this.apiService.jwt == "") {
+      product.total = 1
+      this.shoppingCartProducts.push(product)
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+    }
+    else {
+      localStorage.removeItem("shoppingCart")
+      const cartContent = new CartContent(1, product.id)
+      await this.apiService.post("ShoppingCart/add", cartContent)
+      this.getShoppingCart()
     }
   }
 
-  goToFirstPage() {
-    if (this.querySelector.actualPage != 1) {
-      this.querySelector.actualPage = 1;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
-      this.getAllProducts();
+  async changeQuantity(product: Product) {
+    const input = document.getElementById(product.id.toString()) as HTMLInputElement
+    if(input && parseInt(input.value) <= 0)
+    {
+      alert("Cantidad no válida")
+      return
+    }
+    else if(input)
+    {
+      if (this.apiService.jwt == "") {
+        const p = this.findProductInArray(product.id)
+        p.total = parseInt(input.value);
+        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+      }
+      else {
+        localStorage.removeItem("shoppingCart")
+        const cartContent = new CartContent(parseInt(input.value), product.id)
+        await this.apiService.post("ShoppingCart", cartContent)
+        this.getShoppingCart()
+      }
     }
   }
 
-  goToLastPage() {
-    if (this.querySelector.actualPage != this.totalPages) {
-      this.querySelector.actualPage = this.totalPages;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
-      this.getAllProducts();
+  async deleteProduct(productId: number) {
+    const index = this.shoppingCartProducts.findIndex(product => product.id === productId);
+
+    if (index !== -1) {
+      const product = this.shoppingCartProducts[index];
+
+      /*if (product.total > 1) {
+        product.total -= 1;
+      } else {
+        this.shoppingCartProducts.splice(index, 1);
+      }*/
+
+      if (this.apiService.jwt == "") {
+        this.deleteFromArray(product)
+      }
+      else {
+        await this.apiService.delete("ShoppingCart", { productId })
+        this.getShoppingCart()
+      }
     }
   }
 
-  /*updatePageText() {
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
-  }*/
-
-  newNumberOfProducts() {
-    // Obtener el elemento del DOM
-    const productsPerPageElement = document.getElementById("products-per-page") as HTMLInputElement | HTMLSelectElement;
-
-    // Asegurarnos de que el elemento existe y es del tipo correcto
-    if (productsPerPageElement) {
-      // Obtener el valor del input o select, y convertirlo a un número
-      const numberOfProducts = parseInt(productsPerPageElement.value, 10);
-      this.querySelector.productPageSize = numberOfProducts;
-      this.getAllProducts();
-      this.goToFirstPage();
-    }
-
+  findProductInArray(id: number): Product
+  {
+    const index = this.shoppingCartProducts.findIndex(product => product.id === id);
+    const product = this.shoppingCartProducts[index];
+    return product;
   }
 
-  order() {
-    const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
-    if (orderBy) { this.sortBy(orderBy.value) }
-  }
-
-  getSearchedProducts(query: string) {
-    this.querySelector.search = query
-    this.getAllProducts();
-    this.goToFirstPage();
-  }
-
-  // Método para manejar la ordenación
-  sortBy(order: string) {
-
-    // Configurar la dirección y el tipo de ordenación
-    switch (order) {
-      case 'name-asc':
-        this.querySelector.ordinationType = OrdinationType.NAME;
-        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-        break;
-      case 'name-desc':
-        this.querySelector.ordinationType = OrdinationType.NAME;
-        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-        break;
-      case 'price-asc':
-        this.querySelector.ordinationType = OrdinationType.PRICE;
-        this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-        break;
-      case 'price-desc':
-        this.querySelector.ordinationType = OrdinationType.PRICE;
-        this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-        break;
-    }
-
-    // Volver a obtener los productos con la nueva ordenación
-    this.getAllProducts();
-  }
-
-  ngOnDestroy(): void {
-    this.routeParamMap$?.unsubscribe();
-    sessionStorage.setItem("category", this.querySelector.productType.toString());
-    sessionStorage.setItem("currentPage", this.currentPage.toString());
-    sessionStorage.setItem("totalPages", this.totalPages.toString());
-    sessionStorage.setItem("productsPerPage", this.querySelector.productPageSize.toString());
-    sessionStorage.setItem("ordinationType", this.querySelector.ordinationType.toString());
-    sessionStorage.setItem("ordinationOrder", this.querySelector.ordinationDirection.toString());
-    sessionStorage.setItem("query", this.querySelector.search);
-  }
-
-  desBtnPerName() { // Funcion para ordenar descendente
-    this.BtnPerName = false;
-    this.sortBy("name-desc");
-  }
-
-  ascBtnPerName() {
-    this.BtnPerName = true;
-    this.sortBy("name-asc");
-  }
-
-  togglePerName() {
-    if (this.BtnPerName) {
-      this.desBtnPerName();
-    } else {
-      this.ascBtnPerName();
+  async pay() {
+    for (const product of this.shoppingCartProducts) {
+      const newProduct = await this.productService.getById(product.id)
+      if (newProduct) {
+        const difference = newProduct.stock - product.stock;
+        if (difference < 0) {
+          this.deleteProduct(product.id)
+        }
+      }
+      else {
+        this.deleteFromArray(product)
+      }
     }
   }
 
-  desBtnPerPrice() {
-    this.BtnPerPrice = false;
-    this.sortBy("price-desc");
-  }
-
-  ascBtnPerPrice() {
-    this.BtnPerPrice = true;
-    this.sortBy("price-asc");
-  }
-
-  togglePerPrice() {
-    if (this.BtnPerPrice) {
-      this.desBtnPerPrice();
-    } else {
-      this.ascBtnPerPrice();
-    }
+  deleteFromArray(product: Product) {
+    const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
+    this.shoppingCartProducts.splice(index, 1);
+    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
+    //alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
   }
 
 }
