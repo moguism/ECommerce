@@ -1,3 +1,11 @@
+.main{
+    min-height: 100vh;
+    background-image: url("../../../../public/background.png");
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+    background-position: top center;
+    background-size: cover;
+}
 .information{
     display: flex;
     flex-direction: row;
@@ -9,6 +17,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
+    gap:20px;
 }
 .basket-products{
     display: flex;
@@ -17,8 +27,9 @@
     justify-content: space-around;
     align-items: center;
     height: 200px;
-    width: 120%;
+    width: 100%;
     gap: 20px;
+    border-radius: 8px;
 }
 .basket-products-image{
     width: 100%;
@@ -38,7 +49,16 @@
     color: white;
     width: 100%;
 }
+.basket-products-information-functions-input{
+    width: 50%;
+}
 h3{
+    color: white;
+}
+h2{
+    color: white;
+}
+h4{
     color: white;
 }
 .final-price{
@@ -48,7 +68,8 @@ h3{
     justify-content: space-around;
     align-items: center;
     width: 20%;
-    height: 200px;
+    height: 250px;
+    border-radius: 8px;
 }
 hr{
     width: 50%;
@@ -56,15 +77,17 @@ hr{
 }
 .final-price-button-card{
     width: 50%;
-    height: 50%;
+    height: 30%;
     border-radius: 8px;
     background-color: #99C080;
+    cursor: pointer;
 }
 .final-price-button-Etherium{
     width: 50%;
-    height: 50%;
+    height: 30%;
     border-radius: 8px;
     background-color: #99C080;
+    cursor: pointer;
 }
 .final-price-price{
     display: flex;
@@ -78,30 +101,22 @@ hr{
     flex-direction: row;
     align-items: center;
 }
-.button-menos{
-    background-color: green;
-    width: 100%;
-    height: 38%;
-    border:1px solid black;
-    border-top-left-radius: 10%;
-    border-bottom-left-radius: 10%;
-    cursor: pointer;
+/*responsive*/
+@media (max-width: 1120px){
+    .information{
+        flex-direction: column;
+        gap: 30px;
+    }
+    .final-price{
+        width: 50%;
+    }
 }
-.count{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid white;
-    height: 34%;
-    width: 100%;
-    color: white;
-}
-.button-mas{
-    background-color: green;
-    width: 100%;
-    height: 38%;
-    border: 1px solid black;
-    border-top-right-radius: 10%;
-    border-bottom-right-radius: 10%;
-    cursor: pointer;
+@media (max-width: 1120px){
+    .information{
+        flex-direction: column;
+        gap: 30px;
+    }
+    .final-price{
+        width: 50%;
+    }
 }

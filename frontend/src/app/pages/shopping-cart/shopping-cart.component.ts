@@ -9,11 +9,12 @@ import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
 import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { FormsModule } from '@angular/forms';
+import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderShopComponent, FormsModule],
+  imports: [HeaderShopComponent, FormsModule,EurosToCentsPipe],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
@@ -135,11 +136,11 @@ export class ShoppingCartComponent implements OnInit {
     if (index !== -1) {
       const product = this.shoppingCartProducts[index];
 
-      /*if (product.total > 1) {
+      if (product.total > 1) {
         product.total -= 1;
       } else {
         this.shoppingCartProducts.splice(index, 1);
-      }*/
+      }
 
       if (this.apiService.jwt == "") {
         this.deleteFromArray(product)
@@ -164,7 +165,7 @@ export class ShoppingCartComponent implements OnInit {
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.deleteProduct(product.id)
+          this.deleteFromArray(product)
         }
       }
       else {
@@ -178,6 +179,14 @@ export class ShoppingCartComponent implements OnInit {
     this.shoppingCartProducts.splice(index, 1);
     localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
     //alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
+  }
+
+  totalprice(){
+    let totalcount=0;
+    for(const product of this.shoppingCartProducts){
+      totalcount+=product.total*product.price;
+    }
+    return totalcount;
   }
 
 }
