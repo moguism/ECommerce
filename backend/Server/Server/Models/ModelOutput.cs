@@ -14,5 +14,5 @@ public class ModelOutput
     public float PredictedLabel { get; set; }
 
     [ColumnName(@"Score")]
-    public float Score { get; set; }
+    public float[] Score { get; set; }
 }

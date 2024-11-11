@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { NewReview } from '../models/new-review';
+import { NewReview } from '../models/newReview';
 import { Review } from '../models/review';
 
 @Injectable({
