@@ -121,7 +121,13 @@ export class ProductViewComponent implements OnInit {
   }
 
   sumar() {
-    this.count++;
+    if(this.product)
+    {
+      if(this.count + 1 <= this.product?.stock)
+      {
+        this.count++;
+      }
+    }
   }
   restar() {
     if (this.count > 0) {
