@@ -53,16 +53,41 @@ namespace Server.Services
         }
 
         
+        public async Task AddReview(Review review)
+        {
+            //añade la review al usuario
+            if (review.User != null)
+            {
+                review.User.Reviews.Add(review);
+            }
 
-        public async Task RateReview(Review review)
+            //Añade la review al producto
+            if (review.Product != null)
+            {
+                review.Product.Reviews.Add(review);
+            }
+
+            await _unitOfWork.ReviewRepository.InsertAsync(review);
+            await _unitOfWork.SaveAsync();
+        }
+
+
+        public async Task<Review> RateReview(Review review)
         {
             string finalText = Regex.Replace(review.Text, @"\s{2,}", " "); 
             finalText = _unitOfWork.ReviewRepository.DeleteAcents(finalText);
             ModelInput modelInput = new ModelInput { Text = finalText };
             ModelOutput modelOutput = Predict(finalText);
-            review.Score = (int)modelOutput.PredictedLabel;
-            await _unitOfWork.ReviewRepository.InsertAsync(review);
-            await _unitOfWork.SaveAsync();
+
+            // Obtiene el índice del valor más alto que ha devuelto la IA
+            // 1 | 0 | -1
+            int maxIndex = Array.IndexOf(modelOutput.Score, modelOutput.Score.Max());
+            review.Score = maxIndex;
+
+            //Almacena el producto como objeto por su ID
+            review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
+
+            return review;
         }
         
     }
