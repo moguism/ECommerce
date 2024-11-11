@@ -67,7 +67,7 @@ export class ProductViewComponent implements OnInit {
           if(review.score == -1){
             scoreContainer.textContent = '1';
           }else if(review.score == 0){
-            scoreContainer.textContent = '2,5';
+            scoreContainer.textContent = '3';
           }else{
             scoreContainer.textContent = '5';
           }

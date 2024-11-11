@@ -13,7 +13,7 @@ export class ReviewService {
   async addReview(newReview: NewReview): Promise<void>{
     // hacer get todos los productos
     // y  añadirlos al html
-    const reviewPath = "Review";
+    const reviewPath = "Review/AddReview";
 
     const reviews = await this.api.post(reviewPath, {newReview});
   }
