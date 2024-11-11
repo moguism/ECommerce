@@ -1,6 +1,107 @@
-
 .information{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-around;
+
+}
+.basket{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.basket-products{
+    display: flex;
+    background-color: black;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 200px;
+    width: 120%;
+    gap: 20px;
+}
+.basket-products-image{
+    width: 100%;
+    max-width: 150px;
+    height: 150px;
+    padding: 5%;
+    border-radius: 25px;
+}
+.basket-products-information-functions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+.basket-products-information-functions-title{
+    color: white;
+    width: 100%;
+}
+h3{
+    color: white;
+}
+.final-price{
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 20%;
+    height: 200px;
+}
+hr{
+    width: 50%;
+    border: 2px dopped;
+}
+.final-price-button-card{
+    width: 50%;
+    height: 50%;
+    border-radius: 8px;
+    background-color: #99C080;
+}
+.final-price-button-Etherium{
+    width: 50%;
+    height: 50%;
+    border-radius: 8px;
+    background-color: #99C080;
+}
+.final-price-price{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 70px;
+}
+.products-description-anadir{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.button-menos{
+    background-color: green;
+    width: 100%;
+    height: 38%;
+    border:1px solid black;
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+    cursor: pointer;
+}
+.count{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    height: 34%;
+    width: 100%;
+    color: white;
+}
+.button-mas{
+    background-color: green;
+    width: 100%;
+    height: 38%;
+    border: 1px solid black;
+    border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%;
+    cursor: pointer;
 }

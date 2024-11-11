@@ -9,10 +9,7 @@ namespace Server.Mappers
         {
             return new ReviewDto
             {
-                Id = review.Id,
                 Text = review.Text,
-                Score = review.Score,
-                UserId = review.UserId,
                 ProductId = review.ProductId
             };
         }
@@ -20,11 +17,8 @@ namespace Server.Mappers
         {
             return new Review
             {
-                Id = reviewDto.Id,
                 Text = reviewDto.Text,
-                Score = reviewDto.Score,
-                UserId = reviewDto.UserId,
-                ProductId = reviewDto.ProductId
+                ProductId = reviewDto.ProductId,                
             };
         }
 
