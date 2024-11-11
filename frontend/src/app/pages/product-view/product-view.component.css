@@ -124,6 +124,7 @@ gap: 100px;
     font-weight: bold;
     border:  1px solid black;
     border-radius: 8px;
+    cursor: pointer;
 }
 .review-users{
     display: flex;

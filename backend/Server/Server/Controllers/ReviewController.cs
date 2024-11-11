@@ -63,9 +63,9 @@ namespace Server.Controllers
 
             Review review = _reviewMapper.ToEntity(reviewDto);
             review = await _reviewService.RateReview(review);
-            //Añade el usuario
+            //AÃ¯Â¿Â½ade el usuario
             review.UserId = user.Id;
-            review.User = user;
+            //review.User = user;
 
             //guarda la review con todos los datos
             await _reviewService.AddReview(review);
@@ -75,9 +75,9 @@ namespace Server.Controllers
 
         private async Task<User> GetAuthorizedUser()
         {
-            // Pilla el usuario autenticado según ASP
+            // Pilla el usuario autenticado segÃºn ASP
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+            string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posiciÃ³n
 
             // Pilla el usuario de la base de datos
             return await _shoppingCartService.GetUserFromDbByStringId(idString);
