@@ -7,9 +7,6 @@ import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ReviewService } from '../../services/review.service';
-import { NewReview } from '../../models/newReview';
-import { Review } from '../../models/review';
 @Component({
   selector: 'app-product-view',
   standalone: true,
@@ -22,29 +19,31 @@ export class ProductViewComponent implements OnInit {
   protected count = 0;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
-  prductReviews: Review[] = []
+  //prductReviews: Review[] = []
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
-    this.getProduct(id)
-    this.makeReviews()
+    //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
+    this.getProduct()
+    //this.makeReviews()
 
   }
 
-  async getProduct(id: number) {
+  async getProduct() {
 
     this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
+      const id = paramMap.get('id') as unknown as number;
       const result = await this.productService.getById(id)
       if (result != null) {
         this.product = result
+        console.log("PRODUCTO: ", this.product)
       }
     });
 
   }
 
-  async makeReviews() {
+  /*async makeReviews() {
     const reviews = this.product?.reviews;
 
     if (reviews != null) {
@@ -95,9 +94,9 @@ export class ProductViewComponent implements OnInit {
       });
     }
 
-  }
+  }*/
 
-  addReview() {
+  async addReview() {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 
     if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
@@ -105,15 +104,16 @@ export class ProductViewComponent implements OnInit {
     } else {
       const newReview = new NewReview(reviewTextElement.value, this.product.id);
 
-      this.reviewService.addReview(newReview); 
+      console.log(newReview)
+
+      await this.reviewService.addReview(newReview); 
 
       if (reviewTextElement) {
         reviewTextElement.value = "";
       }
 
-      const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
-      this.getProduct(id); 
-      this.makeReviews();
+      this.getProduct();
+      //this.makeReviews();
     }
 
   }
@@ -128,25 +128,30 @@ export class ProductViewComponent implements OnInit {
   }
 
 
-  async addToCart(product: Product) {
-    if (this.count <= 0) {
+  async addToCart(product: Product)
+  {
+    if(this.count <= 0)
+    {
       alert("Cantidad no válida")
       return
     }
-    if (this.apiService.jwt == "") {
-      let allProducts: Product[] = []
-      const productsLocalStore = localStorage.getItem("shoppingCart")
-      if (productsLocalStore) {
-        allProducts = JSON.parse(productsLocalStore)
-        const index = allProducts.findIndex(p => p.id === product.id);
-        const newProduct = allProducts[index]
-        newProduct.total += this.count
-      }
-      else {
-        product.total = this.count
-        allProducts.push(product)
-      }
-      localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+    if(this.apiService.jwt == "")
+    {
+        let allProducts : Product[] = []
+        const productsLocalStore = localStorage.getItem("shoppingCart")
+        if(productsLocalStore)
+        {
+          allProducts = JSON.parse(productsLocalStore)
+          const index = allProducts.findIndex(p => p.id === product.id);
+          const newProduct = allProducts[index]
+          newProduct.total += this.count
+        }
+        else
+        {
+          product.total = this.count
+          allProducts.push(product)
+        }
+        localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
     }
     else {

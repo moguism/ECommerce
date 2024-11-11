@@ -44,7 +44,7 @@
                 <button (click)="addReview()" class="review-input-button">Enviar</button>
             </div>
             <div class="review-users">
-                @for (review of prductReviews; track $index) 
+                @for (review of product.reviews; track review.id) 
                 {
                     <div>
                         <p>{{review.text}}</p>

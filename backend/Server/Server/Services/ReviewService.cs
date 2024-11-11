@@ -56,7 +56,7 @@ namespace Server.Services
         public async Task AddReview(Review review)
         {
             //añade la review al usuario
-            if (review.User != null)
+            /*if (review.User != null)
             {
                 review.User.Reviews.Add(review);
             }
@@ -65,7 +65,7 @@ namespace Server.Services
             if (review.Product != null)
             {
                 review.Product.Reviews.Add(review);
-            }
+            }*/
 
             await _unitOfWork.ReviewRepository.InsertAsync(review);
             await _unitOfWork.SaveAsync();
@@ -82,7 +82,7 @@ namespace Server.Services
             review.Score = (int)modelOutput.PredictedLabel;
 
             //Almacena el producto como objeto por su ID
-            review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
+            //review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
 
             return review;
         }
