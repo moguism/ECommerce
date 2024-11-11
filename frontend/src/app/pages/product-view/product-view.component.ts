@@ -105,6 +105,8 @@ export class ProductViewComponent implements OnInit {
     } else {
       const newReview = new NewReview(reviewTextElement.value, this.product.id);
 
+      console.log(newReview)
+
       this.reviewService.addReview(newReview); 
 
       if (reviewTextElement) {
