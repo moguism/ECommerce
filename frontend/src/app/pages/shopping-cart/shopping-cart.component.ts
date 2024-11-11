@@ -135,11 +135,11 @@ export class ShoppingCartComponent implements OnInit {
     if (index !== -1) {
       const product = this.shoppingCartProducts[index];
 
-      if (product.total > 1) {
+      /*if (product.total > 1) {
         product.total -= 1;
       } else {
         this.shoppingCartProducts.splice(index, 1);
-      }
+      }*/
 
       if (this.apiService.jwt == "") {
         this.deleteFromArray(product)
@@ -164,7 +164,7 @@ export class ShoppingCartComponent implements OnInit {
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.deleteFromArray(product)
+          this.deleteProduct(product.id)
         }
       }
       else {

@@ -46,7 +46,11 @@ namespace Server.Controllers
                 Text = text
             };
 
-            ModelOutput output = _model.Predict(input);
+            Review review = _reviewMapper.ToEntity(reviewDto);
+            review = await _reviewService.RateReview(review);
+            //A�ade el usuario
+            review.UserId = user.Id;
+            //review.User = user;
 
             return output;
         }
