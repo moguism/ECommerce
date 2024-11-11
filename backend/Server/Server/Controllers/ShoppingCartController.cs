@@ -25,8 +25,6 @@ namespace Server.Controllers
         }
 
 
-
-
         [Authorize]
         [HttpGet]
         public async Task<ShoppingCartDto> GetShoppingCart()

@@ -17,27 +17,34 @@ namespace Server.Controllers
 
         private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
-        private readonly UnitOfWork _unitOfWork;
+        private readonly TemporalOrderService _temporalOrderService;
 
-        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, TemporalOrderService temporalOrderService, ShoppingCartService shoppingCartService)
         {
             _shoppingCartMapper = shoppingCartMapper;
+            _temporalOrderService = temporalOrderService;
             _shoppingCartService = shoppingCartService;
-            _unitOfWork = unitOfWork;
         }
 
         [Authorize]
         [HttpPost]
-        public async Task CreateTemporalOrder()
+        public async Task<TemporalOrder> CreateTemporalOrder()
         {
 
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return;
+                return null;
             }
 
-            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+
+            TemporalOrder temporalOrder = new TemporalOrder();
+            temporalOrder.UserId = user.Id;
+            temporalOrder.ShoppingCartId = cart.Id;
+
+            TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder);
+            return savedTemporalOrder;
         }
 
         private async Task<User> GetAuthorizedUser()
