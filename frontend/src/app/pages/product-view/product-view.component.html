@@ -44,10 +44,12 @@
                 <button (click)="addReview()" class="review-input-button">Enviar</button>
             </div>
             <div class="review-users">
-                <div class="review-users-opinion">
-                    <img class="review-users-opinion-image" src="/assets/images/macacco.jpg" alt="">
-                    <p class="review-users-opinion-text">Las frutas son una de las mejores maneras de incorporar nutrientes esenciales a nuestra dieta, además de ser deliciosas y refrescantes. Cada fruta tiene un perfil único de vitaminas, minerales, fibra y antioxidantes que son clave para mantener una buena salud. Por ejemplo, las frutas cítricas como las naranjas y limones son ricas en vitamina C, mientras que las bayas, como las fresas o arándanos, son excelentes para combatir el envejecimiento celular gracias a su alto contenido de antioxidantes.</p>
-                </div>
+                @for (review of prductReviews; track $index) 
+                {
+                    <div>
+                        <p>{{review.text}}</p>
+                    </div>
+                }
             </div>
         </div>
     }

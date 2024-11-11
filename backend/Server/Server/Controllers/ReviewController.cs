@@ -52,7 +52,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("AddReview")]
-        public async Task AddReviewAsync([FromBody] ReviewDto reviewDto)
+        public async Task AddReviewAsync([FromBody]ReviewDto reviewDto)
         {
 
             User user = await GetAuthorizedUser();
