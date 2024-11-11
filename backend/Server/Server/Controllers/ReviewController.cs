@@ -32,21 +32,7 @@ namespace Server.Controllers
             _shoppingCartService = shoppingCartService;
         }
 
-        [HttpGet("AllProductReviews")]
-        public async Task<IEnumerable<Review>> GetAllProductReviews([FromBody] int id)
-        {
-            IEnumerable<Review> reviews = await _reviewService.GetAllProductReviewsAsync(id);
 
-            return reviews;
-        }
-
-        [HttpGet("AllUserReviews")]
-        public async Task<IEnumerable<Review>> GetAllUserReviews(int id)
-        {
-            IEnumerable<Review> reviews = await _reviewService.GetAllUserReviewsAsync(id);
-
-            return reviews;
-        }
 
         //Pruebas
         [HttpGet("AllReviews")]
@@ -58,14 +44,14 @@ namespace Server.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("Product/{id}")]
         public async Task<IEnumerable<Review>> GetReviewByProductId(int id)
         {
             return await _reviewService.GetAllProductReviewsAsync(id);
         }
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("AddReview")]
         public async Task AddReviewAsync([FromBody] ReviewDto reviewDto)
         {
 
@@ -85,18 +71,7 @@ namespace Server.Controllers
             await _reviewService.AddReview(review);
         }
 
-        [HttpGet]
-        public ModelOutput Predict(string text)
-        {
-            ModelInput input = new ModelInput
-            {
-                Text = text
-            };
 
-            ModelOutput output = _model.Predict(input);
-
-            return output;
-        }
 
         private async Task<User> GetAuthorizedUser()
         {
