@@ -11,7 +11,6 @@ import { environment } from '../../environments/environment';
 export class ProductService {
   constructor(private api: ApiService) { }
 
-
   async getAllProducts(querySelector: QuerySelector): Promise<PagedProducts | null> {
     const result = await this.api.get<PagedProducts>("Product", {
       "ProductType": querySelector.productType,

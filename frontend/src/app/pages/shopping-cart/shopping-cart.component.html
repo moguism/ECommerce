@@ -2,14 +2,40 @@
 <div class="main">
     <div class="information">
         <div class="basket">
-
+            <h2>Mi carrito</h2>
+            <h4>3 articulos</h4>
+            <div class="basket-products">
+                <img class="basket-products-image" src="/assets/images/macacco.jpg" alt="">
+                <div class="basket-products-information">
+                    <div class="basket-products-information-functions">
+                        <h4 class="basket-products-information-functions-title">Hamburquesa de ternera</h4>
+                        <button><i class="fa-solid fa-trash"></i></button>
+                        <div class="products-description-anadir">
+                            <button class="button-menos">-</button>
+                            <p class="count">0</p>
+                            <button class="button-mas">+</button>
+                        </div>
+                    </div>
+                    <h3>10.50€</h3>
+                    <h3>Precio por kg 5.25€</h3>
+                </div>
+            </div>
         </div>
         <div class="final-price">
-
+            <h3>Resumen</h3>
+            <div class="final-price-price">
+                <h3>Total:</h3>
+                <h3>50€</h3>
+            </div>
+            
+            <hr>
+            <button class="final-price-button-card">Pagar con tarjeta</button>
+            <button class="final-price-button-Etherium">Pagar con Etherium</button>
+            
         </div>
     </div>
 </div>
-<div>
+<!--<div>
  funcionalidades no tocar o si? <h1>CARRITO</h1>
     @for (product of shoppingCartProducts; track product.id) 
     {
@@ -26,7 +52,7 @@
         <p>No hay productos en el carrito</p>
     }
 </div>
-<!-- Esta parte habrá que quitarla -->
+<!-- Esta parte habrá que quitarla 
 <div>
     <h1>PRODUCTOS</h1>
     @for (product of allProducts; track product.id) 
@@ -34,6 +60,4 @@
         <p>{{ product.name }}</p>
         <button (click)="addProductToCart(product)">Añadir al carrito</button>
     }
-</div>
-
--->
+</div>-->
