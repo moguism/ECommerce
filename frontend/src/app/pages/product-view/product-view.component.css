@@ -131,7 +131,8 @@ gap: 100px;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-
+    width: 100%;
+    gap: 20px;
 }
 .review-users-opinion{
     background-color: white;
