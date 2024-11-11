@@ -18,7 +18,7 @@ namespace Server.Mappers
             return new Review
             {
                 Text = reviewDto.Text,
-                ProductId = reviewDto.ProductId
+                ProductId = reviewDto.ProductId,                
             };
         }
 

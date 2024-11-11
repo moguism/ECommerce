@@ -17,6 +17,14 @@ namespace Server.Services
             _model = model;
         }
 
+        //Pruebas
+        public async Task<IEnumerable<Review>> GetAllReviewsAsync()
+        {
+            IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetAllWithFullDataAsync();
+
+            return reviews;
+        }
+
         public async Task<IEnumerable<Review>> GetAllProductReviewsAsync(int id)
         {
             IEnumerable<Review> reviews = await _unitOfWork.ReviewRepository.GetByProductIdAsync(id);
@@ -31,6 +39,7 @@ namespace Server.Services
             return reviews;
         }
 
+        
         public ModelOutput Predict(string text)
         {
             ModelInput input = new ModelInput
@@ -43,14 +52,18 @@ namespace Server.Services
             return output;
         }
 
+        
+
         public async Task RateReview(Review review)
         {
             string finalText = Regex.Replace(review.Text, @"\s{2,}", " "); 
             finalText = _unitOfWork.ReviewRepository.DeleteAcents(finalText);
+            ModelInput modelInput = new ModelInput { Text = finalText };
             ModelOutput modelOutput = Predict(finalText);
             review.Score = (int)modelOutput.PredictedLabel;
             await _unitOfWork.ReviewRepository.InsertAsync(review);
             await _unitOfWork.SaveAsync();
         }
+        
     }
 }
