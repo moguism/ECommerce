@@ -7,6 +7,8 @@ import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { NewReview } from '../../models/new-review';
+import { ReviewService } from '../../services/review.service';
 @Component({
   selector: 'app-product-view',
   standalone: true,
