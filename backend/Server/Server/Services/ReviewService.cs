@@ -82,7 +82,7 @@ namespace Server.Services
             review.Score = (int)modelOutput.PredictedLabel;
 
             //Almacena el producto como objeto por su ID
-            review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
+            //review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
 
             return review;
         }

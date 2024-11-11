@@ -124,13 +124,15 @@ gap: 100px;
     font-weight: bold;
     border:  1px solid black;
     border-radius: 8px;
+    cursor: pointer;
 }
 .review-users{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-
+    width: 100%;
+    gap: 20px;
 }
 .review-users-opinion{
     background-color: white;
