@@ -24,131 +24,150 @@ export class ProductListComponent implements OnInit, OnDestroy {
   routeParamMap$: Subscription | null = null;
 
   querySelector: QuerySelector;
-  productTypeString: string = "Producto";
+  productTypeString: string = 'Producto';
 
-  protected BtnPerName: boolean = true;
-  protected BtnPerPrice: boolean = true;
+  BtnPerName: boolean = true;
+  BtnPerPrice: boolean = true;
 
   totalProducts: number = 0;
   totalPages: number = 1;
   currentPage: number = 1;
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(
+    private productService: ProductService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 5;
-    //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
+    this.querySelector = new QuerySelector(
+      ProductType.FRUITS,
+      OrdinationType.NAME,
+      OrdinationDirection.ASC,
+      PRODUCT_PER_PAGE,
+      FIRST_PAGE,
+      ''
+    );
   }
 
   async ngOnInit(): Promise<void> {
-    this.getAllProducts()
+    this.restoreSessionData();
+    this.getAllProducts();
   }
 
-    
-
-  goToProduct(id: number) {
-    let route: string = "product-view/" + id;
-    this.router.navigateByUrl(route)
+  getSearchedProducts(query: string) {
+    this.querySelector.search = query
+    sessionStorage.setItem('query', this.querySelector.search);
+    this.getAllProducts();
+    this.goToFirstPage();
   }
 
+  restoreSessionData() {
+    const savedCategory = sessionStorage.getItem('category');
+    if (savedCategory) {
+      this.querySelector.productType = parseInt(savedCategory);
+      //sessionStorage.removeItem('category');
+    }
 
-  getAllProducts() {
+    const currentPage = sessionStorage.getItem('currentPage');
+    if (currentPage) {
+      this.currentPage = parseInt(currentPage);
+      this.querySelector.actualPage = this.currentPage;
+      //sessionStorage.removeItem('currentPage');
+    }
 
-    this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async paramMap => {
-      const category = paramMap.get('category') as unknown as string;
-      switch (category) {
-        case "frutas":
-          this.querySelector.productType = ProductType.FRUITS;
-          break;
-        case "verduras":
-          this.querySelector.productType = ProductType.VEGETABLES;
-          break;
-        case "carnes":
-          this.querySelector.productType = ProductType.MEAT;
-          break;
+    const totalPages = sessionStorage.getItem('totalPages');
+    if (totalPages) {
+      this.totalPages = parseInt(totalPages);
+      //sessionStorage.removeItem('totalPages');
+    }
+
+    const productsPerPage = sessionStorage.getItem('productsPerPage');
+    const productsPerPageElement = document.getElementById("products-per-page") as HTMLInputElement | HTMLSelectElement;
+    if (productsPerPage && productsPerPageElement) {
+      this.querySelector.productPageSize = parseInt(productsPerPage);
+      productsPerPageElement.value = this.querySelector.productPageSize.toString();
+      //sessionStorage.removeItem('productsPerPage');
+    }
+
+    const ordinationType = sessionStorage.getItem('ordinationType');
+    const ordinationOrder = sessionStorage.getItem('ordinationOrder');
+    const orderBy = document.getElementById('order-by') as HTMLInputElement | HTMLSelectElement;
+    if (ordinationType && ordinationOrder && orderBy) {
+      this.querySelector.ordinationType = parseInt(ordinationType);
+      this.querySelector.ordinationDirection = parseInt(ordinationOrder);
+
+      if (this.querySelector.ordinationType == 0 && this.querySelector.ordinationDirection == 0) {
+        orderBy.value = "name-asc"
+      }
+      else if (this.querySelector.ordinationType == 0 && this.querySelector.ordinationDirection == 1) {
+        orderBy.value = "name-desc"
+      }
+      else if (this.querySelector.ordinationType == 1 && this.querySelector.ordinationDirection == 0) {
+        orderBy.value = "price-asc"
+      }
+      else if (this.querySelector.ordinationType == 1 && this.querySelector.ordinationDirection == 1) {
+        orderBy.value = "price-desc"
       }
 
-      const savedCategory = sessionStorage.getItem("category");
-      if (savedCategory) {
-        const categoryNumber: number = parseInt(savedCategory)
-        if (categoryNumber == this.querySelector.productType) // Si la categoría es la misma
-        {
-          const currentPage = sessionStorage.getItem("currentPage");
-          if (currentPage) {
-            this.currentPage = parseInt(currentPage);
-            sessionStorage.removeItem("currentPage")
-          }
+      //sessionStorage.removeItem('ordinationType');
+      //sessionStorage.removeItem('ordinationOrder');
+    }
 
-          const totalPages = sessionStorage.getItem("totalPages");
-          if (totalPages) {
-            this.totalPages = parseInt(totalPages);
-            sessionStorage.removeItem("totalPages")
-          }
+    const searchQuery = sessionStorage.getItem('query');
+    if (searchQuery) {
+      this.querySelector.search = searchQuery;
+      //sessionStorage.removeItem('query');
+    }
+  }
 
-          const productsPerPage = sessionStorage.getItem("productsPerPage");
-          if (productsPerPage) {
-            this.querySelector.productPageSize = parseInt(productsPerPage)
-            sessionStorage.removeItem("productsPerPage")
-          }
-
-          const ordinationType = sessionStorage.getItem("ordinationType");
-          const ordinationOrder = sessionStorage.getItem("ordinationOrder");
-          sessionStorage.removeItem("ordinationType")
-          sessionStorage.removeItem("ordinationOrder")
-          if (ordinationType && ordinationOrder) {
-            const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
-            if (orderBy) {
-              if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 0) {
-                orderBy.value = "name-asc";
-                this.querySelector.ordinationType = OrdinationType.NAME;
-                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-              }
-
-              else if (parseInt(ordinationType) == 0 && parseInt(ordinationOrder) == 1) {
-                orderBy.value = "name-desc";
-                this.querySelector.ordinationType = OrdinationType.NAME;
-                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-              }
-
-              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 0) {
-                orderBy.value = "price-asc";
-                this.querySelector.ordinationType = OrdinationType.PRICE;
-                this.querySelector.ordinationDirection = OrdinationDirection.ASC;
-              }
-
-              else if (parseInt(ordinationType) == 1 && parseInt(ordinationOrder) == 1) {
-                orderBy.value = "price-desc";
-                this.querySelector.ordinationType = OrdinationType.PRICE;
-                this.querySelector.ordinationDirection = OrdinationDirection.DESC;
-              }
-            }
-          }
+  async getAllProducts() {
+    this.routeParamMap$ = this.activatedRoute.paramMap.subscribe(async (paramMap) => {
+      const category = paramMap.get('category');
+      let type = ProductType.FRUITS
+      if (category) {
+        switch (category) {
+          case 'frutas':
+            type = ProductType.FRUITS;
+            break;
+          case 'verduras':
+            type = ProductType.VEGETABLES;
+            break;
+          case 'carnes':
+            type = ProductType.MEAT;
+            break;
         }
       }
 
-      sessionStorage.removeItem("category")
+      if (type != this.querySelector.productType) {
+        this.querySelector.productType = type
+        this.querySelector.actualPage = 1
+        this.currentPage = this.querySelector.actualPage
+      }
+
+      console.log(this.querySelector)
 
       const result = await this.productService.getAllProducts(this.querySelector);
-
       this.allProducts = result?.products;
-      this.totalProducts = result?.totalProducts ?? 0; // Para que al TS no le de la paja, si no hay total de productos, lo pone en 0
-      this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize); // Para que redondee el resultado hacia arriba (como mi estrés)
+      this.totalProducts = result?.totalProducts ?? 0;
+      this.totalPages = Math.ceil(this.totalProducts / this.querySelector.productPageSize);
+
+      //this.save = false;
 
       this.updatePaginationButtons();
     });
+  }
 
-
-    this.productTypeString = this.querySelector.productType.toString();
-
-
-    console.log("All products ", this.allProducts);
+  goToProduct(id: number) {
+    const route: string = `product-view/${id}`;
+    this.router.navigateByUrl(route);
   }
 
   updatePaginationButtons() {
-    const previousButton = document.getElementById("prev-button") as HTMLButtonElement;
-    const nextButton = document.getElementById("next-button") as HTMLButtonElement;
-    const firstButton = document.getElementById("first-button") as HTMLButtonElement;
-    const lastButton = document.getElementById("last-button") as HTMLButtonElement;
+    const previousButton = document.getElementById('prev-button') as HTMLButtonElement;
+    const nextButton = document.getElementById('next-button') as HTMLButtonElement;
+    const firstButton = document.getElementById('first-button') as HTMLButtonElement;
+    const lastButton = document.getElementById('last-button') as HTMLButtonElement;
 
     if (firstButton) firstButton.disabled = this.querySelector.actualPage <= 1;
     if (previousButton) previousButton.disabled = this.querySelector.actualPage <= 1;
@@ -159,8 +178,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   nextPage() {
     if (this.querySelector.actualPage < this.totalPages) {
       this.querySelector.actualPage++;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
+      this.saveCurrentPage();
       this.getAllProducts();
     }
   }
@@ -168,66 +186,53 @@ export class ProductListComponent implements OnInit, OnDestroy {
   previousPage() {
     if (this.querySelector.actualPage > 1) {
       this.querySelector.actualPage--;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
+      this.saveCurrentPage();
       this.getAllProducts();
     }
   }
 
   goToFirstPage() {
-    if (this.querySelector.actualPage != 1) {
+    if (this.querySelector.actualPage !== 1) {
       this.querySelector.actualPage = 1;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
+      this.saveCurrentPage();
       this.getAllProducts();
     }
   }
 
   goToLastPage() {
-    if (this.querySelector.actualPage != this.totalPages) {
+    if (this.querySelector.actualPage !== this.totalPages) {
       this.querySelector.actualPage = this.totalPages;
-      this.currentPage = this.querySelector.actualPage;
-      //this.updatePageText();
+      this.saveCurrentPage();
       this.getAllProducts();
     }
   }
 
-  /*updatePageText() {
-    const currentPageElement = document.getElementById("pagination-numbers");
-
-    if (currentPageElement) currentPageElement.innerText = this.querySelector.actualPage.toString(); // Actualizar el texto en el DOM
-  }*/
+  saveCurrentPage()
+  {
+    this.currentPage = this.querySelector.actualPage;
+    sessionStorage.setItem('currentPage', this.currentPage.toString());
+  }
 
   newNumberOfProducts() {
-    // Obtener el elemento del DOM
     const productsPerPageElement = document.getElementById("products-per-page") as HTMLInputElement | HTMLSelectElement;
-
-    // Asegurarnos de que el elemento existe y es del tipo correcto
     if (productsPerPageElement) {
-      // Obtener el valor del input o select, y convertirlo a un número
-      const numberOfProducts = parseInt(productsPerPageElement.value, 10);
-      this.querySelector.productPageSize = numberOfProducts;
+      sessionStorage.setItem('productsPerPage', productsPerPageElement.value.toString()); // Por si acaso, que luego falla
+      this.querySelector.productPageSize = parseInt(productsPerPageElement.value);
+      this.querySelector.actualPage = 1;
+      this.currentPage = this.querySelector.actualPage;
       this.getAllProducts();
-      this.goToFirstPage();
     }
-
   }
 
   order() {
-    const orderBy = document.getElementById("order-by") as HTMLInputElement | HTMLSelectElement;
-    if (orderBy) { this.sortBy(orderBy.value) }
+    const orderBy = document.getElementById('order-by') as HTMLInputElement | HTMLSelectElement;
+    if (orderBy) {
+      this.sortBy(orderBy.value);
+      this.getAllProducts();
+    }
   }
 
-  getSearchedProducts(query: string) {
-    this.querySelector.search = query
-    this.getAllProducts();
-    this.goToFirstPage();
-  }
-
-  // Método para manejar la ordenación
   sortBy(order: string) {
-
-    // Configurar la dirección y el tipo de ordenación
     switch (order) {
       case 'name-asc':
         this.querySelector.ordinationType = OrdinationType.NAME;
@@ -247,56 +252,19 @@ export class ProductListComponent implements OnInit, OnDestroy {
         break;
     }
 
-    // Volver a obtener los productos con la nueva ordenación
-    this.getAllProducts();
+    sessionStorage.setItem('ordinationType', this.querySelector.ordinationType.toString());
+    sessionStorage.setItem('ordinationOrder', this.querySelector.ordinationDirection.toString());
     this.goToFirstPage();
   }
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();
-    sessionStorage.setItem("category", this.querySelector.productType.toString());
-    sessionStorage.setItem("currentPage", this.currentPage.toString());
-    sessionStorage.setItem("totalPages", this.totalPages.toString());
-    sessionStorage.setItem("productsPerPage", this.querySelector.productPageSize.toString());
-    sessionStorage.setItem("ordinationType", this.querySelector.ordinationType.toString());
-    sessionStorage.setItem("ordinationOrder", this.querySelector.ordinationDirection.toString());
-    sessionStorage.setItem("query", this.querySelector.search);
+    sessionStorage.setItem('category', this.querySelector.productType.toString());
+    //sessionStorage.setItem('currentPage', this.currentPage.toString());
+    //sessionStorage.setItem('totalPages', this.totalPages.toString());
+    //sessionStorage.setItem('productsPerPage', this.querySelector.productPageSize.toString());
+    //sessionStorage.setItem('ordinationType', this.querySelector.ordinationType.toString());
+    //sessionStorage.setItem('ordinationOrder', this.querySelector.ordinationDirection.toString());
+    //sessionStorage.setItem('query', this.querySelector.search);
   }
-
-  desBtnPerName() { // Funcion para ordenar descendente
-    this.BtnPerName = false;
-    this.sortBy("name-desc");
-  }
-
-  ascBtnPerName() {
-    this.BtnPerName = true;
-    this.sortBy("name-asc");
-  }
-
-  togglePerName() {
-    if (this.BtnPerName) {
-      this.desBtnPerName();
-    } else {
-      this.ascBtnPerName();
-    }
-  }
-
-  desBtnPerPrice() {
-    this.BtnPerPrice = false;
-    this.sortBy("price-desc");
-  }
-
-  ascBtnPerPrice() {
-    this.BtnPerPrice = true;
-    this.sortBy("price-asc");
-  }
-
-  togglePerPrice() {
-    if (this.BtnPerPrice) {
-      this.desBtnPerPrice();
-    } else {
-      this.ascBtnPerPrice();
-    }
-  }
-
 }

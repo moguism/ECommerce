@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Repositories.Base;
+using System.Text;
 
 namespace Server.Repositories;
 
@@ -42,5 +43,19 @@ public class ReviewRepository : Repository<Review, int>
             .ToListAsync();
 
         return reviewsByUserId;
+    }
+
+    public string DeleteAcents(string text)
+    {
+        string acents = "áéíóúÁÉÍÓÚ";
+        string withOutAcents = "aeiouAEIOU";
+        StringBuilder textWithOutAcents = new StringBuilder(text);
+
+        for (int i = 0; i < acents.Length; i++)
+        {
+            textWithOutAcents.Replace(acents [i], withOutAcents [i]);
+        }
+
+        return textWithOutAcents.ToString();
     }
 }
