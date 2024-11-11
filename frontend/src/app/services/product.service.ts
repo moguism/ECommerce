@@ -11,44 +11,6 @@ import { environment } from '../../environments/environment';
 export class ProductService {
   constructor(private api: ApiService) { }
 
-  async getAllProducts(querySelector: QuerySelector): Promise<PagedProducts | null> {
-    const result = await this.api.get<PagedProducts>("Product", {
-      "ProductType": querySelector.productType,
-      "OrdinationType": querySelector.ordinationType,
-      "OrdinationDirection": querySelector.ordinationDirection,
-      "ProductPageSize": querySelector.productPageSize,
-      "ActualPage": querySelector.actualPage,
-      "Search": querySelector.search
-    }, 'json');
-
-    if (result.data) {
-      const pagedProducts = result.data
-      if (pagedProducts.products) {
-        for (const product of pagedProducts.products) {
-          product.image = environment.imageRouteBasic + product.image 
-        }
-      }
-      return pagedProducts
-    }
-
-    return null;
-  }
-
-  async getById(id: number): Promise<Product | null> {
-    const path = "Product/" + id
-    const result = await this.api.get<Product>(path, {}, 'json')
-    if (result.data) {
-      const product: Product = result.data
-      product.image = environment.imageRoute + product.image
-      return product
-    }
-    return null
-  }
-
-  async getById(id: number): Promise<Result<Product>>
-  {
-    const path = "Product/" + id
-    return this.api.get<Product>(path, {}, 'json')
-  }
+  
 
 }

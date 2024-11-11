@@ -3,37 +3,51 @@
 </div>
 <div class="body">
 
-    <div class="main">
-        <div class="products">
-            <div class="products-image">
-                <img class="image" src="/register-image.jpg" alt="">
-            </div>
-    
-            <div class="products-description">
-                <h2 class="products-description-title">Ternera de primera</h2>
-                <h3><i class="fa-solid fa-star"></i>4</h3>
-                <div class="products-description-price">
-                    <h2>10€</h2>
-                    <h2 class="stock">Stock:100</h2>
+    @if(product)
+    {
+        <div class="main">
+            <div class="products">
+                <div class="products-image">
+                    <img class="image" [src]="product.image" alt="Imagen">
                 </div>
-                <div class="products-description-anadir">
-                    <button class="button-menos">-</button>
-                    <p class="count">0</p>
-                    <button class="button-mas">+</button>
-                </div>
-                <div class="image-anadir-carrito">
-                    <button class="anadir">Añadir al carrito</button>
+        
+                <div class="products-description">
+                    <h2 class="products-description-title">{{ product.name }}</h2>
+                    <h3><i class="fa-solid fa-star"></i>4</h3>
+                    <div class="products-description-price">
+                        <h2>{{ product.price}}</h2>
+                        <h2 class="stock">Stock: {{ product.stock}}</h2>
+                    </div>
+                    @if(product.stock > 0)
+                    {
+                        <div class="products-description-anadir">
+                            <button class="button-menos" (click)="restar()">-</button>
+                            <p class="count">{{count}}</p>
+                            <button class="button-mas" (click)="sumar()">+</button>
+                        </div>
+                        <div class="image-anadir-carrito">
+                            <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
-    </div>
-    <div class="description">
-        <p class="description-text">Una fruta crujiente y dulce, ideal para snacks.</p>
-    </div>
-    <div class="review">
-        <h1>Reseñas</h1>
-        <div class="review-input">
-            <textarea class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es malo te baneo) "></textarea>
+        <div class="description">
+            <p class="description-text">{{ product.description }}</p>
         </div>
-    </div>
+        <div class="review">
+            <h1>Reseñas</h1>
+            <div class="review-input">
+                <textarea id="review-text" class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es mala te baneo) "></textarea>
+                <button (click)="addReview()" class="review-input-button">Enviar</button>
+            </div>
+            <div class="review-users">
+                <div class="review-users-opinion">
+                    <img class="review-users-opinion-image" src="/assets/images/macacco.jpg" alt="">
+                    <p class="review-users-opinion-text">Las frutas son una de las mejores maneras de incorporar nutrientes esenciales a nuestra dieta, además de ser deliciosas y refrescantes. Cada fruta tiene un perfil único de vitaminas, minerales, fibra y antioxidantes que son clave para mantener una buena salud. Por ejemplo, las frutas cítricas como las naranjas y limones son ricas en vitamina C, mientras que las bayas, como las fresas o arándanos, son excelentes para combatir el envejecimiento celular gracias a su alto contenido de antioxidantes.</p>
+                </div>
+            </div>
+        </div>
+    }
+
 </div>
