@@ -22,7 +22,7 @@ export class ProductViewComponent implements OnInit {
   protected count = 0;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
-  reviews : Review[] = []
+  prductReviews: Review[] = []
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService) { }
 
@@ -44,10 +44,12 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  async makeReviews(){
+  async makeReviews() {
     const reviews = this.product?.reviews;
 
     if (reviews != null) {
+
+      this.prductReviews = reviews
       reviews.forEach(review => {
         const reviewInputDiv = document.querySelector('.review-input');
 
@@ -92,25 +94,26 @@ export class ProductViewComponent implements OnInit {
         }
       });
     }
-    
+
   }
 
-  addReview(){
+  addReview() {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 
-    if(reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null){
+    if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
       alert("No has hecho ningun comentario");
-    }else{
-      const newReview = new NewReview(reviewTextElement.value.trim(),this.product.id);
+    } else {
+      const newReview = new NewReview(reviewTextElement.value, this.product.id);
 
-      this.reviewService.addReview(newReview)
-      if(reviewTextElement){
+      this.reviewService.addReview(newReview); 
+
+      if (reviewTextElement) {
         reviewTextElement.value = "";
       }
-      
+
       const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
-      this.getProduct(id)
-      this.makeReviews()
+      this.getProduct(id); 
+      this.makeReviews();
     }
 
   }
@@ -125,30 +128,25 @@ export class ProductViewComponent implements OnInit {
   }
 
 
-  async addToCart(product: Product)
-  {
-    if(this.count <= 0)
-    {
+  async addToCart(product: Product) {
+    if (this.count <= 0) {
       alert("Cantidad no válida")
       return
     }
-    if(this.apiService.jwt == "")
-    {
-        let allProducts : Product[] = []
-        const productsLocalStore = localStorage.getItem("shoppingCart")
-        if(productsLocalStore)
-        {
-          allProducts = JSON.parse(productsLocalStore)
-          const index = allProducts.findIndex(p => p.id === product.id);
-          const newProduct = allProducts[index]
-          newProduct.total += this.count
-        }
-        else
-        {
-          product.total = this.count
-          allProducts.push(product)
-        }
-        localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+    if (this.apiService.jwt == "") {
+      let allProducts: Product[] = []
+      const productsLocalStore = localStorage.getItem("shoppingCart")
+      if (productsLocalStore) {
+        allProducts = JSON.parse(productsLocalStore)
+        const index = allProducts.findIndex(p => p.id === product.id);
+        const newProduct = allProducts[index]
+        newProduct.total += this.count
+      }
+      else {
+        product.total = this.count
+        allProducts.push(product)
+      }
+      localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
     }
     else {
