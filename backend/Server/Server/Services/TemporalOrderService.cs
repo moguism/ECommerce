@@ -19,6 +19,16 @@ namespace Server.Services
         public async Task<TemporalOrder> CreateTemporalOrder(TemporalOrder temporalOrder)
         {
             TemporalOrder savedTemporalOrder = await _unitOfWork.TemporalOrderRepository.InsertAsync(temporalOrder);
+
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(savedTemporalOrder.UserId);
+            List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
+            foreach(CartContent cartContent in cartContents)
+            {
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
+                product.Stock -= cartContent.Quantity;
+                _unitOfWork.ProductRepository.Update(product);
+            }
+
             await _unitOfWork.SaveAsync();
             return savedTemporalOrder;
         }
@@ -32,6 +42,5 @@ namespace Server.Services
             }
             await _unitOfWork.SaveAsync();
         }
-
     }
 }

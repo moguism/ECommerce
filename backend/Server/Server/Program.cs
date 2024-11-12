@@ -56,8 +56,9 @@ namespace Server
             builder.Services.AddScoped<ShoppingCartService>();
             builder.Services.AddScoped<ReviewService>();
             builder.Services.AddScoped<ReviewMapper>();
-            builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<TemporalOrderMapper>();
+            builder.Services.AddScoped<TemporalOrderService>();
+            builder.Services.AddScoped<CartContentMapper>();
 
 
 
