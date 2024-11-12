@@ -10,7 +10,8 @@ namespace Server.Mappers
             return new ReviewDto
             {
                 Text = review.Text,
-                ProductId = review.ProductId
+                ProductId = review.ProductId,
+                DateTime = review.DateTime
             };
         }
         public Review ToEntity(ReviewDto reviewDto)
@@ -18,7 +19,8 @@ namespace Server.Mappers
             return new Review
             {
                 Text = reviewDto.Text,
-                ProductId = reviewDto.ProductId,                
+                ProductId = reviewDto.ProductId,
+                DateTime = reviewDto.DateTime
             };
         }
 

@@ -79,7 +79,16 @@ namespace Server.Services
             ModelInput modelInput = new ModelInput { Text = finalText };
             ModelOutput modelOutput = Predict(finalText);
 
-            review.Score = (int)modelOutput.PredictedLabel;
+            if ((int)modelOutput.PredictedLabel == -1)
+            {
+                review.Score = 1;
+            } else if ((int)modelOutput.PredictedLabel == 0) { 
+                review.Score = 3;
+            } else
+            {
+                review.Score = 5;
+            }
+            
 
             //Almacena el producto como objeto por su ID
             //review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);
