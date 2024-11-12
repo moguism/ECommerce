@@ -60,7 +60,7 @@ namespace Server
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
 
-
+            //builder.Services.AddHostedService<CleanTemporalOrdersService>();
 
             // Permite CORS
             if (builder.Environment.IsDevelopment())

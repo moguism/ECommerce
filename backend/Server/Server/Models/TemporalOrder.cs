@@ -9,6 +9,6 @@
 
         //public User User { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
-
+        public DateTime ExpirationDate { get; set; }
     }
 }

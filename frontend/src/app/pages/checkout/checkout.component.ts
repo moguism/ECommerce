@@ -6,6 +6,7 @@ import { HeaderShopComponent } from '../../components/header-shop/header-shop.co
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -16,14 +17,17 @@ import { HeaderComponent } from '../../components/header/header.component';
 })
 export class CheckoutComponent implements OnInit {
   shoppingCartProducts: Product[] = []
+  autoRefreshSubscription: Subscription | undefined;
+  private id: number = 0
+  private method: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute) {
   }
 
   async ngOnInit(): Promise<void> {
-    const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
-    const method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const result = await this.apiService.get("TemporalOrder", { id })
+    this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
+    this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
+    const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
     console.log("RESULT CHECKOUT: ", result)
 
     const shoppinCartResult = await this.apiService.get("ShoppingCart", { "isTemporal": true }, 'json');
@@ -50,6 +54,8 @@ export class CheckoutComponent implements OnInit {
         }
       }
     }
+
+    this.autoRefreshSubscription = this.startAutoRefresh();
   }
 
   totalprice() {
@@ -58,6 +64,15 @@ export class CheckoutComponent implements OnInit {
       totalcount += product.total * product.price;
     }
     return totalcount;
+  }
+
+  startAutoRefresh() {
+    // 300000 milisegundos son 5 minutos
+    return interval(300000).subscribe(() => {this.refreshOrder()});
+  }
+
+  async refreshOrder() {
+    return await this.apiService.get("TemporalOrder/refresh", {"id" : this.id})
   }
 
 }
