@@ -11,7 +11,7 @@ public class TemporalOrderMapper
         {
             Id = temporalOrder.Id,
             ShoppingCartId = temporalOrder.ShoppingCartId,
-            UserId = temporalOrder.UserId
+            //UserId = temporalOrder.UserId
         };
     }
 }

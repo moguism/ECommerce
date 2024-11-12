@@ -24,10 +24,9 @@ namespace Server.Controllers
             _shoppingCartService = shoppingCartService;
         }
 
-
         [Authorize]
         [HttpGet]
-        public async Task<ShoppingCartDto> GetShoppingCart()
+        public async Task<ShoppingCartDto> GetShoppingCart([FromQuery] bool isTemporal)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -35,7 +34,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, isTemporal);
             if(shoppingCart == null)
             {
                 return null;
@@ -86,7 +85,7 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
+            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId, false);
 
         }
 

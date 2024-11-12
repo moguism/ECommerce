@@ -15,9 +15,9 @@ namespace Server.Repositories
         }
 
 
-        public async Task<ShoppingCart> GetAllByUserIdAsync(int id)
+        public async Task<ShoppingCart> GetAllByUserIdAsync(int id, bool temporal)
         {
-            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id);
+            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id && cart.Temporal == temporal);
         }
 
 
@@ -43,7 +43,7 @@ namespace Server.Repositories
         }
 
 
-        public async Task AddCartContent(ShoppingCart shoppingCart, CartContent cartContent)
+        public void AddCartContent(ShoppingCart shoppingCart, CartContent cartContent)
         {
             CartContent c =  shoppingCart.CartContent.Where(c => c.Id == cartContent.Id).FirstOrDefault();
 

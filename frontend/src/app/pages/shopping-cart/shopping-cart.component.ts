@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
-import { OrdinationDirection } from '../../models/enums/ordination-direction';
-import { OrdinationType } from '../../models/enums/ordination-type';
-import { ProductType } from '../../models/enums/product-type';
-import { QuerySelector } from '../../models/query-selector';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
@@ -20,22 +16,9 @@ import { Router } from '@angular/router';
   styleUrl: './shopping-cart.component.css'
 })
 export class ShoppingCartComponent implements OnInit {
-  /*numOfTotalProducts = 0;
-  totalPrice = 0.0;
-  totalProducts : Product[] = []
-  numOfIndividualProduct = 0*/
-
   shoppingCartProducts: Product[] = []
-  allProducts: Product[] | null | undefined = []
-  querySelector: QuerySelector;
   
-  // Estos servicios son para pruebas
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {
-    const FIRST_PAGE = 1;
-    const PRODUCT_PER_PAGE = 5;
-    //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
-  }
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     const goToCheckout = localStorage.getItem("goToCheckout")
@@ -47,7 +30,6 @@ export class ShoppingCartComponent implements OnInit {
     else
     {
       this.getShoppingCart();
-      //this.getAllProducts();
     }
   }
 
@@ -74,7 +56,7 @@ export class ShoppingCartComponent implements OnInit {
     }
   
     if (this.apiService.jwt !== "") {
-      const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      const result = await this.apiService.get("ShoppingCart", {"isTemporal" : false}, 'json');
       if (result.data) {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
@@ -101,26 +83,6 @@ export class ShoppingCartComponent implements OnInit {
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
     }
   }
-
-  /*async getAllProducts() {
-    const result = await this.productService.getAllProducts(this.querySelector);
-    this.allProducts = result?.products;
-  }
-
-  // ESTO HABRÁ QUE BORRARLO
-  async addProductToCart(product: Product) {
-    if (this.apiService.jwt == "") {
-      product.total = 1
-      this.shoppingCartProducts.push(product)
-      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
-    }
-    else {
-      localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(1, product.id)
-      await this.apiService.post("ShoppingCart/add", cartContent)
-      this.getShoppingCart()
-    }
-  }*/
 
   async changeQuantity(product: Product) {
     const input = document.getElementById(product.id.toString()) as HTMLInputElement
@@ -175,6 +137,11 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async pay(method : string) {
+    if(this.shoppingCartProducts.length == 0)
+    {
+      alert("No hay nada que pagar, bobolón")
+      return
+    }
     for (const product of this.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
       if (newProduct) {
@@ -238,7 +205,7 @@ export class ShoppingCartComponent implements OnInit {
     localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
     if(showAlert)
     {
-      
+      alert("Uno o varios productos han sido eliminados por falta de stock") 
     }
   }
 

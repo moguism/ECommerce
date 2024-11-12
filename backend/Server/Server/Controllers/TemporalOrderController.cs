@@ -29,6 +29,25 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpGet]
+        public async Task<TemporalOrderDto> GetTemporalOrderById([FromQuery] int id)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return null;
+            }
+
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+            if(temporalOrder == null)
+            {
+                return null;
+            }
+
+            return _temporalOrderMapper.ToDto(temporalOrder);
+        }
+
+        [Authorize]
         [HttpPost]
         public async Task<TemporalOrderDto> CreateTemporalOrder()
         {
@@ -39,12 +58,14 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, false);
 
             if(cart == null)
             {
                 return null;
             }
+
+            cart = await _shoppingCartService.ChangeTemporalAttribute(cart, true); // Pone el carrito como temporal
 
             return await CreateTemporal(cart, user);
         }
@@ -59,7 +80,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart cart = await _shoppingCartService.CreateShoppingCart(user); // Le creo un nuevo carro, aunque quizás no es la mejor opción
+            ShoppingCart cart = await _shoppingCartService.CreateShoppingCart(user, true); // Le creo un nuevo carro, aunque quizás no es la mejor opción
             await _temporalOrderService.AddDirectTemporalOrder(cartContent, cart);
             return await CreateTemporal(cart, user);
         }
@@ -67,10 +88,10 @@ namespace Server.Controllers
         private async Task<TemporalOrderDto> CreateTemporal(ShoppingCart cart, User user)
         {
             TemporalOrder temporalOrder = new TemporalOrder();
-            temporalOrder.UserId = user.Id;
+            //temporalOrder.UserId = user.Id;
             temporalOrder.ShoppingCartId = cart.Id;
 
-            TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder);
+            TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder, user);
             return _temporalOrderMapper.ToDto(savedTemporalOrder);
         }
 
