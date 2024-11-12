@@ -172,6 +172,15 @@ export class ShoppingCartComponent implements OnInit {
         this.deleteFromArray(product)
       }
     }
+    if(this.apiService.jwt != "")
+    {
+      const result = await this.apiService.post("TemporalOrder")
+      console.log("ORDEN TEMPORAL: ", result)
+    }
+    else
+    {
+      // Redirigir
+    }
   }
 
   deleteFromArray(product: Product) {

@@ -19,10 +19,7 @@ namespace Server.Services
             ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             if (cart == null)
             {
-                cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-                await _unitOfWork.SaveAsync();
+                cart = await CreateShoppingCart(user);
             }
             
             await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
@@ -30,6 +27,15 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
 
 
+        }
+
+        public async Task<ShoppingCart> CreateShoppingCart(User user)
+        {
+            ShoppingCart cart = new ShoppingCart();
+            cart.UserId = user.Id;
+            cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+            await _unitOfWork.SaveAsync();
+            return cart;
         }
 
 
