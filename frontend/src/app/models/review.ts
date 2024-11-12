@@ -3,5 +3,6 @@ export interface Review {
     text: string,
     score: number,
     userId: number,
-    productId: number
+    productId: number,
+    dateTime: string
 }
