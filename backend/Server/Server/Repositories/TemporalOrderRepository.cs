@@ -14,6 +14,11 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
         return await GetQueryable().Include(temporalOrder => temporalOrder.ShoppingCart).FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
 
+    public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
+    {
+        return await GetQueryable().Where(temporalOrder => temporalOrder.ExpirationDate <= currentTime).ToListAsync();
+    }
+
     /*public async Task<TemporalOrder> AddDirectOrder(IEnumerable<CartContent> cartContents, ShoppingCart cart)
     {
         // Agrego todos los productos

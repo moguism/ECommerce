@@ -8,8 +8,6 @@ namespace Server.Repositories
     public class ShoppingCartRepository : Repository<ShoppingCart, int>
     {
 
-        UserRepository _userRepository;
-
         public ShoppingCartRepository(FarminhouseContext context) : base(context) 
         { 
         }
