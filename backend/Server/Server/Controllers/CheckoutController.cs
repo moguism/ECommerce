@@ -38,14 +38,13 @@ namespace Server.Controllers
         }
 
 
-        //Crea la sesión del pago
-        [Authorize]
-        [HttpGet("hosted")]
-        public async Task<ActionResult> HostedCheckout(CartContentDto[] cartContentDto)
+        //Iniciar Sesión de Pago (Modo Embebido)
+        [HttpGet("embedded")]
+        public async Task<ActionResult> EmbededCheckout(IEnumerable<CartContentDto> cartContentDto)
         {
-
             User user = await GetAuthorizedUser();
 
+            //Obtiene el contenido del carrito del usuario
             IEnumerable<CartContent> cartContents = await GetCartContent(cartContentDto, user);
 
             if (cartContents == null)
@@ -53,74 +52,43 @@ namespace Server.Controllers
                 return null;
             }
 
+            var lineItems = new List<SessionLineItemOptions>();
 
-            SessionCreateOptions options = new SessionCreateOptions
+            foreach (var cartContent in cartContents)
             {
-                UiMode = "hosted",
-                Mode = "payment",
-                PaymentMethodTypes = ["card"],
-                LineItems = new List<SessionLineItemOptions>
-            {
-                new SessionLineItemOptions()
+                // Crea un SessionLineItemOptions para cada producto en el carrito
+                var lineItem = new SessionLineItemOptions
                 {
-                    PriceData = new SessionLineItemPriceDataOptions()
+                    PriceData = new SessionLineItemPriceDataOptions
                     {
                         Currency = "eur",
-                        UnitAmount = (long)(product.Price * 100),
-                        ProductData = new SessionLineItemPriceDataProductDataOptions()
+                        UnitAmount = (long)(cartContent.Product.Price * 100), 
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
-                            Name = product.Name,
-                            Description = product.Description,
-                            Images = [product.ImageUrl]
+                            Name = cartContent.Product.Name,
+                            Description = cartContent.Product.Description,
+                            Images = new List<string> { cartContent.Product.Image }
                         }
                     },
-                    Quantity = 1,
-                },
-            },
-                CustomerEmail = "correo_cliente@correo.es",
-                SuccessUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}",
-                CancelUrl = _settings.ClientBaseUrl + "/checkout"
-            };
+                    Quantity = cartContent.Quantity
+                };
 
-            SessionService service = new SessionService();
-            Session session = await service.CreateAsync(options);
+                lineItems.Add(lineItem);
 
-            return Ok(new { sessionUrl = session.Url });
-        }
+            }
 
-
-        //Iniciar Sesión de Pago (Modo Embebido)
-        [HttpGet("embedded")]
-        public async Task<ActionResult> EmbededCheckout()
-        {
-            ProductDto product = GetProducts()[0];
-
+            // Configurar la sesión de pago con los LineItems del carrito
             SessionCreateOptions options = new SessionCreateOptions
             {
                 UiMode = "embedded",
                 Mode = "payment",
                 PaymentMethodTypes = ["card"],
-                LineItems = new List<SessionLineItemOptions>
-            {
-                new SessionLineItemOptions()
-                {
-                    PriceData = new SessionLineItemPriceDataOptions()
-                    {
-                        Currency = "eur",
-                        UnitAmount = (long)(product.Price * 100),
-                        ProductData = new SessionLineItemPriceDataProductDataOptions()
-                        {
-                            Name = product.Name,
-                            Description = product.Description,
-                            Images = [product.ImageUrl]
-                        }
-                    },
-                    Quantity = 1,
-                },
-            },
-                CustomerEmail = "correo_cliente@correo.es",
+                LineItems = lineItems, //Lista de productos del usuario
+                CustomerEmail = user.Email,
                 ReturnUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}",
             };
+
+           
 
             SessionService service = new SessionService();
             Session session = await service.CreateAsync(options);
