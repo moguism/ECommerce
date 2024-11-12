@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.ML;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
@@ -16,6 +17,9 @@ namespace Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
 
             // Add services to the container.
 

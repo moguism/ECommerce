@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
@@ -17,31 +17,35 @@ public class CheckoutController : ControllerBase
     private readonly Settings _settings;
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
+    // TODO: Quitar esto
+    private readonly UnitOfWork _unitOfWork;
 
-    public CheckoutController(Settings settings, CartContentMapper cartContentMapper, ShoppingCartService shoppingCartService)
+    public CheckoutController(Settings settings, CartContentMapper cartContentMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
     {
         _settings = settings;
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
+
+    /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
 
         if (user == null)
         {
             return null;
         }
 
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
 
         return _cartContentMapper.ToEntity(cartContentDtos, shoppingCart);
-    }
+    }*/
 
 
     //Iniciar Sesión de Pago (Modo Embebido)
     [Authorize]
-    [HttpGet("embedded")]
-    public async Task<ActionResult> EmbededCheckout(IEnumerable<CartContentDto> cartContentDto)
+    [HttpPost("embedded")]
+    public async Task<ActionResult> EmbededCheckout()
     {
         User user = await GetAuthorizedUser();
         if (user == null)
@@ -49,26 +53,28 @@ public class CheckoutController : ControllerBase
 
 
         //Obtiene el contenido del carrito del usuario
-        IEnumerable<CartContent> cartContents = await GetCartContent(cartContentDto, user);
+        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
+        IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
         if (cartContents == null || !cartContents.Any()) 
             return null;
 
         var lineItems = new List<SessionLineItemOptions>();
 
-        foreach (var cartContent in cartContents)
+        foreach (CartContent cartContent in cartContents)
         {
+            Product product = await _unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
             // Crea un SessionLineItemOptions para cada producto en el carrito
             var lineItem = new SessionLineItemOptions
             {
                 PriceData = new SessionLineItemPriceDataOptions
                 {
                     Currency = "eur",
-                    UnitAmount = (long)(cartContent.Product.Price * 100), 
+                    UnitAmount = (long)(product.Price * 100), 
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
-                        Name = cartContent.Product.Name,
-                        Description = cartContent.Product.Description,
-                        Images = new List<string> { cartContent.Product.Image }
+                        Name = product.Name,
+                        Description = product.Description,
+                        Images = new List<string> { product.Image }
                     }
                 },
                 Quantity = cartContent.Quantity
@@ -94,7 +100,9 @@ public class CheckoutController : ControllerBase
         SessionService service = new SessionService();
         Session session = await service.CreateAsync(options);
 
-        return Ok(new { clientSecret = session.ClientSecret });
+        //return Ok(new { clientSecret = session.ClientSecret });
+        return Ok(new { sessionId = session.Id });
+
     }
 
 
