@@ -7,6 +7,7 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { interval, Subscription } from 'rxjs';
+import { StripeService } from 'ngx-stripe';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -21,7 +22,7 @@ export class CheckoutComponent implements OnInit {
   private id: number = 0
   private method: string = ""
 
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private stripeService: StripeService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -56,6 +57,23 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.autoRefreshSubscription = this.startAutoRefresh();
+  }
+
+  async initiatePayment() {
+    //const response = await this.apiService.post('Checkout/embedded', this.shoppingCartProducts);
+    const response = await this.apiService.post('Checkout/embedded');
+    if(response.data == null) return;
+    const data : any = JSON.parse(response.data);
+    const sessionId = data.sessionId;
+
+    this.stripeService.redirectToCheckout({ sessionId })
+      .subscribe({
+        next: (result) => {
+          if (result.error) {
+            console.error('Error al redirigir a Stripe Checkout:', result.error.message);
+          }
+        }
+      });
   }
 
   totalprice() {

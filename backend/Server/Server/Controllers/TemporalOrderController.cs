@@ -97,7 +97,7 @@ namespace Server.Controllers
 
             TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
 
-            if (temporalOrder.ShoppingCart.UserId != user.Id)
+            if (temporalOrder == null || temporalOrder.ShoppingCart.UserId != user.Id)
             {
                 return;
             }
