@@ -58,6 +58,7 @@ namespace Server.Controllers
             User user = await GetAuthorizedUser();
             if (user == null)
             {
+                Console.WriteLine("No hay usuario");
                 return;
             }
 

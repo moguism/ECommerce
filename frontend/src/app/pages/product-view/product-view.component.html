@@ -46,6 +46,7 @@
                 @for (review of product.reviews; track review.id) 
                 {
                     <div class="review-users-opinion">
+                        <p>{{review.dateTime | date: 'short' : 'Europe/Madrid' : 'es'}}</p>
                         <h3><i class="fa-solid fa-star"></i>{{ review.score }}</h3>
                         <p class="review-users-opinion-text">{{review.text}}</p>
                     </div>

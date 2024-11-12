@@ -26,14 +26,13 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ShoppingCartDto> GetShoppingCart([FromQuery] bool isTemporal)
+        public async Task<ShoppingCartDto> GetShoppingCart()
         {
             User user = await GetAuthorizedUser();
             if (user == null)
             {
                 return null;
             }
-
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, isTemporal);
             if (shoppingCart == null)
             {

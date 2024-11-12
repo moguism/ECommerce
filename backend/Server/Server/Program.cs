@@ -198,7 +198,8 @@ namespace Server
                             UserId = user1.Id,
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
-                            User = user1
+                            User = user1,
+                            DateTime = "2024-11-12T14:49:21.039Z"
                         };
 
                         var review2 = new Review
@@ -208,7 +209,8 @@ namespace Server
                             UserId = user2.Id,
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
-                            User = user2
+                            User = user2,
+                            DateTime = "2024-11-12T14:49:21.039Z"
                         };
 
                         // Añadir reseñas al contexto de la base de datos
