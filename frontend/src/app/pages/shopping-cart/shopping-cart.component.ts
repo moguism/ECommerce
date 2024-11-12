@@ -10,6 +10,7 @@ import { CartContent } from '../../models/cart-content';
 import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -29,7 +30,7 @@ export class ShoppingCartComponent implements OnInit {
   querySelector: QuerySelector;
   
   // Estos servicios son para pruebas
-  constructor(private productService: ProductService, private apiService: ApiService) {
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {
     const FIRST_PAGE = 1;
     const PRODUCT_PER_PAGE = 5;
     //QuerySelector por defecto para pruebas
@@ -37,14 +38,28 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.getShoppingCart();
-    this.getAllProducts();
+    const goToCheckout = localStorage.getItem("goToCheckout")
+    if(this.apiService.jwt != "" && goToCheckout && goToCheckout == "true")
+    {
+      this.createDirectPayment();
+      localStorage.removeItem("goToCheckout")
+    }
+    else
+    {
+      this.getShoppingCart();
+      //this.getAllProducts();
+    }
   }
 
-  async getShoppingCart() {
+  getLocalStorageCart()
+  {
     this.shoppingCartProducts = [];
     const productsRaw = localStorage.getItem("shoppingCart");
     if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
+  }
+
+  async getShoppingCart() {
+    this.getLocalStorageCart();
 
     if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
       console.log("Sincronizando productos locales al carrito del backend...");
@@ -87,7 +102,7 @@ export class ShoppingCartComponent implements OnInit {
     }
   }
 
-  async getAllProducts() {
+  /*async getAllProducts() {
     const result = await this.productService.getAllProducts(this.querySelector);
     this.allProducts = result?.products;
   }
@@ -105,7 +120,7 @@ export class ShoppingCartComponent implements OnInit {
       await this.apiService.post("ShoppingCart/add", cartContent)
       this.getShoppingCart()
     }
-  }
+  }*/
 
   async changeQuantity(product: Product) {
     const input = document.getElementById(product.id.toString()) as HTMLInputElement
@@ -143,7 +158,7 @@ export class ShoppingCartComponent implements OnInit {
       }
 
       if (this.apiService.jwt == "") {
-        this.deleteFromArray(product)
+        this.deleteFromArray(product, false)
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })
@@ -159,35 +174,72 @@ export class ShoppingCartComponent implements OnInit {
     return product;
   }
 
-  async pay() {
+  async pay(method : string) {
     for (const product of this.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.deleteFromArray(product)
+          this.deleteFromArray(product, true)
+          return
         }
       }
       else {
-        this.deleteFromArray(product)
+        this.deleteFromArray(product, true)
+        return
       }
     }
+    localStorage.setItem("method", method)
     if(this.apiService.jwt != "")
     {
       const result = await this.apiService.post("TemporalOrder")
       console.log("ORDEN TEMPORAL: ", result)
+      this.goToCheckout(result)
     }
     else
     {
-      // Redirigir
+      localStorage.setItem("goToCheckout", "true")
+      this.router.navigateByUrl("login")
     }
   }
 
-  deleteFromArray(product: Product) {
+  // Esta función solo debería servir para el carrito local
+  async createDirectPayment()
+  {
+    this.getLocalStorageCart()
+    const cartContents : CartContent[] = []
+    for(const product of this.shoppingCartProducts)
+    {
+      const cartContent = new CartContent(product.total, product.id)
+      cartContents.push(cartContent)
+    }
+    const result = await this.apiService.post("TemporalOrder/direct", cartContents)
+    console.log("PAGO DIRECTO: ", result)
+    this.goToCheckout(result)
+  }
+
+  goToCheckout(result: any)
+  {
+    if(result.data)
+    {
+      const data = JSON.parse(result.data)
+      const url: string = "checkout/" + localStorage.getItem("method") + "/" +  data.id
+      this.router.navigateByUrl(url)
+    }
+    else
+    {
+      alert("Ha ocurrido un error")
+    }
+  }
+
+  deleteFromArray(product: Product, showAlert: boolean) {
     const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
     this.shoppingCartProducts.splice(index, 1);
     localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
-    //alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
+    if(showAlert)
+    {
+      
+    }
   }
 
   totalprice(){
