@@ -48,7 +48,7 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task RemoveExpiredOrders()
+        /*public async Task RemoveExpiredOrders()
         {
             List<TemporalOrder> expiredOrders = (List<TemporalOrder>) await _unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
 
@@ -58,7 +58,7 @@ namespace Server.Services
             }
 
             await _unitOfWork.SaveAsync();
-        }
+        }*/
 
         public async Task UpdateExpiration(TemporalOrder temporalOrder)
         {

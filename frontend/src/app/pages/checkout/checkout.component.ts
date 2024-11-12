@@ -67,11 +67,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   startAutoRefresh() {
-    // 300000 milisegundos son 5 minutos
-    return interval(300000).subscribe(() => {this.refreshOrder()});
+    // 120.000 milisegundos son 2 minutos
+    return interval(120000).subscribe(() => {this.refreshOrder()});
   }
 
   async refreshOrder() {
+    console.log("Mandando petición...")
     return await this.apiService.get("TemporalOrder/refresh", {"id" : this.id})
   }
 

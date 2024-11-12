@@ -72,7 +72,7 @@ namespace Server.Services
         }
 
 
-        public async Task<Review> RateReview(Review review)
+        public Review RateReview(Review review)
         {
             string finalText = Regex.Replace(review.Text, @"\s{2,}", " "); 
             finalText = _unitOfWork.ReviewRepository.DeleteAcents(finalText);
