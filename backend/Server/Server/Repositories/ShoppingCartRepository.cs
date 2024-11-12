@@ -8,14 +8,14 @@ namespace Server.Repositories
     public class ShoppingCartRepository : Repository<ShoppingCart, int>
     {
 
-        public ShoppingCartRepository(FarminhouseContext context) : base(context) 
-        { 
+        public ShoppingCartRepository(FarminhouseContext context) : base(context)
+        {
         }
 
 
-        public async Task<ShoppingCart> GetAllByUserIdAsync(int id)
+        public async Task<ShoppingCart> GetAllByUserIdAsync(int id, bool temporal)
         {
-            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id);
+            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id && cart.Temporal == temporal);
         }
 
 
@@ -29,9 +29,10 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync();
 
             //Si no existe, lo crea
-            if(existingShoppingCart == null)
+            if (existingShoppingCart == null)
             {
-                _context.ShoppingCart.Add(new ShoppingCart {
+                _context.ShoppingCart.Add(new ShoppingCart
+                {
                     UserId = user.Id,
                     User = user,
                 });
@@ -43,7 +44,7 @@ namespace Server.Repositories
 
         public void AddCartContent(ShoppingCart shoppingCart, CartContent cartContent)
         {
-            CartContent c =  shoppingCart.CartContent.Where(c => c.Id == cartContent.Id).FirstOrDefault();
+            CartContent c = shoppingCart.CartContent.Where(c => c.Id == cartContent.Id).FirstOrDefault();
 
             //Si el contenido del carrito del usuario no existe, lo añade
             if (c == null)
