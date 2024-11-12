@@ -16,11 +16,16 @@ namespace Server.Services
             _cartContentMapper = cartContentMapper;
         }
 
-        public async Task<TemporalOrder> CreateTemporalOrder(TemporalOrder temporalOrder)
+        public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
+        {
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
+        }
+
+        public async Task<TemporalOrder> CreateTemporalOrder(TemporalOrder temporalOrder, User user)
         {
             TemporalOrder savedTemporalOrder = await _unitOfWork.TemporalOrderRepository.InsertAsync(temporalOrder);
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(savedTemporalOrder.UserId);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, true);
             List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
             foreach(CartContent cartContent in cartContents)
             {

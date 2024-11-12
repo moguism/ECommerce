@@ -1,1 +1,36 @@
-<p>checkout works!</p>
+<app-header></app-header>
+<app-header-shop></app-header-shop>
+<div class="main">
+    <div class="information">
+        <div class="basket">
+            <h2>Mi carrito</h2>
+            <h4>{{shoppingCartProducts.length}} articulos</h4>
+            @for (product of shoppingCartProducts; track product.id){
+            <div class="basket-products">
+                <img class="basket-products-image" [src]="product.image" alt="">
+                <div class="basket-products-information">
+                    <div class="basket-products-information-functions">
+                        <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
+                        <h5 class="basket-products-information-functions-title">{{ product.total }}</h5>
+                    </div>
+                    <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
+                    <h3>Precio por kg {{product.price | eurosToCents}}</h3>
+                </div>
+            </div>
+            }
+            @empty 
+            {
+             <p>No hay productos en el carrito</p>
+            }
+        </div>
+        <div class="final-price">
+            <h3>Resumen</h3>
+            <div class="final-price-price">
+                <h3>Total:</h3>
+                <h3>{{totalprice()| eurosToCents}}</h3>
+            </div>
+            
+            <hr>            
+        </div>
+    </div>
+</div>
