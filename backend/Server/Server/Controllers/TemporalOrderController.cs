@@ -16,19 +16,21 @@ namespace Server.Controllers
     {
 
         private readonly ShoppingCartMapper _shoppingCartMapper;
+        private readonly TemporalOrderMapper _temporalOrderMapper;
         private readonly ShoppingCartService _shoppingCartService;
         private readonly TemporalOrderService _temporalOrderService;
 
-        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, TemporalOrderService temporalOrderService, ShoppingCartService shoppingCartService)
+        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, TemporalOrderService temporalOrderService, ShoppingCartService shoppingCartService, TemporalOrderMapper temporalOrderMapper)
         {
             _shoppingCartMapper = shoppingCartMapper;
             _temporalOrderService = temporalOrderService;
             _shoppingCartService = shoppingCartService;
+            _temporalOrderMapper = temporalOrderMapper;
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<TemporalOrder> CreateTemporalOrder()
+        public async Task<TemporalOrderDto> CreateTemporalOrder()
         {
 
             User user = await GetAuthorizedUser();
@@ -39,12 +41,37 @@ namespace Server.Controllers
 
             ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
+            if(cart == null)
+            {
+                return null;
+            }
+
+            return await CreateTemporal(cart, user);
+        }
+
+        [Authorize]
+        [HttpPost("direct")]
+        public async Task<TemporalOrderDto> CreateDirectTemporalOrder([FromBody] IEnumerable<CartContentDto> cartContent) // Le paso un array de contenido de carrito porque habrá varios productos
+        {
+            User user = await GetAuthorizedUser();
+            if(user == null)
+            {
+                return null;
+            }
+
+            ShoppingCart cart = await _shoppingCartService.CreateShoppingCart(user); // Le creo un nuevo carro, aunque quizás no es la mejor opción
+            await _temporalOrderService.AddDirectTemporalOrder(cartContent, cart);
+            return await CreateTemporal(cart, user);
+        }
+
+        private async Task<TemporalOrderDto> CreateTemporal(ShoppingCart cart, User user)
+        {
             TemporalOrder temporalOrder = new TemporalOrder();
             temporalOrder.UserId = user.Id;
             temporalOrder.ShoppingCartId = cart.Id;
 
             TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder);
-            return savedTemporalOrder;
+            return _temporalOrderMapper.ToDto(savedTemporalOrder);
         }
 
         private async Task<User> GetAuthorizedUser()
