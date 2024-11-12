@@ -121,7 +121,13 @@ export class ProductViewComponent implements OnInit {
   }
 
   sumar() {
-    this.count++;
+    if(this.product)
+    {
+      if(this.count + 1 <= this.product?.stock)
+      {
+        this.count++;
+      }
+    }
   }
   restar() {
     if (this.count > 0) {
@@ -145,8 +151,16 @@ export class ProductViewComponent implements OnInit {
         {
           allProducts = JSON.parse(productsLocalStore)
           const index = allProducts.findIndex(p => p.id === product.id);
-          const newProduct = allProducts[index]
-          newProduct.total += this.count
+          let newProduct = product
+          if(index != -1)
+          {
+            newProduct = allProducts[index]
+            newProduct.total += this.count
+          }
+          else
+          {
+            newProduct.total = 1
+          }
         }
         else
         {
@@ -161,6 +175,7 @@ export class ProductViewComponent implements OnInit {
       const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
       await this.apiService.post("ShoppingCart/add", cartContent)
     }
+    alert("Producto añadido al carrito correctamente")
   }
 
   ngOnDestroy(): void {

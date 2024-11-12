@@ -1,49 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
-import { OrdinationDirection } from '../../models/enums/ordination-direction';
-import { OrdinationType } from '../../models/enums/ordination-type';
-import { ProductType } from '../../models/enums/product-type';
-import { QuerySelector } from '../../models/query-selector';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
 import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { FormsModule } from '@angular/forms';
+import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderShopComponent, FormsModule],
+  imports: [HeaderShopComponent, FormsModule,EurosToCentsPipe],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
 export class ShoppingCartComponent implements OnInit {
-  /*numOfTotalProducts = 0;
-  totalPrice = 0.0;
-  totalProducts : Product[] = []
-  numOfIndividualProduct = 0*/
-
   shoppingCartProducts: Product[] = []
-  allProducts: Product[] | null | undefined = []
-  querySelector: QuerySelector;
   
-  // Estos servicios son para pruebas
-  constructor(private productService: ProductService, private apiService: ApiService) {
-    const FIRST_PAGE = 1;
-    const PRODUCT_PER_PAGE = 5;
-    //QuerySelector por defecto para pruebas
-    this.querySelector = new QuerySelector(ProductType.FRUITS, OrdinationType.NAME, OrdinationDirection.ASC, PRODUCT_PER_PAGE, FIRST_PAGE, "");
-  }
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
-    this.getShoppingCart();
-    this.getAllProducts();
+    const goToCheckout = localStorage.getItem("goToCheckout")
+    if(this.apiService.jwt != "" && goToCheckout && goToCheckout == "true")
+    {
+      this.createDirectPayment();
+      localStorage.removeItem("goToCheckout")
+    }
+    else
+    {
+      this.getShoppingCart();
+    }
   }
 
-  async getShoppingCart() {
+  getLocalStorageCart()
+  {
     this.shoppingCartProducts = [];
     const productsRaw = localStorage.getItem("shoppingCart");
     if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
+  }
+
+  async getShoppingCart() {
+    this.getLocalStorageCart();
 
     if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
       console.log("Sincronizando productos locales al carrito del backend...");
@@ -58,7 +56,7 @@ export class ShoppingCartComponent implements OnInit {
     }
   
     if (this.apiService.jwt !== "") {
-      const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      const result = await this.apiService.get("ShoppingCart", {"isTemporal" : false}, 'json');
       if (result.data) {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
@@ -83,26 +81,6 @@ export class ShoppingCartComponent implements OnInit {
         }
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
-    }
-  }
-
-  async getAllProducts() {
-    const result = await this.productService.getAllProducts(this.querySelector);
-    this.allProducts = result?.products;
-  }
-
-  // ESTO HABRÁ QUE BORRARLO
-  async addProductToCart(product: Product) {
-    if (this.apiService.jwt == "") {
-      product.total = 1
-      this.shoppingCartProducts.push(product)
-      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
-    }
-    else {
-      localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(1, product.id)
-      await this.apiService.post("ShoppingCart/add", cartContent)
-      this.getShoppingCart()
     }
   }
 
@@ -135,14 +113,14 @@ export class ShoppingCartComponent implements OnInit {
     if (index !== -1) {
       const product = this.shoppingCartProducts[index];
 
-      /*if (product.total > 1) {
+      if (product.total > 1) {
         product.total -= 1;
       } else {
         this.shoppingCartProducts.splice(index, 1);
-      }*/
+      }
 
       if (this.apiService.jwt == "") {
-        this.deleteFromArray(product)
+        this.deleteFromArray(product, false)
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })
@@ -158,26 +136,85 @@ export class ShoppingCartComponent implements OnInit {
     return product;
   }
 
-  async pay() {
+  async pay(method : string) {
+    if(this.shoppingCartProducts.length == 0)
+    {
+      alert("No hay nada que pagar, bobolón")
+      return
+    }
     for (const product of this.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.deleteProduct(product.id)
+          this.deleteFromArray(product, true)
+          return
         }
       }
       else {
-        this.deleteFromArray(product)
+        this.deleteFromArray(product, true)
+        return
       }
+    }
+    localStorage.setItem("method", method)
+    if(this.apiService.jwt != "")
+    {
+      const result = await this.apiService.post("TemporalOrder")
+      console.log("ORDEN TEMPORAL: ", result)
+      this.goToCheckout(result)
+    }
+    else
+    {
+      localStorage.setItem("goToCheckout", "true")
+      this.router.navigateByUrl("login")
     }
   }
 
-  deleteFromArray(product: Product) {
+  // Esta función solo debería servir para el carrito local
+  async createDirectPayment()
+  {
+    this.getLocalStorageCart()
+    const cartContents : CartContent[] = []
+    for(const product of this.shoppingCartProducts)
+    {
+      const cartContent = new CartContent(product.total, product.id)
+      cartContents.push(cartContent)
+    }
+    const result = await this.apiService.post("TemporalOrder/direct", cartContents)
+    console.log("PAGO DIRECTO: ", result)
+    this.goToCheckout(result)
+  }
+
+  goToCheckout(result: any)
+  {
+    if(result.data)
+    {
+      const data = JSON.parse(result.data)
+      const url: string = "checkout/" + localStorage.getItem("method") + "/" +  data.id
+      this.router.navigateByUrl(url)
+    }
+    else
+    {
+      alert("Ha ocurrido un error")
+    }
+  }
+
+  deleteFromArray(product: Product, showAlert: boolean) {
     const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
     this.shoppingCartProducts.splice(index, 1);
     localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
-    //alert("Uno o más productos han sido eliminados del carrrito por falta de stock");
+    if(showAlert)
+    {
+      alert("Uno o varios productos han sido eliminados por falta de stock") 
+    }
+  }
+
+  totalprice(){
+    let totalcount=0;
+    for(const product of this.shoppingCartProducts){
+      totalcount+=product.total*product.price;
+    }
+    return totalcount;
   }
 
 }
