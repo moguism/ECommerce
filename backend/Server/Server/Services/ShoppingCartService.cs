@@ -42,15 +42,15 @@ namespace Server.Services
 
         public async Task RemoveProductFromShoppingCart(User user, int productId, bool temporal)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, temporal);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
             await _unitOfWork.SaveAsync();
         }
 
 
-        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id, bool temporal)
+        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id, temporal);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
 
             if (shoppingCart == null)
             {
