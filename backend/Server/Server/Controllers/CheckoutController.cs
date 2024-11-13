@@ -21,7 +21,7 @@ public class CheckoutController : ControllerBase
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
     private readonly UnitOfWork _unitOfWork;
-    private readonly string secret = "wh";
+    private readonly string secret = "wh"; // AQUÍ VA CLAVE
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
     {
@@ -119,12 +119,12 @@ public class CheckoutController : ControllerBase
 
         if(mode.Equals("embedded"))
         {
-            options.ReturnUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}";
+            options.ReturnUrl = _settings.ClientBaseUrl + "/after-checkout?session_id={CHECKOUT_SESSION_ID}";
         }
         else
         {
-            options.SuccessUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}";
-            options.CancelUrl = _settings.ClientBaseUrl + "/checkout";
+            options.SuccessUrl = _settings.ClientBaseUrl + "/-after-checkout?session_id={CHECKOUT_SESSION_ID}";
+            options.CancelUrl = _settings.ClientBaseUrl + "/after-checkout";
         }
 
         SessionService service = new SessionService();
