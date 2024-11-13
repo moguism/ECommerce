@@ -111,6 +111,7 @@ namespace Server.Controllers
             //temporalOrder.UserId = user.Id;
             temporalOrder.ShoppingCartId = cart.Id;
             temporalOrder.ExpirationDate = DateTime.UtcNow;
+            temporalOrder.Finished = false;
 
             TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder, user);
             return _temporalOrderMapper.ToDto(savedTemporalOrder);
