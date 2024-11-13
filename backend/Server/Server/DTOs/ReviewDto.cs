@@ -9,5 +9,5 @@ public class ReviewDto
 
     public int ProductId { get; set; }
 
-    public string DateTime { get; set; }
+    public DateTime DateTime { get; set; }
 }

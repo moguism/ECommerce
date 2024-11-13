@@ -4,5 +4,5 @@ export interface Review {
     score: number,
     userId: number,
     productId: number,
-    dateTime: string
+    dateTime: Date
 }

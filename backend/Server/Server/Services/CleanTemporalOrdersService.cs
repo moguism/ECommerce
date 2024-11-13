@@ -4,9 +4,7 @@ namespace Server.Services;
 
 public class CleanTemporalOrdersService : BackgroundService
 {
-    // TODO: AHORA MISMO NO FUNCIONA BIEN
-
-    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(1);
+    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(5);
 
     /*public CleanTemporalOrdersService(TemporalOrderService temporalOrderService)
     {
@@ -15,7 +13,7 @@ public class CleanTemporalOrdersService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        FarminhouseContext farminhouseContext = new FarminhouseContext();
+        /*FarminhouseContext farminhouseContext = new FarminhouseContext();
         UnitOfWork unitOfWork = new UnitOfWork(farminhouseContext);
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -42,6 +40,6 @@ public class CleanTemporalOrdersService : BackgroundService
             await unitOfWork.SaveAsync();
 
             await Task.Delay(_cleanupInterval, stoppingToken);
-        }
+        }*/
     }
 }

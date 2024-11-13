@@ -66,6 +66,7 @@ namespace Server.Controllers
             review = _reviewService.RateReview(review);
             //Aï¿½ade el usuario
             review.UserId = user.Id;
+            review.DateTime = DateTime.UtcNow;
             //review.User = user;
 
             //guarda la review con todos los datos
