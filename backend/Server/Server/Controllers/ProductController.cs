@@ -56,6 +56,14 @@ namespace Server.Controllers
         public async Task<Product> GetProductById(int id)
         {
             Product product = await _unitOfWork.ProductRepository.GetFullProductById(id);
+            foreach (Review review in product.Reviews)
+            {
+                User user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
+                review.User = new User()
+                {
+                    Name = user.Name
+                };
+            }
             return _productMapper.AddCorrectPath(product);
         }
        
