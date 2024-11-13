@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -17,7 +17,7 @@ import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/s
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
   shoppingCartProducts: Product[] = []
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
@@ -28,6 +28,10 @@ export class CheckoutComponent implements OnInit {
   stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
 
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private stripeService: StripeService) {
+  }
+  
+  ngOnDestroy(): void {
+    this.autoRefreshSubscription?.unsubscribe();
   }
 
   async ngOnInit(): Promise<void> {
