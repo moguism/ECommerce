@@ -130,7 +130,7 @@ export class CheckoutComponent implements OnInit {
 
   startAutoRefresh() {
     // 120.000 milisegundos son 2 minutos
-    return interval(120000).subscribe(() => {this.refreshOrder()});
+    return interval(30000).subscribe(() => {this.refreshOrder()});
   }
 
   async refreshOrder() {

@@ -9,11 +9,12 @@ public class Order
 
     public DateTime CreatedAt { get; set; }
 
-    public decimal Total { get; set; }
-    public int UserId { get; set; }
-    public int PaymentTypeId { get; set; }
+    //public decimal Total { get; set; }
+    //public int UserId { get; set; }
+    //public int PaymentTypeId { get; set; }
+    //public int ShoppingCartId { get; set; }
     public int TemporalOrderId { get; set; }
-    public int ShoppingCartId { get; set; }
 
+    public TemporalOrder TemporalOrder { get; set; }
 
 }
