@@ -22,7 +22,7 @@
 }
 .basket-products{
     display: flex;
-    background-color: black;
+    background-color: white;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
@@ -46,23 +46,13 @@
     gap: 20px;
 }
 .basket-products-information-functions-title{
-    color: white;
     width: 100%;
 }
 .basket-products-information-functions-input{
     width: 50%;
 }
-h3{
-    color: white;
-}
-h2{
-    color: white;
-}
-h4{
-    color: white;
-}
 .final-price{
-    background-color: black;
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-around;

@@ -11,7 +11,7 @@
                     <div class="basket-products-information-functions">
                         <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
                         <button (click)="deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
-                         <button (click)="changeQuantity(product)">Cambiar cantidad</button>
+                        <button (click)="changeQuantity(product)">Cambiar cantidad</button>
                         <input class="basket-products-information-functions-input" [id]="product.id" type="number" [placeholder]="product.total">
                     </div>
                     <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
@@ -21,7 +21,7 @@
             }
             @empty 
             {
-             <p>No hay productos en el carrito</p>
+            <p>No hay productos en el carrito</p>
             }
         </div>
         <div class="final-price">

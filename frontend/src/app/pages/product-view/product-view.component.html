@@ -13,6 +13,7 @@
         
                 <div class="products-description">
                     <h2 class="products-description-title">{{ product.name }}</h2>
+                    <h3 class="products-description-description">{{ product.description }}</h3>
                     <div class="products-description-price">
                         <h2>{{ product.price}}</h2>
                         <h2 class="stock">Stock: {{ product.stock}}</h2>
@@ -24,15 +25,12 @@
                             <p class="count">{{count}}</p>
                             <button class="button-mas" (click)="sumar()">+</button>
                         </div>
-                        <div class="image-anadir-carrito">
+                        <div class="products-description-anadir">
                             <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
                         </div>
                     }
                 </div>
             </div>
-        </div>
-        <div class="description">
-            <p class="description-text">{{ product.description }}</p>
         </div>
 
         
