@@ -23,6 +23,18 @@ public class CleanTemporalOrdersService : BackgroundService
             foreach (TemporalOrder temporalOrder in expiredOrders)
             {
                 unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+                
+                ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetFullByIdAsync(temporalOrder.ShoppingCartId);
+                cart.Temporal = false;
+                unitOfWork.ShoppingCartRepository.Update(cart);
+
+                List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
+                foreach (CartContent cartContent in cartContents)
+                {
+                    Product product = await unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
+                    product.Stock += cartContent.Quantity;
+                    unitOfWork.ProductRepository.Update(product);
+                }
             }
 
             await unitOfWork.SaveAsync();

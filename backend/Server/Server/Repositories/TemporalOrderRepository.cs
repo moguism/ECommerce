@@ -11,12 +11,12 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
 
     public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
     {
-        return await GetQueryable().Include(temporalOrder => temporalOrder.ShoppingCart).FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
+        return await GetQueryable().Include(temporalOrder => temporalOrder.ShoppingCart).FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id && temporalOrder.Finished == false);
     }
 
     public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
     {
-        return await GetQueryable().Where(temporalOrder => temporalOrder.ExpirationDate <= currentTime).ToListAsync();
+        return await GetQueryable().Where(temporalOrder => temporalOrder.Finished == false && temporalOrder.ExpirationDate <= currentTime).ToListAsync();
     }
 
     /*public async Task<TemporalOrder> AddDirectOrder(IEnumerable<CartContent> cartContents, ShoppingCart cart)

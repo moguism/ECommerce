@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { interval, Subscription } from 'rxjs';
 import { StripeService } from 'ngx-stripe';
+import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -21,6 +22,10 @@ export class CheckoutComponent implements OnInit {
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
   private method: string = ""
+  
+  @ViewChild('checkoutDialog')
+  checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
+  stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
 
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private stripeService: StripeService) {
   }
@@ -59,7 +64,7 @@ export class CheckoutComponent implements OnInit {
     this.autoRefreshSubscription = this.startAutoRefresh();
   }
 
-  async initiatePayment() {
+  /*async initiatePayment() {
     //const response = await this.apiService.post('Checkout/embedded', this.shoppingCartProducts);
     const response = await this.apiService.post('Checkout/embedded');
     if(response.data == null) return;
@@ -74,6 +79,45 @@ export class CheckoutComponent implements OnInit {
           }
         }
       });
+  }*/
+
+  async embeddedCheckout() {
+    const request = await this.apiService.post('Checkout/embedded');
+
+    if (request.success && request.data) {
+      const data : any = JSON.parse(request.data)
+      const options: StripeEmbeddedCheckoutOptions = {
+        clientSecret: data.clientSecret
+      };
+
+      this.stripeService.initEmbeddedCheckout(options)
+        .subscribe((checkout) => {
+          this.stripeEmbedCheckout = checkout;
+          checkout.mount('#checkout');
+          if(this.checkoutDialogRef)
+          {
+            this.checkoutDialogRef.nativeElement.showModal();
+          }
+        });
+      }
+  }
+
+  async hostedCheckout() {
+    const request = await this.apiService.post('Checkout/hosted');
+
+    if (request.success && request.data) {
+      const data : any = JSON.parse(request.data)
+      // Abrimos la url de la session de stripe sin crear una nueva pestaña en el navegador 
+      window.open(data.sessionUrl, '_self');
+    }
+  }
+
+  cancelCheckoutDialog() {
+    if(this.stripeEmbedCheckout && this.checkoutDialogRef)
+    {
+      this.stripeEmbedCheckout.destroy();
+      this.checkoutDialogRef.nativeElement.close();
+    }
   }
 
   totalprice() {

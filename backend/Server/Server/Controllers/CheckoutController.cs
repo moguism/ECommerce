@@ -51,11 +51,31 @@ public class CheckoutController : ControllerBase
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
+        Session session = await GetOptions(user, "embedded");
 
-        //Obtiene el contenido del carrito del usuario
+        return Ok(new { clientSecret = session.ClientSecret });
+        //return Ok(new { sessionId = session.Id });
+
+    }
+
+    [HttpPost("hosted")]
+    public async Task<ActionResult> HostedCheckout()
+    {
+        User user = await GetAuthorizedUser();
+        if (user == null)
+            Unauthorized("Usuario no autenticado.");
+
+
+        Session session = await GetOptions(user, "hosted");
+
+        return Ok(new { sessionUrl = session.Url });
+    }
+
+    private async Task<Session> GetOptions(User user, string mode)
+    {
         ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
         IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
-        if (cartContents == null || !cartContents.Any()) 
+        if (cartContents == null || !cartContents.Any())
             return null;
 
         var lineItems = new List<SessionLineItemOptions>();
@@ -69,7 +89,7 @@ public class CheckoutController : ControllerBase
                 PriceData = new SessionLineItemPriceDataOptions
                 {
                     Currency = "eur",
-                    UnitAmount = (long)(product.Price), 
+                    UnitAmount = (long)(product.Price),
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
                         Name = product.Name,
@@ -87,25 +107,27 @@ public class CheckoutController : ControllerBase
         // Configurar la sesión de pago con los LineItems del carrito
         SessionCreateOptions options = new SessionCreateOptions
         {
-            UiMode = "embedded",
+            UiMode = mode,
             Mode = "payment",
             PaymentMethodTypes = ["card"],
             LineItems = lineItems, //Lista de productos del usuario
-            CustomerEmail = user.Email,
-            ReturnUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}",
+            CustomerEmail = user.Email
         };
 
-       
+        if(mode.Equals("embedded"))
+        {
+            options.ReturnUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}";
+        }
+        else
+        {
+            options.SuccessUrl = _settings.ClientBaseUrl + "/checkout?session_id={CHECKOUT_SESSION_ID}";
+            options.CancelUrl = _settings.ClientBaseUrl + "/checkout";
+        }
 
         SessionService service = new SessionService();
         Session session = await service.CreateAsync(options);
-
-        //return Ok(new { clientSecret = session.ClientSecret });
-        return Ok(new { sessionId = session.Id });
-
+        return session;
     }
-
-
 
     //Verifica el estado de la sesión
     [HttpGet("status/{sessionId}")]

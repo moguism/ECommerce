@@ -18,6 +18,11 @@ namespace Server.Repositories
             return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id && cart.Temporal == temporal);
         }
 
+        public async Task<ShoppingCart> GetFullByIdAsync(int id)
+        {
+            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.Id == id);
+        }
+
 
         //Método que añade un nuevo carrito a un usuario si no tenía
         //Devuelve True si tenía carrito, False si no
