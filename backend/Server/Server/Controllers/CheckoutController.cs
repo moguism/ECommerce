@@ -5,6 +5,7 @@ using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
 using Server.Services;
+using Stripe;
 using Stripe.Checkout;
 
 namespace Server.Controllers;
@@ -14,11 +15,13 @@ namespace Server.Controllers;
 public class CheckoutController : ControllerBase
 {
 
+    // TODO: QUITAR LA UNIT OF WORK
+
     private readonly Settings _settings;
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
-    // TODO: Quitar esto
     private readonly UnitOfWork _unitOfWork;
+    private readonly string secret = "wh";
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
     {
@@ -82,7 +85,7 @@ public class CheckoutController : ControllerBase
 
         foreach (CartContent cartContent in cartContents)
         {
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
+            var product = await _unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
             // Crea un SessionLineItemOptions para cada producto en el carrito
             var lineItem = new SessionLineItemOptions
             {
@@ -137,6 +140,65 @@ public class CheckoutController : ControllerBase
         Session session = await sessionService.GetAsync(sessionId);
 
         return Ok(new { status = session.Status, customerEmail = session.CustomerEmail });
+    }
+
+    [HttpPost("webhook")]
+    public async Task<IActionResult> Index()
+    {
+        // Pilla lo que le han mandado por la solicitud
+        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+        try
+        {
+            // Para que no venga un ruso a hackear el back y leakear info, verifica que viene desde Stripe
+            var stripeEvent = EventUtility.ConstructEvent(
+                json,
+                Request.Headers["Stripe-Signature"],
+                secret
+            );
+
+            // Si el pago ha sido correcto...
+            if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted || stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentSucceeded)
+            {
+                // ... extraigo la sesión para poder manipularla
+                var session = stripeEvent.Data.Object as Session;
+
+                await CompletePayment(session);
+            }
+
+            return Ok();
+        }
+        catch (StripeException)
+        {
+            Console.WriteLine("Algo ha fallado :(");
+            return BadRequest();
+        }
+    }
+
+    private async Task CompletePayment(Session session)
+    {
+        User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
+        
+        ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
+        if(cart.TemporalOrders.Count() == 0 || cart.TemporalOrders.Count() > 1)
+        {
+            throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
+        }
+        cart.Finished = true;
+        _unitOfWork.ShoppingCartRepository.Update(cart);
+
+        TemporalOrder temporalOrder = cart.TemporalOrders.First();
+        temporalOrder.Finished = true;
+        temporalOrder.PaymentTypeId = 1; // El pago con tarjeta
+        _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
+
+        Order order = new Order();
+        order.TemporalOrderId = temporalOrder.Id;
+        order.CreatedAt = DateTime.UtcNow;
+        // Quizás también deberíamos de guardar el total, pero por ahora no lo hago porque en el front tenemos métodos para eso
+        await _unitOfWork.OrderRepository.InsertAsync(order);
+
+        await _unitOfWork.SaveAsync();
     }
 
 

@@ -12,7 +12,7 @@ public class OrderRepository : Repository<Order, int>
     public async Task<ICollection<Order>> GetAllWithFullDataAsync()
     {
         return await GetQueryable()
-            .Include(order => order.UserId)
+            //.Include(order => order.UserId)
             .ToArrayAsync();
     }
 
@@ -20,7 +20,7 @@ public class OrderRepository : Repository<Order, int>
     {
         // "FirstOrDefaultAsync" DEVUELVE NULO SI NO EXISTE
         Order order = await GetQueryable()
-            .Include(order => order.UserId)
+            //.Include(order => order.UserId)
             .FirstOrDefaultAsync(order => order.Id == id);
         return order;
     }

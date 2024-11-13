@@ -10,6 +10,7 @@ namespace Server.Models
         public bool Temporal { get; set; }
         public ICollection<CartContent> CartContent { get; set; } = new List<CartContent>();
         public ICollection<TemporalOrder> TemporalOrders { get; set; } = new List<TemporalOrder>();
+        public bool Finished { get; set; }
 
     }
 }

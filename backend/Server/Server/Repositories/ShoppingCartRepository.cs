@@ -15,12 +15,12 @@ namespace Server.Repositories
 
         public async Task<ShoppingCart> GetAllByUserIdAsync(int id, bool temporal)
         {
-            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id && cart.Temporal == temporal);
+            return await GetQueryable().Include(cart => cart.CartContent).Include(cart => cart.TemporalOrders).FirstOrDefaultAsync(cart => cart.UserId == id && cart.Temporal == temporal && cart.Finished == false);
         }
 
         public async Task<ShoppingCart> GetFullByIdAsync(int id)
         {
-            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.Id == id);
+            return await GetQueryable().Include(cart => cart.CartContent).Include(cart => cart.CartContent).Include(cart => cart.TemporalOrders).FirstOrDefaultAsync(cart => cart.Id == id && cart.Finished == false);
         }
 
 

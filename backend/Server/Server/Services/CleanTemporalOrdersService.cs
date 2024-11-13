@@ -4,7 +4,9 @@ namespace Server.Services;
 
 public class CleanTemporalOrdersService : BackgroundService
 {
-    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(5);
+    // TODO: AHORA MISMO NO FUNCIONA BIEN
+
+    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(1);
 
     /*public CleanTemporalOrdersService(TemporalOrderService temporalOrderService)
     {
