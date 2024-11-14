@@ -91,6 +91,32 @@ hr{
     flex-direction: row;
     align-items: center;
 }
+.button-menos{
+    background-color: green;
+    width: 25%;
+    height: 38%;
+    border:1px solid black;
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+    cursor: pointer;
+}
+.count{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    height: 34%;
+    width: 25%;
+}
+.button-mas{
+    background-color: green;
+    width: 25%;
+    height: 38%;
+    border: 1px solid black;
+    border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%;
+    cursor: pointer;
+}
 /*responsive*/
 @media (max-width: 1120px){
     .information{

@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 })
 export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
+  protected count = 0;
   
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {}
 
@@ -215,6 +216,16 @@ export class ShoppingCartComponent implements OnInit {
       totalcount+=product.total*product.price;
     }
     return totalcount;
+  }
+  sumar(index: number) {
+    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
+    this.shoppingCartProducts[quantity].total++;
+  }
+  restar(index: number) {
+    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
+    if(this.shoppingCartProducts[quantity].total>0){
+      this.shoppingCartProducts[quantity].total--;
+    }
   }
 
 }
