@@ -72,14 +72,23 @@ namespace Server.Services
         }
 
 
-        public async Task<Review> RateReview(Review review)
+        public Review RateReview(Review review)
         {
             string finalText = Regex.Replace(review.Text, @"\s{2,}", " "); 
             finalText = _unitOfWork.ReviewRepository.DeleteAcents(finalText);
             ModelInput modelInput = new ModelInput { Text = finalText };
             ModelOutput modelOutput = Predict(finalText);
 
-            review.Score = (int)modelOutput.PredictedLabel;
+            if ((int)modelOutput.PredictedLabel == -1)
+            {
+                review.Score = 1;
+            } else if ((int)modelOutput.PredictedLabel == 0) { 
+                review.Score = 3;
+            } else
+            {
+                review.Score = 5;
+            }
+            
 
             //Almacena el producto como objeto por su ID
             //review.Product = await _unitOfWork.ProductRepository.GetFullProductById(review.ProductId);

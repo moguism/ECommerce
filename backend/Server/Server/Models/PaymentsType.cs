@@ -8,4 +8,6 @@ public class PaymentsType
     public string Name { get; set; }
 
     public int Id { get; set; }
+
+    public ICollection<TemporalOrder> TemporalOrders { get; set; } = new List<TemporalOrder>();
 }

@@ -85,11 +85,33 @@ namespace Server.Controllers
             return await CreateTemporal(cart, user);
         }
 
+        [Authorize]
+        [HttpGet("refresh")]
+        public async Task RefreshTemporalOrder([FromQuery] int id)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+
+            if (temporalOrder == null || temporalOrder.ShoppingCart.UserId != user.Id)
+            {
+                return;
+            }
+
+            await _temporalOrderService.UpdateExpiration(temporalOrder);
+        }
+
         private async Task<TemporalOrderDto> CreateTemporal(ShoppingCart cart, User user)
         {
             TemporalOrder temporalOrder = new TemporalOrder();
             //temporalOrder.UserId = user.Id;
             temporalOrder.ShoppingCartId = cart.Id;
+            temporalOrder.ExpirationDate = DateTime.UtcNow;
+            temporalOrder.Finished = false;
 
             TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder, user);
             return _temporalOrderMapper.ToDto(savedTemporalOrder);

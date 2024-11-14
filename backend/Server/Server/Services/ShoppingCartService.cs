@@ -9,7 +9,7 @@ namespace Server.Services
 
         UnitOfWork _unitOfWork;
 
-        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
+        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper)
         {
             _unitOfWork = unitOfWork;
         }
@@ -21,7 +21,7 @@ namespace Server.Services
             {
                 cart = await CreateShoppingCart(user, false);
             }
-            
+
             await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
 
             await _unitOfWork.SaveAsync();
@@ -42,15 +42,15 @@ namespace Server.Services
 
         public async Task RemoveProductFromShoppingCart(User user, int productId, bool temporal)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, temporal);
             await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
             await _unitOfWork.SaveAsync();
         }
 
 
-        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
+        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id, bool temporal)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id, temporal);
 
             if (shoppingCart == null)
             {
@@ -59,7 +59,7 @@ namespace Server.Services
 
             return shoppingCart;
         }
-        
+
         public async Task<User> GetUserFromDbByStringId(string stringId)
         {
 

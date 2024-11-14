@@ -9,11 +9,13 @@ namespace Server.Services
 
         private readonly UnitOfWork _unitOfWork;
         private readonly CartContentMapper _cartContentMapper;
+        private readonly IServiceProvider _serviceProvider;
 
-        public TemporalOrderService(UnitOfWork unitOfWork, CartContentMapper cartContentMapper)
+        public TemporalOrderService(UnitOfWork unitOfWork, CartContentMapper cartContentMapper, IServiceProvider serviceProvider)
         {
             _unitOfWork = unitOfWork;
             _cartContentMapper = cartContentMapper;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
@@ -47,5 +49,31 @@ namespace Server.Services
             }
             await _unitOfWork.SaveAsync();
         }
+
+        /*public async Task RemoveExpiredOrders()
+        {
+            List<TemporalOrder> expiredOrders = (List<TemporalOrder>) await _unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
+
+            foreach (TemporalOrder temporalOrder in expiredOrders)
+            {
+                _unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+            }
+
+            await _unitOfWork.SaveAsync();
+        }*/
+
+        public async Task UpdateExpiration(TemporalOrder temporalOrder)
+        {
+            temporalOrder.ExpirationDate = DateTime.UtcNow;
+            using (var scope = _serviceProvider.CreateScope()) // Crea la instancia del serviceProvider
+            {
+                var unitOfWork = scope.ServiceProvider.GetService<UnitOfWork>();
+
+                unitOfWork.TemporalOrderRepository.Update(temporalOrder);
+
+                await unitOfWork.SaveAsync();
+            } // Cierra la instancia del serviceProvider
+        }
+
     }
 }
