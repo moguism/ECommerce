@@ -9,7 +9,7 @@ namespace Server.Services
 
         UnitOfWork _unitOfWork;
 
-        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
+        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper)
         {
             _unitOfWork = unitOfWork;
         }
@@ -21,7 +21,7 @@ namespace Server.Services
             {
                 cart = await CreateShoppingCart(user, false);
             }
-            
+
             await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
 
             await _unitOfWork.SaveAsync();
@@ -59,7 +59,7 @@ namespace Server.Services
 
             return shoppingCart;
         }
-        
+
         public async Task<User> GetUserFromDbByStringId(string stringId)
         {
 

@@ -14,13 +14,14 @@ import { CommonModule} from '@angular/common';
 // Date Import
 import locale from '@angular/common/locales/es'
 import { registerLocaleData } from '@angular/common';
+import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 registerLocaleData(locale, 'es');
 
 @Component({
   selector: 'app-product-view',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CommonModule],
-  providers: [{provide: LOCALE_ID, useValue: 'es'}],
+  imports: [HeaderComponent, FormsModule, CommonModule, CorrectDatePipe],
+  //providers: [{provide: LOCALE_ID, useValue: 'es'}],
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
 })

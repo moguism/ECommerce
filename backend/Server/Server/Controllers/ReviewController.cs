@@ -63,9 +63,10 @@ namespace Server.Controllers
             }
 
             Review review = _reviewMapper.ToEntity(reviewDto);
-            review = await _reviewService.RateReview(review);
+            review = _reviewService.RateReview(review);
             //Aï¿½ade el usuario
             review.UserId = user.Id;
+            review.DateTime = DateTime.UtcNow;
             //review.User = user;
 
             //guarda la review con todos los datos

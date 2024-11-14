@@ -35,12 +35,12 @@ namespace Server.Controllers
             }
 
             ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, isTemporal);
-            if(shoppingCart == null)
+            if (shoppingCart == null)
             {
                 return null;
             }
             return _shoppingCartMapper.ToDto(shoppingCart);
-          
+
 
         }
 

@@ -13,9 +13,9 @@ namespace Server.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             return await GetQueryable()
-                .Where(user => user.Email == email)
                 .Include(user => user.Reviews)
-                .FirstOrDefaultAsync();
+                .Include(user => user.ShoppingCarts)
+                .FirstOrDefaultAsync(user => user.Email.Equals(email));
         }
 
         public async Task<User> GetAllInfoById(int id)
