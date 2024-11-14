@@ -27,7 +27,7 @@ registerLocaleData(locale, 'es');
 })
 export class ProductViewComponent implements OnInit {
 
-  protected count = 0;
+  protected count = 1;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
@@ -114,6 +114,7 @@ export class ProductViewComponent implements OnInit {
           else
           {
             newProduct.total = 1
+            allProducts.push(product)
           }
         }
         else
