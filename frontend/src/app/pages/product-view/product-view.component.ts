@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
@@ -9,10 +9,19 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
+import { CommonModule} from '@angular/common';
+
+// Date Import
+import locale from '@angular/common/locales/es'
+import { registerLocaleData } from '@angular/common';
+import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
+registerLocaleData(locale, 'es');
+
 @Component({
   selector: 'app-product-view',
   standalone: true,
-  imports: [HeaderComponent, FormsModule],
+  imports: [HeaderComponent, FormsModule, CommonModule, CorrectDatePipe],
+  //providers: [{provide: LOCALE_ID, useValue: 'es'}],
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
 })
@@ -29,7 +38,6 @@ export class ProductViewComponent implements OnInit {
     //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.getProduct()
     //this.makeReviews()
-
   }
 
   async getProduct() {
@@ -45,66 +53,13 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  /*async makeReviews() {
-    const reviews = this.product?.reviews;
-
-    if (reviews != null) {
-
-      this.prductReviews = reviews
-      reviews.forEach(review => {
-        const reviewInputDiv = document.querySelector('.review-input');
-
-        if(reviewInputDiv){ // Para que no salga posible nulo
-          const newReviewDiv = document.createElement('div');
-          newReviewDiv.className = 'review-users';
-
-          const innerDiv = document.createElement('div');
-          innerDiv.className = 'review-users-opinion';
-
-          const scoreContainer = document.createElement('h3');
-          const star = document.createElement('i');
-          star.className = 'fa-solid fa-star';
-          
-          scoreContainer.appendChild(star);
-
-          if(review.score == -1){
-            scoreContainer.textContent = '1';
-          }else if(review.score == 0){
-            scoreContainer.textContent = '3';
-          }else{
-            scoreContainer.textContent = '5';
-          }
-
-          const img = document.createElement('img');
-          img.className = 'review-users-opinion-image';
-          img.src = '/assets/images/macacco.jpg'; // Cambiar esto cuando tengamos foto de perfil de usuario
-
-          const paragraph = document.createElement('p');
-          paragraph.className = 'review-users-opinion-text';
-          
-          paragraph.textContent = review.text;
-          
-
-          // Añade los elementos al div
-          innerDiv.appendChild(img);
-          innerDiv.appendChild(paragraph);
-          newReviewDiv.appendChild(innerDiv);
-
-          // Inserta el nuevo div justo después del div con la clase "review-input"
-          reviewInputDiv.insertAdjacentElement('afterend', newReviewDiv);
-        }
-      });
-    }
-
-  }*/
-
   async addReview() {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 
     if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
       alert("No has hecho ningun comentario");
     } else {
-      const newReview = new NewReview(reviewTextElement.value, this.product.id);
+      const newReview = new NewReview(reviewTextElement.value, this.product.id, new Date().toISOString());
 
       console.log(newReview)
 
@@ -115,7 +70,6 @@ export class ProductViewComponent implements OnInit {
       }
 
       this.getProduct();
-      //this.makeReviews();
     }
 
   }
@@ -151,8 +105,16 @@ export class ProductViewComponent implements OnInit {
         {
           allProducts = JSON.parse(productsLocalStore)
           const index = allProducts.findIndex(p => p.id === product.id);
-          const newProduct = allProducts[index]
-          newProduct.total += this.count
+          let newProduct = product
+          if(index != -1)
+          {
+            newProduct = allProducts[index]
+            newProduct.total += this.count
+          }
+          else
+          {
+            newProduct.total = 1
+          }
         }
         else
         {
@@ -167,6 +129,7 @@ export class ProductViewComponent implements OnInit {
       const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
       await this.apiService.post("ShoppingCart/add", cartContent)
     }
+    alert("Producto añadido al carrito correctamente")
   }
 
   ngOnDestroy(): void {

@@ -92,7 +92,15 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
         this.rememberFunction()
-        this.router.navigateByUrl("user")
+        const goToCheckout = localStorage.getItem("goToCheckout")
+        if(goToCheckout && goToCheckout == "true")
+        {
+          this.router.navigateByUrl("shopping-cart")
+        }
+        else
+        {
+          this.router.navigateByUrl("user")
+        }
       }
       else {
         alert("Los datos introducidos no son correctos")

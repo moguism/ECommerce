@@ -1,3 +1,4 @@
+<app-header></app-header>
 <app-header-shop></app-header-shop>
 <div class="main">
     <div class="information">
@@ -10,9 +11,7 @@
                 <div class="basket-products-information">
                     <div class="basket-products-information-functions">
                         <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
-                        <button (click)="deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
-                        <button (click)="changeQuantity(product)">Cambiar cantidad</button>
-                        <input class="basket-products-information-functions-input" [id]="product.id" type="number" [placeholder]="product.total">
+                        <h5 class="basket-products-information-functions-title">{{ product.total }}</h5>
                     </div>
                     <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
                     <h3>Precio por kg {{product.price | eurosToCents}}</h3>
@@ -21,7 +20,7 @@
             }
             @empty 
             {
-            <p>No hay productos en el carrito</p>
+             <p>No hay productos en el carrito</p>
             }
         </div>
         <div class="final-price">
@@ -30,11 +29,15 @@
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
-            
-            <hr>
-            <button class="final-price-button-card" (click)="pay('card')">Pagar con tarjeta</button>
-            <button class="final-price-button-Etherium" (click)="pay('eth')">Pagar con Etherium</button>
-            
+            @if (shoppingCartProducts.length > 0) {
+                <button (click)="embeddedCheckout()">Comprar embebido</button>
+                <button (click)="hostedCheckout()">Comprar en página externa</button>
+            }
+            <hr>            
         </div>
     </div>
 </div>
+<dialog #checkoutDialog>
+    <div id="checkout"></div>
+    <button (click)="cancelCheckoutDialog()">x</button>
+</dialog>

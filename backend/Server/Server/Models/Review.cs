@@ -11,6 +11,8 @@ public class Review
 
     public int Score { get; set; }
 
+    public DateTime DateTime { get; set; }
+
     public int UserId { get; set; }
 
     public int ProductId { get; set; }
