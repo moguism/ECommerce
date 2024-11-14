@@ -114,6 +114,7 @@ export class ProductViewComponent implements OnInit {
           else
           {
             newProduct.total = 1
+            allProducts.push(product)
           }
         }
         else
