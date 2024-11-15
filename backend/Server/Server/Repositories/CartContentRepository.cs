@@ -13,14 +13,17 @@ namespace Server.Repositories
 
         public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
         {
-            CartContent cartContent = await _context.CartContent
-                .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id 
+            CartContent cartContent = await GetQueryable()
+                .Include(c => c.Product)
+                .Include(c => c.ShoppingCart)
+                .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id
                 && c.ProductId == cartContentDto.ProductId);
+                
 
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)
             {
-                _context.CartContent.Add(new CartContent
+                Add(new CartContent
                 {
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
@@ -34,7 +37,7 @@ namespace Server.Repositories
                 //Se pasa el la cantidad del producto
                 cartContent.Quantity = cartContentDto.Quantity;
 
-                _context.CartContent.Update(cartContent);
+                Update(cartContent);
             }
 
 

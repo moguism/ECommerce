@@ -22,6 +22,7 @@ namespace Server.Services
             if (cart == null)
             {
                 cart = await _unitOfWork.ShoppingCartRepository.CreateShoppingCartAsync(user);
+                await _unitOfWork.SaveAsync();
             }
 
             //añade el producto a este
@@ -31,8 +32,6 @@ namespace Server.Services
 
 
         }
-
-        
 
 
         public async Task RemoveProductFromShoppingCart(User user, int productId)

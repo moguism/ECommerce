@@ -34,17 +34,22 @@ namespace Server.Repositories
         public async Task<ShoppingCart> CreateShoppingCartAsync(User user)
         {
 
-            ShoppingCart shoppingCart = await _context.ShoppingCart.FirstOrDefaultAsync(c => c.UserId == user.Id);
+            ShoppingCart shoppingCart = await GetQueryable()
+                .Include(cart => cart.User)
+                .Include(cart => cart.CartContent)
+                .Include(cart => cart.TemporalOrders)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
 
             //Si el usuario no tenia carrito, crea uno nuevo
             if (shoppingCart == null)
             {
 
-                ShoppingCart cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                cart.User = user;
-                _context.Add(cart);
-                return cart;
+                ShoppingCart newCart = new ShoppingCart{
+                    UserId = user.Id,
+                };
+
+                _context.ShoppingCart.Add(newCart);
+                return newCart;
             }
 
             return shoppingCart;
