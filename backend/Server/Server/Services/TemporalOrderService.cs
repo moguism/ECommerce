@@ -27,7 +27,7 @@ namespace Server.Services
         {
             TemporalOrder savedTemporalOrder = await _unitOfWork.TemporalOrderRepository.InsertAsync(temporalOrder);
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, true);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
             foreach(CartContent cartContent in cartContents)
             {
@@ -40,9 +40,9 @@ namespace Server.Services
             return savedTemporalOrder;
         }
 
-        public async Task AddDirectTemporalOrder(IEnumerable<CartContentDto> cartContentsDto, ShoppingCart cart)
+        public async Task AddDirectTemporalOrder(IEnumerable<CartContentDto> cartContentsDto)
         {
-            IEnumerable<CartContent> cartContents = _cartContentMapper.ToEntity(cartContentsDto, cart);
+            IEnumerable<CartContent> cartContents = _cartContentMapper.ToEntity(cartContentsDto);
             foreach (CartContent cartContent in cartContents)
             {
                 await _unitOfWork.CartContentRepository.InsertAsync(cartContent);

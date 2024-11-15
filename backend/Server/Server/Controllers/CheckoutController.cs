@@ -76,7 +76,7 @@ public class CheckoutController : ControllerBase
 
     private async Task<Session> GetOptions(User user, string mode)
     {
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
+        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
         IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
         if (cartContents == null || !cartContents.Any())
             return null;
@@ -179,12 +179,12 @@ public class CheckoutController : ControllerBase
     {
         User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
         
-        ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
+        ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+
         if(cart.TemporalOrders.Count() == 0 || cart.TemporalOrders.Count() > 1)
         {
             throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
         }
-        cart.Finished = true;
         _unitOfWork.ShoppingCartRepository.Update(cart);
 
         TemporalOrder temporalOrder = cart.TemporalOrders.First();

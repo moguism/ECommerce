@@ -58,16 +58,14 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, false);
+            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
 
             if(cart == null)
             {
                 return null;
             }
 
-            cart = await _shoppingCartService.ChangeTemporalAttribute(cart, true); // Pone el carrito como temporal
-
-            return await CreateTemporal(cart, user);
+            return await CreateTemporal(user, cart);
         }
 
         [Authorize]
@@ -80,9 +78,11 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart cart = await _shoppingCartService.CreateShoppingCart(user, true); // Le creo un nuevo carro, aunque quizás no es la mejor opción
-            await _temporalOrderService.AddDirectTemporalOrder(cartContent, cart);
-            return await CreateTemporal(cart, user);
+            await _temporalOrderService.AddDirectTemporalOrder(cartContent);
+
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+
+            return await CreateTemporal(user , shoppingCart);
         }
 
         [Authorize]
@@ -105,7 +105,7 @@ namespace Server.Controllers
             await _temporalOrderService.UpdateExpiration(temporalOrder);
         }
 
-        private async Task<TemporalOrderDto> CreateTemporal(ShoppingCart cart, User user)
+        private async Task<TemporalOrderDto> CreateTemporal(User user, ShoppingCart cart)
         {
             TemporalOrder temporalOrder = new TemporalOrder();
             //temporalOrder.UserId = user.Id;

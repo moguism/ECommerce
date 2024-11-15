@@ -27,8 +27,7 @@ public class CleanTemporalOrdersService : BackgroundService
                     {
                         unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
 
-                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetFullByIdAsync(temporalOrder.ShoppingCartId);
-                        cart.Temporal = false;
+                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetAllShoppingCartByShoppingCartIdAsync(temporalOrder.ShoppingCartId);
                         unitOfWork.ShoppingCartRepository.Update(cart);
 
                         List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
