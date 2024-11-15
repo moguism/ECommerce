@@ -29,10 +29,15 @@
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
-            @if (shoppingCartProducts.length > 0) {
-                <button (click)="embeddedCheckout()">Comprar embebido</button>
-                <button (click)="hostedCheckout()">Comprar en página externa</button>
+            @if(sesionId == null || sesionId == ""){
+                @if (shoppingCartProducts.length > 0) {
+                    <button (click)="embeddedCheckout()">Comprar embebido</button>
+                    <button (click)="hostedCheckout()">Comprar en página externa</button>
+                }
+            }@else {
+                <h1>¡Pago completado con exito!</h1>
             }
+            
             <hr>            
         </div>
     </div>
