@@ -41,9 +41,10 @@ public class CleanTemporalOrdersService : BackgroundService
                         List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
                         foreach (CartContent cartContent in cartContents)
                         {
-                            Product product = await unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
+                            Product product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
                             product.Stock += cartContent.Quantity;
                             unitOfWork.ProductRepository.Update(product);
+
                         }
                     }
 

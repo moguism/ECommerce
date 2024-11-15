@@ -1,6 +1,14 @@
 <app-header></app-header>
 <app-header-shop></app-header-shop>
 <div class="main">
+    @if (id != "")
+    {
+        <h2>Pago completado</h2>
+    }
+    @else
+    {
+        <h2>Pago rechazado</h2>
+    }
     <div class="information">
         <div class="basket">
             <h2>Mi carrito</h2>
@@ -18,9 +26,9 @@
                 </div>
             </div>
             }
-            @empty
+            @empty 
             {
-            <p>No hay productos en el carrito</p>
+             <p>No hay productos en el carrito</p>
             }
         </div>
         <div class="final-price">
@@ -29,16 +37,7 @@
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
-            @if (shoppingCartProducts.length > 0) {
-            <button (click)="embeddedCheckout()">Comprar embebido</button>
-            <button (click)="hostedCheckout()">Comprar en página externa</button>
-            }
-
-            <hr>
+            <hr>            
         </div>
     </div>
 </div>
-<dialog #checkoutDialog>
-    <div id="checkout"></div>
-    <button (click)="cancelCheckoutDialog()">x</button>
-</dialog>

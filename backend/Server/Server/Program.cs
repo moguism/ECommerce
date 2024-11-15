@@ -58,6 +58,7 @@ namespace Server
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
+            builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
             builder.Services.AddScoped<ReviewMapper>();
             builder.Services.AddScoped<TemporalOrderMapper>();

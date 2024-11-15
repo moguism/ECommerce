@@ -22,7 +22,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
   private method: string = ""
-  public sesionId: string = ""
   
   @ViewChild('checkoutDialog')
   checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
@@ -35,16 +34,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.autoRefreshSubscription?.unsubscribe();
   }
 
-  async createOrder(){
-    
-  }
 
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
-    this.sesionId = this.activatedRoute.snapshot.queryParamMap.get('id') as unknown as string;
-    if(this.sesionId != null && this.sesionId != ""){
-      this.createOrder()
-    }
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
     const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
     console.log("RESULT CHECKOUT: ", result)
