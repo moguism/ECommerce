@@ -193,7 +193,7 @@ namespace Server
                         dbContext.Users.Add(user2);
 
                         // Crear reseñas para el producto de arándano
-                        /*var review1 = new Review
+                        var review1 = new Review
                         {
                             Text = "Los mejores arándanos que he probado, muy frescos y jugosos.",
                             Score = 5,
@@ -201,7 +201,6 @@ namespace Server
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
                             User = user1,
-                            DateTime = "2024-11-12T14:49:21.039Z"
                         };
 
                         var review2 = new Review
@@ -212,7 +211,7 @@ namespace Server
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
                             User = user2,
-                            DateTime = "2024-11-12T14:49:21.039Z"
+                      
                         };
 
                         // Añadir reseñas al contexto de la base de datos
@@ -225,7 +224,7 @@ namespace Server
 
                         // Añadir reseñas a la colección de Reviews de cada usuario
                         user1.Reviews.Add(review1);
-                        user2.Reviews.Add(review2);*/
+                        user2.Reviews.Add(review2);
 
                         dbContext.SaveChanges();
 
