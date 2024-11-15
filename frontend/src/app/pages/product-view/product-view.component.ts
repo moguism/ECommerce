@@ -97,6 +97,7 @@ export class ProductViewComponent implements OnInit {
       alert("Cantidad no válida")
       return
     }
+    
     if(this.apiService.jwt == "")
     {
         let allProducts : Product[] = []
@@ -127,8 +128,8 @@ export class ProductViewComponent implements OnInit {
     }
     else {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
-      await this.apiService.post("ShoppingCart/add", cartContent)
+      const cartContent = new CartContent(product.id, this.count) // 0 no es para borrar, sino para agregar uno nuevo
+      await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
     alert("Producto añadido al carrito correctamente")
   }

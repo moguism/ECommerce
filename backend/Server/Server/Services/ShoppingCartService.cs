@@ -14,43 +14,37 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto, bool add)
+        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
         {
-            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, false);
+            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+
+            //Si el usuario es nuevo y no tenía carrito, le crea uno nuevo
             if (cart == null)
             {
-                cart = await CreateShoppingCart(user, false);
+                cart = await _unitOfWork.ShoppingCartRepository.CreateShoppingCartAsync(user);
+                await _unitOfWork.SaveAsync();
             }
 
-            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
+            //añade el producto a este
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
 
             await _unitOfWork.SaveAsync();
 
 
         }
 
-        public async Task<ShoppingCart> CreateShoppingCart(User user, bool Temporal)
-        {
-            ShoppingCart cart = new ShoppingCart();
-            cart.UserId = user.Id;
-            cart.Temporal = Temporal;
-            cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-            await _unitOfWork.SaveAsync();
-            return cart;
-        }
 
-
-        public async Task RemoveProductFromShoppingCart(User user, int productId, bool temporal)
+        public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, temporal);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
             await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
             await _unitOfWork.SaveAsync();
         }
 
 
-        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id, bool temporal)
+        public async Task<ShoppingCart> GetShoppingCartByUserIdAsync(int id)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id, temporal);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(id);
 
             if (shoppingCart == null)
             {
@@ -67,13 +61,5 @@ namespace Server.Services
             return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
         }
 
-
-        public async Task<ShoppingCart> ChangeTemporalAttribute(ShoppingCart cart, bool isTemporal)
-        {
-            cart.Temporal = isTemporal;
-            _unitOfWork.ShoppingCartRepository.Update(cart);
-            await _unitOfWork.SaveAsync();
-            return cart;
-        }
     }
 }

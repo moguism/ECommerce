@@ -17,22 +17,21 @@ public class CartContentMapper
         };
     }
 
-    public CartContent ToEntity(CartContentDto cartContentDto, ShoppingCart cart)
+    public CartContent ToEntity(CartContentDto cartContentDto)
     {
         return new CartContent
         {
             ProductId = cartContentDto.ProductId,
             Quantity = cartContentDto.Quantity,
-            ShoppingCartId = cart.Id
         };
     }
 
-    public IEnumerable<CartContent> ToEntity(IEnumerable<CartContentDto> cartContentDtos, ShoppingCart cart)
+    public IEnumerable<CartContent> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
     {
         List<CartContent> result = new List<CartContent>();
         foreach(CartContentDto cartContent in cartContentDtos)
         {
-            result.Add(ToEntity(cartContent, cart));
+            result.Add(ToEntity(cartContent));
         }
         return result;
     }
