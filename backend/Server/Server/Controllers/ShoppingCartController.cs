@@ -44,6 +44,21 @@ namespace Server.Controllers
 
         }
 
+
+        //Pruebas
+        [HttpGet("ByUserId")]
+        public async Task<ShoppingCart> GetShoppingCart(int Id)
+        {
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(Id, false);
+            if (shoppingCart == null)
+            {
+                return null;
+            }
+            return shoppingCart;
+
+
+        }
+
         [Authorize]
         [HttpPost]
         public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
