@@ -38,6 +38,8 @@ public class UnitOfWork
         _context = context;
     }
 
+    public FarminhouseContext Context => _context;
+
     public async Task<bool> SaveAsync()
     {
         return await _context.SaveChangesAsync() > 0;
