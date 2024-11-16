@@ -4,7 +4,6 @@
     {
 
         public int Id { get; set; }
-
-        public IEnumerable<CartContent> CartContents { get; set; } = new List<CartContent>();
+        public int ProductId { get; set; }
     }
 }
