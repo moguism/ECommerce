@@ -8,8 +8,8 @@ namespace Server.Models
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int ProductToById { get; set; }
-        public ProductsToBuy ProductsToBuy { get; set; }
+        public int WishlistId { get; set; }
+        public Wishlist Wishlist { get; set; }
 
 
     }

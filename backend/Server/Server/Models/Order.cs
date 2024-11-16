@@ -10,7 +10,7 @@ public class Order
     public int Total { get; set; }
     public int PaymentTypeId { get; set; }
     public PaymentsType PaymentsType { get; set; }
-    public int ProductsToBuyId { get; set; }
-    public ProductsToBuy ProductsToBuy { get; set; }
+    public int WishlistId { get; set; }
+    public Wishlist Wishlist { get; set; }
 
 }
