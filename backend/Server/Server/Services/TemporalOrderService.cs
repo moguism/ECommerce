@@ -26,6 +26,7 @@ namespace Server.Services
         
         public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
         {
+            //Crea un nuevo pedido temporal con el usuario y los productos que quiere comprar
             TemporalOrder temporalOrder = new TemporalOrder{
                 UserId = user.Id,
                 User = user,
@@ -34,29 +35,22 @@ namespace Server.Services
   
             };
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(temporalOrder.User.Id);
-            List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
-            foreach(CartContent cartContent in cartContents)
+            //La añade a la base de datos
+            _unitOfWork.TemporalOrderRepository.Add(temporalOrder);
+
+            //Resta el stock a los productos que quiere comprar el usuario
+            foreach(ProductsToBuy productToBuy in wishlist.Products)
             {
-                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
-                product.Stock -= cartContent.Quantity;
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
             }
 
             await _unitOfWork.SaveAsync();
-            return savedTemporalOrder;
+            return temporalOrder;
         }
         
 
-        public async Task AddProductsToTemporalOrder(TemporalOrder temporalOrder, IEnumerable<CartContentDto> cartContentsDto)
-        {
-            IEnumerable<CartContent> cartContents = _cartContentMapper.ToEntity(cartContentsDto);
-            foreach (CartContent cartContent in cartContents)
-            {
-                await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
-            }
-            await _unitOfWork.SaveAsync();
-        }
 
         /*public async Task RemoveExpiredOrders()
         {

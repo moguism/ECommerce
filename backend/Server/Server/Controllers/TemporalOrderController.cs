@@ -63,18 +63,14 @@ namespace Server.Controllers
                 return null;
             }
 
-            TemporalOrder temporalOrder = new TemporalOrder();
-            temporalOrder.UserId = user.Id;
-            temporalOrder.User = user;
 
             Wishlist wishlist = await _wishListService.CreateNewWishList(products);// Añade a la nueva wislist los productos que el usuario quire comprar
 
-            temporalOrder.ShoppingCartId = cart.Id;
-            temporalOrder.ExpirationDate = DateTime.UtcNow;
-            temporalOrder.Finished = false;
+            //Añade una nueva orden temporal con los datos del usuario
+            TemporalOrder temporalOrder = await _temporalOrderService.CreateTemporalOrder(user,wishlist);
 
-            TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder, user);
-            return _temporalOrderMapper.ToDto(savedTemporalOrder);
+
+            return _temporalOrderMapper.ToDto(temporalOrder);
         }
 
 

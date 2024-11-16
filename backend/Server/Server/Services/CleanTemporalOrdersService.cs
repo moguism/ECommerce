@@ -13,10 +13,12 @@ public class CleanTemporalOrdersService : BackgroundService
         _serviceProvider = serviceProvider;
     }
 
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            /*
             using (var scope = _serviceProvider.CreateScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
@@ -58,6 +60,10 @@ public class CleanTemporalOrdersService : BackgroundService
             
 
             await Task.Delay(_cleanupInterval, stoppingToken);
+            */
         }
+            
+    
     }
+    
 }
