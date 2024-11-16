@@ -40,6 +40,8 @@ export class ShoppingCartComponent implements OnInit {
     if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
   }
 
+  
+
   async getShoppingCart() {
     this.getLocalStorageCart();
 
