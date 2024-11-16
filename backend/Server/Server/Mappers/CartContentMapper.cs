@@ -6,6 +6,7 @@ namespace Server.Mappers;
 
 public class CartContentMapper
 {   
+
     public CartContentDto ToDto(CartContent cartContent)
     {
 

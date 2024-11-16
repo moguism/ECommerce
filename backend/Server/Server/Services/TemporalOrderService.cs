@@ -23,11 +23,18 @@ namespace Server.Services
             return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
         }
 
-        public async Task<TemporalOrder> CreateTemporalOrder(TemporalOrder temporalOrder, User user)
+        
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
         {
-            TemporalOrder savedTemporalOrder = await _unitOfWork.TemporalOrderRepository.InsertAsync(temporalOrder);
+            TemporalOrder temporalOrder = new TemporalOrder{
+                UserId = user.Id,
+                User = user,
+                WishlistId = wishlist.Id,
+                Wishlist = wishlist
+  
+            };
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(temporalOrder.User.Id);
             List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
             foreach(CartContent cartContent in cartContents)
             {
@@ -39,8 +46,9 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
             return savedTemporalOrder;
         }
+        
 
-        public async Task AddDirectTemporalOrder(IEnumerable<CartContentDto> cartContentsDto)
+        public async Task AddProductsToTemporalOrder(TemporalOrder temporalOrder, IEnumerable<CartContentDto> cartContentsDto)
         {
             IEnumerable<CartContent> cartContents = _cartContentMapper.ToEntity(cartContentsDto);
             foreach (CartContent cartContent in cartContents)
@@ -60,7 +68,7 @@ namespace Server.Services
             }
 
             await _unitOfWork.SaveAsync();
-        }*/
+        }
 
         public async Task UpdateExpiration(TemporalOrder temporalOrder)
         {
@@ -74,6 +82,6 @@ namespace Server.Services
                 await unitOfWork.SaveAsync();
             } // Cierra la instancia del serviceProvider
         }
-
+        */
     }
 }

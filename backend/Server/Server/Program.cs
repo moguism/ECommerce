@@ -66,6 +66,7 @@ namespace Server
             builder.Services.AddScoped<CartContentMapper>();
 
             builder.Services.AddScoped<WishListService>();
+            builder.Services.AddScoped<ProductsToBuyMapper>();
 
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
