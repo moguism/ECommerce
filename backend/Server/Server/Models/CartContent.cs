@@ -10,5 +10,8 @@
         public Product Product { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
 
+        public int ProductsToBuyId { get; set; }
+        public ProductsToBuy ProductsToBuy { get; set; }
+
     }
 }
