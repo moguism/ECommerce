@@ -39,7 +39,7 @@ namespace Server.Mappers
             };
         }
 
-        public IEnumerable<ProductsToBuy> ToDto(IEnumerable<CartContentDto> cartContentDtos)
+        public IEnumerable<ProductsToBuy> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
         {
 
             List<ProductsToBuy> result = new List<ProductsToBuy>();

@@ -9,12 +9,12 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
 {
     public TemporalOrderRepository(FarminhouseContext context) : base(context) { }
 
-    public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
+    public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int userId)
     {
         return await GetQueryable()
             .Include(temporalOrder => temporalOrder.User)
             .Include(temporalOrder => temporalOrder.Wishlist)
-            .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
+            .LastOrDefaultAsync(temporalOrder => temporalOrder.UserId == userId);
     }
 
 

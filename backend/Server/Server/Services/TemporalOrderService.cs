@@ -18,36 +18,33 @@ namespace Server.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
+        public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int id)
         {
-            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
         }
 
         
-        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
+        public async Task CreateTemporalOrder(User user, Wishlist wishlist)
         {
-            //Crea un nuevo pedido temporal con el usuario y los productos que quiere comprar
-            TemporalOrder temporalOrder = new TemporalOrder{
-                UserId = user.Id,
-                User = user,
-                WishlistId = wishlist.Id,
-                Wishlist = wishlist
-  
-            };
 
             //La añade a la base de datos
-            _unitOfWork.TemporalOrderRepository.Add(temporalOrder);
+            _unitOfWork.TemporalOrderRepository.Add(new TemporalOrder
+            {
+                UserId = user.Id,
+                WishlistId = wishlist.Id,
+
+            });
+
 
             //Resta el stock a los productos que quiere comprar el usuario
             foreach(ProductsToBuy productToBuy in wishlist.Products)
             {
-                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToBuy.ProductId);
                 product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
             }
 
             await _unitOfWork.SaveAsync();
-            return temporalOrder;
         }
         
 

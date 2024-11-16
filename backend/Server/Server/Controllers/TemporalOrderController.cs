@@ -43,7 +43,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderByUserId(id);
             if(temporalOrder == null)
             {
                 return null;
@@ -55,22 +55,21 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("newTemporalOrder")]
-        private async Task<TemporalOrderDto> CreateTemporal([FromBody] IEnumerable<CartContentDto> products)
+        public async Task<IActionResult> CreateTemporal([FromBody] IEnumerable<CartContentDto> products)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return null;
+                return Unauthorized();
             }
 
 
             Wishlist wishlist = await _wishListService.CreateNewWishList(products);// Añade a la nueva wislist los productos que el usuario quire comprar
 
             //Añade una nueva orden temporal con los datos del usuario
-            TemporalOrder temporalOrder = await _temporalOrderService.CreateTemporalOrder(user,wishlist);
+            await _temporalOrderService.CreateTemporalOrder(user,wishlist);
+            return Ok("Orden temporal creada correctamente");
 
-
-            return _temporalOrderMapper.ToDto(temporalOrder);
         }
 
 
