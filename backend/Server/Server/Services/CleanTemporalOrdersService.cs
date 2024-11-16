@@ -13,16 +13,18 @@ public class CleanTemporalOrdersService : BackgroundService
         _serviceProvider = serviceProvider;
     }
 
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            
             using (var scope = _serviceProvider.CreateScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                 try {
                     Console.WriteLine("Ejecutando servicio en segundo plano");
-                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
+                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetAllAsync();
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
@@ -35,7 +37,7 @@ public class CleanTemporalOrdersService : BackgroundService
 
                         unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
 
-                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetAllShoppingCartByShoppingCartIdAsync(temporalOrder.ShoppingCartId);
+                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetAllShoppingCartByShoppingCartIdAsync(1);
                         unitOfWork.ShoppingCartRepository.Update(cart);
 
                         List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
@@ -58,6 +60,10 @@ public class CleanTemporalOrdersService : BackgroundService
             
 
             await Task.Delay(_cleanupInterval, stoppingToken);
+            
         }
+            
+    
     }
+    
 }

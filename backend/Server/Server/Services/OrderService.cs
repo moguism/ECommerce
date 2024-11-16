@@ -14,32 +14,31 @@ namespace Server.Services
             _shoppingCartService = shoppingCartService;
         }
 
-        /*public async Task CreateOrder(Order order)
-        {
-            order = await _unitOfWork.OrderRepository.InsertAsync();
-
-        }*/
         public async Task CompletePayment(Session session)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
 
-            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-
-            if (cart.TemporalOrders.Count() == 0 || cart.TemporalOrders.Count() > 1)
+            if (user.TemporalOrders.Count() == 0)
             {
                 throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
             }
-            _unitOfWork.ShoppingCartRepository.Update(cart);
 
-            TemporalOrder temporalOrder = cart.TemporalOrders.First();
-            temporalOrder.Finished = true;
-            temporalOrder.PaymentTypeId = 1; // El pago con tarjeta
-            _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
+            //Recoge la ultima orden temporal del usuario
+            TemporalOrder temporalOrder = user.TemporalOrders.Last();
 
             Order order = new Order();
-            order.TemporalOrderId = temporalOrder.Id;
             order.CreatedAt = DateTime.UtcNow;
-            // Quizás también deberíamos de guardar el total, pero por ahora no lo hago porque en el front tenemos métodos para eso
+            order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
+
+            //Por ahora inserta el pago con tarjeta
+            order.PaymentTypeId = 1;
+            order.PaymentsType = await _unitOfWork.PaymentsTypeRepository.GetByIdAsync(1);
+
+            //La misma wishlist que la ultima orden temporal que ha realizado el usuario
+            order.WishlistId = temporalOrder.WishlistId;
+            order.Wishlist = temporalOrder.Wishlist;
+
+
             await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
