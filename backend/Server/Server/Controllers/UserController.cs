@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -7,6 +8,7 @@ using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
 using Server.Repositories.Base;
+using Server.Services;
 
 namespace Server.Controllers
 {
@@ -16,11 +18,13 @@ namespace Server.Controllers
     {
         private readonly UserMapper _userMapper;
         private readonly UnitOfWork _unitOfWork;
+        private readonly UserService _userService;
 
-        public UserController(UnitOfWork unitOfWork, UserMapper userMapper)
+        public UserController(UnitOfWork unitOfWork, UserMapper userMapper, UserService userService)
         {
             _unitOfWork = unitOfWork;
             _userMapper = userMapper;
+            _userService = userService;
         }
 
 
@@ -51,7 +55,17 @@ namespace Server.Controllers
 
             return userDto;
         }
-        
-        
+
+        [HttpGet("authorizedUser")]
+        public async Task<User> GetAuthorizedUser()
+        {
+            // Pilla el usuario autenticado según ASP
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+
+            // Pilla el usuario de la base de datos
+            return await _userService.GetUserFromDbByStringId(idString);
+        }
+
     }
 }

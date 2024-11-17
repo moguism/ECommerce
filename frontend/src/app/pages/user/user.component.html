@@ -1,2 +1,9 @@
 <app-header></app-header>
-<p>user works!</p>
+<div class="user-data-container">
+    <h2>Inicio de sesión y seguridad</h2>
+    <p><b>Nombre</b></p><span class="user-data">{{user?.name}}</span>
+    <p><b>Correo</b></p><span class="user-data">{{user?.email}}</span>
+    <p><b>Dirección</b></p><span class="user-data">{{user?.address}}</span>
+    <p><b>Contraseña</b></p><span class="">{{user?.password}}</span>
+</div>
+
