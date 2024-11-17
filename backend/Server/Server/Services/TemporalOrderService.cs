@@ -18,37 +18,37 @@ namespace Server.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
+        public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int id)
         {
-            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
         }
 
-        public async Task<TemporalOrder> CreateTemporalOrder(TemporalOrder temporalOrder, User user)
+        
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
         {
-            TemporalOrder savedTemporalOrder = await _unitOfWork.TemporalOrderRepository.InsertAsync(temporalOrder);
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id, true);
-            List<CartContent> cartContents = (List<CartContent>)shoppingCart.CartContent;
-            foreach(CartContent cartContent in cartContents)
+            //La añade a la base de datos
+            TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder
             {
-                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
-                product.Stock -= cartContent.Quantity;
+                UserId = user.Id,
+                WishlistId = wishlist.Id,
+
+            });
+
+
+            //Resta el stock a los productos que quiere comprar el usuario
+            foreach(ProductsToBuy productToBuy in wishlist.Products)
+            {
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
             }
 
             await _unitOfWork.SaveAsync();
-            return savedTemporalOrder;
+            return order;
         }
+        
 
-        public async Task AddDirectTemporalOrder(IEnumerable<CartContentDto> cartContentsDto, ShoppingCart cart)
-        {
-            IEnumerable<CartContent> cartContents = _cartContentMapper.ToEntity(cartContentsDto, cart);
-            foreach (CartContent cartContent in cartContents)
-            {
-                await _unitOfWork.CartContentRepository.InsertAsync(cartContent);
-            }
-            await _unitOfWork.SaveAsync();
-        }
 
         /*public async Task RemoveExpiredOrders()
         {
@@ -60,7 +60,7 @@ namespace Server.Services
             }
 
             await _unitOfWork.SaveAsync();
-        }*/
+        }
 
         public async Task UpdateExpiration(TemporalOrder temporalOrder)
         {
@@ -74,6 +74,6 @@ namespace Server.Services
                 await unitOfWork.SaveAsync();
             } // Cierra la instancia del serviceProvider
         }
-
+        */
     }
 }

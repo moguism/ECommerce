@@ -58,11 +58,17 @@ namespace Server
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
+            builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
             builder.Services.AddScoped<ReviewMapper>();
             builder.Services.AddScoped<TemporalOrderMapper>();
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
+
+            builder.Services.AddScoped<WishListService>();
+            builder.Services.AddScoped<ProductsToBuyMapper>();
+
+
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
             // Aqui esta la clave privada
             Stripe.StripeConfiguration.ApiKey = "sk_test_51QJzjI2MpRBL4z2Cyh3NiBYhF4kXzVk7QJppRv2cAwoM8vPFrDwUjKnwZOiIDw0yYZfzNxNybQWenGMmmj83NunP00UGENKK29";

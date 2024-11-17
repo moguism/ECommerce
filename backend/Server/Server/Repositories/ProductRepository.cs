@@ -29,6 +29,7 @@ namespace Server.Repositories
             Product product = await GetQueryable()
             .Include(product => product.Category)
             .Include(product => product.Reviews)
+            .Include(product => product.CartContents)
             .FirstOrDefaultAsync(order => order.Id == id);
             return product;
         }

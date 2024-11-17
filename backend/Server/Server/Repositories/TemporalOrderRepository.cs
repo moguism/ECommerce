@@ -9,31 +9,20 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
 {
     public TemporalOrderRepository(FarminhouseContext context) : base(context) { }
 
+    public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int userId)
+    {
+        return await GetQueryable()
+            .Include(temporalOrder => temporalOrder.User)
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .OrderBy(temporalOrder => temporalOrder.Id)
+            .LastOrDefaultAsync(temporalOrder => temporalOrder.UserId == userId);
+    }
+
     public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
     {
-        return await GetQueryable().Include(temporalOrder => temporalOrder.ShoppingCart).FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id && temporalOrder.Finished == false);
+        return await GetQueryable()
+            .Include(temporalOrder => temporalOrder.User)
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
-
-    public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
-    {
-        return await GetQueryable().Where(temporalOrder => temporalOrder.Finished == false && temporalOrder.ExpirationDate <= currentTime).ToListAsync();
-    }
-
-    /*public async Task<TemporalOrder> AddDirectOrder(IEnumerable<CartContent> cartContents, ShoppingCart cart)
-    {
-        // Agrego todos los productos
-        foreach (CartContent cartContent in cartContents)
-        {
-            _context.CartContent.Add(new CartContent
-            {
-                ProductId = cartContent.ProductId,
-                Quantity = cartContent.Quantity,
-                ShoppingCartId = cart.Id,
-                Product = _context.Products.FirstOrDefault(p => p.Id == cartContent.ProductId),
-                ShoppingCart = _context.ShoppingCart.FirstOrDefault(c => c.Id == cart.Id)
-            });
-        }
-        return null;
-    }*/
-
 }

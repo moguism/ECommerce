@@ -19,6 +19,10 @@ public class UnitOfWork
     private TemporalOrderRepository _temporalOrderRepository;
     private CartContentRepository _cartContentRepository;
 
+    private WishlistRepository _wishlistRepository;
+    private ProductsToBuyRepository _productsToBuyRepository;
+
+
 
     public OrderRepository OrderRepository => _orderRepository ??= new OrderRepository(_context);
     public PaymentsTypeRepository PaymentsTypeRepository => _paymentsTypeRepository ??= new PaymentsTypeRepository(_context);
@@ -31,6 +35,10 @@ public class UnitOfWork
     public ShoppingCartRepository ShoppingCartRepository => _shoppingCartRepository ??= new ShoppingCartRepository(_context);
     public TemporalOrderRepository TemporalOrderRepository => _temporalOrderRepository ??= new TemporalOrderRepository(_context);
     public CartContentRepository CartContentRepository => _cartContentRepository ??= new CartContentRepository(_context);
+
+
+    public WishlistRepository WishlistRepository => _wishlistRepository ??= new WishlistRepository(_context);
+    public ProductsToBuyRepository ProductsToBuyRepository => _productsToBuyRepository ??= new ProductsToBuyRepository(_context);
 
 
     public UnitOfWork(FarminhouseContext context)

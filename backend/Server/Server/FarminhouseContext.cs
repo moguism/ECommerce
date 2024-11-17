@@ -23,6 +23,10 @@ public class FarminhouseContext : DbContext
 
     public DbSet<TemporalOrder> TemporalOrder { get; set; }
 
+    public DbSet<Wishlist> Wishlists { get; set; }
+    public DbSet<ProductsToBuy> ProductsToBuys { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

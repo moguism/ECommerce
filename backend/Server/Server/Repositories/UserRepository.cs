@@ -14,16 +14,18 @@ namespace Server.Repositories
         {
             return await GetQueryable()
                 .Include(user => user.Reviews)
-                .Include(user => user.ShoppingCarts)
+                .Include(user => user.TemporalOrders)
+                .Include(user => user.Orders)
                 .FirstOrDefaultAsync(user => user.Email.Equals(email));
         }
 
         public async Task<User> GetAllInfoById(int id)
         {
             return await GetQueryable()
-                .Where(user => user.Id == id)
                 .Include(user => user.Reviews)
-                .FirstOrDefaultAsync();
+                .Include(user => user.TemporalOrders)
+                .Include(user => user.Orders)
+                .FirstOrDefaultAsync(user => user.Id == id);
         }
 
     }
