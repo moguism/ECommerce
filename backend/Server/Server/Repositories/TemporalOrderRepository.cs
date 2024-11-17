@@ -14,8 +14,15 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
         return await GetQueryable()
             .Include(temporalOrder => temporalOrder.User)
             .Include(temporalOrder => temporalOrder.Wishlist)
+            .OrderBy(temporalOrder => temporalOrder.Id)
             .LastOrDefaultAsync(temporalOrder => temporalOrder.UserId == userId);
     }
 
-
+    public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
+    {
+        return await GetQueryable()
+            .Include(temporalOrder => temporalOrder.User)
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
+    }
 }

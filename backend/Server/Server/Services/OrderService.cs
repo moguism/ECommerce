@@ -24,19 +24,19 @@ namespace Server.Services
             }
 
             //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = user.TemporalOrders.Last();
+            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
 
             Order order = new Order();
             order.CreatedAt = DateTime.UtcNow;
-            order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
+            //order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
 
             //Por ahora inserta el pago con tarjeta
             order.PaymentTypeId = 1;
-            order.PaymentsType = await _unitOfWork.PaymentsTypeRepository.GetByIdAsync(1);
+            //order.PaymentsType = await _unitOfWork.PaymentsTypeRepository.GetByIdAsync(1);
 
             //La misma wishlist que la ultima orden temporal que ha realizado el usuario
             order.WishlistId = temporalOrder.WishlistId;
-            order.Wishlist = temporalOrder.Wishlist;
+            //order.Wishlist = temporalOrder.Wishlist;
 
 
             await _unitOfWork.OrderRepository.InsertAsync(order);

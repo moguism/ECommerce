@@ -27,7 +27,7 @@ namespace Server.Services
             List<ProductsToBuy> productsToBuyList = _productsToBuyMapper.ToEntity(products).ToList();
 
 
-            _unitOfWork.WishlistRepository.Add(wishlist);
+            await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
             await _unitOfWork.SaveAsync();
 
             // Asignar el Id de la wishlist a los productos después de guardar
@@ -37,12 +37,13 @@ namespace Server.Services
                 product.WishlistId = wishlist.Id;
             }
 
-            // Si es necesario guardar los productos asociados, puedes hacerlo ahora
             foreach (var product in productsToBuyList)
             {
-                // Aquí asegúrate de que la operación de agregar esté correctamente manejada
-                _unitOfWork.ProductsToBuyRepository.Add(product);
+                await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
             }
+
+            wishlist.Products = productsToBuyList;
+            _unitOfWork.WishlistRepository.Update(wishlist);
 
             // Guardar los productos asociados en la base de datos
             await _unitOfWork.SaveAsync();
