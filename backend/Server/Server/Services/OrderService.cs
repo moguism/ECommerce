@@ -6,12 +6,12 @@ namespace Server.Services
     public class OrderService
     {
         UnitOfWork _unitOfWork;
-        private readonly ShoppingCartService _shoppingCartService;
+        /*private readonly ShoppingCartService _shoppingCartService;*/
 
-        public OrderService(UnitOfWork unitOfWork, ShoppingCartService shoppingCartService)
+        public OrderService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _shoppingCartService = shoppingCartService;
+            /*_shoppingCartService = shoppingCartService;*/
         }
 
         public async Task CompletePayment(Session session)
@@ -30,7 +30,7 @@ namespace Server.Services
             {
                 temporalOrder = user.TemporalOrders.LastOrDefault();
             }
-
+            
             Order order = new Order();
             order.CreatedAt = DateTime.UtcNow;
             //order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
@@ -42,7 +42,11 @@ namespace Server.Services
             //La misma wishlist que la ultima orden temporal que ha realizado el usuario
             order.WishlistId = temporalOrder.WishlistId;
             //order.Wishlist = temporalOrder.Wishlist;
+            order.UserId = user.Id;
 
+            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
+
+            await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
 
             await _unitOfWork.OrderRepository.InsertAsync(order);
 
