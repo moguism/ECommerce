@@ -25,4 +25,9 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
             .Include(temporalOrder => temporalOrder.Wishlist)
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
+
+    public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
+    {
+        return await GetQueryable().Where(temporalOrder => temporalOrder.ExpirationDate <= currentTime).ToListAsync();
+    }
 }

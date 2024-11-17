@@ -11,6 +11,6 @@ namespace Server.Models
         public int WishlistId { get; set; }
         public Wishlist Wishlist { get; set; }
 
-
+        public DateTime ExpirationDate { get; set; }
     }
 }

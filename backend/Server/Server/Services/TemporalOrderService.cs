@@ -32,7 +32,7 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-
+                ExpirationDate = DateTime.UtcNow
             });
 
 
