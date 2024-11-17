@@ -34,6 +34,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.autoRefreshSubscription?.unsubscribe();
   }
 
+
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;

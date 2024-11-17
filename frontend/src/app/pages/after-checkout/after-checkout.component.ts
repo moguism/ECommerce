@@ -23,12 +23,17 @@ export class AfterCheckoutComponent implements OnInit
   constructor(private productService: ProductService, private apiService: ApiService, private activatedRoute: ActivatedRoute) {
   }
 
+  async createOrder(){
+    this.apiService.get("checkout/status/"+this.id)
+  }
+
   async ngOnInit(): Promise<void> {
     const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
     console.log("PRUEBA: ", id)
     if(id != "" && id != null)
     {
       this.id = id
+      this.createOrder()
     }
     /*this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
     const result = await this.apiService.get("TemporalOrder", { "id" : this.id })

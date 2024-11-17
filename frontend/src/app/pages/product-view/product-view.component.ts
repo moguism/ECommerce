@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
-import { CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 // Date Import
 import locale from '@angular/common/locales/es'
@@ -27,7 +27,7 @@ registerLocaleData(locale, 'es');
 })
 export class ProductViewComponent implements OnInit {
 
-  protected count = 0;
+  protected count = 1;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
@@ -63,7 +63,7 @@ export class ProductViewComponent implements OnInit {
 
       console.log(newReview)
 
-      await this.reviewService.addReview(newReview); 
+      await this.reviewService.addReview(newReview);
 
       if (reviewTextElement) {
         reviewTextElement.value = "";
@@ -75,10 +75,8 @@ export class ProductViewComponent implements OnInit {
   }
 
   sumar() {
-    if(this.product)
-    {
-      if(this.count + 1 <= this.product?.stock)
-      {
+    if (this.product) {
+      if (this.count + 1 <= this.product?.stock) {
         this.count++;
       }
     }
@@ -90,44 +88,40 @@ export class ProductViewComponent implements OnInit {
   }
 
 
-  async addToCart(product: Product)
-  {
-    if(this.count <= 0)
-    {
+  async addToCart(product: Product) {
+    if (this.count <= 0) {
       alert("Cantidad no válida")
       return
     }
-    if(this.apiService.jwt == "")
-    {
-        let allProducts : Product[] = []
-        const productsLocalStore = localStorage.getItem("shoppingCart")
-        if(productsLocalStore)
-        {
-          allProducts = JSON.parse(productsLocalStore)
-          const index = allProducts.findIndex(p => p.id === product.id);
-          let newProduct = product
-          if(index != -1)
-          {
-            newProduct = allProducts[index]
-            newProduct.total += this.count
-          }
-          else
-          {
-            newProduct.total = 1
-          }
+
+    if (this.apiService.jwt == "") {
+      let allProducts: Product[] = []
+      const productsLocalStore = localStorage.getItem("shoppingCart")
+      if (productsLocalStore) {
+        allProducts = JSON.parse(productsLocalStore)
+        const index = allProducts.findIndex(p => p.id === product.id);
+        let newProduct = product
+        if (index != -1) {
+          newProduct = allProducts[index]
+          newProduct.total += this.count
         }
-        else
-        {
-          product.total = this.count
+        else {
+          newProduct.total = 1
           allProducts.push(product)
         }
-        localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+      }
+      else {
+        product.total = this.count
+        allProducts.push(product)
+      }
+      localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
     }
     else {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
-      await this.apiService.post("ShoppingCart/add", cartContent)
+      const cartContent = new CartContent(product.id, this.count)
+      // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
+      await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
     alert("Producto añadido al carrito correctamente")
   }

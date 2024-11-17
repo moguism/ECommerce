@@ -20,10 +20,13 @@ public class CheckoutController : ControllerBase
     private readonly Settings _settings;
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
+    private readonly OrderService _orderService;
     private readonly UnitOfWork _unitOfWork;
     private readonly string secret = "wh"; // AQUÍ VA CLAVE
 
-    public CheckoutController(Settings settings, CartContentMapper cartContentMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork)
+    public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
+        ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, 
+        OrderService orderService)
     {
         _settings = settings;
         _cartContentMapper = cartContentMapper;
@@ -76,7 +79,7 @@ public class CheckoutController : ControllerBase
 
     private async Task<Session> GetOptions(User user, string mode)
     {
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
+        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
         IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
         if (cartContents == null || !cartContents.Any())
             return null;
@@ -123,7 +126,7 @@ public class CheckoutController : ControllerBase
         }
         else
         {
-            options.SuccessUrl = _settings.ClientBaseUrl + "/-after-checkout?session_id={CHECKOUT_SESSION_ID}";
+            options.SuccessUrl = _settings.ClientBaseUrl + "/after-checkout?session_id={CHECKOUT_SESSION_ID}";
             options.CancelUrl = _settings.ClientBaseUrl + "/after-checkout";
         }
 
@@ -134,72 +137,17 @@ public class CheckoutController : ControllerBase
 
     //Verifica el estado de la sesión
     [HttpGet("status/{sessionId}")]
-    public async Task<ActionResult> SessionStatus(string sessionId)
+    public async Task SessionStatus(string sessionId)
     {
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
-
-        return Ok(new { status = session.Status, customerEmail = session.CustomerEmail });
-    }
-
-    [HttpPost("webhook")]
-    public async Task<IActionResult> Index()
-    {
-        // Pilla lo que le han mandado por la solicitud
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-
-        try
+        if (session.PaymentStatus == "paid")
         {
-            // Para que no venga un ruso a hackear el back y leakear info, verifica que viene desde Stripe
-            var stripeEvent = EventUtility.ConstructEvent(
-                json,
-                Request.Headers["Stripe-Signature"],
-                secret
-            );
-
-            // Si el pago ha sido correcto...
-            if (stripeEvent.Type == EventTypes.CheckoutSessionCompleted || stripeEvent.Type == EventTypes.CheckoutSessionAsyncPaymentSucceeded)
-            {
-                // ... extraigo la sesión para poder manipularla
-                var session = stripeEvent.Data.Object as Session;
-
-                await CompletePayment(session);
-            }
-
-            return Ok();
-        }
-        catch (StripeException)
-        {
-            Console.WriteLine("Algo ha fallado :(");
-            return BadRequest();
+            await _orderService.CompletePayment(session);
         }
     }
 
-    private async Task CompletePayment(Session session)
-    {
-        User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
-        
-        ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
-        if(cart.TemporalOrders.Count() == 0 || cart.TemporalOrders.Count() > 1)
-        {
-            throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
-        }
-        cart.Finished = true;
-        _unitOfWork.ShoppingCartRepository.Update(cart);
-
-        TemporalOrder temporalOrder = cart.TemporalOrders.First();
-        temporalOrder.Finished = true;
-        temporalOrder.PaymentTypeId = 1; // El pago con tarjeta
-        _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
-
-        Order order = new Order();
-        order.TemporalOrderId = temporalOrder.Id;
-        order.CreatedAt = DateTime.UtcNow;
-        // Quizás también deberíamos de guardar el total, pero por ahora no lo hago porque en el front tenemos métodos para eso
-        await _unitOfWork.OrderRepository.InsertAsync(order);
-
-        await _unitOfWork.SaveAsync();
-    }
+    
 
 
     private async Task<User> GetAuthorizedUser()

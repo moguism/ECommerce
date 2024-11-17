@@ -19,5 +19,5 @@ export const routes: Routes = [
     {path: "product-list/:category", component: ProductListComponent},
     {path: "shopping-cart", component: ShoppingCartComponent},
     {path: "checkout/:method/:id", component: CheckoutComponent},
-    {path: "after-checkout", component: AfterCheckoutComponent}
+    {path: "after-checkout",component:AfterCheckoutComponent}
 ];

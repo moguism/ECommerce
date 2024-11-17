@@ -18,9 +18,9 @@
                 </div>
             </div>
             }
-            @empty 
+            @empty
             {
-             <p>No hay productos en el carrito</p>
+            <p>No hay productos en el carrito</p>
             }
         </div>
         <div class="final-price">
@@ -30,10 +30,11 @@
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
             @if (shoppingCartProducts.length > 0) {
-                <button (click)="embeddedCheckout()">Comprar embebido</button>
-                <button (click)="hostedCheckout()">Comprar en página externa</button>
+            <button (click)="embeddedCheckout()">Comprar embebido</button>
+            <button (click)="hostedCheckout()">Comprar en página externa</button>
             }
-            <hr>            
+
+            <hr>
         </div>
     </div>
 </div>

@@ -25,7 +25,7 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
     }
 
     
-
+    
     public IQueryable<TEntity> GetQueryable(bool asNoTracking = true)
     {
         DbSet<TEntity> entities = _context.Set<TEntity>();

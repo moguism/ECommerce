@@ -1,45 +1,69 @@
-﻿using Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Server.Models;
 
 namespace Server.Services;
 
 public class CleanTemporalOrdersService : BackgroundService
 {
-    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(5);
+    private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(1);
+    private readonly IServiceProvider _serviceProvider;
 
-    /*public CleanTemporalOrdersService(TemporalOrderService temporalOrderService)
+    public CleanTemporalOrdersService(IServiceProvider serviceProvider)
     {
-        _temporalOrderService = temporalOrderService;
-    }*/
+        _serviceProvider = serviceProvider;
+    }
 
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        /*FarminhouseContext farminhouseContext = new FarminhouseContext();
-        UnitOfWork unitOfWork = new UnitOfWork(farminhouseContext);
         while (!stoppingToken.IsCancellationRequested)
         {
-            Console.WriteLine("Ejecutando servicio en segundo plano");
-            List<TemporalOrder> expiredOrders = (List<TemporalOrder>) await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
-
-            foreach (TemporalOrder temporalOrder in expiredOrders)
+            
+            using (var scope = _serviceProvider.CreateScope())
             {
-                unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
-                
-                ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetFullByIdAsync(temporalOrder.ShoppingCartId);
-                cart.Temporal = false;
-                unitOfWork.ShoppingCartRepository.Update(cart);
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
+                try {
+                    Console.WriteLine("Ejecutando servicio en segundo plano");
+                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetAllAsync();
 
-                List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
-                foreach (CartContent cartContent in cartContents)
+                    foreach (TemporalOrder temporalOrder in expiredOrders)
+                    {
+                        // Se desasocia la entidad existente del contexto antes de tocar otra
+                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetByIdAsync(temporalOrder.Id);
+                        if (existingEntity != null)
+                        {
+                            unitOfWork.Context.Entry(existingEntity).State = EntityState.Detached;
+                        }
+
+                        unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+
+                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetAllShoppingCartByShoppingCartIdAsync(1);
+                        unitOfWork.ShoppingCartRepository.Update(cart);
+
+                        List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
+                        foreach (CartContent cartContent in cartContents)
+                        {
+                            Product product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
+                            product.Stock += cartContent.Quantity;
+                            unitOfWork.ProductRepository.Update(product);
+
+                        }
+                    }
+
+                    await unitOfWork.SaveAsync();
+                } catch(Exception e)
                 {
-                    Product product = await unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
-                    product.Stock += cartContent.Quantity;
-                    unitOfWork.ProductRepository.Update(product);
+                    Console.WriteLine($"Error durante la ejecución del servicio: {e.ToString()}");
                 }
+                
             }
-
-            await unitOfWork.SaveAsync();
+            
 
             await Task.Delay(_cleanupInterval, stoppingToken);
-        }*/
+            
+        }
+            
+    
     }
+    
 }

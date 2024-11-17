@@ -26,7 +26,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ShoppingCartDto> GetShoppingCart([FromQuery] bool isTemporal)
+        public async Task<ShoppingCartDto> GetShoppingCart()
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -34,7 +34,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, isTemporal);
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
             if (shoppingCart == null)
             {
                 return null;
@@ -44,8 +44,23 @@ namespace Server.Controllers
 
         }
 
+
+        //Pruebas
+        [HttpGet("ByUserId")]
+        public async Task<ShoppingCart> GetShoppingCart(int Id)
+        {
+            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(Id);
+            if (shoppingCart == null)
+            {
+                return null;
+            }
+            return shoppingCart;
+
+
+        }
+
         [Authorize]
-        [HttpPost]
+        [HttpPost("addProductOrChangeQuantity")]
         public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
         {
 
@@ -55,22 +70,7 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, false);
-
-        }
-
-        [Authorize]
-        [HttpPost("add")]
-        public async Task ChangeShoppingCartQuantity([FromBody] CartContentDto cartContentDto)
-        {
-
-            User user = await GetAuthorizedUser();
-            if (user == null)
-            {
-                return;
-            }
-
-            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto, true);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
 
         }
 
@@ -85,7 +85,7 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId, false);
+            await _shoppingCartService.RemoveProductFromShoppingCart(user, productId);
 
         }
 

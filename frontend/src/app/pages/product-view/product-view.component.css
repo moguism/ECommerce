@@ -21,15 +21,22 @@
     width: 100%; 
     max-width: 350px;
     height: 350px;
+    border-radius: 8px;
 }
 .products-description{
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 5%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    width: 30%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
-.products-description-title{
-    color: white;
+products-description-description{
+    word-break: break-word;
+    white-space: normal;
+    width: 50%;
 }
 .products-description-price{
 display: flex;
@@ -43,11 +50,12 @@ gap: 100px;
 .products-description-anadir{
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
 }
 .button-menos{
     background-color: green;
-    width: 100%;
+    width: 25%;
     height: 38%;
     border:1px solid black;
     border-top-left-radius: 10%;
@@ -60,11 +68,11 @@ gap: 100px;
     align-items: center;
     border: 1px solid black;
     height: 34%;
-    width: 100%;
+    width: 25%;
 }
 .button-mas{
     background-color: green;
-    width: 100%;
+    width: 25%;
     height: 38%;
     border: 1px solid black;
     border-top-right-radius: 10%;
@@ -72,7 +80,7 @@ gap: 100px;
     cursor: pointer;
 }
 .anadir{
-    width: 100%;
+    width: 50%;
     height: 150%;
     background-color: green;
     font-weight: bold;
@@ -113,13 +121,13 @@ gap: 100px;
     width: 41%;
 }
 .review-input-text{
-    background-color: black;
+    background-color: white;
     border-radius: 8px;
-    color: white;
+    color: black;
     width: 100%;
 }
 .review-input-button{
-    width: 100%;
+    width: 50%;
     background-color: green;
     font-weight: bold;
     border:  1px solid black;
@@ -158,10 +166,14 @@ gap: 100px;
 @media (max-width: 650px) {
     .products {
         flex-direction: column;
+        gap: 20px;
     }
     .products-image{
         display: flex;
         justify-content: center;
+    }
+    .products-description{
+        width: 100%;
     }
     .products-description-anadir{
         width: 50%;
