@@ -55,20 +55,20 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("newTemporalOrder")]
-        public async Task<IActionResult> CreateTemporal([FromBody] IEnumerable<CartContentDto> products)
+        public async Task<TemporalOrder> CreateTemporal([FromBody] IEnumerable<CartContentDto> products)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return Unauthorized();
+                return null;
             }
 
 
             Wishlist wishlist = await _wishListService.CreateNewWishList(products);// Añade a la nueva wislist los productos que el usuario quire comprar
 
             //Añade una nueva orden temporal con los datos del usuario
-            await _temporalOrderService.CreateTemporalOrder(user,wishlist);
-            return Ok("Orden temporal creada correctamente");
+            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,wishlist);
+            return order;
 
         }
 

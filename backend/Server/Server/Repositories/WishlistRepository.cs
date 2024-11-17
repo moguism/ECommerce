@@ -8,6 +8,11 @@ namespace Server.Repositories
     {
         public WishlistRepository(FarminhouseContext context) : base(context) { }
 
-
+        public async Task<Wishlist> GetFullByIdAsync (int id)
+        {
+            return await GetQueryable()
+            .Include(wishlist => wishlist.Products)
+            .FirstOrDefaultAsync(wishlist => wishlist.Id == id); 
+        }
     }
 }

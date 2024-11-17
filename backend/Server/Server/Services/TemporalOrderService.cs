@@ -24,27 +24,28 @@ namespace Server.Services
         }
 
         
-        public async Task CreateTemporalOrder(User user, Wishlist wishlist)
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
         {
 
             //La añade a la base de datos
-            _unitOfWork.TemporalOrderRepository.Add(new TemporalOrder
+            TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-
+                ExpirationDate = DateTime.UtcNow
             });
 
 
             //Resta el stock a los productos que quiere comprar el usuario
             foreach(ProductsToBuy productToBuy in wishlist.Products)
             {
-                Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToBuy.ProductId);
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
                 product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
             }
 
             await _unitOfWork.SaveAsync();
+            return order;
         }
         
 

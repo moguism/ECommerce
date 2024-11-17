@@ -39,22 +39,8 @@ namespace Server.Controllers
             {
                 return null;
             }
+
             return _shoppingCartMapper.ToDto(shoppingCart);
-
-
-        }
-
-
-        //Pruebas
-        [HttpGet("ByUserId")]
-        public async Task<ShoppingCart> GetShoppingCart(int Id)
-        {
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(Id);
-            if (shoppingCart == null)
-            {
-                return null;
-            }
-            return shoppingCart;
 
 
         }

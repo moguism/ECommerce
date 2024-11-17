@@ -23,7 +23,7 @@ namespace Server.Repositories
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)
             {
-                Add(new CartContent
+                await InsertAsync(new CartContent
                 {
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
@@ -51,7 +51,7 @@ namespace Server.Repositories
             {
                 return;
             }
-            _context.CartContent.Remove(cartContent);
+            Delete(cartContent);
 
 
         }
