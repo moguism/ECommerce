@@ -22,7 +22,6 @@ public class CheckoutController : ControllerBase
     private readonly ShoppingCartService _shoppingCartService;
     private readonly OrderService _orderService;
     private readonly UnitOfWork _unitOfWork;
-    private readonly string secret = "wh"; // AQUÍ VA CLAVE
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
         ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, 
@@ -32,6 +31,7 @@ public class CheckoutController : ControllerBase
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
         _unitOfWork = unitOfWork;
+        _orderService = orderService;
     }
 
 

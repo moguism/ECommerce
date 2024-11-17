@@ -99,7 +99,7 @@ export class ShoppingCartComponent implements OnInit {
       else {
         localStorage.removeItem("shoppingCart")
         const cartContent = new CartContent(parseInt(input.value), product.id)
-        await this.apiService.post("ShoppingCart", cartContent)
+        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
       }
     }
