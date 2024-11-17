@@ -24,29 +24,29 @@ public class CleanTemporalOrdersService : BackgroundService
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                 try {
                     Console.WriteLine("Ejecutando servicio en segundo plano");
-                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetAllAsync();
+                    TemporalOrder[] expiredOrders = (TemporalOrder[])await unitOfWork.TemporalOrderRepository.GetAllAsync();
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
                         // Se desasocia la entidad existente del contexto antes de tocar otra
-                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetByIdAsync(temporalOrder.Id);
+                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(temporalOrder.Id);
                         if (existingEntity != null)
                         {
                             unitOfWork.Context.Entry(existingEntity).State = EntityState.Detached;
                         }
 
+                        Wishlist wishlist = existingEntity.Wishlist;
+                        wishlist = await unitOfWork.WishlistRepository.GetFullByIdAsync(wishlist.Id);
+
                         unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+                        unitOfWork.WishlistRepository.Delete(wishlist);
 
-                        ShoppingCart cart = await unitOfWork.ShoppingCartRepository.GetAllShoppingCartByShoppingCartIdAsync(1);
-                        unitOfWork.ShoppingCartRepository.Update(cart);
-
-                        List<CartContent> cartContents = (List<CartContent>)cart.CartContent;
-                        foreach (CartContent cartContent in cartContents)
+                        foreach (ProductsToBuy cartContent in wishlist.Products)
                         {
                             Product product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
                             product.Stock += cartContent.Quantity;
                             unitOfWork.ProductRepository.Update(product);
-
+                            unitOfWork.ProductsToBuyRepository.Delete(cartContent);
                         }
                     }
 
