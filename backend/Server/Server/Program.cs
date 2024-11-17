@@ -6,6 +6,7 @@ using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
 using Server.Services;
+using Server.Services.Blockchain;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -65,6 +66,7 @@ namespace Server
             builder.Services.AddScoped<TemporalOrderMapper>();
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
+            builder.Services.AddScoped<BlockchainService>();
 
             builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
