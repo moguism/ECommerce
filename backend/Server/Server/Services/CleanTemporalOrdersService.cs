@@ -24,7 +24,7 @@ public class CleanTemporalOrdersService : BackgroundService
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                 try {
                     Console.WriteLine("Ejecutando servicio en segundo plano");
-                    TemporalOrder[] expiredOrders = (TemporalOrder[])await unitOfWork.TemporalOrderRepository.GetAllAsync();
+                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
