@@ -18,6 +18,10 @@ namespace Server.Mappers
 
         public IEnumerable<CartContentDto> ToDto(IEnumerable<ProductsToBuy> productsToBuy)
         {
+            if(productsToBuy == null)
+            {
+                return null;
+            }
 
             List<CartContentDto> result = new List<CartContentDto>();
 

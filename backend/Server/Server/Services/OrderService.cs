@@ -18,13 +18,18 @@ namespace Server.Services
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
 
-            if (user.TemporalOrders.Count() == 0)
+            /*if (user.TemporalOrders.Count() == 0)
             {
                 throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
-            }
+            }*/
 
             //Recoge la ultima orden temporal del usuario
             TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
+
+            if(temporalOrder == null)
+            {
+                temporalOrder = user.TemporalOrders.LastOrDefault();
+            }
 
             Order order = new Order();
             order.CreatedAt = DateTime.UtcNow;
