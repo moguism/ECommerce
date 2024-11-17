@@ -98,8 +98,8 @@ export class ShoppingCartComponent implements OnInit {
       }
       else {
         localStorage.removeItem("shoppingCart")
-        const cartContent = new CartContent(parseInt(input.value), product.id)
-        await this.apiService.post("ShoppingCart", cartContent)
+        const cartContent = new CartContent( product.id, parseInt(input.value))
+        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
       }
     }
