@@ -49,11 +49,13 @@ namespace Server.Services
             //order.Wishlist = temporalOrder.Wishlist;
             order.UserId = user.Id;
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
+            if(!temporalOrder.Quick)
+            {
+                ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
+                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
+            }
 
-            await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
-
-           Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
+            Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
             return saveOrder;

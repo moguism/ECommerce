@@ -24,7 +24,7 @@ namespace Server.Services
         }
 
         
-        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist)
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist, bool quick)
         {
 
             //La añade a la base de datos
@@ -32,7 +32,8 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-                ExpirationDate = DateTime.UtcNow
+                ExpirationDate = DateTime.UtcNow,
+                Quick = quick
             });
 
 

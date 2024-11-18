@@ -7,6 +7,7 @@ import { HeaderShopComponent } from '../../components/header-shop/header-shop.co
 import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { Router } from '@angular/router';
+import { TemporalOrder } from '../../models/temporal-order';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -24,8 +25,9 @@ export class ShoppingCartComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
-      this.createDirectPayment();
+      await this.createDirectPayment();
       localStorage.removeItem("goToCheckout")
+      return
     }
     else {
       this.getShoppingCart();
@@ -168,7 +170,7 @@ export class ShoppingCartComponent implements OnInit {
 
     localStorage.setItem("method", method)
     if (this.apiService.jwt != "") {
-      const result = await this.apiService.post("TemporalOrder/newTemporalOrder", this.productsToBuy)
+      const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(this.productsToBuy, false))
       console.log("ORDEN TEMPORAL: ", result)
       this.goToCheckout(result)
     }
@@ -187,8 +189,9 @@ export class ShoppingCartComponent implements OnInit {
       const cartContent = new CartContent(product.id, product.total)
       cartContents.push(cartContent)
     }
-    const result = await this.apiService.post("TemporalOrder/newTemporalOrder", cartContents)
+    const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(cartContents, true))
     console.log("PAGO DIRECTO: ", result)
+    localStorage.removeItem("shoppingCart")
     this.goToCheckout(result)
   }
 
