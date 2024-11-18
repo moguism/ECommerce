@@ -55,5 +55,10 @@ namespace Server.Repositories
 
 
         }
+        public async Task DeleteByIdShoppingCartAsync(ShoppingCart cart,int ShoppingCartId)
+        {
+            CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ShoppingCartId == ShoppingCartId);
+            _context.CartContent.Remove(cartContent);
+        }
     }
 }

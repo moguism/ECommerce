@@ -47,7 +47,7 @@ export class ShoppingCartComponent implements OnInit {
       console.log("Sincronizando productos locales al carrito del backend...");
 
       for (const product of this.shoppingCartProducts) {
-        const cartContent = new CartContent(product.total, product.id);
+        const cartContent = new CartContent(product.id, product.total);
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent);
       }
 
@@ -98,7 +98,9 @@ export class ShoppingCartComponent implements OnInit {
       }
       else {
         localStorage.removeItem("shoppingCart")
-        const cartContent = new CartContent(parseInt(input.value), product.id)
+
+        const cartContent = new CartContent( product.id, parseInt(input.value))
+
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
       }

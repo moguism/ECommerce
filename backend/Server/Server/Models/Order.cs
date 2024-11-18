@@ -10,6 +10,9 @@ public class Order
     //public decimal Total { get; set; }
     public int PaymentTypeId { get; set; }
     public PaymentsType PaymentsType { get; set; }
+
+    public int UserId { get; set; }
+    public User User { get; set; }
     public int WishlistId { get; set; }
     public Wishlist Wishlist { get; set; }
 

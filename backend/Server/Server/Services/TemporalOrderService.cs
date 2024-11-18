@@ -32,7 +32,7 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-
+                ExpirationDate = DateTime.UtcNow
             });
 
 
@@ -47,33 +47,18 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
             return order;
         }
-        
 
-
-        /*public async Task RemoveExpiredOrders()
+        public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
         {
-            List<TemporalOrder> expiredOrders = (List<TemporalOrder>) await _unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
-
-            foreach (TemporalOrder temporalOrder in expiredOrders)
-            {
-                _unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
-            }
-
-            await _unitOfWork.SaveAsync();
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
         }
 
         public async Task UpdateExpiration(TemporalOrder temporalOrder)
         {
             temporalOrder.ExpirationDate = DateTime.UtcNow;
-            using (var scope = _serviceProvider.CreateScope()) // Crea la instancia del serviceProvider
-            {
-                var unitOfWork = scope.ServiceProvider.GetService<UnitOfWork>();
-
-                unitOfWork.TemporalOrderRepository.Update(temporalOrder);
-
-                await unitOfWork.SaveAsync();
-            } // Cierra la instancia del serviceProvider
+            _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
+            await _unitOfWork.SaveAsync();
         }
-        */
+        
     }
 }
