@@ -80,11 +80,7 @@ namespace Server.Repositories
             return shoppingCart;
         }
 
-        public async Task DeleteShoppingCartByShoppingCartIdAsync(int shoppingCartId)
-        {
-            ShoppingCart shoppingCart = await _context.ShoppingCart.FirstOrDefaultAsync(c => c.Id == shoppingCartId);
-            _context.ShoppingCart.Remove(shoppingCart);
-        }
+
 
     }
 }
