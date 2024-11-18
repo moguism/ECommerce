@@ -43,11 +43,14 @@ namespace Server.Controllers
                 return null;
             }
 
-            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderByUserId(id);
-            if(temporalOrder == null)
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+            Wishlist wishlist = await _wishListService.GetWishlistById(temporalOrder.WishlistId);
+            if(temporalOrder == null || wishlist == null)
             {
                 return null;
             }
+
+            temporalOrder.Wishlist = wishlist;
 
             return _temporalOrderMapper.ToDto(temporalOrder);
         }
