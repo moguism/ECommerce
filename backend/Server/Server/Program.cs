@@ -54,6 +54,7 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
+            
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
@@ -69,6 +70,7 @@ namespace Server
 
             builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
+            builder.Services.AddScoped<UserService>();
 
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
