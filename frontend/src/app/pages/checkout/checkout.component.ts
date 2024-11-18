@@ -9,11 +9,8 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { interval, Subscription } from 'rxjs';
 import { StripeService } from 'ngx-stripe';
 import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
-import { CreateEthTransactionRequest } from '../models/create-eth-transaction-request';
-import { EthereumInfo } from '../models/ethereum-info';
-import { CheckTransactionRequest } from '../models/check-transaction-request';
-import { Result } from '../models/result';
 import { BlockchainService } from '../../services/blockchain.service';
+import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -34,13 +31,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   //blockchain
   networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
-  contractAddress: string;
-
   eurosToSend: number;
   addressToSend: string;
-
-  contractInfo: Erc20Contract;
-
 
   constructor(private productService: ProductService, private apiService: ApiService, 
     private router: Router, private activatedRoute: ActivatedRoute, 
@@ -227,7 +219,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
 
 }
-
 
 
 declare global {
