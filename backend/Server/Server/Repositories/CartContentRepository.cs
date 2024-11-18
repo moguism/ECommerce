@@ -23,7 +23,7 @@ namespace Server.Repositories
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)
             {
-                await InsertAsync(new CartContent
+                Add(new CartContent
                 {
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
@@ -51,9 +51,14 @@ namespace Server.Repositories
             {
                 return;
             }
-            Delete(cartContent);
+            _context.CartContent.Remove(cartContent);
 
 
+        }
+        public async Task DeleteByIdShoppingCartAsync(ShoppingCart cart,int ShoppingCartId)
+        {
+            CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ShoppingCartId == ShoppingCartId);
+            _context.CartContent.Remove(cartContent);
         }
     }
 }

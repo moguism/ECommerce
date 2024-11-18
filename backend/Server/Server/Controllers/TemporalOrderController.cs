@@ -72,6 +72,25 @@ namespace Server.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet("refresh")]
+        public async Task RefreshTemporalOrder([FromQuery] int id)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+
+            if (temporalOrder == null || temporalOrder.UserId != user.Id)
+            {
+                return;
+            }
+
+            await _temporalOrderService.UpdateExpiration(temporalOrder);
+        }
 
         private async Task<User> GetAuthorizedUser()
         {
