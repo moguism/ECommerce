@@ -46,9 +46,14 @@ namespace Server.Services
 
             ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
 
-            await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
+            if(shoppingCart != null)
+            {
+                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
 
-            await _unitOfWork.OrderRepository.InsertAsync(order);
+                await _unitOfWork.OrderRepository.InsertAsync(order);
+
+                await _unitOfWork.ShoppingCartRepository.DeleteShoppingCartByShoppingCartIdAsync(shoppingCart.Id);
+            }
 
             await _unitOfWork.SaveAsync();
         }

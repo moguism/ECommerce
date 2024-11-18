@@ -38,13 +38,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
-    console.log("RESULT CHECKOUT: ", result)
-
-    const shoppinCartResult = await this.apiService.get("ShoppingCart", { "isTemporal": true }, 'json');
+    const shoppinCartResult = await this.apiService.get("TemporalOrder", {"id" : this.id} , 'json');
+    console.log("RESULTADO AAAAAA: ", shoppinCartResult)
     if (shoppinCartResult.data) {
       const data: any = shoppinCartResult.data;
-      const cartContent: any[] = data.cartContent;
+      const cartContent: any[] = data.cartContentDtos;
       for (const product of cartContent) {
         const productResult = await this.productService.getById(product.productId);
         if (productResult != null) {

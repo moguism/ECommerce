@@ -24,12 +24,12 @@ public class CleanTemporalOrdersService : BackgroundService
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                 try {
                     Console.WriteLine("Ejecutando servicio en segundo plano");
-                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow);
+                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow.AddMinutes(5));
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
                         // Se desasocia la entidad existente del contexto antes de tocar otra
-                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(temporalOrder.Id);
+                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetFullTemporalOderByIdWithoutUser(temporalOrder.Id);
                         if (existingEntity != null)
                         {
                             unitOfWork.Context.Entry(existingEntity).State = EntityState.Detached;
@@ -39,14 +39,13 @@ public class CleanTemporalOrdersService : BackgroundService
                         wishlist = await unitOfWork.WishlistRepository.GetFullByIdAsync(wishlist.Id);
 
                         unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
-                        unitOfWork.WishlistRepository.Delete(wishlist);
 
                         foreach (ProductsToBuy cartContent in wishlist.Products)
                         {
                             Product product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
                             product.Stock += cartContent.Quantity;
                             unitOfWork.ProductRepository.Update(product);
-                            unitOfWork.ProductsToBuyRepository.Delete(cartContent);
+                            /*unitOfWork.ProductsToBuyRepository.Delete(cartContent);*/
                         }
                     }
 
