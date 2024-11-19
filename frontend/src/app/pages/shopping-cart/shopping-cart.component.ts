@@ -20,7 +20,8 @@ export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
 
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) { }
+  
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     const goToCheckout = localStorage.getItem("goToCheckout")
@@ -221,6 +222,16 @@ export class ShoppingCartComponent implements OnInit {
       totalcount += product.total * product.price;
     }
     return totalcount;
+  }
+  sumar(index: number) {
+    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
+    this.shoppingCartProducts[quantity].total++;
+  }
+  restar(index: number) {
+    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
+    if(this.shoppingCartProducts[quantity].total>0){
+      this.shoppingCartProducts[quantity].total--;
+    }
   }
 
 }

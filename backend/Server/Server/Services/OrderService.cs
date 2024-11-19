@@ -87,8 +87,7 @@ namespace Server.Services
             order.CreatedAt = DateTime.UtcNow;
             //order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
 
-            //Por ahora inserta el pago con tarjeta
-            order.PaymentTypeId = 1;
+            order.PaymentTypeId = 2;
             //order.PaymentsType = await _unitOfWork.PaymentsTypeRepository.GetByIdAsync(1);
 
             //La misma wishlist que la ultima orden temporal que ha realizado el usuario

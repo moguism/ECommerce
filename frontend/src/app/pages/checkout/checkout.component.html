@@ -31,10 +31,14 @@
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
             @if (shoppingCartProducts.length > 0) {
-            <button (click)="embeddedCheckout()">Comprar embebido</button>
-            <button (click)="hostedCheckout()">Comprar en página externa</button>
-            <button (click)="createTransaction()">Pagar con ETH</button>
-
+                @if(method == "card")
+                {
+                    <button (click)="embeddedCheckout()">Comprar embebido</button>
+                    <button (click)="hostedCheckout()">Comprar en página externa</button>
+                }
+                @else {
+                    <button (click)="createTransaction()">Pagar con ETH</button>
+                }
             }
             
 
