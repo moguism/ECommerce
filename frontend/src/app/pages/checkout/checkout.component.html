@@ -23,6 +23,7 @@
             <p>No hay productos en el carrito</p>
             }
         </div>
+
         <div class="final-price">
             <h3>Resumen</h3>
             <div class="final-price-price">
@@ -32,7 +33,10 @@
             @if (shoppingCartProducts.length > 0) {
             <button (click)="embeddedCheckout()">Comprar embebido</button>
             <button (click)="hostedCheckout()">Comprar en página externa</button>
+            <button (click)="createTransaction()">Pagar con ETH</button>
+
             }
+            
 
             <hr>
         </div>
