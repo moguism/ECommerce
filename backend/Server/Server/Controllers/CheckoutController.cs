@@ -173,12 +173,20 @@ public class CheckoutController : ControllerBase
         if (session.PaymentStatus == "paid")
         {
             Order order= await _orderService.CompletePayment(session);
+            int whislistId = order.WishlistId;
+            Wishlist productsorder=await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
             if (session.CustomerEmail != null)
             {
                 string to = session.CustomerEmail;
                 String subject = "Envio de la compra realizada";
-                String body = "Gracias por comprar en Farm in house a salavdo a millones de animales con esta compra";
-                await _emailService.SendEmailAsync(to, subject, body,false);
+                String body = "<html> <h1>QUE BISHO GRACIAS POR COMPRAR</h1> <table><tr><td>Nombre</td><td>Imagen</td><td>Precio</td><td>Cantidad</td><td>Suma</td></tr>";
+                foreach (ProductsToBuy products in productsorder.Products) 
+                {
+                    Models.Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
+                    body += $"<tr><td>{oneproduct.Name}</td><td>{oneproduct.Image}</td><td>{oneproduct.Price}</td><td>{products.Quantity}</td><td>{products.Quantity*oneproduct.Price}</td></tr>";
+                }
+                body += "</table></html>";
+                await _emailService.SendEmailAsync(to, subject, body,true);
             }
             return order;
         }
