@@ -16,4 +16,6 @@ public class Order
     public int WishlistId { get; set; }
     public Wishlist Wishlist { get; set; }
     public string SessionId { get; set; }
+
+    public string Hash { get; set; }
 }
