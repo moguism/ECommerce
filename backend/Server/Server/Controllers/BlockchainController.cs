@@ -8,6 +8,7 @@ using Server.Services.Blockchain;
 using Nethereum.Hex.HexTypes;
 using System.Web;
 using Examples.WebApi.Models.Dtos;
+using Server.Mappers;
 
 namespace Server.Controllers;
 
@@ -18,12 +19,17 @@ public class BlockchainController : ControllerBase
     private readonly BlockchainService _blockchainService;
     private readonly OrderService _orderService;
     private readonly UserService _userService;
+    private readonly ProductsToBuyMapper _productsToBuyMapper;
+    private readonly OrderMapper _orderMapper;
 
-    public BlockchainController(BlockchainService blockchainService, OrderService orderService, UserService userService)
+    public BlockchainController(BlockchainService blockchainService, OrderService orderService, 
+        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper)
     {
         _blockchainService = blockchainService;
         _orderService = orderService;
         _userService = userService;
+        _productsToBuyMapper = productsToBuyMapper;
+        _orderMapper = orderMapper;
     }
 
     [HttpGet]
@@ -43,7 +49,7 @@ public class BlockchainController : ControllerBase
 
     [Authorize]
     [HttpPost("check")]
-    public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
+    public async Task<OrderDto> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
         User user = await GetAuthorizedUser();
         if(user == null)
@@ -55,7 +61,11 @@ public class BlockchainController : ControllerBase
         if(done == true)
         {
             Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
-            return order;
+            
+            //Productos comprados por el usuario
+            IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
+
+            return _orderMapper.ToDto(order,products);
         }
         return null;
     }

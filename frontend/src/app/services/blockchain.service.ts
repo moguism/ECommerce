@@ -4,6 +4,7 @@ import { CreateEthTransactionRequest } from '../models/create-eth-transaction-re
 import { EthereumInfo } from '../models/ethereum-info';
 import { CheckTransactionRequest } from '../models/check-transaction-request';
 import { Result } from '../models/result';
+import { Order } from '../models/order';
 
 
 
@@ -19,7 +20,7 @@ export class BlockchainService {
     return this.api.post<EthereumInfo>(`Blockchain/transaction`, data) 
   }
 
-  checkTransaction(data: CheckTransactionRequest): Promise<Result<boolean>> {
-    return this.api.post<boolean>(`Blockchain/check`, data)
+  checkTransaction(data: CheckTransactionRequest): Promise<Result<Order>> {
+    return this.api.post<Order>(`Blockchain/check`, data)
   }
 }

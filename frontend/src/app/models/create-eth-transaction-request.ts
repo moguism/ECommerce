@@ -1,4 +1,4 @@
 export interface CreateEthTransactionRequest {
-    networkUrl: string;
-    euros: number;
+    NetworkUrl: string;
+    Euros: number;
 }

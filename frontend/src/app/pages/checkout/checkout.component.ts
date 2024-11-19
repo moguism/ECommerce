@@ -11,6 +11,7 @@ import { StripeService } from 'ngx-stripe';
 import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
 import { BlockchainService } from '../../services/blockchain.service';
 import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
+import { EthereumInfo } from '../../models/ethereum-info';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -169,67 +170,70 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }]
     });
 
+    this.eurosToSend = this.totalprice() //total a pagar
+
     // Obtenemos los datos que necesitamos para la transacción: 
     // gas, precio del gas y el valor en Ethereum
     const transactionRequest: CreateEthTransactionRequest = {
-      networkUrl: this.networkUrl,
-      euros: this.eurosToSend
+      NetworkUrl: this.networkUrl,
+      Euros: this.eurosToSend
     };
 
 
     const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
     //para no dar problemas con los posibles nulos
-    var ethereumInfo: any
-    ethereumInfo = ethereumInfoResult.data;
+    const ethereumInfo =  ethereumInfoResult.data;
 
     try {
       // Creamos la transacción y pedimos al usuario que la firme
-      const transactionHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
+      if (ethereumInfo != null) {
+        const transactionHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: account,
+            to: this.addressToSend,
+            value: ethereumInfo.Value,
+            gas: ethereumInfo.Gas,
+            gasPrice: ethereumInfo.GasPrice
+          }]
+        });
+        // Pedimos al servidor que verifique la transacción.
+        // CUIDADO: si el cliente le manda todos los datos,
+        // podría engañar al servidor.
+        const checkTransactionRequest = {
+          networkUrl: this.networkUrl,
+          hash: transactionHash,
           from: account,
           to: this.addressToSend,
-          value: ethereumInfo.value,
-          gas: ethereumInfo.gas,
-          gasPrice: ethereumInfo.gasPrice
-        }]
-      });
+          value: ethereumInfo.Value
+        }
 
-      // Pedimos al servidor que verifique la transacción.
-      // CUIDADO: si el cliente le manda todos los datos,
-      // podría engañar al servidor.
-      const checkTransactionRequest = {
-        networkUrl: this.networkUrl,
-        hash: transactionHash,
-        from: account,
-        to: this.addressToSend,
-        value: ethereumInfo.value
+
+        const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
+
+        //Si la transacción ha sido exitosa, crea la orden y elimina el carrito
+        if (checkTransactionResult.success && checkTransactionResult.data) {
+          alert('Transacción realizada con éxito');
+          console.log(checkTransactionResult.data)
+
+
+        } else {
+          alert('Transacción fallida');
+        }
       }
-
-      const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
-
-      //Si la transacción ha sido exitosa, crea la orden y elimina el carrito
-      if (checkTransactionResult.success && checkTransactionResult.data) {
-        alert('Transacción realizada con éxito');
-
-
-
-
-        
-      } else {
-        alert('Transacción fallida');
+      else{
+        console.log("error en la información del ethereum")
       }
-    }catch(error)
-    {
+    } catch (error) {
       // Captura el error en la transacción y muestra un mensaje
       console.error('Error en la transacción:', error);
       alert('Transacción fallida');
     }
-    
 
-    
-    
-  
+
+
+
+
   }
 
 
