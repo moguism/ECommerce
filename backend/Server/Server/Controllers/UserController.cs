@@ -17,25 +17,30 @@ namespace Server.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserMapper _userMapper;
-        private readonly UnitOfWork _unitOfWork;
         private readonly UserService _userService;
+        private readonly PasswordService _passwordService;
 
-        public UserController(UnitOfWork unitOfWork, UserMapper userMapper, UserService userService)
+        public UserController(UserMapper userMapper, UserService userService, PasswordService passwordService)
         {
-            _unitOfWork = unitOfWork;
             _userMapper = userMapper;
             _userService = userService;
+            _passwordService = passwordService;
         }
 
-
-
         //Obtiene todos los usuarios sin contraseña
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<UserAfterLoginDto>> GetAllUsers()
         {
-            //Obtener todos los usuarios
-            ICollection<User> users = await _unitOfWork.UserRepository.GetAllAsync();
+            User user = await GetCurrentUser();
+            
+            if(user == null || !user.Role.Equals("Admin"))
+            {
+                return null;
+            }
 
+            //Obtiene todos los usuarios excepto el propio usuario
+            IEnumerable<User> users = await _userService.GetAllUsersExceptId(user.Id);
 
             //Paso a DTO
             IEnumerable<UserAfterLoginDto> userDtos = _userMapper.ToDto(users);
@@ -43,8 +48,69 @@ namespace Server.Controllers
             return userDtos;
         }
 
-        
-        [HttpGet("byemail")]
+        [Authorize]
+        [HttpGet("authorizedUser")]
+        public async Task<UserAfterLoginDto> GetAuthorizedUser()
+        {
+            User user = await GetCurrentUser();
+            if(user == null)
+            {
+                return null;
+            }
+
+            UserAfterLoginDto userDto = _userMapper.ToDto(user);
+
+            return userDto;
+        }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<UserAfterLoginDto> UpdateUser([FromBody] User updatedUser)
+        {
+            User user = await GetCurrentUser();
+            if (user == null || !user.Role.Equals("Admin"))
+            {
+                return null;
+            }
+
+            User oldUser = await _userService.GetUserById(updatedUser.Id);
+            oldUser.Email = updatedUser.Email;
+            oldUser.Address = updatedUser.Address;
+            oldUser.Name = updatedUser.Name;
+            oldUser.Role = updatedUser.Role;
+
+            if(updatedUser.Password != null && updatedUser.Password != "")
+            {
+                oldUser.Password = _passwordService.Hash(updatedUser.Password);
+            }
+
+            User afterUpdate = await _userService.UpdateUser(oldUser);
+
+            UserAfterLoginDto userDto = _userMapper.ToDto(afterUpdate);
+            return userDto;
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task DeleteUser([FromQuery] int id)
+        {
+            User user = await GetCurrentUser();
+            if (user == null || !user.Role.Equals("Admin") || user.Id == id)
+            {
+                return;
+            }
+
+            User deletedUser = await _userService.GetUserById(id);
+
+            if (deletedUser == null)
+            {
+                return;
+            }
+
+            await _userService.DeleteUser(deletedUser);
+        }
+
+        /*[HttpGet("byemail")]
         public async Task<UserAfterLoginDto> GetUserByEmail(string email)
         {
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
@@ -54,10 +120,9 @@ namespace Server.Controllers
             UserAfterLoginDto userDto = _userMapper.ToDto(user);
 
             return userDto;
-        }
+        }*/
 
-        [HttpGet("authorizedUser")]
-        public async Task<User> GetAuthorizedUser()
+        private async Task<User> GetCurrentUser()
         {
             // Pilla el usuario autenticado según ASP
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;

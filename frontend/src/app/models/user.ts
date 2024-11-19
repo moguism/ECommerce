@@ -1,7 +1,7 @@
 import { Order } from "./order";
 
 export class User {
-
+    id: number;
     name : string;
     email : string;
     password : string;
@@ -9,7 +9,8 @@ export class User {
     role : string;
     orders: Order[];
 
-    public constructor(name: string, email: string, password: string, address: string, role : string = "user") {
+    public constructor(id: number, name: string, email: string, password: string, address: string, role : string = "user") {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;

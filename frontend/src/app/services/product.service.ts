@@ -44,4 +44,17 @@ export class ProductService {
     }
     return null
   }
+
+  async getCompleteProducts() : Promise<Product[] | null>
+  {
+    const result = await this.api.get("Product/complete", {}, 'json');
+    if(result.data){
+      const products : any = result.data;
+      for (const product of products) {
+        product.image = environment.imageRoute + product.image 
+      }
+      return products;
+    }
+    return null;
+  }
 }

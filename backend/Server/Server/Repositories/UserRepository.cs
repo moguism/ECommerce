@@ -28,5 +28,12 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
+        public async Task<ICollection<User>> GetAllInfoExceptId(int id)
+        {
+            return await GetQueryable()
+                .Where(user => user.Id != id)
+                .ToArrayAsync();
+        }
+
     }
 }
