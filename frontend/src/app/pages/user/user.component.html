@@ -1,9 +1,49 @@
 <app-header></app-header>
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
-    <p><b>Nombre</b></p><span class="user-data">{{user?.name}}</span>
-    <p><b>Correo</b></p><span class="user-data">{{user?.email}}</span>
-    <p><b>Dirección</b></p><span class="user-data">{{user?.address}}</span>
-    <p><b>Contraseña</b></p><span class="">{{user?.password}}</span>
+    @if(user){
+        <p><b>Nombre</b></p><span class="user-data">{{user.name}}</span><span><button class="btn-name">Editar</button></span>
+        <p><b>Correo</b></p><span class="user-data">{{user.email}}</span><span><button class="btn-email">Editar</button></span>
+        <p><b>Dirección</b></p><span class="user-data">{{user.address}}</span><span><button class="btn-address">Editar</button></span>
+        <p><b>Rol</b></p><span class="user-data">{{user.role}}</span>
+        <p><b>Contraseña</b></p><span class="user-data">************</span><span><button class="btn-password">Editar</button></span>
+        <h2>Listado de pedidos</h2>
+        @if(user.orders){
+            @for (order of user.orders; track order.id){
+                <div class="order-container">
+                    <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
+                    <table>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Kg</th>
+                        </tr>
+                        @for(product of order.products; track product.id){
+                            <tr>
+                                <td class="product-img"><img src={{product.image}}></td>
+                                <td class="product-data">{{product.name}}</td>
+                                <td class="product-data">{{product.total}}</td>
+                                <td class="product-data">{{product.price | eurosToCents}}</td>
+                            </tr>
+                        }
+                    </table>
+                    @if(order.paymentTypeId == 1){
+                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                    }@else {
+                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                    }
+                    
+                </div>
+                
+            }
+        }@else {
+            <h3>No se realizo ningun pedido</h3>
+        }
+        
+    }
+    
+    
+    
 </div>
 
