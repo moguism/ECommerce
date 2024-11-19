@@ -23,6 +23,7 @@ export class UserComponent implements OnInit {
   }
 
   user: User | null = null;
+  btnEdit: boolean = false;
   elementShowing: string = "";
   allUsers: User[] = [];
   allProducts: Product[] = [];
@@ -43,6 +44,21 @@ export class UserComponent implements OnInit {
       this.user = result;
       this.changeElementShowing("users");
     }
+  }
+
+  saveUserData(){
+    const newName = document.getElementById("new-name") as HTMLInputElement
+    const newEmail = document.getElementById("new-email") as HTMLInputElement
+    const newAddress = document.getElementById("new-address") as HTMLInputElement
+    const newPassword = document.getElementById("new-password") as HTMLInputElement
+
+    if (newName && newEmail && newAddress && newPassword) {
+      if (newName.value != "") {
+        
+      }
+    }
+    
+    this.btnEdit = false
   }
 
   async changeElementShowing(newElement: string) {

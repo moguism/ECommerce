@@ -2,16 +2,25 @@
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
     @if(user){
-        <p><b>Nombre</b></p><span class="user-data">{{user.name}}</span><span><button class="btn-name">Editar</button></span>
-        <p><b>Correo</b></p><span class="user-data">{{user.email}}</span><span><button class="btn-email">Editar</button></span>
-        <p><b>Dirección</b></p><span class="user-data">{{user.address}}</span><span><button class="btn-address">Editar</button></span>
-        <p><b>Rol</b></p><span class="user-data">{{user.role}}</span>
-        <button class="btn-password">Editar</button>
+        <p><b>Nombre:</b>{{user.name}}</p>
+        <p><b>Correo:</b>{{user.email}}</p>
+        <p><b>Dirección:</b>{{user.address}}</p>
+        <p><b>Rol:</b>{{user.role}}</p>
+        <button class="btn-edit-data" (click)="btnEdit = true">Editar datos del usuario</button>
+        @if (btnEdit) {
+            <div class="popUp-container">
+                <p>Introduce tu nuevo nombre: <input type="text" class="input-new-data" id="new-name"></p>
+                <p>Introduce tu nuevo correo: <input type="text" class="input-new-data" id="new-email"></p>
+                <p>Introduce tu nueva dirección: <input type="text" class="input-new-data" id="new-address"></p>
+                <p>Introduce tu nueva contraseña: <input type="text" class="input-new-data" id="new-password"></p>
+                <button class="btn-save-new-data" (click)="saveUserData()">Guardar nuevos datos</button>
+            </div>
+        }
         <h2>Listado de pedidos</h2>
         @if(user.orders){
-            @for (order of user.orders; track order.id){
+            @for (order of user.orders; track order.Id){
                 <div class="order-container">
-                    <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
+                    <h3>Fecha del pedido: {{ order.CreatedAt | correctDate }}</h3>
                     <table>
                         <tr>
                             <th>Imagen</th>
@@ -19,7 +28,7 @@
                             <th>Cantidad</th>
                             <th>Precio Kg</th>
                         </tr>
-                        @for(product of order.products; track product.id){
+                        @for(product of order.Products; track product.id){
                             <tr>
                                 <td class="product-img"><img src={{product.image}}></td>
                                 <td class="product-data">{{product.name}}</td>
@@ -28,10 +37,10 @@
                             </tr>
                         }
                     </table>
-                    @if(order.paymentTypeId == 1){
-                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                    @if(order.PaymentTypeId == 1){
+                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
                     }@else {
-                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
                     }
                     
                 </div>
@@ -42,10 +51,6 @@
         }
         
     }
-    
-    
-    
-</div>
 
     @if (user?.role == "Admin") {
         <div class="admin-menu">
