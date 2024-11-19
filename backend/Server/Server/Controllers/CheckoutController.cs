@@ -21,17 +21,19 @@ public class CheckoutController : ControllerBase
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
     private readonly OrderService _orderService;
+    private readonly EmailService _emailService;
     private readonly UnitOfWork _unitOfWork;
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
         ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, 
-        OrderService orderService)
+        OrderService orderService,EmailService emailService)
     {
         _settings = settings;
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
         _unitOfWork = unitOfWork;
         _orderService = orderService;
+        _emailService = emailService;
     }
 
 
@@ -171,6 +173,13 @@ public class CheckoutController : ControllerBase
         if (session.PaymentStatus == "paid")
         {
             Order order= await _orderService.CompletePayment(session);
+            if (session.CustomerEmail != null)
+            {
+                string to = session.CustomerEmail;
+                String subject = "Envio de la compra realizada";
+                String body = "Gracias por comprar en Farm in house a salavdo a millones de animales con esta compra";
+                await _emailService.SendEmailAsync(to, subject, body,false);
+            }
             return order;
         }
         return null;
