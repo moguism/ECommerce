@@ -164,14 +164,16 @@ public class CheckoutController : ControllerBase
 
     //Verifica el estado de la sesión
     [HttpGet("status/{sessionId}")]
-    public async Task SessionStatus(string sessionId)
+    public async Task<Order> SessionStatus(string sessionId)
     {
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
         if (session.PaymentStatus == "paid")
         {
-            await _orderService.CompletePayment(session);
+            Order order= await _orderService.CompletePayment(session);
+            return order;
         }
+        return null;
     }
 
     

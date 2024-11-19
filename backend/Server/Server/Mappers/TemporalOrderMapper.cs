@@ -18,6 +18,7 @@ public class TemporalOrderMapper
         {
             Id = temporalOrder.Id,
             UserId = temporalOrder.UserId,
+            Quick = temporalOrder.Quick,
             CartContentDtos = _productsToBuyMapper.ToDto(temporalOrder.Wishlist.Products) //Manda al cliente una lista con los productos de la orden temporal para poder mostrarlos
         };
     }
