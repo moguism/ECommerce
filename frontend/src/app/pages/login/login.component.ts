@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit {
     if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
       alert("Las  contraseñas tienen que ser iguales");
     }else if (this.registerForm.valid) {
-      let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
+      let user = new User(0, this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         this.rememberFunction()

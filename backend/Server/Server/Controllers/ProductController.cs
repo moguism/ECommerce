@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
 using Server.Enums;
@@ -15,12 +16,30 @@ namespace Server.Controllers
         private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
         private readonly SmartSearchService _smartSearchService;
+        private readonly UserService _userService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService)
+        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService)
         {
             _unitOfWork = unitOfWork;
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
+            _userService = userService;
+        }
+
+        [Authorize]
+        [HttpGet("complete")]
+        public async Task<IEnumerable<ProductDto>> GetCompleteProducts()
+        {
+            User user = await GetAuthorizedUser();
+
+            if (user == null || !user.Role.Equals("Admin"))
+            {
+                return null;
+            }
+
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+
+            return _productMapper.ToDto(products);
         }
 
         [HttpGet]
@@ -66,6 +85,16 @@ namespace Server.Controllers
             }
             return _productMapper.AddCorrectPath(product);
         }
-       
+
+        private async Task<User> GetAuthorizedUser()
+        {
+            // Pilla el usuario autenticado según ASP
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+
+            // Pilla el usuario de la base de datos
+            return await _userService.GetUserFromDbByStringId(idString);
+        }
+
     }
 }
