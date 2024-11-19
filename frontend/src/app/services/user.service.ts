@@ -19,4 +19,18 @@ export class UserService {
     }
     return null;
   }
+
+  async getAllUsers(): Promise<User[] | null>{
+    const result = await this.api.get("User", {}, 'json');
+    if(result.data){
+      const users = result.data;
+      return users;
+    }
+    return null;
+  }
+
+  async deleteUser(id: number): Promise<void>
+  {
+    await this.api.delete("User", {"id" : id});
+  }
 }

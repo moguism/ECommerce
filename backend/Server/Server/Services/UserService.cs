@@ -17,4 +17,17 @@ public class UserService
         // Pilla el usuario de la base de datos
         return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
     }
+
+    public async Task<User> GetUserById(int id)
+    {
+
+        // Pilla el usuario de la base de datos
+        return await _unitOfWork.UserRepository.GetAllInfoById(id);
+    }
+
+    public async Task DeleteUser(User user)
+    {
+        _unitOfWork.UserRepository.Delete(user);
+        await _unitOfWork.SaveAsync();
+    }
 }

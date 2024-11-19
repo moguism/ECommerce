@@ -29,4 +29,10 @@ public class OrderRepository : Repository<Order, int>
         Order order = await GetQueryable().FirstOrDefaultAsync(order => order.SessionId.Equals(sessionid));
         return order;
     }
+
+    public async Task<Order> GetByHash(string hash)
+    {
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.Hash.Equals(hash));
+        return order;
+    }
 }
