@@ -24,4 +24,15 @@ public class OrderRepository : Repository<Order, int>
             .FirstOrDefaultAsync(order => order.Id == id);
         return order;
     }
+    public async Task<Order> GetBySessionId(string sessionid)
+    {
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.SessionId.Equals(sessionid));
+        return order;
+    }
+
+    public async Task<Order> GetByHash(string hash)
+    {
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.Hash.Equals(hash));
+        return order;
+    }
 }

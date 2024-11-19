@@ -34,16 +34,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.autoRefreshSubscription?.unsubscribe();
   }
 
+
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
-    console.log("RESULT CHECKOUT: ", result)
-
-    const shoppinCartResult = await this.apiService.get("ShoppingCart", { "isTemporal": true }, 'json');
+    const shoppinCartResult = await this.apiService.get("TemporalOrder", {"id" : this.id} , 'json');
+    console.log("RESULTADO AAAAAA: ", shoppinCartResult)
     if (shoppinCartResult.data) {
       const data: any = shoppinCartResult.data;
-      const cartContent: any[] = data.cartContent;
+      const cartContent: any[] = data.cartContentDtos;
       for (const product of cartContent) {
         const productResult = await this.productService.getById(product.productId);
         if (productResult != null) {
@@ -86,7 +85,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }*/
 
   async embeddedCheckout() {
-    const request = await this.apiService.post('Checkout/embedded');
+    const request = await this.apiService.post('Checkout/embedded', this.id);
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)
@@ -107,7 +106,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async hostedCheckout() {
-    const request = await this.apiService.post('Checkout/hosted');
+    const request = await this.apiService.post('Checkout/hosted', this.id);
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)

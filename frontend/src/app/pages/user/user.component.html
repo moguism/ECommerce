@@ -1,2 +1,49 @@
 <app-header></app-header>
-<p>user works!</p>
+<div class="user-data-container">
+    <h2>Inicio de sesión y seguridad</h2>
+    <p><b>Nombre</b></p><span class="user-data">{{user?.name}}</span>
+    <p><b>Correo</b></p><span class="user-data">{{user?.email}}</span>
+    <p><b>Dirección</b></p><span class="user-data">{{user?.address}}</span>
+    @if (user?.role == "Admin")
+    {
+        <!-- Menú de opciones -->
+        <div>
+            <a (click)="changeElementShowing('users')">Usuarios</a>
+            <a (click)="changeElementShowing('products')">Productos</a>
+        </div>
+
+        @if (elementShowing == "users")
+        {
+            @for (users of allUsers; track users.id)
+            {
+                <div class="user">
+                    <p>Nombre: {{ users.name }}</p>
+                    <p>Correo electrónico: {{ users.email }}</p>
+                    <p>Rol: {{ users.role }}</p>
+                    <button>Modificar mail</button>
+                    <button>Modificar rol</button> <!-- Aquí debería dejar elegir entre "Admin" o "User" -->
+                    <button (click)="deleteUser(users.id)">Eliminar usuario</button>
+                </div>
+            }
+            @empty
+            {
+                <p>Cargando usuarios...</p>
+            }
+        }
+        @else if (elementShowing == "products")
+        {
+            @for (product of allProducts; track product.id)
+            {
+                <div class="product">
+                    <p></p>
+                </div>
+            }
+            @empty
+            {
+                <p>Cargando productos...</p>
+            }
+            <button>Crear nuevo producto</button> <!-- Aquí se abriría un formulario -->
+        }
+    }
+</div>
+

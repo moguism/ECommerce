@@ -6,6 +6,7 @@ using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
 using Server.Services;
+using Server.Services.Blockchain;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -53,16 +54,25 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
+            
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
+            builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
             builder.Services.AddScoped<ReviewMapper>();
             builder.Services.AddScoped<TemporalOrderMapper>();
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
+            builder.Services.AddScoped<BlockchainService>();
+
+            builder.Services.AddScoped<WishListService>();
+            builder.Services.AddScoped<ProductsToBuyMapper>();
+            builder.Services.AddScoped<UserService>();
+
+
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
             // Aqui esta la clave privada
             Stripe.StripeConfiguration.ApiKey = "sk_test_51QJzjI2MpRBL4z2Cyh3NiBYhF4kXzVk7QJppRv2cAwoM8vPFrDwUjKnwZOiIDw0yYZfzNxNybQWenGMmmj83NunP00UGENKK29";
