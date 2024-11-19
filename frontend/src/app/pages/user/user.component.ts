@@ -46,16 +46,27 @@ export class UserComponent implements OnInit {
     }
   }
 
-  saveUserData(){
+  async saveUserData(){
     const newName = document.getElementById("new-name") as HTMLInputElement
     const newEmail = document.getElementById("new-email") as HTMLInputElement
     const newAddress = document.getElementById("new-address") as HTMLInputElement
     const newPassword = document.getElementById("new-password") as HTMLInputElement
 
-    if (newName && newEmail && newAddress && newPassword) {
+    if (newName && newEmail && newAddress && newPassword && this.selectedUser) {
       if (newName.value != "") {
-        
+        this.selectedUser.name = newName.value
       }
+      if(newEmail.value != ""){
+        this.selectedUser.email = newEmail.value
+      }
+      if(newAddress.value != ""){
+        this.selectedUser.address = newAddress.value
+      }
+      if(newPassword.value != ""){
+        this.selectedUser.password = newPassword.value
+      }
+      
+      await this.userService.updateUser(this.selectedUser);
     }
     
     this.btnEdit = false
