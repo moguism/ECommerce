@@ -31,8 +31,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   //blockchain
   networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
-  eurosToSend: number;
-  addressToSend: string;
+  eurosToSend: number = 0;
+  addressToSend: string = "0x3402A2c72FFc187C67f2c467eCDd4181d873778a";
 
   constructor(private productService: ProductService, private apiService: ApiService, 
     private router: Router, private activatedRoute: ActivatedRoute, 
@@ -94,7 +94,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }*/
 
   async embeddedCheckout() {
-    const request = await this.apiService.post('Checkout/embedded', this.id);
+    const request = await this.apiService.post('Checkout/embedded');
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)
@@ -115,7 +115,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async hostedCheckout() {
-    const request = await this.apiService.post('Checkout/hosted', this.id);
+    const request = await this.apiService.post('Checkout/hosted');
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)
@@ -177,8 +177,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       networkUrl: this.networkUrl, 
       euros: this.eurosToSend 
     };
+
+
     const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
-    const ethereumInfo = ethereumInfoResult.data;
+    //para no dar problemas con los posibles nulos
+    var ethereumInfo : any
+    ethereumInfo = ethereumInfoResult.data;
 
     // Creamos la transacción y pedimos al usuario que la firme
     const transactionHash = await window.ethereum.request({
