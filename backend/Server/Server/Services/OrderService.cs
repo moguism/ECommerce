@@ -14,8 +14,13 @@ namespace Server.Services
             /*_shoppingCartService = shoppingCartService;*/
         }
 
-        public async Task CompletePayment(Session session)
+        public async Task<Order> CompletePayment(Session session)
         {
+            Order existingOrder = await _unitOfWork.OrderRepository.GetBySessionId(session.Id);
+            if(existingOrder != null)
+            {
+                return existingOrder;
+            }
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
 
             /*if (user.TemporalOrders.Count() == 0)
@@ -44,18 +49,16 @@ namespace Server.Services
             //order.Wishlist = temporalOrder.Wishlist;
             order.UserId = user.Id;
 
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
-
-            if(shoppingCart != null)
+            if(!temporalOrder.Quick)
             {
+                ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
                 await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
-
-                await _unitOfWork.OrderRepository.InsertAsync(order);
-
-                await _unitOfWork.ShoppingCartRepository.DeleteShoppingCartByShoppingCartIdAsync(shoppingCart.Id);
             }
 
+            Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
+
             await _unitOfWork.SaveAsync();
+            return saveOrder;
         }
 
     }

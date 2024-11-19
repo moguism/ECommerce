@@ -7,5 +7,7 @@ namespace Server.DTOs
         public int Id { get; set; }
         public int UserId { get; set; }
         public IEnumerable<CartContentDto> CartContentDtos  { get; set; }
+
+        public bool Quick { get; set; }
     }
 }

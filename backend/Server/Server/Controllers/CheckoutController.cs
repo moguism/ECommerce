@@ -51,13 +51,20 @@ public class CheckoutController : ControllerBase
     //Iniciar Sesión de Pago (Modo Embebido)
     [Authorize]
     [HttpPost("embedded")]
-    public async Task<ActionResult> EmbededCheckout()
+    public async Task<ActionResult> EmbededCheckout([FromBody] int temporalOrderId)
     {
         User user = await GetAuthorizedUser();
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
-        Session session = await GetOptions(user, "embedded");
+        TemporalOrder temporalOrder = await GetTemporal(temporalOrderId, user);
+
+        if(temporalOrder == null)
+        {
+            return null;
+        }
+
+        Session session = await GetOptions(temporalOrder, "embedded", user);
 
         return Ok(new { clientSecret = session.ClientSecret });
         //return Ok(new { sessionId = session.Id });
@@ -65,28 +72,48 @@ public class CheckoutController : ControllerBase
     }
 
     [HttpPost("hosted")]
-    public async Task<ActionResult> HostedCheckout()
+    public async Task<ActionResult> HostedCheckout([FromBody] int temporalOrderId)
     {
         User user = await GetAuthorizedUser();
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
+        TemporalOrder temporalOrder = await GetTemporal(temporalOrderId, user);
 
-        Session session = await GetOptions(user, "hosted");
+        if(temporalOrder == null)
+        {
+            return null;
+        }
+
+        Session session = await GetOptions(temporalOrder, "hosted", user);
 
         return Ok(new { sessionUrl = session.Url });
     }
 
-    private async Task<Session> GetOptions(User user, string mode)
+    private async Task<TemporalOrder> GetTemporal(int id, User user)
     {
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+        TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
+
+        if (temporalOrder.UserId != user.Id)
+        {
+            return null;
+        }
+
+        return temporalOrder;
+    }
+
+    private async Task<Session> GetOptions(TemporalOrder temporalOrder, string mode, User user)
+    {
+        /*ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
         IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
         if (cartContents == null || !cartContents.Any())
-            return null;
+            return null;*/
 
         var lineItems = new List<SessionLineItemOptions>();
 
-        foreach (CartContent cartContent in cartContents)
+        Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(temporalOrder.WishlistId);
+
+        foreach (ProductsToBuy cartContent in wishlist.Products)
         {
             var product = await _unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
             // Crea un SessionLineItemOptions para cada producto en el carrito
@@ -137,14 +164,16 @@ public class CheckoutController : ControllerBase
 
     //Verifica el estado de la sesión
     [HttpGet("status/{sessionId}")]
-    public async Task SessionStatus(string sessionId)
+    public async Task<Order> SessionStatus(string sessionId)
     {
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
         if (session.PaymentStatus == "paid")
         {
-            await _orderService.CompletePayment(session);
+            Order order= await _orderService.CompletePayment(session);
+            return order;
         }
+        return null;
     }
 
     

@@ -94,7 +94,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }*/
 
   async embeddedCheckout() {
-    const request = await this.apiService.post('Checkout/embedded');
+    const request = await this.apiService.post('Checkout/embedded', this.id);
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)
@@ -115,7 +115,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async hostedCheckout() {
-    const request = await this.apiService.post('Checkout/hosted');
+    const request = await this.apiService.post('Checkout/hosted', this.id);
 
     if (request.success && request.data) {
       const data : any = JSON.parse(request.data)

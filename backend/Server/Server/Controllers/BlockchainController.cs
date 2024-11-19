@@ -16,10 +16,12 @@ namespace Server.Controllers;
 public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
+    private readonly OrderService _orderService;
 
-    public BlockchainController(BlockchainService blockchainService)
+    public BlockchainController(BlockchainService blockchainService, OrderService orderService)
     {
         _blockchainService = blockchainService;
+        _orderService = orderService;
     }
 
     [HttpGet]
@@ -28,6 +30,7 @@ public class BlockchainController : ControllerBase
         return _blockchainService.GetContractInfoAsync(data.NetworkUrl, data.ContractAddress);
     }
 
+    // OBTIENE LOS DATOS DE LA TRANSACCIÓN
     [HttpPost("transaction")]
     public Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
     {
@@ -37,8 +40,13 @@ public class BlockchainController : ControllerBase
     }
 
     [HttpPost("check")]
-    public Task<bool> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
+    public async Task<bool> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
-        return _blockchainService.CheckTransactionAsync(data);
+        bool done = await _blockchainService.CheckTransactionAsync(data);
+        if(done == true)
+        {
+
+        }
+        return done;
     }
 }

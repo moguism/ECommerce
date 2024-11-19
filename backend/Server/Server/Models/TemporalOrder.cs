@@ -12,5 +12,7 @@ namespace Server.Models
         public Wishlist Wishlist { get; set; }
 
         public DateTime ExpirationDate { get; set; }
+
+        public bool Quick { get; set; }
     }
 }
