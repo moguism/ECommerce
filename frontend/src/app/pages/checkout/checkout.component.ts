@@ -211,11 +211,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
         const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
 
-        //Si la transacción ha sido exitosa, crea la orden y elimina el carrito
-        if (checkTransactionResult.success && checkTransactionResult.data) {
+        //Si la transacción ha sido exitosa
+        if (checkTransactionResult.success) {
           alert('Transacción realizada con éxito');
           console.log(checkTransactionResult.data)
-
+          if(checkTransactionResult.data)
+            console.log("Orden creada")
+          else
+            console.log("Error al crear la orden")
 
         } else {
           alert('Transacción fallida');
