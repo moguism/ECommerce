@@ -9,9 +9,9 @@
         <button class="btn-password">Editar</button>
         <h2>Listado de pedidos</h2>
         @if(user.orders){
-            @for (order of user.orders; track order.id){
+            @for (order of user.orders; track order.Id){
                 <div class="order-container">
-                    <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
+                    <h3>Fecha del pedido: {{ order.CreatedAt | correctDate }}</h3>
                     <table>
                         <tr>
                             <th>Imagen</th>
@@ -19,7 +19,7 @@
                             <th>Cantidad</th>
                             <th>Precio Kg</th>
                         </tr>
-                        @for(product of order.products; track product.id){
+                        @for(product of order.Products; track product.id){
                             <tr>
                                 <td class="product-img"><img src={{product.image}}></td>
                                 <td class="product-data">{{product.name}}</td>
@@ -28,10 +28,10 @@
                             </tr>
                         }
                     </table>
-                    @if(order.paymentTypeId == 1){
-                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                    @if(order.PaymentTypeId == 1){
+                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
                     }@else {
-                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.products) | eurosToCents}}</h3>
+                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
                     }
                     
                 </div>
@@ -119,4 +119,3 @@
         }
     }
 }
-</div>
