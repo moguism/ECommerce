@@ -3,13 +3,18 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product';
 import { FormsModule } from '@angular/forms';
+import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+
+// Pipe Import
+import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
+import { Product } from '../../models/product';
+
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -106,4 +111,13 @@ export class UserComponent implements OnInit {
     const products = await this.productService.getCompleteProducts();
     if (products != null) this.allProducts = products;
   }
+
+  totalprice(products: Product[]) {
+    let totalcount = 0;
+    for (const product of products) {
+      totalcount += product.total * product.price;
+    }
+    return totalcount;
+  }
+  
 }

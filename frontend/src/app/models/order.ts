@@ -7,6 +7,7 @@ export class Order {
     UserId : number;
     Products: Product[];
 
+
     constructor(id: number, createdAt: Date, PaymentTypeId : number , UserId: number, products: Product[])
     {
         this.Id = id,
