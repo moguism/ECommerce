@@ -50,9 +50,10 @@ export class UserComponent implements OnInit {
     const newName = document.getElementById("new-name") as HTMLInputElement
     const newEmail = document.getElementById("new-email") as HTMLInputElement
     const newAddress = document.getElementById("new-address") as HTMLInputElement
+    const oldPassword = document.getElementById("old-password") as HTMLInputElement
     const newPassword = document.getElementById("new-password") as HTMLInputElement
 
-    if (newName && newEmail && newAddress && newPassword && this.selectedUser) {
+    if (newName && newEmail && newAddress && oldPassword && newPassword && this.selectedUser) {
       if (newName.value != "") {
         this.selectedUser.name = newName.value
       }
@@ -62,7 +63,7 @@ export class UserComponent implements OnInit {
       if(newAddress.value != ""){
         this.selectedUser.address = newAddress.value
       }
-      if(newPassword.value != ""){
+      if(oldPassword.value == this.selectedUser.password && newPassword.value != ""){
         this.selectedUser.password = newPassword.value
       }
       
