@@ -17,13 +17,13 @@ public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
     private readonly OrderService _orderService;
-    private readonly ShoppingCartService _shoppingCartService;
+    private readonly UserService _userService;
 
-    public BlockchainController(BlockchainService blockchainService, OrderService orderService, ShoppingCartService shoppingCartService)
+    public BlockchainController(BlockchainService blockchainService, OrderService orderService, UserService userService)
     {
         _blockchainService = blockchainService;
         _orderService = orderService;
-        _shoppingCartService = shoppingCartService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -67,6 +67,6 @@ public class BlockchainController : ControllerBase
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _shoppingCartService.GetUserFromDbByStringId(idString);
+        return await _userService.GetUserFromDbByStringId(idString);
     }
 }
