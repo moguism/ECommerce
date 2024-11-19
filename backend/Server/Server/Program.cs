@@ -72,6 +72,7 @@ namespace Server
             builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<OrderMapper>();
 
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();

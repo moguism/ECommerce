@@ -9,6 +9,9 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { interval, Subscription } from 'rxjs';
 import { StripeService } from 'ngx-stripe';
 import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
+import { BlockchainService } from '../../services/blockchain.service';
+import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
+import { EthereumInfo } from '../../models/ethereum-info';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -21,15 +24,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   shoppingCartProducts: Product[] = []
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
-  private method: string = ""
+  method: string = ""
   
   @ViewChild('checkoutDialog')
   checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
   stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
 
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private stripeService: StripeService) {
+  //blockchain
+  networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
+  eurosToSend: number = 0;
+  addressToSend: string = "0x3402A2c72FFc187C67f2c467eCDd4181d873778a";
+
+  constructor(private productService: ProductService, private apiService: ApiService,
+    private router: Router, private activatedRoute: ActivatedRoute,
+    private stripeService: StripeService, private blockchainService: BlockchainService) {
   }
-  
+
   ngOnDestroy(): void {
     this.autoRefreshSubscription?.unsubscribe();
   }
@@ -38,7 +48,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const shoppinCartResult = await this.apiService.get("TemporalOrder", {"id" : this.id} , 'json');
+    const shoppinCartResult = await this.apiService.get("TemporalOrder", { "id": this.id }, 'json');
     console.log("RESULTADO AAAAAA: ", shoppinCartResult)
     if (shoppinCartResult.data) {
       const data: any = shoppinCartResult.data;
@@ -88,7 +98,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const request = await this.apiService.post('Checkout/embedded', this.id);
 
     if (request.success && request.data) {
-      const data : any = JSON.parse(request.data)
+      const data: any = JSON.parse(request.data)
       const options: StripeEmbeddedCheckoutOptions = {
         clientSecret: data.clientSecret
       };
@@ -97,27 +107,25 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         .subscribe((checkout) => {
           this.stripeEmbedCheckout = checkout;
           checkout.mount('#checkout');
-          if(this.checkoutDialogRef)
-          {
+          if (this.checkoutDialogRef) {
             this.checkoutDialogRef.nativeElement.showModal();
           }
         });
-      }
+    }
   }
 
   async hostedCheckout() {
     const request = await this.apiService.post('Checkout/hosted', this.id);
 
     if (request.success && request.data) {
-      const data : any = JSON.parse(request.data)
+      const data: any = JSON.parse(request.data)
       // Abrimos la url de la session de stripe sin crear una nueva pestaña en el navegador 
       window.open(data.sessionUrl, '_self');
     }
   }
 
   cancelCheckoutDialog() {
-    if(this.stripeEmbedCheckout && this.checkoutDialogRef)
-    {
+    if (this.stripeEmbedCheckout && this.checkoutDialogRef) {
       this.stripeEmbedCheckout.destroy();
       this.checkoutDialogRef.nativeElement.close();
     }
@@ -133,12 +141,114 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   startAutoRefresh() {
     // 120.000 milisegundos son 2 minutos
-    return interval(30000).subscribe(() => {this.refreshOrder()});
+    return interval(30000).subscribe(() => { this.refreshOrder() });
   }
 
   async refreshOrder() {
     console.log("Mandando petición...")
-    return await this.apiService.get("TemporalOrder/refresh", {"id" : this.id})
+    return await this.apiService.get("TemporalOrder/refresh", { "id": this.id })
   }
 
+
+  /******** Blockchain  **********/
+  async createTransaction() {
+
+    // Si no está instalado Metamask se lanza un error y se corta la ejecución
+    if (!window.ethereum) {
+      throw new Error('Metamask not found');
+    }
+
+    // Obtener la cuenta de metamask del usuario
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const account = accounts[0];
+
+    // Pedimos permiso al usuario para usar su cuenta de metamask
+    await window.ethereum.request({
+      method: 'wallet_requestPermissions',
+      params: [{
+        "eth_accounts": { account }
+      }]
+    });
+
+    this.eurosToSend = this.totalprice() //total a pagar
+
+    // Obtenemos los datos que necesitamos para la transacción: 
+    // gas, precio del gas y el valor en Ethereum
+    const transactionRequest: CreateEthTransactionRequest = {
+      NetworkUrl: this.networkUrl,
+      Euros: this.eurosToSend
+    };
+
+
+    const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
+    //para no dar problemas con los posibles nulos
+    const ethereumInfo =  ethereumInfoResult.data;
+
+    try {
+      // Creamos la transacción y pedimos al usuario que la firme
+      if (ethereumInfo != null) {
+        const transactionHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: account,
+            to: this.addressToSend,
+            value: ethereumInfo.Value,
+            gas: ethereumInfo.Gas,
+            gasPrice: ethereumInfo.GasPrice
+          }]
+        });
+        // Pedimos al servidor que verifique la transacción.
+        // CUIDADO: si el cliente le manda todos los datos,
+        // podría engañar al servidor.
+        const checkTransactionRequest = {
+          networkUrl: this.networkUrl,
+          hash: transactionHash,
+          from: account,
+          to: this.addressToSend,
+          value: ethereumInfo.Value
+        }
+
+
+        const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
+
+        //Si la transacción ha sido exitosa
+        if (checkTransactionResult.success) {
+          alert('Transacción realizada con éxito');
+          console.log(checkTransactionResult.data)
+          if(checkTransactionResult.data)
+            console.log("Orden creada")
+          else
+            console.log("Error al crear la orden")
+
+        } else {
+          alert('Transacción fallida');
+        }
+      }
+      else{
+        console.log("error en la información del ethereum")
+      }
+    } catch (error) {
+      // Captura el error en la transacción y muestra un mensaje
+      console.error('Error en la transacción:', error);
+      alert('Transacción fallida');
+    }
+
+
+
+
+
+  }
+
+
+
+
+
+
+}
+
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
 }
