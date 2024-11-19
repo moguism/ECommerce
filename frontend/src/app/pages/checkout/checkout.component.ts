@@ -24,8 +24,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   shoppingCartProducts: Product[] = []
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
-  private method: string = ""
-
+  method: string = ""
+  
   @ViewChild('checkoutDialog')
   checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
   stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
