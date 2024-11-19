@@ -49,7 +49,10 @@ export class ProductService {
   {
     const result = await this.api.get("Product/complete", {}, 'json');
     if(result.data){
-      const products = result.data;
+      const products : any = result.data;
+      for (const product of products) {
+        product.image = environment.imageRoute + product.image 
+      }
       return products;
     }
     return null;

@@ -1,49 +1,80 @@
 <app-header></app-header>
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
-    <p><b>Nombre</b></p><span class="user-data">{{user?.name}}</span>
-    <p><b>Correo</b></p><span class="user-data">{{user?.email}}</span>
-    <p><b>Dirección</b></p><span class="user-data">{{user?.address}}</span>
-    @if (user?.role == "Admin")
-    {
-        <!-- Menú de opciones -->
-        <div>
+    <p><b>Nombre:</b></p><span class="user-data">{{ user?.name }}</span>
+    <p><b>Correo:</b></p><span class="user-data">{{ user?.email }}</span>
+    <p><b>Dirección:</b></p><span class="user-data">{{ user?.address }}</span>
+
+    @if (user?.role == "Admin") {
+        <div class="admin-menu">
             <a (click)="changeElementShowing('users')">Usuarios</a>
             <a (click)="changeElementShowing('products')">Productos</a>
         </div>
 
-        @if (elementShowing == "users")
-        {
-            @for (users of allUsers; track users.id)
-            {
-                <div class="user">
-                    <p>Nombre: {{ users.name }}</p>
-                    <p>Correo electrónico: {{ users.email }}</p>
-                    <p>Rol: {{ users.role }}</p>
-                    <button>Modificar mail</button>
-                    <button>Modificar rol</button> <!-- Aquí debería dejar elegir entre "Admin" o "User" -->
-                    <button (click)="deleteUser(users.id)">Eliminar usuario</button>
-                </div>
+        @if (elementShowing == "users") {
+            @for (users of allUsers; track users.id) {
+            <div class="user">
+                <p><b>Nombre:</b> {{ users.name }}</p>
+                <p><b>Correo electrónico:</b> {{ users.email }}</p>
+                <p><b>Rol:</b> {{ users.role }}</p>
+                <button (click)="showEditRoleForm(users)">Modificar rol</button>
+                <button (click)="deleteUser(users.id)">Eliminar usuario</button>
+            </div>
             }
-            @empty
-            {
-                <p>Cargando usuarios...</p>
+            @empty {
+            <p>Cargando usuarios...</p>
             }
         }
-        @else if (elementShowing == "products")
-        {
-            @for (product of allProducts; track product.id)
-            {
-                <div class="product">
-                    <p></p>
-                </div>
+
+        <!-- Formulario para editar rol -->
+        @if (formState == "editRole") {
+            <div class="modal">
+                <h3>Modificar rol</h3>
+                <form>
+                    <label for="newRole">Nuevo rol:</label>
+                    <select id="newRole" [(ngModel)]="editRoleValue" name="newRole" required>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                    </select>
+                    <button type="submit" (click)="submitEditRole()">Guardar</button>
+                    <button type="button" (click)="closeForm()">Cancelar</button>
+                </form>
+            </div>
+        }
+
+        @else if (elementShowing == "products") {
+            @for (product of allProducts; track product.id) {
+            <div class="product">
+                <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
+                <p><b>ID:</b> {{ product.id }}</p>
+                <p><b>Nombre:</b> {{ product.name }}</p>
+                <p><b>Precio:</b> {{ product.price }}</p>
+                <p><b>Stock:</b> {{ product.stock }}</p>
+                <!--<button (click)="showEditProductForm(product.id)">Editar producto</button>
+                <button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
+            </div>
             }
-            @empty
-            {
-                <p>Cargando productos...</p>
-            }
-            <button>Crear nuevo producto</button> <!-- Aquí se abriría un formulario -->
+        @empty {
+            <p>Cargando productos...</p>
+        }
+
+        <!-- Formulario para crear producto (faltan más datos) -->
+        <button (click)="showCreateProductForm()">Crear nuevo producto</button>
+        @if (formState == "createProduct") {
+            <div class="modal">
+                <h3>Crear nuevo producto</h3>
+                <form>
+                    <label for="productName">Nombre del producto:</label>
+                    <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
+                    <label for="productPrice">Precio:</label>
+                    <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
+                    <label for="productCategory">Categoría:</label>
+                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
+                    <button type="submit" (click)="submitCreateProduct()">Crear</button>
+                    <button type="button" (click)="closeForm()">Cancelar</button>
+                </form>
+            </div>
         }
     }
+}
 </div>
-
