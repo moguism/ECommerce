@@ -67,6 +67,7 @@ namespace Server
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
             builder.Services.AddScoped<BlockchainService>();
+            builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
