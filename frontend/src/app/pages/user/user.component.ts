@@ -109,7 +109,7 @@ export class UserComponent implements OnInit {
     if(this.selectedUser)
     {
       this.selectedUser.role = this.editRoleValue;
-      await this.userService.updateUser(this.selectedUser);
+      await this.userService.updateUserAdmin(this.selectedUser);
       this.closeForm();
       this.getAllUsers();
       alert(`Rol actualizado a: ${this.editRoleValue}`);

@@ -17,7 +17,7 @@
             </div>
         }
         <h2>Listado de pedidos</h2>
-        @if(user.orders){
+        @if(user.orders.length != 0 && user.orders){
             @for (order of user.orders; track order.Id){
                 <div class="order-container">
                     <h3>Fecha del pedido: {{ order.CreatedAt | correctDate }}</h3>

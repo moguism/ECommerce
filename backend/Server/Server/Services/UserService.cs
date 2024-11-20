@@ -16,7 +16,7 @@ public class UserService
     {
 
         // Pilla el usuario de la base de datos
-        return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
+        return await _unitOfWork.UserRepository.GetOnlyOrdersById(Int32.Parse(stringId));
     }
 
     public async Task<User> GetUserById(int id)

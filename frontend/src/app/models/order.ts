@@ -5,7 +5,6 @@ export class Order {
     CreatedAt: Date;
     PaymentTypeId: number;
     UserId : number;
-    Products: Product[];
 
 
     constructor(id: number, createdAt: Date, PaymentTypeId : number , UserId: number, products: Product[])
@@ -13,7 +12,6 @@ export class Order {
         this.Id = id,
         this.CreatedAt = createdAt,
         this.PaymentTypeId = PaymentTypeId,
-        this.UserId = UserId,
-        this.Products = products
+        this.UserId = UserId
     }
 }
