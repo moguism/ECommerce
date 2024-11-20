@@ -2,6 +2,7 @@
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Web3;
+using static TorchSharp.torch.utils;
 
 namespace Server.Services.Blockchain;
 
@@ -25,6 +26,11 @@ public class EthereumService
     }
 
     public BigInteger ToWei(decimal amount)
+    {
+        return Web3.Convert.ToWei(amount);
+    }
+
+    public BigInteger ToWei(long amount)
     {
         return Web3.Convert.ToWei(amount);
     }
