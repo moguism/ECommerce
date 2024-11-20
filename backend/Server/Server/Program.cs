@@ -74,6 +74,7 @@ namespace Server
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<OrderMapper>();
             builder.Services.AddScoped<ProductService>();
+            builder.Services.AddScoped<ImageService>();
 
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();

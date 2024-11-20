@@ -123,6 +123,7 @@
                         <option value="User">Verduras</option>
                         <option value="Carnes">Carnes</option>
                     </select>
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)"/>
                     <button type="submit" (click)="submitCreateProduct()">Crear</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
