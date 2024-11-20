@@ -1,58 +1,59 @@
 ﻿using Server.DTOs;
 using Server.Models;
 
-namespace Server.Mappers
+namespace Server.Mappers;
+
+public class ProductsToBuyMapper
 {
-    public class ProductsToBuyMapper
+
+
+    public CartContentDto ToDto(ProductsToBuy productsToBuy)
     {
 
-        public CartContentDto ToDto(ProductsToBuy productsToBuy)
+        return new CartContentDto
         {
+            ProductId = productsToBuy.ProductId,
+            Quantity = productsToBuy.Quantity,
+        };
+    }
 
-            return new CartContentDto
-            {
-                ProductId = productsToBuy.ProductId,
-                Quantity = productsToBuy.Quantity,
-            };
+    public IEnumerable<CartContentDto> ToDto(IEnumerable<ProductsToBuy> productsToBuy)
+    {
+        if(productsToBuy == null)
+        {
+            return null;
         }
 
-        public IEnumerable<CartContentDto> ToDto(IEnumerable<ProductsToBuy> productsToBuy)
+        List<CartContentDto> result = new List<CartContentDto>();
+
+        foreach (ProductsToBuy product in productsToBuy)
         {
-            if(productsToBuy == null)
-            {
-                return null;
-            }
-
-            List<CartContentDto> result = new List<CartContentDto>();
-
-            foreach (ProductsToBuy product in productsToBuy)
-            {
-                result.Add(ToDto(product));
-            }
-            return result;
+            result.Add(ToDto(product));
         }
+        return result;
+    }
 
 
-        public ProductsToBuy ToEntity(CartContentDto cartContentDto)
+    public async Task<ProductsToBuy> ToEntity(CartContentDto cartContentDto)
+    {
+
+        return new ProductsToBuy
         {
+            ProductId = cartContentDto.ProductId,
+            Quantity = cartContentDto.Quantity,
+        };
+    }
 
-            return new ProductsToBuy
-            {
-                ProductId = cartContentDto.ProductId,
-                Quantity = cartContentDto.Quantity,
-            };
-        }
+    public async Task<IEnumerable<ProductsToBuy>> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
+    {
 
-        public IEnumerable<ProductsToBuy> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
+        List<ProductsToBuy> result = new List<ProductsToBuy>();
+
+        foreach (CartContentDto product in cartContentDtos)
         {
-
-            List<ProductsToBuy> result = new List<ProductsToBuy>();
-
-            foreach (CartContentDto product in cartContentDtos)
-            {
-                result.Add(ToEntity(product));
-            }
-            return result;
+            ProductsToBuy productToBuy = await ToEntity(product);
+            result.Add(productToBuy);
         }
+        return result;
     }
 }

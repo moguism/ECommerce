@@ -46,6 +46,7 @@ namespace Server.Services
 
             //La misma wishlist que la ultima orden temporal que ha realizado el usuario
             order.WishlistId = temporalOrder.WishlistId;
+
             //order.Wishlist = temporalOrder.Wishlist;
             order.UserId = user.Id;
             order.SessionId = session.Id;
@@ -57,12 +58,16 @@ namespace Server.Services
             }
 
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
-
             await _unitOfWork.SaveAsync();
+
 
             //Añade la orden a la lista de ordenes del usuario
             user.Orders.Add(saveOrder);
             _unitOfWork.UserRepository.Update(user);
+
+            //Añade la misma wishlist que la de la orden temporal
+            saveOrder.Wishlist = temporalOrder.Wishlist;
+            _unitOfWork.OrderRepository.Update(saveOrder);
 
             return saveOrder;
         }
@@ -75,41 +80,36 @@ namespace Server.Services
                 return existingOrder;
             }
 
-            /*if (user.TemporalOrders.Count() == 0)
-            {
-                throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
-            }*/
 
             //Recoge la ultima orden temporal del usuario
             TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
 
-            /*if (temporalOrder == null)
-            {
-                temporalOrder = user.TemporalOrders.LastOrDefault();
-            }*/
 
-            Order order = new Order();
-            order.CreatedAt = DateTime.UtcNow;
-            //order.Total = temporalOrder.Wishlist.Products.Sum(p => p.Product.Price * p.Quantity);
+            Order order = new Order {
+                CreatedAt = DateTime.UtcNow,
+                PaymentTypeId = 2,
+                //La misma wishlist que la ultima orden temporal que ha realizado el usuario
+                WishlistId = temporalOrder.WishlistId,
+                UserId = user.Id,
+                Hash = hash
+            };
 
-            order.PaymentTypeId = 2;
-            //order.PaymentsType = await _unitOfWork.PaymentsTypeRepository.GetByIdAsync(1);
 
-            //La misma wishlist que la ultima orden temporal que ha realizado el usuario
-            order.WishlistId = temporalOrder.WishlistId;
-            //order.Wishlist = temporalOrder.Wishlist;
-            order.UserId = user.Id;
-            order.Hash = hash;
-
+            
+            //Elimina el carrito si se ha hecho la compra con sesión iniciada           
             if (!temporalOrder.Quick)
             {
                 ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
                 await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);
             }
 
+            //Order en la base de datos
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
-
             await _unitOfWork.SaveAsync();
+
+            saveOrder.Wishlist = temporalOrder.Wishlist;
+            //saveOrder.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(saveOrder.WishlistId);
+            _unitOfWork.OrderRepository.Update(saveOrder);
 
             //Añade la orden a la lista de ordenes del usuario
             user.Orders.Add(saveOrder);
@@ -123,14 +123,37 @@ namespace Server.Services
 
         public async Task<IEnumerable<Order>> GetAllOrders(User user)
         {
-            return await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
+            IEnumerable<Order> orders =  await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
 
+            foreach (Order order in orders)
+            {
+                orders.Append(await GetOrderById(order.Id));
+            }
+
+            return orders;
+
+            
         }
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            return await _unitOfWork.OrderRepository.GetById(orderId);
+            Order order =  await _unitOfWork.OrderRepository.GetById(orderId);
+            order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
+            order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
+                    .GetAllProductsByWishlistId(order.WishlistId);
 
+
+            List<ProductsToBuy> products = new List<ProductsToBuy>();
+
+            foreach (var product in order.Wishlist.Products)
+            {
+                product.Product = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                products.Add(product);
+            }
+
+            order.Wishlist.Products = products;
+
+            return order;
         }
 
 
