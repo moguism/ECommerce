@@ -4,6 +4,7 @@ import { QuerySelector } from '../models/query-selector';
 import { PagedProducts } from '../models/paged-products';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
+import { ProductToInsert } from '../models/product-to-insert';
 
 @Injectable({
   providedIn: 'root'
@@ -61,4 +62,9 @@ export class ProductService {
     const result=await this.api.put("Product/modify",{});
     
   }*/
+  async createProduct(productToInsert: ProductToInsert)
+  {
+    const result = await this.api.post("Product", productToInsert)
+    console.log("INSERTANDO NUEVO PRODUCTO: ", result)
+  }
 }
