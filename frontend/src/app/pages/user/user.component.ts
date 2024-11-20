@@ -9,6 +9,8 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
+import { Order } from '../../models/order';
+import { ProductsToBuy } from '../../models/products-to-buy';
 
 
 @Component({
@@ -24,6 +26,7 @@ export class UserComponent implements OnInit {
 
   user: User | null = null;
   btnEdit: boolean = false;
+  orders: Order[] = [];
   elementShowing: string = "";
   allUsers: User[] = [];
   allProducts: Product[] = [];
@@ -36,6 +39,7 @@ export class UserComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
+    await this.getAllOrders();
   }
 
   async getUser() {
@@ -43,6 +47,13 @@ export class UserComponent implements OnInit {
     if (result) {
       this.user = result;
       this.changeElementShowing("users");
+    }
+  }
+
+  async getAllOrders(){
+    const result = await this.userService.getAllOrders();
+    if (result) {
+      this.orders = result;
     }
   }
 
@@ -140,10 +151,10 @@ export class UserComponent implements OnInit {
     if (products != null) this.allProducts = products;
   }
 
-  totalprice(products: Product[]) {
+  totalprice(products: ProductsToBuy[]) {
     let totalcount = 0;
     for (const product of products) {
-      totalcount += product.total * product.price;
+      totalcount += product.quantity * product.product.price;
     }
     return totalcount;
   }

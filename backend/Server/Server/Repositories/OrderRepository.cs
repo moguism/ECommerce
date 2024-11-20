@@ -19,6 +19,7 @@ public class OrderRepository : Repository<Order, int>
     public async Task<IEnumerable<Order>> GetAllOrdersByUserId(int userId)
     {
         return await GetQueryable()
+        .Include(o => o.Wishlist)
         .Where(o => o.UserId == userId)
         .ToListAsync();
     }

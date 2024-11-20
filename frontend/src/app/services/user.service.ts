@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { User } from '../models/user';
+import { Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,15 @@ export class UserService {
     if(result.data){
       const user: User = result.data;
       return user;
+    }
+    return null;
+  }
+
+  async getAllOrders(){
+    const result = await this.api.get("Order/allUserOrders", {}, 'json');
+    if(result.data){
+      const orders: Order[] = result.data;
+      return orders
     }
     return null;
   }

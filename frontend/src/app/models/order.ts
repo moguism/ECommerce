@@ -1,17 +1,20 @@
 import { Product } from "./product";
+import { Wishlist } from "./wishlist";
 
 export class Order {
-    Id: number;
-    CreatedAt: Date;
-    PaymentTypeId: number;
-    UserId : number;
+    id: number;
+    createdAt: Date;
+    paymentTypeId: number;
+    userId : number;
+    wishlist: Wishlist;
 
 
-    constructor(id: number, createdAt: Date, PaymentTypeId : number , UserId: number, products: Product[])
+    constructor(id: number, createdAt: Date, PaymentTypeId : number , UserId: number, Wishlist: Wishlist)
     {
-        this.Id = id,
-        this.CreatedAt = createdAt,
-        this.PaymentTypeId = PaymentTypeId,
-        this.UserId = UserId
+        this.id = id,
+        this.createdAt = createdAt,
+        this.paymentTypeId = PaymentTypeId,
+        this.userId = UserId
+        this.wishlist = Wishlist;
     }
 }
