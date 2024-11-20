@@ -34,15 +34,15 @@ export class UserService {
     await this.api.delete("User", {"id" : id});
   }
 
-  async updateUserAdmin(user: User): Promise<User | null>
+  /*async updateUserAdmin(user: User): Promise<User | null>
   {
     const result = await this.api.put<User | null>("User/userAdmin", user)
     return result.data
-  }
+  }*/
 
   async updateUser(user: User): Promise<User | null>
   {
-    const result = await this.api.put<User | null>("User/user", user)
+    const result = await this.api.put<User | null>("User", user)
     return result.data
   }
 }

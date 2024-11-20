@@ -64,11 +64,16 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut ("userAdmin")]
+        [HttpPut]
         public async Task<UserAfterLoginDto> UpdateUserAdmin([FromBody] User updatedUser)
         {
             User user = await GetCurrentUser();
-            if (user == null || !user.Role.Equals("Admin"))
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!user.Role.Equals("Admin") && updatedUser.Id != user.Id)
             {
                 return null;
             }
@@ -94,7 +99,7 @@ namespace Server.Controllers
             return userDto;
         }
 
-        [Authorize]
+        /*[Authorize]
         [HttpPut ("user")]
         public async Task<UserAfterLoginDto> UpdateUser([FromBody] User updatedUser)
         {
@@ -118,7 +123,7 @@ namespace Server.Controllers
 
             UserAfterLoginDto userDto = _userMapper.ToDto(afterUpdate);
             return userDto;
-        }
+        }*/
 
         [Authorize]
         [HttpDelete]
