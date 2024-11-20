@@ -16,13 +16,11 @@ public class OrderRepository : Repository<Order, int>
             .ToArrayAsync();
     }
 
-    public async Task<Order> GetById(int id)
+    public async Task<IEnumerable<Order>> GetAllOrdersByUserId(int userId)
     {
-        // "FirstOrDefaultAsync" DEVUELVE NULO SI NO EXISTE
-        Order order = await GetQueryable()
-            //.Include(order => order.UserId)
-            .FirstOrDefaultAsync(order => order.Id == id);
-        return order;
+        return await GetQueryable()
+        .Where(o => o.UserId == userId)
+        .ToListAsync();
     }
     public async Task<Order> GetBySessionId(string sessionid)
     {

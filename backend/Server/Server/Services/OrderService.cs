@@ -108,5 +108,17 @@ namespace Server.Services
             return saveOrder;
         }
 
+
+
+
+        public async Task<IEnumerable<Order>> GetAllOrders(User user)
+        {
+            return await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
+
+        }
+
+
+
+
     }
 }
