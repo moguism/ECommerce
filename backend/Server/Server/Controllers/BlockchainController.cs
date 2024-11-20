@@ -66,6 +66,7 @@ public class BlockchainController : ControllerBase
         if(done == true)
         {
             Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
+
             int whislistId = order.WishlistId;
             Wishlist productsorder = await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
             await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);

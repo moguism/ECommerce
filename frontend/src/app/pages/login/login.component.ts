@@ -113,6 +113,7 @@ export class LoginComponent implements OnInit {
 
   rememberFunction()
   {
+    if(this.apiService.jwt == null) { return; }
     if (this.rememberUser) {
       console.log("Recordando al usuario...")
       localStorage.setItem("token", this.apiService.jwt)

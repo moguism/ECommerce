@@ -30,7 +30,7 @@ namespace Server.Repositories
             .Include(product => product.Category)
             .Include(product => product.Reviews)
             .Include(product => product.CartContents)
-            .FirstOrDefaultAsync(order => order.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }
 
@@ -38,6 +38,8 @@ namespace Server.Repositories
         {
             return await GetQueryable()
             .Include(product => product.Category)
+            .Include(product => product.Reviews)
+            .Include(product => product.CartContents)
             .ToArrayAsync();
         }
     }
