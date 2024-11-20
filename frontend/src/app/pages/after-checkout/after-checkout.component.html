@@ -7,16 +7,16 @@
     <div class="information">
         <div class="purchased ">
             <h2>Productos</h2>
-            @for (product of lastOrder.Products; track product.id){
+            @for (productPurchased of lastOrder.wishlist.products; track productPurchased.id){
             <div class="purchased -products">
-                <img class="purchased-products-image" [src]="product.image" alt="">
+                <img class="purchased-products-image" [src]="productPurchased.product.image" alt="">
                 <div class="purchased-products-information">
                     <div class="purchased-products-information-functions">
-                        <h4 class="purchased-products-information-functions-title">{{product.name}}</h4>
-                        <h5 class="purchased-products-information-functions-title">{{ product.total }}</h5>
+                        <h4 class="purchased-products-information-functions-title">{{productPurchased.product.name}}</h4>
+                        <h5 class="purchased-products-information-functions-title">{{ productPurchased.product.total }}</h5>
                     </div>
-                    <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
-                    <h3>Precio por kg {{product.price | eurosToCents}}</h3>
+                    <h3>Total: {{(productPurchased.quantity * productPurchased.product.price) | eurosToCents}}</h3>
+                    <h3>Precio por kg {{productPurchased.product.price | eurosToCents}}</h3>
                 </div>
             </div>
             }

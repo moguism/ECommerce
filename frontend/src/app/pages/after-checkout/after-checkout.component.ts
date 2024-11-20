@@ -57,8 +57,8 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
     if (this.lastOrder) {
 
-      for (const product of this.lastOrder?.Products) {
-        totalcount += product.total * product.price;
+      for (const product of this.lastOrder.wishlist.products) {
+        totalcount += product.quantity * product.product.price;
       }
     }
 
