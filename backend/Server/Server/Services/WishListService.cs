@@ -29,7 +29,7 @@ namespace Server.Services
         {
             Wishlist wishlist = new Wishlist();
 
-            List<ProductsToBuy> productsToBuyList = _productsToBuyMapper.ToEntity(products).ToList();
+            IEnumerable<ProductsToBuy> productsToBuyList = await _productsToBuyMapper.ToEntity(products);
 
 
             await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
@@ -40,10 +40,6 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = wishlist.Id;
-            }
-
-            foreach (var product in productsToBuyList)
-            {
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
             }
 
