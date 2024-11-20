@@ -13,14 +13,14 @@
     justify-content: space-around;
 
 }
-.basket{
+.purchased  {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     gap:20px;
 }
-.basket-products{
+.purchased-products{
     display: flex;
     background-color: black;
     flex-direction: row;
@@ -31,25 +31,25 @@
     gap: 20px;
     border-radius: 8px;
 }
-.basket-products-image{
+.purchased-products-image{
     width: 100%;
     max-width: 150px;
     height: 150px;
     padding: 5%;
     border-radius: 25px;
 }
-.basket-products-information-functions{
+.purchased-products-information-functions{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     gap: 20px;
 }
-.basket-products-information-functions-title{
+.purchased-products-information-functions-title{
     color: white;
     width: 100%;
 }
-.basket-products-information-functions-input{
+.purchased-products-information-functions-input{
     width: 50%;
 }
 h3{
