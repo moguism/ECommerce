@@ -62,9 +62,6 @@ public class BlockchainController : ControllerBase
         {
             Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
             
-            //Productos comprados por el usuario
-            //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
-
             return order;
         }
         return null;

@@ -45,6 +45,21 @@ public class OrderController : ControllerBase
         return user.Orders;
     }
 
+    [Authorize]
+    [HttpGet("lastOrder")]
+    public async Task<Models.Order> GetLastOrder()
+    {
+        User user = await GetCurrentUser();
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user.Orders.Last();
+    }
+
+
     private async Task<User> GetCurrentUser()
     {
         // Pilla el usuario autenticado según ASP

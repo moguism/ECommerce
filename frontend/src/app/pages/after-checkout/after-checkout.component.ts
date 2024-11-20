@@ -8,6 +8,7 @@ import { ApiService } from '../../services/api.service';
 import { ProductService } from '../../services/product.service';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
+import { Order } from '../../models/order';
 
 @Component({
   selector: 'app-after-checkout',
@@ -16,64 +17,52 @@ import { User } from '../../models/user';
   templateUrl: './after-checkout.component.html',
   styleUrl: './after-checkout.component.css'
 })
-export class AfterCheckoutComponent implements OnInit, OnDestroy
-{
+export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
-  user : User | null = null
-  newOrder : Order | null
-
-
-  shoppingCartProducts: Product[] = []
-  id: string = ""
+  user: User | null = null
+  lastOrder: Order | null = null
   private method: string = ""
 
-  constructor(private productService: ProductService, private apiService: ApiService, 
-    private userService : UserService, private activatedRoute: ActivatedRoute) {
+  constructor(private productService: ProductService, private apiService: ApiService,
+    private userService: UserService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnDestroy(): void {
     localStorage.removeItem("method")
   }
 
-  async createOrder(){
-    this.apiService.get("checkout/status/"+this.id)
-  }
 
   // Falta obtener la orden
 
   async ngOnInit(): Promise<void> {
-    const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
-    console.log("PRUEBA: ", id)
-    if(id != "" && id != null)
-    {
-      this.id = id
-      this.createOrder()
-    }
-    else
-    {
-      const method = localStorage.getItem("method")
-      if(method)
-      {
-        this.id = "completado"
-      }
-    }
 
     await this.getUser()
+    await this.getLastOrder()
 
+    console.log(this.lastOrder)
   }
 
 
-  async getUser(){
+  async getUser() {
     this.user = await this.userService.getUser()
   }
 
+  async getLastOrder() {
+    const orderResult = await this.apiService.get<Order>("Order/lastOrder", {}, "json")
+    this.lastOrder = orderResult.data
+  }
 
 
   totalprice() {
     let totalcount = 0;
-    for (const product of this.shoppingCartProducts) {
-      totalcount += product.total * product.price;
+
+    if (this.lastOrder) {
+
+      for (const product of this.lastOrder?.Products) {
+        totalcount += product.total * product.price;
+      }
     }
+
     return totalcount;
   }
 
