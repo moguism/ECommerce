@@ -30,12 +30,6 @@ public class OrderRepository : Repository<Order, int>
             .FirstOrDefaultAsync(order => order.Id == orderId);
     }
 
-    public Order GetLastByUserId(int userId)
-    {
-        return GetQueryable()
-            .LastOrDefault(o => o.UserId == userId);
-    }
-
 
     public async Task<Order> GetBySessionId(string sessionid)
     {
