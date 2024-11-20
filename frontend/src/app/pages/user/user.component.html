@@ -149,7 +149,7 @@
                     <label for="productCategory">Descripcion del producto:</label>
                     <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription" required />
                     <label for="productImage">Foto del producto:</label>
-                    <input type="file" accept="image/png, image/jpeg, image/jpg" required/>
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)"/>
                     <button type="submit" (click)="submitCreateProduct()">Modificar</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
