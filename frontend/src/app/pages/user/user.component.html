@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header [name]="user?.name || 'NULL'"></app-header>
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
     @if(user){
@@ -17,10 +17,10 @@
             </div>
         }
         <h2>Listado de pedidos</h2>
-        @if(user.orders){
-            @for (order of user.orders; track order.Id){
+        @if(orders.length != 0 && orders){
+            @for (order of orders; track order.id){
                 <div class="order-container">
-                    <h3>Fecha del pedido: {{ order.CreatedAt | correctDate }}</h3>
+                    <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
                     <table>
                         <tr>
                             <th>Imagen</th>
@@ -28,26 +28,26 @@
                             <th>Cantidad</th>
                             <th>Precio Kg</th>
                         </tr>
-                        @for(product of order.Products; track product.id){
+                        <!--@for(productToBuy of order.wishlist.products; track productToBuy.id){
                             <tr>
-                                <td class="product-img"><img src={{product.image}}></td>
-                                <td class="product-data">{{product.name}}</td>
-                                <td class="product-data">{{product.total}}</td>
-                                <td class="product-data">{{product.price | eurosToCents}}</td>
+                                <td class="product-img"><img src={{productToBuy.product.image}}></td>
+                                <td class="product-data">{{productToBuy.product.name}}</td>
+                                <td class="product-data">{{productToBuy.quantity}}</td>
+                                <td class="product-data">{{productToBuy.product.price| eurosToCents}}</td>
                             </tr>
-                        }
+                        }-->
                     </table>
-                    @if(order.PaymentTypeId == 1){
-                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
+                    <!--@if(order.paymentTypeId == 1){
+                        <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
                     }@else {
-                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.Products) | eurosToCents}}</h3>
-                    }
+                        <h3>Pagado con: ethereum Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
+                }-->
                     
                 </div>
                 
             }
         }@else {
-            <h3>No se realizo ningun pedido</h3>
+            <h3>No se realizó ningun pedido</h3>
         }
         
     }
@@ -117,7 +117,12 @@
                     <label for="productPrice">Precio:</label>
                     <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
                     <label for="productCategory">Categoría:</label>
-                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
+                    <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
+                    <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
+                        <option value="Frutas">Frutas</option>
+                        <option value="User">Verduras</option>
+                        <option value="Carnes">Carnes</option>
+                    </select>
                     <button type="submit" (click)="submitCreateProduct()">Crear</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
@@ -125,15 +130,20 @@
         }
         @if (formState=="modifyProduct"){
             <div class="modal">
-                <h3>Crear nuevo producto</h3>
+                <h3>Modificar producto</h3>
                 <form>
                     <label for="productName">Nombre del producto:</label>
                     <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
                     <label for="productPrice">Precio:</label>
                     <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
                     <label for="productCategory">Categoría:</label>
-                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
-                    <label for="productCategory">Stock del producto:</label>
+                    <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
+                    <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
+                        <option value="Frutas">Frutas</option>
+                        <option value="User">Verduras</option>
+                        <option value="Carnes">Carnes</option>
+                    </select>
+                    <label for="productStock">Stock del producto:</label>
                     <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" required />
                     <label for="productCategory">Descripcion del producto:</label>
                     <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription" required />

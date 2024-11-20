@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
@@ -9,15 +9,17 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
-import { TitleCasePipe } from '@angular/common';
+import { Order } from '../../models/order';
+import { ProductsToBuy } from '../../models/products-to-buy';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Category } from '../../models/category';
+
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, TranslatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -28,6 +30,7 @@ export class UserComponent implements OnInit {
 
   user: User | null = null;
   btnEdit: boolean = false;
+  orders: Order[] = [];
   elementShowing: string = "";
   allUsers: User[] = [];
   allProducts: Product[] = [];
@@ -45,6 +48,7 @@ export class UserComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
+    await this.getAllOrders();
   }
 
   async getUser() {
@@ -55,6 +59,13 @@ export class UserComponent implements OnInit {
     }
   }
 
+  async getAllOrders(){
+    const result = await this.userService.getAllOrders();
+    if (result) {
+      this.orders = result;
+    }
+  }
+
   async saveUserData(){
     const newName = document.getElementById("new-name") as HTMLInputElement
     const newEmail = document.getElementById("new-email") as HTMLInputElement
@@ -62,7 +73,6 @@ export class UserComponent implements OnInit {
     const newPassword = document.getElementById("new-password") as HTMLInputElement
 
     if (newName && newEmail && newAddress && newPassword && this.user) {
-      
       if (newName.value != "") {
         this.user.name = newName.value
       }
@@ -77,6 +87,7 @@ export class UserComponent implements OnInit {
       }
       
       await this.userService.updateUser(this.user);
+      //await this.userService.obtainNewJwt()
     }
     
     this.btnEdit = false
@@ -115,7 +126,7 @@ export class UserComponent implements OnInit {
     this.formState="modifyProduct"
     this.Product=this.allProducts[id-1];
     this.newProductName = this.Product.name;
-    this.newProductPrice = this.Product.price;
+    this.newProductPrice = parseFloat(eurosToCentsPipe.transform(this.Product.price));
     this.category=this.Product.category.name;
     this.categorytranslate=translatepipe.transform(this.category)
     this.newProductCategory = this.categorytranslate;
@@ -168,10 +179,10 @@ export class UserComponent implements OnInit {
     if (products != null) this.allProducts = products;
   }
 
-  totalprice(products: Product[]) {
+  totalprice(products: ProductsToBuy[]) {
     let totalcount = 0;
     for (const product of products) {
-      totalcount += product.total * product.price;
+      totalcount += product.quantity * product.product.price;
     }
     return totalcount;
   }

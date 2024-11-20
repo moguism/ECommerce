@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
@@ -9,18 +9,26 @@ import { ApiService } from '../../services/api.service';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   protected buttonChange: boolean = true;
   protected dropdownChange: boolean = true;
   protected jwt : string = "";
-  protected name : string = "";
-
+  @Input() name : string = "";
 
   constructor(private apiService: ApiService, private router: Router){
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this.apiService.post<string>("User/getJwtAfterlogin")
+    if(this.apiService.jwt == null)
+    {
+      return;
+    }
     this.jwt = this.apiService.jwt;
     if(this.jwt != "")
     {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
+      console.log("EL NOMBRE ES: ", this.name)
     }
   }
 

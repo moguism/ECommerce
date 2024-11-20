@@ -28,6 +28,13 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
+        public async Task<User> GetOnlyOrdersById(int id)
+        {
+            return await GetQueryable()
+                .Include(user => user.Orders)
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
+
         public async Task<ICollection<User>> GetAllInfoExceptId(int id)
         {
             return await GetQueryable()
