@@ -37,24 +37,12 @@ public class OrderController : ControllerBase
     {
         User user = await GetCurrentUser();
 
-        if (user == null || !user.Role.Equals("Admin"))
+        if (user == null)
         {
             return null;
         }
 
-        return await _orderService.GetAllOrders(user);
-    }
-
-
-    [HttpGet("allProductsByOrderId")]
-    //Devuelve productoId cantidad (obtener el producto desde el front)
-    public async Task<IEnumerable<CartContentDto>> GetAllProducts(int orderId)
-    {
-        Models.Order order = await _orderService.GetOrderById(orderId);
-
-        IEnumerable<ProductsToBuy> products = _wishListService.GetAllProductsByWishlistIdAsync(order.WishlistId);
-        return _productsToBuyMapper.ToDto(products);
-
+        return user.Orders;
     }
 
     private async Task<User> GetCurrentUser()

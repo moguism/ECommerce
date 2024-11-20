@@ -59,6 +59,11 @@ namespace Server.Services
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
+
+            //Añade la orden a la lista de ordenes del usuario
+            user.Orders.Add(saveOrder);
+            _unitOfWork.UserRepository.Update(user);
+
             return saveOrder;
         }
 
@@ -105,6 +110,11 @@ namespace Server.Services
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
+
+            //Añade la orden a la lista de ordenes del usuario
+            user.Orders.Add(saveOrder);
+            _unitOfWork.UserRepository.Update(user);
+
             return saveOrder;
         }
 
