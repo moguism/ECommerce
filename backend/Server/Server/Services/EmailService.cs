@@ -1,4 +1,5 @@
-﻿using Server.Models;
+﻿using Server.Mappers;
+using Server.Models;
 using System.Net;
 using System.Net.Mail;
 
@@ -7,9 +8,11 @@ namespace Server.Services
     public class EmailService
     {
         UnitOfWork _unitOfWork;
-        public EmailService(UnitOfWork unitOfWork) 
+        ProductMapper _productMapper;
+        public EmailService(UnitOfWork unitOfWork,ProductMapper productMapper) 
         {
             _unitOfWork = unitOfWork;
+            _productMapper = productMapper;
         }
 
         private const string SMTP_HOST = "smtp.gmail.com";
@@ -45,7 +48,7 @@ namespace Server.Services
                 Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
                 price = oneproduct.Price / 100m;
                 totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
-                body += $"<tr><td>{oneproduct.Name}</td><td><img src='/images/{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>";
+                body += $"<tr><td>{oneproduct.Name}</td><td><img src='{_productMapper.AddCorrectPath(oneproduct)}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>";
                 totalprice += products.Quantity * oneproduct.Price;
             }
             body += "</table></html>";

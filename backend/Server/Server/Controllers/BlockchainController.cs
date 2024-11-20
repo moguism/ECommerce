@@ -54,7 +54,7 @@ public class BlockchainController : ControllerBase
 
     [Authorize]
     [HttpPost("check")]
-    public async Task<OrderDto> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
+    public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
         User user = await GetAuthorizedUser();
         if(user == null)
@@ -71,9 +71,9 @@ public class BlockchainController : ControllerBase
             await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
 
             //Productos comprados por el usuario
-            IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
+            //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
 
-            return _orderMapper.ToDto(order,products);
+            return order;
         }
         return null;
     }
