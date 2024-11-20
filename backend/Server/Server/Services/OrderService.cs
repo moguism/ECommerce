@@ -157,6 +157,12 @@ namespace Server.Services
         }
 
 
+        public async Task<Order> GetLastOrderByUserAsync(User user)
+        {
+            Order order = _unitOfWork.OrderRepository.GetLastByUserId(user.Id);
+            return await GetOrderById(order.Id);
+        }
+
 
 
     }

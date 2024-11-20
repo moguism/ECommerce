@@ -61,7 +61,9 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return await _orderService.GetOrderById(user.Orders.Last().Id);
+        Models.Order order = await _orderService.GetLastOrderByUserAsync(user);
+
+        return order;
     }
 
 
