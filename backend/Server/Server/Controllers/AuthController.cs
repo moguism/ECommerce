@@ -19,15 +19,14 @@ namespace Server.Controllers
         private readonly UserMapper _userMapper;
         private readonly UnitOfWork _unitOfWork;
         private readonly PasswordService _passwordService;
-        private readonly TokenValidationParameters _tokenParameters;
+        private readonly UserService _userService;
 
-        public AuthController(UnitOfWork unitOfWork, UserMapper userMapper, PasswordService passwordService, IOptionsMonitor<JwtBearerOptions> jwtOptions)
+        public AuthController(UnitOfWork unitOfWork, UserMapper userMapper, PasswordService passwordService, UserService userService)
         {
             _unitOfWork = unitOfWork;
             _userMapper = userMapper;
             _passwordService = passwordService;
-            _tokenParameters = jwtOptions.Get(JwtBearerDefaults.AuthenticationScheme)
-                .TokenValidationParameters;
+            _userService = userService;
         }
 
         [HttpPost("signup")]
@@ -37,7 +36,7 @@ namespace Server.Controllers
             user.Password = _passwordService.Hash(receivedUser.Password);
             await _unitOfWork.UserRepository.InsertAsync(user);
             await _unitOfWork.SaveAsync();
-            return obtainToken(user);
+            return _userService.ObtainToken(user);
         }
 
         [HttpPost("login")]
@@ -46,7 +45,7 @@ namespace Server.Controllers
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(userLogin.Email);
             if (user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
             {
-                string stringToken = obtainToken(user);
+                string stringToken = _userService.ObtainToken(user);
                 return Ok(stringToken);
             }
             else
@@ -54,28 +53,6 @@ namespace Server.Controllers
                 return Unauthorized();
             }
 
-        }
-
-        private string obtainToken(User user)
-        {
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                // EL CONTENIDO DEL JWT
-                Claims = new Dictionary<string, object>
-                    {
-                        { "id", user.Id },
-                        { "name", user.Name },
-                        { ClaimTypes.Role, "admin" } // TODO: CAMBIAR ESTO
-                    },
-                Expires = DateTime.UtcNow.AddYears(3),
-                SigningCredentials = new SigningCredentials(
-                        _tokenParameters.IssuerSigningKey,
-                        SecurityAlgorithms.HmacSha256Signature
-                    )
-            };
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
     }
 }

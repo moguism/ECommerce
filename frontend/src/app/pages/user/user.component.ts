@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
@@ -9,7 +9,6 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
-import { TitleCasePipe } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
 
@@ -55,7 +54,6 @@ export class UserComponent implements OnInit {
     const newPassword = document.getElementById("new-password") as HTMLInputElement
 
     if (newName && newEmail && newAddress && newPassword && this.user) {
-      
       if (newName.value != "") {
         this.user.name = newName.value
       }
@@ -70,6 +68,7 @@ export class UserComponent implements OnInit {
       }
       
       await this.userService.updateUser(this.user);
+      //await this.userService.obtainNewJwt()
     }
     
     this.btnEdit = false
