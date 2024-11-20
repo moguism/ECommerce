@@ -155,6 +155,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     // Si no está instalado Metamask se lanza un error y se corta la ejecución
     if (!window.ethereum) {
+      alert("Metamask no ha sido encontrado")
       throw new Error('Metamask not found');
     }
 
@@ -171,6 +172,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
 
     this.eurosToSend = this.totalprice() //total a pagar
+    this.eurosToSend = this.eurosToSend / 100
 
     // Obtenemos los datos que necesitamos para la transacción: 
     // gas, precio del gas y el valor en Ethereum
@@ -179,10 +181,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       Euros: this.eurosToSend
     };
 
+    console.log("TRANSATION REQUEST: ", transactionRequest)
+
 
     const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
     //para no dar problemas con los posibles nulos
-    const ethereumInfo =  ethereumInfoResult.data;
+    if(ethereumInfoResult.data == null)
+    {
+      alert("Ha ocurrido un error")
+      return;
+    }
+    const ethereumInfo =  JSON.parse(ethereumInfoResult.data.toString());
+
+    console.log("ETHERIUM INFO RESULT: ", ethereumInfoResult)
+    console.log("ETHERIUM INFO GOOD ENDING: ", ethereumInfo)
 
     try {
       // Creamos la transacción y pedimos al usuario que la firme
@@ -192,9 +204,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           params: [{
             from: account,
             to: this.addressToSend,
-            value: ethereumInfo.Value,
-            gas: ethereumInfo.Gas,
-            gasPrice: ethereumInfo.GasPrice
+            value: ethereumInfo.value,
+            gas: ethereumInfo.gas,
+            gasPrice: ethereumInfo.gasPrice
           }]
         });
         // Pedimos al servidor que verifique la transacción.
@@ -205,7 +217,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           hash: transactionHash,
           from: account,
           to: this.addressToSend,
-          value: ethereumInfo.Value
+          value: ethereumInfo.value
         }
 
 
@@ -226,7 +238,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           alert('Transacción realizada con éxito');
           console.log(checkTransactionResult.data)
           if(checkTransactionResult.data)
+          {
             console.log("Orden creada")
+            this.router.navigateByUrl("after-checkout")
+            localStorage.setItem("method", 'eth')
+          }
           else
             console.log("Error al crear la orden")
 
