@@ -6,7 +6,6 @@
 
     <div class="information">
         <div class="purchased ">
-            <h2>Productos</h2>
             @for (productPurchased of lastOrder.wishlist.products; track productPurchased.id){
             <div class="purchased -products">
                 <img class="purchased-products-image" [src]="productPurchased.product.image" alt="">
