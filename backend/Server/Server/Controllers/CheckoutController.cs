@@ -184,17 +184,18 @@ public class CheckoutController : ControllerBase
             Wishlist productsorder=await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
             if (session.CustomerEmail != null)
             {
-                decimal totalprice=0;
+                await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
+                /*decimal totalprice=0;
                 string to = session.CustomerEmail;
-                String subject = "Envio de la compra realizada";
-                String body = "<html> <h1>QUE BISHO GRACIAS POR COMPRAR</h1> <table><tr><td>Nombre</td><td>Imagen</td><td>Precio</td><td>Cantidad</td><td>Suma</td></tr>";
+                string subject = "Envio de la compra realizada";
+                string body = "<html> <h1>QUE BISHO GRACIAS POR COMPRAR</h1> <table><tr><td>Nombre</td><td>Imagen</td><td>Precio</td><td>Cantidad</td><td>Suma</td></tr>";
                 foreach (ProductsToBuy products in productsorder.Products) 
                 {
                     decimal price = 0;
                     decimal totalpricequantity = 0;
                     Models.Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
-                    price = oneproduct.Price / 100;
-                    totalpricequantity = (products.Quantity * oneproduct.Price) / 100;
+                    price = oneproduct.Price / 100m;
+                    totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
                     body += $"<tr><td>{oneproduct.Name}</td><td><img src='/images/{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>";
                      totalprice += products.Quantity * oneproduct.Price;
                 }
@@ -205,7 +206,7 @@ public class CheckoutController : ControllerBase
                     body += $"<h3>Metodo de pago: Tarjeta</h3>";
                 }
                 body += $"<h4>Direccion de envio: {user.Address}</h4>";
-                await _emailService.SendEmailAsync(to, subject, body,true);
+                await _emailService.SendEmailAsync(to, subject, body,true);*/
             }
             return order;
         }

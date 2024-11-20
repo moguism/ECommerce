@@ -21,15 +21,20 @@ public class BlockchainController : ControllerBase
     private readonly UserService _userService;
     private readonly ProductsToBuyMapper _productsToBuyMapper;
     private readonly OrderMapper _orderMapper;
+    private readonly UnitOfWork _unitOfWork;
+    private readonly EmailService _emailService;
 
     public BlockchainController(BlockchainService blockchainService, OrderService orderService, 
-        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper)
+        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper,
+        UnitOfWork unitOfWork, EmailService emailService)
     {
         _blockchainService = blockchainService;
         _orderService = orderService;
         _userService = userService;
         _productsToBuyMapper = productsToBuyMapper;
         _orderMapper = orderMapper;
+        _unitOfWork = unitOfWork;
+        _emailService = emailService;
     }
 
     [HttpGet]
@@ -49,7 +54,7 @@ public class BlockchainController : ControllerBase
 
     [Authorize]
     [HttpPost("check")]
-    public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
+    public async Task<OrderDto> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
         User user = await GetAuthorizedUser();
         if(user == null)
@@ -61,11 +66,14 @@ public class BlockchainController : ControllerBase
         if(done == true)
         {
             Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
-            
-            //Productos comprados por el usuario
-            //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
+            int whislistId = order.WishlistId;
+            Wishlist productsorder = await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
+            await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
 
-            return order;
+            //Productos comprados por el usuario
+            IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
+
+            return _orderMapper.ToDto(order,products);
         }
         return null;
     }
