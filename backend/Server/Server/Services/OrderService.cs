@@ -127,10 +127,7 @@ namespace Server.Services
 
             foreach (Order order in orders)
             {
-                order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
-                order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
-                    .GetAllProductsByWishlistId(order.WishlistId);
-                orders.Append(order);
+                orders.Append(await GetOrderById(order.Id));
             }
 
             return orders;
@@ -144,6 +141,18 @@ namespace Server.Services
             order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
             order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
                     .GetAllProductsByWishlistId(order.WishlistId);
+
+
+            List<ProductsToBuy> products = new List<ProductsToBuy>();
+
+            foreach (var product in order.Wishlist.Products)
+            {
+                product.Product = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                products.Add(product);
+            }
+
+            order.Wishlist.Products = products;
+
             return order;
         }
 
