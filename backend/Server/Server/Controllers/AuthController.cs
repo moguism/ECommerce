@@ -17,13 +17,11 @@ namespace Server.Controllers
     {
 
         private readonly UserMapper _userMapper;
-        private readonly UnitOfWork _unitOfWork;
         private readonly PasswordService _passwordService;
         private readonly UserService _userService;
 
-        public AuthController(UnitOfWork unitOfWork, UserMapper userMapper, PasswordService passwordService, UserService userService)
+        public AuthController( UserMapper userMapper, PasswordService passwordService, UserService userService)
         {
-            _unitOfWork = unitOfWork;
             _userMapper = userMapper;
             _passwordService = passwordService;
             _userService = userService;
@@ -34,15 +32,14 @@ namespace Server.Controllers
         {
             User user = _userMapper.ToEntity(receivedUser);
             user.Password = _passwordService.Hash(receivedUser.Password);
-            await _unitOfWork.UserRepository.InsertAsync(user);
-            await _unitOfWork.SaveAsync();
+            await _userService.InsertUser(user);
             return _userService.ObtainToken(user);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginUser([FromBody] LoginDto userLogin)
         {
-            User user = await _unitOfWork.UserRepository.GetByEmailAsync(userLogin.Email);
+            User user = await _userService.GetUserByEmailAsync(userLogin.Email);
             if (user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
             {
                 string stringToken = _userService.ObtainToken(user);

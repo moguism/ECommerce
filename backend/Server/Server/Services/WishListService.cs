@@ -51,7 +51,10 @@ namespace Server.Services
             return wishlist;
         }
 
-
-
+        public async Task<Wishlist> GetWishlistByIdAsync(int wishlistId)
+        {
+            Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(wishlistId);
+            return wishlist;
+        }
     }
 }

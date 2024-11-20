@@ -73,4 +73,18 @@ public class UserService
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+    public async Task InsertUser(User user)
+    {
+        await _unitOfWork.UserRepository.InsertAsync(user);
+        await _unitOfWork.SaveAsync();
+    }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+        return user;
+    }
+
+        
 }

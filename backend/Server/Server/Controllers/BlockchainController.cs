@@ -21,20 +21,20 @@ public class BlockchainController : ControllerBase
     private readonly UserService _userService;
     private readonly ProductsToBuyMapper _productsToBuyMapper;
     private readonly OrderMapper _orderMapper;
-    private readonly UnitOfWork _unitOfWork;
     private readonly EmailService _emailService;
+    private readonly WishListService _wishListService;
 
     public BlockchainController(BlockchainService blockchainService, OrderService orderService, 
-        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper,
-        UnitOfWork unitOfWork, EmailService emailService)
+        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper, 
+        EmailService emailService, WishListService wishListService)
     {
         _blockchainService = blockchainService;
         _orderService = orderService;
         _userService = userService;
         _productsToBuyMapper = productsToBuyMapper;
         _orderMapper = orderMapper;
-        _unitOfWork = unitOfWork;
         _emailService = emailService;
+        _wishListService = wishListService;
     }
 
     [HttpGet]
@@ -67,8 +67,8 @@ public class BlockchainController : ControllerBase
         {
             Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
 
-            int whislistId = order.WishlistId;
-            Wishlist productsorder = await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
+            int wishlistId = order.WishlistId;
+            Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(wishlistId);
             await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
 
             //Productos comprados por el usuario
