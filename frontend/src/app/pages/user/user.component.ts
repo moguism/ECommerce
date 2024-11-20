@@ -13,6 +13,7 @@ import { Order } from '../../models/order';
 import { ProductsToBuy } from '../../models/products-to-buy';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Category } from '../../models/category';
+import { ProductToInsert } from '../../models/product-to-insert';
 
 
 
@@ -37,14 +38,15 @@ export class UserComponent implements OnInit {
   formState: string | null = null; // Puede ser 'editRole' o 'createProduct'
   editRoleValue: string = "";
   newProductName: string = "";
-  newProductPrice: number | null = null;
+  newProductPrice: number = 0;
   newProductCategory:string="";
-  newProductStock: number|null=null;
+  newProductStock: number = 0;
   newproductDescription: string="";
   selectedUser: User | null = null;
   Product:Product|null=null;
   category:string="";
   categorytranslate:string="";
+  image: File | null = null
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
@@ -117,7 +119,7 @@ export class UserComponent implements OnInit {
   showCreateProductForm() {
     this.formState = "createProduct";
     this.newProductName = "";
-    this.newProductPrice = null;
+    this.newProductPrice = 0;
     /*this.newProductCategory = "";*/
   }
   showEditProductForm(id: number){
@@ -137,6 +139,7 @@ export class UserComponent implements OnInit {
 
   closeForm() {
     this.formState = null;
+    this.image = null;
   }
 
   async submitEditRole() {
@@ -151,7 +154,20 @@ export class UserComponent implements OnInit {
   }
 
   async submitCreateProduct() {
-    alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    if(this.image)
+    {
+      // TODO: Cambiar ID de la categoría
+      const newProduct = new ProductToInsert(
+        this.image, this.newProductName, this.newproductDescription, this.newProductPrice, this.newProductStock, 1
+      )
+
+      await this.productService.createProduct(newProduct)
+      await this.getAllProducts()
+
+      alert("PRODUCTO CREADO")
+
+    }
     this.closeForm();
   }
   /*async submitModifyProduct() {
@@ -166,6 +182,14 @@ export class UserComponent implements OnInit {
       await this.userService.deleteUser(id);
       alert("Usuario borrado correctamente");
       this.getAllUsers();
+    }
+  }
+
+  onFileSelected(event: any) {
+    const image = event.target.files[0] as File;
+    if(image)
+    {
+      this.image = image
     }
   }
 
