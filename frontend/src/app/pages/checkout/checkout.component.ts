@@ -24,8 +24,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   shoppingCartProducts: Product[] = []
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
-  private method: string = ""
-
+  method: string = ""
+  
   @ViewChild('checkoutDialog')
   checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
   stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
@@ -33,7 +33,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   //blockchain
   networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
   eurosToSend: number = 0;
-  addressToSend: string = "0x3402A2c72FFc187C67f2c467eCDd4181d873778a";
+  addressToSend: string = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2"; //Café para mauricio
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private router: Router, private activatedRoute: ActivatedRoute,
@@ -155,6 +155,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     // Si no está instalado Metamask se lanza un error y se corta la ejecución
     if (!window.ethereum) {
+      alert("Metamask no ha sido encontrado")
       throw new Error('Metamask not found');
     }
 
@@ -171,6 +172,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
 
     this.eurosToSend = this.totalprice() //total a pagar
+    this.eurosToSend = this.eurosToSend / 100
 
     // Obtenemos los datos que necesitamos para la transacción: 
     // gas, precio del gas y el valor en Ethereum
@@ -179,10 +181,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       Euros: this.eurosToSend
     };
 
+    console.log("TRANSATION REQUEST: ", transactionRequest)
+
 
     const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
     //para no dar problemas con los posibles nulos
-    const ethereumInfo =  ethereumInfoResult.data;
+    if(ethereumInfoResult.data == null)
+    {
+      alert("Ha ocurrido un error")
+      return;
+    }
+    const ethereumInfo =  JSON.parse(ethereumInfoResult.data.toString());
+
+    console.log("ETHERIUM INFO RESULT: ", ethereumInfoResult)
+    console.log("ETHERIUM INFO GOOD ENDING: ", ethereumInfo)
 
     try {
       // Creamos la transacción y pedimos al usuario que la firme
@@ -192,9 +204,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           params: [{
             from: account,
             to: this.addressToSend,
-            value: ethereumInfo.Value,
-            gas: ethereumInfo.Gas,
-            gasPrice: ethereumInfo.GasPrice
+            value: ethereumInfo.value,
+            gas: ethereumInfo.gas,
+            gasPrice: ethereumInfo.gasPrice
           }]
         });
         // Pedimos al servidor que verifique la transacción.
@@ -205,18 +217,32 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           hash: transactionHash,
           from: account,
           to: this.addressToSend,
-          value: ethereumInfo.Value
+          value: ethereumInfo.value
         }
 
 
         const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
+
+
+        console.log("Data : ",          
+          "\n" + checkTransactionRequest.networkUrl, 
+          "\n" + checkTransactionRequest.hash, 
+          "\n" + checkTransactionRequest.from ,
+          "\n" + checkTransactionRequest.to, 
+          "\n" + checkTransactionRequest.value)
+
+
 
         //Si la transacción ha sido exitosa
         if (checkTransactionResult.success) {
           alert('Transacción realizada con éxito');
           console.log(checkTransactionResult.data)
           if(checkTransactionResult.data)
+          {
             console.log("Orden creada")
+            this.router.navigateByUrl("after-checkout")
+            localStorage.setItem("method", 'eth')
+          }
           else
             console.log("Error al crear la orden")
 
