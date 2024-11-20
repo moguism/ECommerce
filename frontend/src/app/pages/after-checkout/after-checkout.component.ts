@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from '../../services/product.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/user';
+import { Order } from '../../models/order';
 
 @Component({
   selector: 'app-after-checkout',
@@ -13,76 +16,74 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './after-checkout.component.html',
   styleUrl: './after-checkout.component.css'
 })
-export class AfterCheckoutComponent implements OnInit, OnDestroy
-{
-  shoppingCartProducts: Product[] = []
-  id: string = ""
-  private method: string = ""
+export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
-  constructor(private productService: ProductService, private apiService: ApiService, private activatedRoute: ActivatedRoute) {
+  user: User | null = null
+  lastOrder: Order | null = null
+  private method: string = ""
+  id : string = ""
+
+  constructor(private productService: ProductService, private apiService: ApiService,
+    private userService: UserService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnDestroy(): void {
     localStorage.removeItem("method")
   }
 
-  async createOrder(){
-    this.apiService.get("checkout/status/"+this.id)
-  }
 
   // Falta obtener la orden
 
   async ngOnInit(): Promise<void> {
     const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
-    console.log("PRUEBA: ", id)
-    if(id != "" && id != null)
+    if(id != null && id != "")
     {
       this.id = id
-      this.createOrder()
+      await this.createOrder()
+      //await this.getLastOrder(id)
     }
     else
     {
-      const method = localStorage.getItem("method")
-      if(method)
+      const orderCheckout = sessionStorage.getItem("orderCheckout")
+      if(orderCheckout)
       {
-        this.id = "completado"
+        this.lastOrder = JSON.parse(orderCheckout)
       }
     }
-    /*this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
-    console.log("RESULT CHECKOUT: ", result)
+    await this.getUser()
 
-    const shoppinCartResult = await this.apiService.get("ShoppingCart", { "isTemporal": true }, 'json');
-    if (shoppinCartResult.data) {
-      const data: any = shoppinCartResult.data;
-      const cartContent: any[] = data.cartContent;
-      for (const product of cartContent) {
-        const productResult = await this.productService.getById(product.productId);
-        if (productResult != null) {
-          const p: Product = {
-            id: productResult.id,
-            name: productResult.name,
-            average: productResult.average,
-            category: productResult.category,
-            categoryId: productResult.categoryId,
-            description: productResult.description,
-            image: productResult.image,
-            price: productResult.price,
-            reviews: productResult.reviews,
-            stock: productResult.stock,
-            total: product.quantity
-          };
-          this.shoppingCartProducts.push(p);
-        }
-      }
-    }*/
+    console.log(this.lastOrder)
   }
+
+  async createOrder(){
+    const orderResult = await this.apiService.get("checkout/status/"+this.id)
+    if(orderResult.data)
+    {
+      this.lastOrder = orderResult.data 
+    }
+  }
+
+  async getUser() {
+    this.user = await this.userService.getUser()
+  }
+
+  /*async getLastOrder(id : string) {
+    const orderResult = await this.apiService.get<Order>("Order/lastOrder", {"id" : id}, "json")
+    console.log("ORDER RESULT: ", orderResult)
+    this.lastOrder = orderResult.data
+  }*/
+
 
   totalprice() {
     let totalcount = 0;
-    for (const product of this.shoppingCartProducts) {
-      totalcount += product.total * product.price;
+
+    if (this.lastOrder) {
+
+      for (const product of this.lastOrder.wishlist.products) {
+        totalcount += product.quantity * product.product.price;
+      }
     }
+
     return totalcount;
   }
 

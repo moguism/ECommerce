@@ -46,19 +46,11 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        IEnumerable<Models.Order> Orders = await _orderService.GetAllOrders(user);
+        return await _orderService.GetAllOrders(user);
 
-        foreach (Models.Order o in Orders)
-        {
-            o.Wishlist.Products = _wishListService.GetAllProductsByWishlistIdAsync(o.WishlistId);
-            foreach (ProductsToBuy p in o.Wishlist.Products)
-            {
-                p.Product = await _productService.GetProductById(p.ProductId);
-            }
-        }
-
-        return Orders;
     }
+
+
 
     private async Task<User> GetCurrentUser()
     {

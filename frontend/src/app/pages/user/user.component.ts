@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { CommonModule, DecimalPipe } from '@angular/common';
 
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
@@ -20,12 +21,13 @@ import { ProductToInsert } from '../../models/product-to-insert';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, TranslatePipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe,CommonModule],
   templateUrl: './user.component.html',
-  styleUrl: './user.component.css'
+  styleUrl: './user.component.css',
+  providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService) {
+  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe) {
   }
 
 
@@ -47,6 +49,7 @@ export class UserComponent implements OnInit {
   category:string="";
   categorytranslate:string="";
   image: File | null = null
+  pricedecimal:string="";
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
@@ -124,11 +127,16 @@ export class UserComponent implements OnInit {
   }
   showEditProductForm(id: number){
     const translatepipe=new TranslatePipe();
-    const eurosToCentsPipe=new EurosToCentsPipe();
     this.formState="modifyProduct"
     this.Product=this.allProducts[id-1];
     this.newProductName = this.Product.name;
-    this.newProductPrice = parseFloat(eurosToCentsPipe.transform(this.Product.price));
+    const convert=this.decimalPipe.transform(this.Product.price/100,"1.2-2");
+    console.log(convert);
+    if(convert==null){
+      return;
+    }
+    this.pricedecimal=convert
+    this.newProductPrice = parseFloat(this.pricedecimal);
     this.category=this.Product.category.name;
     this.categorytranslate=translatepipe.transform(this.category)
     this.newProductCategory = this.categorytranslate;

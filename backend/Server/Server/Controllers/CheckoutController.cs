@@ -208,7 +208,7 @@ public class CheckoutController : ControllerBase
                 body += $"<h4>Direccion de envio: {user.Address}</h4>";
                 await _emailService.SendEmailAsync(to, subject, body,true);*/
             }
-            return order;
+            return await _orderService.GetOrderById(order.Id);
         }
         return null;
     }
