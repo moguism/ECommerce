@@ -19,7 +19,7 @@ import { Category } from '../../models/category';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, TranslatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -126,7 +126,7 @@ export class UserComponent implements OnInit {
     this.formState="modifyProduct"
     this.Product=this.allProducts[id-1];
     this.newProductName = this.Product.name;
-    this.newProductPrice = this.Product.price;
+    this.newProductPrice = parseFloat(eurosToCentsPipe.transform(this.Product.price));
     this.category=this.Product.category.name;
     this.categorytranslate=translatepipe.transform(this.category)
     this.newProductCategory = this.categorytranslate;

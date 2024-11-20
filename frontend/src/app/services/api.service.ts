@@ -10,7 +10,7 @@ import { Result } from '../models/result';
 export class ApiService {
 
   private BASE_URL = environment.apiUrl;
-  jwt: string = ""
+  jwt: string | null = ""
 
   constructor(private http: HttpClient) {
     let token: string | null = localStorage.getItem("token")
@@ -33,7 +33,7 @@ export class ApiService {
   }
 
   deleteToken() {
-    this.jwt = "";
+    this.jwt = null;
     localStorage.removeItem("token");
   }
 
