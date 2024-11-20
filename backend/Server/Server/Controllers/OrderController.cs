@@ -14,20 +14,24 @@ namespace Server.Controllers;
 public class OrderController : ControllerBase
 {
 
-    UserService _userService;
+
     //Hay que poner Services.OrderService porque da conflictos en Stripe
-    Services.OrderService _orderService;
-    WishListService _wishListService;
-    ProductsToBuyMapper _productsToBuyMapper;
+    private readonly UserService _userService;
+    private readonly Services.OrderService _orderService;
+    private readonly Services.ProductService _productService;
+    private readonly WishListService _wishListService;
+    private readonly ProductsToBuyMapper _productsToBuyMapper;
 
 
     public OrderController(UserService userService, Services.OrderService orderService, 
-        WishListService wishListService, ProductsToBuyMapper productsToBuyMapper)
+        WishListService wishListService, ProductsToBuyMapper productsToBuyMapper,
+        Services.ProductService productService)
     {
         _userService = userService;
         _orderService = orderService;
         _wishListService = wishListService;
         _productsToBuyMapper = productsToBuyMapper;
+        _productService = productService;
     }
 
 
@@ -42,7 +46,18 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return user.Orders;
+        IEnumerable<Models.Order> Orders = await _orderService.GetAllOrders(user);
+
+        foreach (Models.Order o in Orders)
+        {
+            o.Wishlist.Products = _wishListService.GetAllProductsByWishlistIdAsync(o.WishlistId);
+            foreach (ProductsToBuy p in o.Wishlist.Products)
+            {
+                p.Product = await _productService.GetProductById(p.ProductId);
+            }
+        }
+
+        return Orders;
     }
 
     private async Task<User> GetCurrentUser()

@@ -79,10 +79,15 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<UserAfterLoginDto> UpdateUser([FromBody] User updatedUser)
+        public async Task<UserAfterLoginDto> UpdateUserAdmin([FromBody] User updatedUser)
         {
             User user = await GetCurrentUser();
-            if (user == null || !user.Role.Equals("Admin"))
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!user.Role.Equals("Admin") && updatedUser.Id != user.Id)
             {
                 return null;
             }
@@ -107,6 +112,32 @@ namespace Server.Controllers
             UserAfterLoginDto userDto = _userMapper.ToDto(afterUpdate);
             return userDto;
         }
+
+        /*[Authorize]
+        [HttpPut ("user")]
+        public async Task<UserAfterLoginDto> UpdateUser([FromBody] User updatedUser)
+        {
+            User user = await GetCurrentUser();
+            if (user == null)
+            {
+                return null;
+            }
+
+            User oldUser = await _userService.GetUserById(updatedUser.Id);
+            oldUser.Email = updatedUser.Email;
+            oldUser.Address = updatedUser.Address;
+            oldUser.Name = updatedUser.Name;
+
+            if (updatedUser.Password != null && updatedUser.Password != "")
+            {
+                oldUser.Password = _passwordService.Hash(updatedUser.Password);
+            }
+
+            User afterUpdate = await _userService.UpdateUser(oldUser);
+
+            UserAfterLoginDto userDto = _userMapper.ToDto(afterUpdate);
+            return userDto;
+        }*/
 
         [Authorize]
         [HttpDelete]
