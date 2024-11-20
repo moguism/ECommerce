@@ -31,7 +31,6 @@ namespace Server.Services
 
             IEnumerable<ProductsToBuy> productsToBuyList = await _productsToBuyMapper.ToEntity(products);
 
-
             await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
             await _unitOfWork.SaveAsync();
 
@@ -40,14 +39,21 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = wishlist.Id;
+                product.Product = await _unitOfWork.ProductRepository.GetFullProductById(product.Id);
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
+                
             }
+
+            await _unitOfWork.SaveAsync();
+
+            IEnumerable<ProductsToBuy> finalProducts = _unitOfWork.ProductsToBuyRepository
+                .GetAllProductsByWishlistId(wishlist.Id);
+
 
             wishlist.Products = productsToBuyList;
             _unitOfWork.WishlistRepository.Update(wishlist);
 
             // Guardar los productos asociados en la base de datos
-            await _unitOfWork.SaveAsync();
 
             // Devolver la wishlist creada
             return wishlist;

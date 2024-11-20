@@ -5,12 +5,7 @@ namespace Server.Mappers;
 
 public class ProductsToBuyMapper
 {
-    UnitOfWork _unitOfWork;
 
-    public ProductsToBuyMapper(UnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
 
     public CartContentDto ToDto(ProductsToBuy productsToBuy)
     {
@@ -45,7 +40,6 @@ public class ProductsToBuyMapper
         return new ProductsToBuy
         {
             ProductId = cartContentDto.ProductId,
-            Product = await _unitOfWork.ProductRepository.GetFullProductById(cartContentDto.ProductId),
             Quantity = cartContentDto.Quantity,
         };
     }
