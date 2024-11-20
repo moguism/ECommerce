@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { Router } from '@angular/router';
 import { TemporalOrder } from '../../models/temporal-order';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderShopComponent, FormsModule, EurosToCentsPipe],
+  imports: [HeaderComponent, FormsModule, EurosToCentsPipe],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })

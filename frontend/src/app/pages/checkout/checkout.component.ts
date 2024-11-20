@@ -2,7 +2,6 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
-import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -16,7 +15,7 @@ import { EthereumInfo } from '../../models/ethereum-info';
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderShopComponent, EurosToCentsPipe, HeaderComponent],
+  imports: [EurosToCentsPipe, HeaderComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
