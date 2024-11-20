@@ -59,7 +59,7 @@ public class ProductMapper
         };
     }
 
-    public Product ToEntity(ProductToInsert productDto)
+    /*public Product ToEntity(ProductToInsert productDto)
     {
         return new Product
         {
@@ -69,7 +69,7 @@ public class ProductMapper
             Price = productDto.Price,
             Stock = productDto.Stock
         };
-    }
+    }*/
 
     public IEnumerable<Product> ToEntity(IEnumerable<ProductDto> productsDto)
     {

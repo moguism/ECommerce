@@ -97,11 +97,12 @@ namespace Server.Controllers
             {
                 return null;
             }
-            Product product = _productMapper.ToEntity(newProduct);
+            /*Product product = _productMapper.ToEntity(newProduct);
             product.Image = await _imageService.InsertAsync(newProduct.Image);
             Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
             await _unitOfWork.SaveAsync();
-            return _productMapper.ToDto(savedProduct);
+            return _productMapper.ToDto(savedProduct);*/
+            return null;
         }
 
         [Authorize]
@@ -120,10 +121,10 @@ namespace Server.Controllers
                 return;
             }
 
-            product = _productMapper.ToEntity(productToUpdate);
+            /*product = _productMapper.ToEntity(productToUpdate);
             product.Image = await _imageService.InsertAsync(productToUpdate.Image);
             _unitOfWork.ProductRepository.Update(product);
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();*/
         }
 
         private async Task<User> GetAuthorizedUser()
