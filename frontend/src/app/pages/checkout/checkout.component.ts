@@ -231,8 +231,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           "\n" + checkTransactionRequest.to, 
           "\n" + checkTransactionRequest.value)
 
-
-
         //Si la transacción ha sido exitosa
         if (checkTransactionResult.success) {
           alert('Transacción realizada con éxito');
