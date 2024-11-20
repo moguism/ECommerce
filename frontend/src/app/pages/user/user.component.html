@@ -95,7 +95,7 @@
                 <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
                 <p><b>ID:</b> {{ product.id }}</p>
                 <p><b>Nombre:</b> {{ product.name }}</p>
-                <p><b>Precio:</b> {{ product.price }}</p>
+                <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
                 <p><b>Stock:</b> {{ product.stock }}</p>
                 <p><b>Categoría:</b> {{ product.category.name | translate}}</p>
                 <button (click)="showEditProductForm(product.id)">Editar producto</button>
@@ -135,7 +135,7 @@
                     <label for="productName">Nombre del producto:</label>
                     <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
                     <label for="productPrice">Precio:</label>
-                    <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
+                    <input type="number" step="0.01" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
                     <label for="productCategory">Categoría:</label>
                     <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
                     <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
@@ -147,6 +147,8 @@
                     <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" required />
                     <label for="productCategory">Descripcion del producto:</label>
                     <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription" required />
+                    <label for="productImage">Foto del producto:</label>
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" required/>
                     <button type="submit" (click)="submitCreateProduct()">Modificar</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
