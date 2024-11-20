@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 using Server.Services;
 using Stripe.Climate;
@@ -14,12 +15,19 @@ public class OrderController : ControllerBase
 {
 
     UserService _userService;
+    //Hay que poner Services.OrderService porque da conflictos en Stripe
     Services.OrderService _orderService;
+    WishListService _wishListService;
+    ProductsToBuyMapper _productsToBuyMapper;
 
-    public OrderController(UserService userService, Services.OrderService orderService)
+
+    public OrderController(UserService userService, Services.OrderService orderService, 
+        WishListService wishListService, ProductsToBuyMapper productsToBuyMapper)
     {
         _userService = userService;
         _orderService = orderService;
+        _wishListService = wishListService;
+        _productsToBuyMapper = productsToBuyMapper;
     }
 
 
@@ -39,11 +47,15 @@ public class OrderController : ControllerBase
 
 
     [HttpGet("allProductsByOrderId")]
-    public async Task<IEnumerable<Models.Order>> GetAllProducts(int orderId)
+    //Devuelve productoId cantidad (obtener el producto desde el front)
+    public async Task<IEnumerable<CartContentDto>> GetAllProducts(int orderId)
     {
-        return await _orderService.GetAllOrders(user);
-    }
+        Models.Order order = await _orderService.GetOrderById(orderId);
 
+        IEnumerable<ProductsToBuy> products = _wishListService.GetAllProductsByWishlistIdAsync(orderId);
+        return _productsToBuyMapper.ToDto(products);
+
+    }
 
     private async Task<User> GetCurrentUser()
     {

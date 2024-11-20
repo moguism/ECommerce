@@ -117,6 +117,12 @@ namespace Server.Services
 
         }
 
+        public async Task<Order> GetOrderById(int orderId)
+        {
+            return await _unitOfWork.OrderRepository.GetById(orderId);
+
+        }
+
 
 
 
