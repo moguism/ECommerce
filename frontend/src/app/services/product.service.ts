@@ -57,4 +57,8 @@ export class ProductService {
     }
     return null;
   }
+  /*async modifyProduct(Product:Product) : Promise<Product|null>{
+    const result=await this.api.put("Product/modify",{});
+    
+  }*/
 }
