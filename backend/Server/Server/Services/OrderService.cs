@@ -53,7 +53,7 @@ namespace Server.Services
             if(!temporalOrder.Quick)
             {
                 ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
-                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
+                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);
             }
 
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
@@ -99,7 +99,7 @@ namespace Server.Services
             if (!temporalOrder.Quick)
             {
                 ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(user.Id);
-                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart, shoppingCart.Id);
+                await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);
             }
 
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);

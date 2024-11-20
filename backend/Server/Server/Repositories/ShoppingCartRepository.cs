@@ -76,7 +76,7 @@ namespace Server.Repositories
         }
         public async Task<ShoppingCart> GetIdShoppingCartByUserId(int userId)
         {
-            ShoppingCart shoppingCart = await _context.ShoppingCart.FirstOrDefaultAsync(c => c.UserId == userId);
+            ShoppingCart shoppingCart = await GetQueryable().Include(shoppingCart => shoppingCart.CartContent).FirstOrDefaultAsync(c => c.UserId == userId);
             return shoppingCart;
         }
 
