@@ -46,14 +46,6 @@ namespace Server.Services
 
             await _unitOfWork.SaveAsync();
 
-            IEnumerable<ProductsToBuy> finalProducts = _unitOfWork.ProductsToBuyRepository
-                .GetAllProductsByWishlistId(wishlist.Id);
-
-
-            wishlist.Products = productsToBuyList;
-            _unitOfWork.WishlistRepository.Update(wishlist);
-
-            // Guardar los productos asociados en la base de datos
 
             // Devolver la wishlist creada
             return wishlist;

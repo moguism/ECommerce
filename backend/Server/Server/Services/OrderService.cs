@@ -123,14 +123,28 @@ namespace Server.Services
 
         public async Task<IEnumerable<Order>> GetAllOrders(User user)
         {
-            return await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
+            IEnumerable<Order> orders =  await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
 
+            foreach (Order order in orders)
+            {
+                order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
+                order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
+                    .GetAllProductsByWishlistId(order.WishlistId);
+                orders.Append(order);
+            }
+
+            return orders;
+
+            
         }
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            return await _unitOfWork.OrderRepository.GetById(orderId);
-
+            Order order =  await _unitOfWork.OrderRepository.GetById(orderId);
+            order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
+            order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
+                    .GetAllProductsByWishlistId(order.WishlistId);
+            return order;
         }
 
 

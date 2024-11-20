@@ -42,7 +42,7 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return user.Orders;
+        return await _orderService.GetAllOrders(user);
     }
 
     [Authorize]
@@ -56,7 +56,7 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return user.Orders.Last();
+        return await _orderService.GetOrderById(user.Orders.Last().Id);
     }
 
 
