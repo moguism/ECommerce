@@ -59,6 +59,11 @@ namespace Server.Services
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
+
+            //Añade la orden a la lista de ordenes del usuario
+            user.Orders.Add(saveOrder);
+            _unitOfWork.UserRepository.Update(user);
+
             return saveOrder;
         }
 
@@ -105,8 +110,31 @@ namespace Server.Services
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
             await _unitOfWork.SaveAsync();
+
+            //Añade la orden a la lista de ordenes del usuario
+            user.Orders.Add(saveOrder);
+            _unitOfWork.UserRepository.Update(user);
+
             return saveOrder;
         }
+
+
+
+
+        public async Task<IEnumerable<Order>> GetAllOrders(User user)
+        {
+            return await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
+
+        }
+
+        public async Task<Order> GetOrderById(int orderId)
+        {
+            return await _unitOfWork.OrderRepository.GetById(orderId);
+
+        }
+
+
+
 
     }
 }
