@@ -50,6 +50,11 @@ export class ProductViewComponent implements OnInit {
 
   }
 
+  isLogged()
+  {
+    return this.apiService.jwt == null
+  }
+
   async addReview() {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 

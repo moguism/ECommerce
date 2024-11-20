@@ -20,6 +20,10 @@ export class HeaderComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.apiService.post<string>("User/getJwtAfterlogin")
+    if(this.apiService.jwt == null)
+    {
+      return;
+    }
     this.jwt = this.apiService.jwt;
     if(this.jwt != "")
     {

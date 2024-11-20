@@ -28,20 +28,20 @@
                             <th>Cantidad</th>
                             <th>Precio Kg</th>
                         </tr>
-                        @for(productToBuy of order.wishlist.products; track productToBuy.id){
+                        <!--@for(productToBuy of order.wishlist.products; track productToBuy.id){
                             <tr>
                                 <td class="product-img"><img src={{productToBuy.product.image}}></td>
                                 <td class="product-data">{{productToBuy.product.name}}</td>
                                 <td class="product-data">{{productToBuy.quantity}}</td>
                                 <td class="product-data">{{productToBuy.product.price| eurosToCents}}</td>
                             </tr>
-                        }
+                        }-->
                     </table>
-                    @if(order.paymentTypeId == 1){
+                    <!--@if(order.paymentTypeId == 1){
                         <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
                     }@else {
                         <h3>Pagado con: ethereum Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
-                    }
+                }-->
                     
                 </div>
                 
@@ -117,7 +117,12 @@
                     <label for="productPrice">Precio:</label>
                     <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
                     <label for="productCategory">Categoría:</label>
-                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
+                    <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
+                    <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
+                        <option value="Frutas">Frutas</option>
+                        <option value="User">Verduras</option>
+                        <option value="Carnes">Carnes</option>
+                    </select>
                     <button type="submit" (click)="submitCreateProduct()">Crear</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
@@ -125,15 +130,20 @@
         }
         @if (formState=="modifyProduct"){
             <div class="modal">
-                <h3>Crear nuevo producto</h3>
+                <h3>Modificar producto</h3>
                 <form>
                     <label for="productName">Nombre del producto:</label>
                     <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
                     <label for="productPrice">Precio:</label>
                     <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
                     <label for="productCategory">Categoría:</label>
-                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
-                    <label for="productCategory">Stock del producto:</label>
+                    <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
+                    <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
+                        <option value="Frutas">Frutas</option>
+                        <option value="User">Verduras</option>
+                        <option value="Carnes">Carnes</option>
+                    </select>
+                    <label for="productStock">Stock del producto:</label>
                     <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" required />
                     <label for="productCategory">Descripcion del producto:</label>
                     <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription" required />
