@@ -64,6 +64,20 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpPost("getJwtAfterlogin")]
+        public async Task<string> GetJwt()
+        {
+            User user = await GetCurrentUser();
+            if(user == null)
+            {
+                return null;
+            }
+
+            string jwt = _userService.ObtainToken(user);
+            return jwt;
+        }
+
+        [Authorize]
         [HttpPut]
         public async Task<UserAfterLoginDto> UpdateUserAdmin([FromBody] User updatedUser)
         {

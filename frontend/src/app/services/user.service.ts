@@ -55,4 +55,10 @@ export class UserService {
     const result = await this.api.put<User | null>("User", user)
     return result.data
   }
+
+  async obtainNewJwt()
+  {
+    const result = await this.api.post<string>("User/getJwtAfterlogin")
+    return result.data
+  }
 }

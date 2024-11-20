@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
@@ -11,18 +11,22 @@ import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
 import { Order } from '../../models/order';
 import { ProductsToBuy } from '../../models/products-to-buy';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { Category } from '../../models/category';
+
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export class UserComponent implements OnInit {
   constructor(private userService: UserService, private productService: ProductService) {
   }
+
 
   user: User | null = null;
   btnEdit: boolean = false;
@@ -34,8 +38,13 @@ export class UserComponent implements OnInit {
   editRoleValue: string = "";
   newProductName: string = "";
   newProductPrice: number | null = null;
-  newProductCategory: string = "";
+  newProductCategory:string="";
+  newProductStock: number|null=null;
+  newproductDescription: string="";
   selectedUser: User | null = null;
+  Product:Product|null=null;
+  category:string="";
+  categorytranslate:string="";
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
@@ -64,7 +73,6 @@ export class UserComponent implements OnInit {
     const newPassword = document.getElementById("new-password") as HTMLInputElement
 
     if (newName && newEmail && newAddress && newPassword && this.user) {
-      
       if (newName.value != "") {
         this.user.name = newName.value
       }
@@ -79,6 +87,7 @@ export class UserComponent implements OnInit {
       }
       
       await this.userService.updateUser(this.user);
+      //await this.userService.obtainNewJwt()
     }
     
     this.btnEdit = false
@@ -109,7 +118,21 @@ export class UserComponent implements OnInit {
     this.formState = "createProduct";
     this.newProductName = "";
     this.newProductPrice = null;
-    this.newProductCategory = "";
+    /*this.newProductCategory = "";*/
+  }
+  showEditProductForm(id: number){
+    const translatepipe=new TranslatePipe();
+    const eurosToCentsPipe=new EurosToCentsPipe();
+    this.formState="modifyProduct"
+    this.Product=this.allProducts[id-1];
+    this.newProductName = this.Product.name;
+    this.newProductPrice = this.Product.price;
+    this.category=this.Product.category.name;
+    this.categorytranslate=translatepipe.transform(this.category)
+    this.newProductCategory = this.categorytranslate;
+    this.newProductStock=this.Product.stock;
+    this.newproductDescription=this.Product.description;
+
   }
 
   closeForm() {
@@ -131,6 +154,11 @@ export class UserComponent implements OnInit {
     alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
     this.closeForm();
   }
+  /*async submitModifyProduct() {
+    alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    await this.productService.modifyProduct();
+    this.closeForm();
+  }*/
 
   async deleteUser(id: number) {
     const response = confirm("¿Seguro que quieres borrar al usuario?");
