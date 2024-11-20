@@ -170,11 +170,17 @@ export class UserComponent implements OnInit {
         this.image, this.newProductName, this.newproductDescription, this.newProductPrice, this.newProductStock, 1
       )
 
+      console.log("NUEVO PRODUCTO MAMAHUEVO: ", newProduct)
+
       await this.productService.createProduct(newProduct)
       await this.getAllProducts()
 
       alert("PRODUCTO CREADO")
 
+    }
+    else
+    {
+      alert("No has insertado ninguna imagen")
     }
     this.closeForm();
   }
