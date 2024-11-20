@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { CommonModule, DecimalPipe } from '@angular/common';
 
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
@@ -13,18 +14,20 @@ import { Order } from '../../models/order';
 import { ProductsToBuy } from '../../models/products-to-buy';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Category } from '../../models/category';
+import { ProductToInsert } from '../../models/product-to-insert';
 
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, TranslatePipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe,CommonModule],
   templateUrl: './user.component.html',
-  styleUrl: './user.component.css'
+  styleUrl: './user.component.css',
+  providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService) {
+  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe) {
   }
 
 
@@ -37,14 +40,16 @@ export class UserComponent implements OnInit {
   formState: string | null = null; // Puede ser 'editRole' o 'createProduct'
   editRoleValue: string = "";
   newProductName: string = "";
-  newProductPrice: number | null = null;
+  newProductPrice: number = 0;
   newProductCategory:string="";
-  newProductStock: number|null=null;
+  newProductStock: number = 0;
   newproductDescription: string="";
   selectedUser: User | null = null;
   Product:Product|null=null;
   category:string="";
   categorytranslate:string="";
+  image: File | null = null
+  pricedecimal:string="";
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
@@ -117,16 +122,21 @@ export class UserComponent implements OnInit {
   showCreateProductForm() {
     this.formState = "createProduct";
     this.newProductName = "";
-    this.newProductPrice = null;
+    this.newProductPrice = 0;
     /*this.newProductCategory = "";*/
   }
   showEditProductForm(id: number){
     const translatepipe=new TranslatePipe();
-    const eurosToCentsPipe=new EurosToCentsPipe();
     this.formState="modifyProduct"
     this.Product=this.allProducts[id-1];
     this.newProductName = this.Product.name;
-    this.newProductPrice = parseFloat(eurosToCentsPipe.transform(this.Product.price));
+    const convert=this.decimalPipe.transform(this.Product.price/100,"1.2-2");
+    console.log(convert);
+    if(convert==null){
+      return;
+    }
+    this.pricedecimal=convert
+    this.newProductPrice = parseFloat(this.pricedecimal);
     this.category=this.Product.category.name;
     this.categorytranslate=translatepipe.transform(this.category)
     this.newProductCategory = this.categorytranslate;
@@ -137,6 +147,7 @@ export class UserComponent implements OnInit {
 
   closeForm() {
     this.formState = null;
+    this.image = null;
   }
 
   async submitEditRole() {
@@ -151,7 +162,26 @@ export class UserComponent implements OnInit {
   }
 
   async submitCreateProduct() {
-    alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    if(this.image)
+    {
+      // TODO: Cambiar ID de la categoría
+      const newProduct = new ProductToInsert(
+        this.image, this.newProductName, this.newproductDescription, this.newProductPrice, this.newProductStock, 1
+      )
+
+      console.log("NUEVO PRODUCTO MAMAHUEVO: ", newProduct)
+
+      await this.productService.createProduct(newProduct)
+      await this.getAllProducts()
+
+      alert("PRODUCTO CREADO")
+
+    }
+    else
+    {
+      alert("No has insertado ninguna imagen")
+    }
     this.closeForm();
   }
   /*async submitModifyProduct() {
@@ -166,6 +196,14 @@ export class UserComponent implements OnInit {
       await this.userService.deleteUser(id);
       alert("Usuario borrado correctamente");
       this.getAllUsers();
+    }
+  }
+
+  onFileSelected(event: any) {
+    const image = event.target.files[0] as File;
+    if(image)
+    {
+      this.image = image
     }
   }
 

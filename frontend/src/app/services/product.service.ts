@@ -4,6 +4,7 @@ import { QuerySelector } from '../models/query-selector';
 import { PagedProducts } from '../models/paged-products';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
+import { ProductToInsert } from '../models/product-to-insert';
 
 @Injectable({
   providedIn: 'root'
@@ -61,4 +62,30 @@ export class ProductService {
     const result=await this.api.put("Product/modify",{});
     
   }*/
+  async createProduct(productToInsert: ProductToInsert)
+  {
+    const formData = new FormData();
+    /*
+
+    public string Name { get; set; }
+
+public string Description { get; set; }
+
+public long Price { get; set; }
+
+public int Stock { get; set; }
+
+public IFormFile Image { get; set; }
+
+public int CategoryId { get; set; }
+    */
+    formData.append('Name', productToInsert.name);
+    formData.append('Description', productToInsert.description);
+    formData.append('Price', productToInsert.price.toString());
+    formData.append('Stock', productToInsert.stock.toString());
+    formData.append('Image', productToInsert.image);
+    formData.append('CategoryId', productToInsert.categoryId.toString());
+    const result = await this.api.post("Product", formData)
+    console.log("INSERTANDO NUEVO PRODUCTO: ", result)
+  }
 }

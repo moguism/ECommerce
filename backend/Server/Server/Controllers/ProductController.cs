@@ -17,13 +17,15 @@ namespace Server.Controllers
         private readonly ProductMapper _productMapper;
         private readonly SmartSearchService _smartSearchService;
         private readonly UserService _userService;
+        private readonly ImageService _imageService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService)
+        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService)
         {
             _unitOfWork = unitOfWork;
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
+            _imageService = imageService;
         }
 
         [Authorize]
@@ -84,6 +86,45 @@ namespace Server.Controllers
                 };
             }
             return _productMapper.AddCorrectPath(product);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ProductDto> CreateProduct([FromBody] ProductToInsert newProduct)
+        {
+            User user = await GetAuthorizedUser();
+            if(user == null || !user.Role.Equals("Admin"))
+            {
+                return null;
+            }
+            /*Product product = _productMapper.ToEntity(newProduct);
+            product.Image = await _imageService.InsertAsync(newProduct.Image);
+            Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
+            await _unitOfWork.SaveAsync();
+            return _productMapper.ToDto(savedProduct);*/
+            return null;
+        }
+
+        [Authorize]
+        [HttpPut]
+        public async Task UpdateProduct([FromBody] ProductToInsert productToUpdate)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null || !user.Role.Equals("Admin"))
+            {
+                return;
+            }
+
+            Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToUpdate.Id);
+            if (product == null)
+            {
+                return;
+            }
+
+            /*product = _productMapper.ToEntity(productToUpdate);
+            product.Image = await _imageService.InsertAsync(productToUpdate.Image);
+            _unitOfWork.ProductRepository.Update(product);
+            await _unitOfWork.SaveAsync();*/
         }
 
         private async Task<User> GetAuthorizedUser()
