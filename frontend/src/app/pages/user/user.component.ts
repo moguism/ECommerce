@@ -9,12 +9,14 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
+import { TitleCasePipe } from '@angular/common';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

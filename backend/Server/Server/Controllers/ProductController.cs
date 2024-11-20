@@ -37,7 +37,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
+            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetFullProducts();
 
             return _productMapper.ToDto(products);
         }

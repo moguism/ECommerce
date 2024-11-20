@@ -33,5 +33,12 @@ namespace Server.Repositories
             .FirstOrDefaultAsync(order => order.Id == id);
             return product;
         }
+
+        public async Task<IEnumerable<Product>> GetFullProducts()
+        {
+            return await GetQueryable()
+            .Include(product => product.Category)
+            .ToArrayAsync();
+        }
     }
 }
