@@ -33,6 +33,7 @@ public class OrderRepository : Repository<Order, int>
     public Order GetLastByUserId(int userId)
     {
         return GetQueryable()
+            .OrderBy(o => o.Id)
             .LastOrDefault(o => o.UserId == userId);
     }
 

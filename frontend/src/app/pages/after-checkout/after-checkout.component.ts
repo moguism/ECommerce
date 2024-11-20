@@ -21,6 +21,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   user: User | null = null
   lastOrder: Order | null = null
   private method: string = ""
+  id : string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private userService: UserService, private activatedRoute: ActivatedRoute) {
@@ -34,22 +35,35 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   // Falta obtener la orden
 
   async ngOnInit(): Promise<void> {
-
+    const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
+    if(id != null && id != "")
+    {
+      this.id = id
+      await this.createOrder()
+      //await this.getLastOrder(id)
+    }
     await this.getUser()
-    await this.getLastOrder()
 
     console.log(this.lastOrder)
   }
 
+  async createOrder(){
+    const orderResult = await this.apiService.get("checkout/status/"+this.id)
+    if(orderResult.data)
+    {
+      this.lastOrder = orderResult.data 
+    }
+  }
 
   async getUser() {
     this.user = await this.userService.getUser()
   }
 
-  async getLastOrder() {
-    const orderResult = await this.apiService.get<Order>("Order/lastOrder", {}, "json")
+  /*async getLastOrder(id : string) {
+    const orderResult = await this.apiService.get<Order>("Order/lastOrder", {"id" : id}, "json")
+    console.log("ORDER RESULT: ", orderResult)
     this.lastOrder = orderResult.data
-  }
+  }*/
 
 
   totalprice() {

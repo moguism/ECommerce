@@ -50,9 +50,9 @@ public class OrderController : ControllerBase
 
     }
 
-    [Authorize]
+    /*[Authorize]
     [HttpGet("lastOrder")]
-    public async Task<Models.Order> GetLastOrder()
+    public async Task<Models.Order> GetLastOrder([FromQuery] string id)
     {
         User user = await GetCurrentUser();
 
@@ -61,10 +61,10 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        Models.Order order = await _orderService.GetLastOrderByUserAsync(user);
+        Models.Order order = await _orderService.GetByPaymentId(id);
 
         return order;
-    }
+    }*/
 
 
     private async Task<User> GetCurrentUser()

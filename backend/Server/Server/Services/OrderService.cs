@@ -163,6 +163,16 @@ namespace Server.Services
             return await GetOrderById(order.Id);
         }
 
+        public async Task<Order> GetByPaymentId(string id)
+        {
+            Order order = await _unitOfWork.OrderRepository.GetBySessionId(id);
+            if(order == null)
+            {
+                order = await _unitOfWork.OrderRepository.GetByHash(id);
+            }    
+            return order;
+        }
+
 
 
     }
