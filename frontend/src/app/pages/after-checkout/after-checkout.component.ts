@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from '../../services/product.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-after-checkout',
@@ -16,11 +18,17 @@ import { ProductService } from '../../services/product.service';
 })
 export class AfterCheckoutComponent implements OnInit, OnDestroy
 {
+
+  user : User | null = null
+  newOrder : Order | null
+
+
   shoppingCartProducts: Product[] = []
   id: string = ""
   private method: string = ""
 
-  constructor(private productService: ProductService, private apiService: ApiService, private activatedRoute: ActivatedRoute) {
+  constructor(private productService: ProductService, private apiService: ApiService, 
+    private userService : UserService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnDestroy(): void {
@@ -49,35 +57,17 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy
         this.id = "completado"
       }
     }
-    /*this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
-    console.log("RESULT CHECKOUT: ", result)
 
-    const shoppinCartResult = await this.apiService.get("ShoppingCart", { "isTemporal": true }, 'json');
-    if (shoppinCartResult.data) {
-      const data: any = shoppinCartResult.data;
-      const cartContent: any[] = data.cartContent;
-      for (const product of cartContent) {
-        const productResult = await this.productService.getById(product.productId);
-        if (productResult != null) {
-          const p: Product = {
-            id: productResult.id,
-            name: productResult.name,
-            average: productResult.average,
-            category: productResult.category,
-            categoryId: productResult.categoryId,
-            description: productResult.description,
-            image: productResult.image,
-            price: productResult.price,
-            reviews: productResult.reviews,
-            stock: productResult.stock,
-            total: product.quantity
-          };
-          this.shoppingCartProducts.push(p);
-        }
-      }
-    }*/
+    await this.getUser()
+
   }
+
+
+  async getUser(){
+    this.user = await this.userService.getUser()
+  }
+
+
 
   totalprice() {
     let totalcount = 0;
