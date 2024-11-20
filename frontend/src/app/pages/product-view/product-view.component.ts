@@ -11,11 +11,8 @@ import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
 
-// Date Import
-import locale from '@angular/common/locales/es'
-import { registerLocaleData } from '@angular/common';
+// Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
-registerLocaleData(locale, 'es');
 
 @Component({
   selector: 'app-product-view',

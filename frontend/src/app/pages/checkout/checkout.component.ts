@@ -33,7 +33,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   //blockchain
   networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
   eurosToSend: number = 0;
-  addressToSend: string = "0x3402A2c72FFc187C67f2c467eCDd4181d873778a";
+  addressToSend: string = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2"; //Café para mauricio
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private router: Router, private activatedRoute: ActivatedRoute,
@@ -210,6 +210,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
 
         const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
+
+
+        console.log("Data : ",          
+          "\n" + checkTransactionRequest.networkUrl, 
+          "\n" + checkTransactionRequest.hash, 
+          "\n" + checkTransactionRequest.from ,
+          "\n" + checkTransactionRequest.to, 
+          "\n" + checkTransactionRequest.value)
+
+
 
         //Si la transacción ha sido exitosa
         if (checkTransactionResult.success) {
