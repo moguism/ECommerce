@@ -34,16 +34,19 @@ public class BlockchainService
         EthereumService ethereumService = new EthereumService(data.NetworkUrl);
 
         decimal ethEurPrice = await coinGeckoApi.GetEthereumPriceAsync();
+        decimal ethAmount = data.Euros / ethEurPrice;
         BigInteger value = ethereumService.ToWei(data.Euros / ethEurPrice);
         HexBigInteger gas = ethereumService.GetGas();
         HexBigInteger gasPrice = await ethereumService.GetGasPriceAsync();
 
-        return new EthereumTransaction
+        EthereumTransaction ethereumTransaction = new EthereumTransaction
         {
             Value = new HexBigInteger(value).HexValue,
             Gas = gas.HexValue,
             GasPrice = gasPrice.HexValue,
         };
+
+        return ethereumTransaction;
     }
 
     public Task<bool> CheckTransactionAsync(CheckTransactionRequest data)
