@@ -98,8 +98,8 @@
                 <p><b>Precio:</b> {{ product.price }}</p>
                 <p><b>Stock:</b> {{ product.stock }}</p>
                 <p><b>Categoría:</b> {{ product.category.name | translate}}</p>
-                <!--<button (click)="showEditProductForm(product.id)">Editar producto</button>
-                <button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
+                <button (click)="showEditProductForm(product.id)">Editar producto</button>
+                <!--<button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
             </div>
             }
         @empty {
@@ -119,6 +119,25 @@
                     <label for="productCategory">Categoría:</label>
                     <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
                     <button type="submit" (click)="submitCreateProduct()">Crear</button>
+                    <button type="button" (click)="closeForm()">Cancelar</button>
+                </form>
+            </div>
+        }
+        @if (formState=="modifyProduct"){
+            <div class="modal">
+                <h3>Crear nuevo producto</h3>
+                <form>
+                    <label for="productName">Nombre del producto:</label>
+                    <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
+                    <label for="productPrice">Precio:</label>
+                    <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
+                    <label for="productCategory">Categoría:</label>
+                    <input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />
+                    <label for="productCategory">Stock del producto:</label>
+                    <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" required />
+                    <label for="productCategory">Descripcion del producto:</label>
+                    <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription" required />
+                    <button type="submit" (click)="submitCreateProduct()">Modificar</button>
                     <button type="button" (click)="closeForm()">Cancelar</button>
                 </form>
             </div>
