@@ -55,10 +55,13 @@ namespace Server.Repositories
 
 
         }
-        public async Task DeleteByIdShoppingCartAsync(ShoppingCart cart,int ShoppingCartId)
+        public async Task DeleteByIdShoppingCartAsync(ShoppingCart cart)
         {
-            CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ShoppingCartId == ShoppingCartId);
-            _context.CartContent.Remove(cartContent);
+            IEnumerable<CartContent> cartContents = await GetQueryable().Where(c => c.ShoppingCartId == cart.Id).ToArrayAsync();
+            foreach (CartContent cartContent in cartContents)
+            {
+                _context.CartContent.Remove(cartContent);
+            }
         }
     }
 }
