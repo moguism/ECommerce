@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
@@ -10,7 +10,7 @@ import { Result } from '../models/result';
 export class ApiService {
 
   private BASE_URL = environment.apiUrl;
-  jwt: string = ""
+  jwt: string | null = ""
 
   constructor(private http: HttpClient) {
     let token: string | null = localStorage.getItem("token")
@@ -33,7 +33,7 @@ export class ApiService {
   }
 
   deleteToken() {
-    this.jwt = "";
+    this.jwt = null;
     localStorage.removeItem("token");
   }
 
@@ -118,7 +118,7 @@ export class ApiService {
     console.log("RESULT: ", result)
     if (result.data && saveJwt) {
       this.jwt = result.data.toString();
-      //console.log("AY MI MADRE EL BICHO: ", this.jwt)
+      console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
   }

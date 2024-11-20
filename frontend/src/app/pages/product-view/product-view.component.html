@@ -37,10 +37,13 @@
         
         <div class="review">
             <h1>Reseñas</h1>
-            <div class="review-input">
-                <textarea id="review-text" class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es mala te baneo) "></textarea>
-                <button (click)="addReview()" class="review-input-button">Enviar</button>
-            </div>
+            @if(isLogged())
+            {
+                <div class="review-input">
+                    <textarea id="review-text" class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es mala te baneo) "></textarea>
+                    <button (click)="addReview()" class="review-input-button">Enviar</button>
+                </div>
+            }
             <div class="review-users">
                 @for (review of product.reviews; track review.id) 
                 {

@@ -21,17 +21,19 @@ public class CheckoutController : ControllerBase
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
     private readonly OrderService _orderService;
+    private readonly EmailService _emailService;
     private readonly UnitOfWork _unitOfWork;
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
         ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, 
-        OrderService orderService)
+        OrderService orderService,EmailService emailService)
     {
         _settings = settings;
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
         _unitOfWork = unitOfWork;
         _orderService = orderService;
+        _emailService = emailService;
     }
 
 
@@ -163,14 +165,49 @@ public class CheckoutController : ControllerBase
     }
 
     //Verifica el estado de la sesión
+    [Authorize]
     [HttpGet("status/{sessionId}")]
     public async Task<Order> SessionStatus(string sessionId)
     {
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
+        User user = await GetAuthorizedUser();
+        if (user == null) 
+        {
+        Unauthorized("Usuario no autenticado.");
+        }
+
         if (session.PaymentStatus == "paid")
         {
             Order order= await _orderService.CompletePayment(session);
+            int whislistId = order.WishlistId;
+            Wishlist productsorder=await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
+            if (session.CustomerEmail != null)
+            {
+                await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
+                /*decimal totalprice=0;
+                string to = session.CustomerEmail;
+                string subject = "Envio de la compra realizada";
+                string body = "<html> <h1>QUE BISHO GRACIAS POR COMPRAR</h1> <table><tr><td>Nombre</td><td>Imagen</td><td>Precio</td><td>Cantidad</td><td>Suma</td></tr>";
+                foreach (ProductsToBuy products in productsorder.Products) 
+                {
+                    decimal price = 0;
+                    decimal totalpricequantity = 0;
+                    Models.Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
+                    price = oneproduct.Price / 100m;
+                    totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
+                    body += $"<tr><td>{oneproduct.Name}</td><td><img src='/images/{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>";
+                     totalprice += products.Quantity * oneproduct.Price;
+                }
+                body += "</table></html>";
+                body += $"<h2>Su pedido ha costado: {totalprice/100}€</h2>";
+                if (order.PaymentTypeId == 1)
+                {
+                    body += $"<h3>Metodo de pago: Tarjeta</h3>";
+                }
+                body += $"<h4>Direccion de envio: {user.Address}</h4>";
+                await _emailService.SendEmailAsync(to, subject, body,true);*/
+            }
             return order;
         }
         return null;

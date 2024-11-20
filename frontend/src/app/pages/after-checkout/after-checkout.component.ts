@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +12,7 @@ import { Order } from '../../models/order';
 @Component({
   selector: 'app-after-checkout',
   standalone: true,
-  imports: [HeaderShopComponent, EurosToCentsPipe, HeaderComponent],
+  imports: [EurosToCentsPipe, HeaderComponent],
   templateUrl: './after-checkout.component.html',
   styleUrl: './after-checkout.component.css'
 })
