@@ -52,7 +52,7 @@ public class OrderController : ControllerBase
     {
         Models.Order order = await _orderService.GetOrderById(orderId);
 
-        IEnumerable<ProductsToBuy> products = _wishListService.GetAllProductsByWishlistIdAsync(orderId);
+        IEnumerable<ProductsToBuy> products = _wishListService.GetAllProductsByWishlistIdAsync(order.WishlistId);
         return _productsToBuyMapper.ToDto(products);
 
     }
