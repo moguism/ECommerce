@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
@@ -14,7 +14,7 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './after-checkout.component.html',
   styleUrl: './after-checkout.component.css'
 })
-export class AfterCheckoutComponent implements OnInit 
+export class AfterCheckoutComponent implements OnInit, OnDestroy
 {
   shoppingCartProducts: Product[] = []
   id: string = ""
@@ -23,9 +23,15 @@ export class AfterCheckoutComponent implements OnInit
   constructor(private productService: ProductService, private apiService: ApiService, private activatedRoute: ActivatedRoute) {
   }
 
+  ngOnDestroy(): void {
+    localStorage.removeItem("method")
+  }
+
   async createOrder(){
     this.apiService.get("checkout/status/"+this.id)
   }
+
+  // Falta obtener la orden
 
   async ngOnInit(): Promise<void> {
     const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
@@ -34,6 +40,14 @@ export class AfterCheckoutComponent implements OnInit
     {
       this.id = id
       this.createOrder()
+    }
+    else
+    {
+      const method = localStorage.getItem("method")
+      if(method)
+      {
+        this.id = "completado"
+      }
     }
     /*this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
     const result = await this.apiService.get("TemporalOrder", { "id" : this.id })
