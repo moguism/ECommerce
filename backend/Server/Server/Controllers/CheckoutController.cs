@@ -22,18 +22,23 @@ public class CheckoutController : ControllerBase
     private readonly ShoppingCartService _shoppingCartService;
     private readonly OrderService _orderService;
     private readonly EmailService _emailService;
-    private readonly UnitOfWork _unitOfWork;
+    private readonly TemporalOrderService _temporalOrderService;
+    private readonly WishListService _wishListService;
+    private readonly Services.ProductService _productService;
 
     public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
-        ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, 
-        OrderService orderService,EmailService emailService)
+        ShoppingCartService shoppingCartService, OrderService orderService,
+        EmailService emailService, TemporalOrderService temporalOrderService,
+        WishListService wishListService, Services.ProductService productService)
     {
         _settings = settings;
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
-        _unitOfWork = unitOfWork;
         _orderService = orderService;
         _emailService = emailService;
+        _temporalOrderService = temporalOrderService;
+        _wishListService = wishListService;
+        _productService = productService;
     }
 
 
@@ -94,7 +99,7 @@ public class CheckoutController : ControllerBase
 
     private async Task<TemporalOrder> GetTemporal(int id, User user)
     {
-        TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderById(id);
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
 
         if (temporalOrder.UserId != user.Id)
         {
@@ -113,11 +118,11 @@ public class CheckoutController : ControllerBase
 
         var lineItems = new List<SessionLineItemOptions>();
 
-        Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(temporalOrder.WishlistId);
+        Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
 
         foreach (ProductsToBuy cartContent in wishlist.Products)
         {
-            var product = await _unitOfWork.ProductRepository.GetFullProductById(cartContent.ProductId);
+            var product = await _productService.GetFullProductById(cartContent.ProductId);
             // Crea un SessionLineItemOptions para cada producto en el carrito
             var lineItem = new SessionLineItemOptions
             {
@@ -181,7 +186,7 @@ public class CheckoutController : ControllerBase
         {
             Order order= await _orderService.CompletePayment(session);
             int whislistId = order.WishlistId;
-            Wishlist productsorder=await _unitOfWork.WishlistRepository.GetFullByIdAsync(whislistId);
+            Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(whislistId);
             if (session.CustomerEmail != null)
             {
                 await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);

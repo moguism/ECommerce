@@ -23,4 +23,14 @@ public class CategoryRepository : Repository<Category, int>
             .FirstOrDefaultAsync(category => category.Id == id);
         return category;
     }
+
+    public async Task<Category> GetByName(string name)
+    {
+        // "FirstOrDefaultAsync" DEVUELVE NULO SI NO EXISTE
+        Category category = await GetQueryable()
+            .FirstOrDefaultAsync(category => category.Name.Equals(name));
+        return category;
+    }
+
+
 }

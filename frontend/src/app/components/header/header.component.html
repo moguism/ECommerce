@@ -14,6 +14,7 @@
         <h2 class="text"  (click)="goToRoute('product-list/carnes')">Carnes</h2>
         <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
         <h2 class="text" (click)="goToRoute('shopping-cart')"><i class="fa-solid fa-cart-shopping"></i></h2>
+        <p>{{ shoppingCartService.total }}</p>
 
         @if(jwt != ""){
             <h2 class="text-welcome">Bienvenido, {{ name }}</h2>
@@ -25,12 +26,12 @@
                 }
                 <div class="dropdown-list">
                     
-                    <p (click)="goToRoute('login')">Perfil</p>
+                    <p (click)="goToRoute('user')">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
             </div>
         }@else {
-            <div class="red" (click)="goToRoute('login')">
+            <div class="red" (click)="goToRoute('user')">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>
         }
