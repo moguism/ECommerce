@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-header',
@@ -15,10 +16,11 @@ export class HeaderComponent implements OnInit {
   protected jwt : string = "";
   @Input() name : string = "";
 
-  constructor(private apiService: ApiService, private router: Router){
+  constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService){
   }
 
   async ngOnInit(): Promise<void> {
+    this.shoppingCartService.getShoppingCartCount()
     await this.apiService.post<string>("User/getJwtAfterlogin")
     if(this.apiService.jwt == null)
     {
@@ -29,7 +31,24 @@ export class HeaderComponent implements OnInit {
     {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)
+      /*const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      if(result.data)
+      {
+        const data: any = result.data;
+        console.log("DATA MONDONGO: ", data)
+        this.total = data.cartContent.length
+      }*/
     }
+    /*else
+    {
+      const cart = localStorage.getItem("shoppingCart")
+      if(cart)
+      {
+        const cartObject = JSON.parse(cart)
+        console.log("CART OBJECT: ", cartObject)
+        this.total = cartObject.length
+      }
+    }*/
   }
 
   async deleteToken()
