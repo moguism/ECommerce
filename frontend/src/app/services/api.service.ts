@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { HostListener, Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { debounceTime, fromEvent, lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
@@ -17,24 +17,11 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
-    /*if(localStorage.getItem("remember") == "false")
+    if(localStorage.getItem("remember") == "false")
     {
       this.deleteToken()
-    }*/
-    //window.onbeforeunload = this.closeWindow
-  }
-
-  /*closeWindow()
-  {
-    const remember = localStorage.getItem("remember")
-    if(remember)
-    {
-      if(remember == "false")
-      {
-        localStorage.removeItem("token")
-      }
     }
-  }*/
+  }
 
   deleteToken() {
     this.jwt = null;

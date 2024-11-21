@@ -39,9 +39,10 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = wishlist.Id;
-                product.Product = await _unitOfWork.ProductRepository.GetFullProductById(product.Id);
+                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                product.ProductId = realProduct.Id;
+                product.PurchasePrice = realProduct.Price;
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
-                
             }
 
             await _unitOfWork.SaveAsync();
