@@ -102,51 +102,38 @@
 
     <!-- Formulario para crear producto (faltan más datos) -->
     <button (click)="showCreateProductForm()">Crear nuevo producto</button>
-    @if (formState == "createProduct") {
+    @if (formState == "createProduct" || formState == "modifyProduct") {
     <div class="modal">
-        <h3>Crear nuevo producto</h3>
-        <form>
-            <label for="productName">Nombre del producto:</label>
-            <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
-            <label for="productPrice">Precio:</label>
-            <input type="number" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice" required />
-            <label for="productCategory">Categoría:</label>
-            <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
-            <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
-                <option value="Frutas">Frutas</option>
-                <option value="User">Verduras</option>
-                <option value="Carnes">Carnes</option>
-            </select>
-            <input type="file" accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event)" />
-            <button type="submit" (click)="submitCreateProduct()">Crear</button>
-            <button type="button" (click)="closeForm()">Cancelar</button>
-        </form>
-    </div>
-    }
-    @if (formState=="modifyProduct"){
-    <div class="modal">
-        <h3>Modificar producto</h3>
+        <h3>Datos a introducir: </h3>
         <form>
             <label for="productName">Nombre del producto:</label>
             <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
             <label for="productPrice">Precio:</label>
             <input type="number" step="0.01" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice"
-                required />
+                pattern="[0-9]" required />
             <label for="productCategory">Categoría:</label>
             <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
             <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
                 <option value="Frutas">Frutas</option>
-                <option value="User">Verduras</option>
+                <option value="Verduras">Verduras</option>
                 <option value="Carnes">Carnes</option>
             </select>
             <label for="productStock">Stock del producto:</label>
-            <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" required />
+            <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" pattern="[0-9]"
+                required />
             <label for="productCategory">Descripcion del producto:</label>
             <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription"
                 required />
             <label for="productImage">Foto del producto:</label>
             <input type="file" accept="image/png, image/jpeg, image/jpg" required />
-            <button type="submit" (click)="submitCreateProduct()">Modificar</button>
+            @if(create)
+            {
+            <button type="submit" (click)="submitCreateProduct()">Crear producto</button>
+            }
+            @else
+            {
+            <button type="submit" (click)="submitCreateProduct()">Modificar producto</button>
+            }
             <button type="button" (click)="closeForm()">Cancelar</button>
         </form>
     </div>

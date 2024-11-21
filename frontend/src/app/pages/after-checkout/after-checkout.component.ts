@@ -21,7 +21,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   user: User | null = null
   lastOrder: Order | null = null
   private method: string = ""
-  id : string = ""
+  id: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private userService: UserService, private activatedRoute: ActivatedRoute) {
@@ -32,46 +32,44 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   }
 
 
-  // Falta obtener la orden
-
   async ngOnInit(): Promise<void> {
     const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
-    if(id != null && id != "")
-    {
+    if (id != null && id != "") {
       this.id = id
       await this.createOrder()
-      //await this.getLastOrder(id)
     }
-    else
-    {
+    else {
       const orderCheckout = sessionStorage.getItem("orderCheckout")
-      if(orderCheckout)
-      {
+      if (orderCheckout) {
         this.lastOrder = JSON.parse(orderCheckout)
       }
     }
+    await this.convertToCompleteProduct()
     await this.getUser()
 
     console.log(this.lastOrder)
   }
 
-  async createOrder(){
-    const orderResult = await this.apiService.get("checkout/status/"+this.id)
-    if(orderResult.data)
-    {
-      this.lastOrder = orderResult.data 
+  async createOrder() {
+    const orderResult = await this.apiService.get("checkout/status/" + this.id)
+    if (orderResult.data) {
+      this.lastOrder = orderResult.data
+    }
+  }
+
+  async convertToCompleteProduct() {
+    if (!this.lastOrder?.wishlist?.products) return;
+
+    for (const productToBuy of this.lastOrder.wishlist.products) {
+      var product = await this.productService.getById(productToBuy.product.id);
+      if(product)
+        productToBuy.product = product
     }
   }
 
   async getUser() {
     this.user = await this.userService.getUser()
   }
-
-  /*async getLastOrder(id : string) {
-    const orderResult = await this.apiService.get<Order>("Order/lastOrder", {"id" : id}, "json")
-    console.log("ORDER RESULT: ", orderResult)
-    this.lastOrder = orderResult.data
-  }*/
 
 
   totalprice() {

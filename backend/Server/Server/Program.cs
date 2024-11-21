@@ -7,6 +7,7 @@ using Server.Models;
 using Server.Repositories;
 using Server.Services;
 using Server.Services.Blockchain;
+using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -17,6 +18,9 @@ namespace Server
     {
         public static void Main(string[] args)
         {
+            // Configuramos cultura invariante para que al pasar los decimales a texto no tengan comas
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));

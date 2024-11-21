@@ -15,6 +15,8 @@ import { ProductsToBuy } from '../../models/products-to-buy';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Category } from '../../models/category';
 import { ProductToInsert } from '../../models/product-to-insert';
+import { Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 
 
 
@@ -27,7 +29,7 @@ import { ProductToInsert } from '../../models/product-to-insert';
   providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe) {
+  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
   }
 
 
@@ -50,8 +52,14 @@ export class UserComponent implements OnInit {
   categorytranslate:string="";
   image: File | null = null
   pricedecimal:string="";
+  create : boolean = false;
+  idToUpdate : number = 0
 
   async ngOnInit(): Promise<void> {
+    if(this.api.jwt == null || this.api.jwt == "")
+    {
+      this.router.navigateByUrl("login")
+    }
     await this.getUser();
     await this.getAllOrders();
   }
@@ -134,7 +142,11 @@ export class UserComponent implements OnInit {
     this.formState = "createProduct";
     this.newProductName = "";
     this.newProductPrice = 0;
-    /*this.newProductCategory = "";*/
+    this.newProductStock = 0;
+    this.newProductCategory = "";
+    this.newproductDescription = "";
+    this.idToUpdate = 0
+    this.create = true;
   }
   showEditProductForm(id: number){
     const translatepipe=new TranslatePipe();
@@ -153,7 +165,8 @@ export class UserComponent implements OnInit {
     this.newProductCategory = this.categorytranslate;
     this.newProductStock=this.Product.stock;
     this.newproductDescription=this.Product.description;
-
+    this.idToUpdate = id
+    this.create = false;
   }
 
   closeForm() {
@@ -172,28 +185,40 @@ export class UserComponent implements OnInit {
     }
   }
 
-  async submitCreateProduct() {
+  async submitCreateProduct() { // Por defecto actualiza el producto
     //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
-    if(this.image)
+    console.log(this.newProductCategory)
+    if(this.newProductName && this.newproductDescription && this.newProductPrice && this.newProductStock && this.newProductCategory)
     {
+      if(this.create && this.image == null)
+      {
+        alert("No puedes insertar un producto sin una imagen")
+        return;
+      }
+
       // TODO: Cambiar ID de la categoría
       const newProduct = new ProductToInsert(
-        this.image, this.newProductName, this.newproductDescription, this.newProductPrice, this.newProductStock, 1
+        this.image, this.newProductName, this.newproductDescription, this.newProductPrice * 100, this.newProductStock, this.newProductCategory, this.idToUpdate
       )
 
       console.log("NUEVO PRODUCTO MAMAHUEVO: ", newProduct)
 
-      await this.productService.createProduct(newProduct)
+      if(this.create)
+      {
+        await this.productService.createProduct(newProduct)
+      }
+      else
+      {
+        await this.productService.updateProduct(newProduct)
+      }
+      
       await this.getAllProducts()
-
-      alert("PRODUCTO CREADO")
-
+      this.closeForm();
     }
     else
     {
-      alert("No has insertado ninguna imagen")
+      alert("No todos los datos están completos")
     }
-    this.closeForm();
   }
   /*async submitModifyProduct() {
     alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
