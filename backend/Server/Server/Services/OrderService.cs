@@ -125,19 +125,21 @@ namespace Server.Services
         {
             IEnumerable<Order> orders =  await _unitOfWork.OrderRepository.GetAllOrdersByUserId(user.Id);
 
+            List<Order> allUserOrders = new List<Order>();
+
             foreach (Order order in orders)
             {
-                orders.Append(await GetOrderById(order.Id));
+                allUserOrders.Add(await GetOrderById(order.Id));
             }
 
-            return orders;
+            return allUserOrders;
 
             
         }
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            Order order =  await _unitOfWork.OrderRepository.GetById(orderId);
+            Order order =  await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
             order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
             order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
                     .GetAllProductsByWishlistId(order.WishlistId);
