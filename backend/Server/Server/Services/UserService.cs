@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Models;
+using Stripe;
 using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -86,5 +87,10 @@ public class UserService
         return user;
     }
 
+    public async Task<User> GetUserByIdAsync(int id)
+    {
+        return await _unitOfWork.UserRepository.GetByIdAsync(id);
+    }
         
+
 }

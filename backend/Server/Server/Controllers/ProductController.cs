@@ -13,19 +13,19 @@ namespace Server.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
         private readonly SmartSearchService _smartSearchService;
         private readonly UserService _userService;
         private readonly ImageService _imageService;
+        private readonly ProductService _productService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService)
+        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService)
         {
-            _unitOfWork = unitOfWork;
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
             _imageService = imageService;
+            _productService = productService;
         }
 
         [Authorize]
@@ -39,7 +39,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetFullProducts();
+            IEnumerable<Product> products = await _productService.GetFullProducts();
 
             return _productMapper.ToDto(products);
         }
@@ -66,8 +66,8 @@ namespace Server.Controllers
             }
 
             string productType = query.ProductType.ToString().ToLower();
-
-            PagedDto pagedDto = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+            
+            PagedDto pagedDto = _productService.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
             pagedDto.Products = _productMapper.AddCorrectPath(pagedDto.Products);
 
             return pagedDto;
@@ -76,10 +76,10 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<Product> GetProductById(int id)
         {
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(id);
+            Product product = await _productService.GetFullProductById(id);
             foreach (Review review in product.Reviews)
             {
-                User user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
+                User user = await _userService.GetUserByIdAsync(review.UserId);
                 review.User = new User()
                 {
                     Name = user.Name
@@ -115,7 +115,7 @@ namespace Server.Controllers
                 return;
             }
 
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToUpdate.Id);
+            Product product = await _productService.GetFullProductById(productToUpdate.Id);
             if (product == null)
             {
                 return;

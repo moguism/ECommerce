@@ -1,4 +1,5 @@
 ﻿using Server.Models;
+using Server.DTOs;
 
 namespace Server.Services
 {
@@ -19,5 +20,21 @@ namespace Server.Services
             return await _unitOfWork.ProductRepository.GetByIdAsync(id);
         }
 
+        public async Task<Product> GetFullProductById(int id)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.ProductRepository.GetFullProductById(id);
+        }
+
+        public async Task<IEnumerable<Product>> GetFullProducts()
+        {
+            return await _unitOfWork.ProductRepository.GetFullProducts();
+        }
+
+        public PagedDto GetAllProductsByCategory(string productCategory, int pageNumber, int pageSize, IEnumerable<Product> products)
+        {
+            return _unitOfWork.ProductRepository.GetAllProductsByCategory(productCategory,pageNumber,pageSize,products);
+        }
     }
 }
