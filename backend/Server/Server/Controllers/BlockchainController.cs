@@ -74,7 +74,7 @@ public class BlockchainController : ControllerBase
             //Productos comprados por el usuario
             //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
 
-            return order;
+            return await _orderService.GetOrderById(order.Id);
         }
         return null;
     }
