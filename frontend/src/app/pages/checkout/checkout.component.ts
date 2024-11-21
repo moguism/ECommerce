@@ -238,7 +238,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           {
             console.log("Orden creada")
             this.router.navigateByUrl("after-checkout")
-            localStorage.setItem("method", 'eth')
+            sessionStorage.setItem("method", 'eth')
+            sessionStorage.setItem("orderCheckout", JSON.stringify(checkTransactionResult.data))
           }
           else
             console.log("Error al crear la orden")
