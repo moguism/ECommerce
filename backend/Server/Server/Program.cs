@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
-using Server.Repositories;
 using Server.Services;
 using Server.Services.Blockchain;
 using System.Globalization;
@@ -79,6 +78,7 @@ namespace Server
             builder.Services.AddScoped<OrderMapper>();
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<ImageService>();
+            builder.Services.AddScoped<CategoryService>();
 
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();

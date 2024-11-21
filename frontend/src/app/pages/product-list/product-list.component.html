@@ -22,7 +22,7 @@
 
         <a class="product-card" (click)="goToProduct(product.id)">
             <div class="product-card-name">{{product.name}}</div>
-            <div class="product-card-image"><img class="image" [src]="product.image"></div>
+            <div class="product-card-image"><img class="image" [src]="product.image.replace('/images/images/', '/images/')"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
             @if (product.stock > 0) {
             <div class="product-card-stock">Stock: {{ product.stock }} KG</div>

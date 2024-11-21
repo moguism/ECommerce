@@ -53,7 +53,12 @@ export class ProductViewComponent implements OnInit {
 
   isLogged()
   {
-    return this.apiService.jwt == null
+    let boolean = false;
+    if(this.apiService.jwt != null && this.apiService.jwt != "")
+    {
+      boolean = true
+    }
+    return boolean
   }
 
   async addReview() {
