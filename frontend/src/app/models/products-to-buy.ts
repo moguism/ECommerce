@@ -6,15 +6,17 @@ export class ProductsToBuy {
     productId: number;
     quantity: number;
     product: Product;
-   
+    purchasePrice: number;
     wishlistId: number;
     wishlist: Wishlist;
 
-    constructor(Id: number, ProductId: number, Quantity: number, Product: Product, WishlistId: number, Wishlist: Wishlist){
+    constructor(Id: number, ProductId: number, Quantity: number, Product: Product, 
+        purchasePrice: number, WishlistId: number, Wishlist: Wishlist){
         this.id = Id;
         this.productId = ProductId;
         this.quantity = Quantity;
         this.product = Product;
+        this.purchasePrice = purchasePrice;
         this.wishlistId = WishlistId;
         this.wishlist = Wishlist;
     }
