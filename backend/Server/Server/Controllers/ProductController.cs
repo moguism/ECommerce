@@ -111,8 +111,7 @@ namespace Server.Controllers
 
                 product.Image = await _imageService.InsertAsync(newProduct.Image);
                 product.CategoryId = 1; // TODO: Cambiar
-                Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
-                await _unitOfWork.SaveAsync();
+                Product savedProduct = await _productService.InsertProduct(product);
                 return _productMapper.ToDto(savedProduct);
             }
             catch(Exception e)
@@ -135,14 +134,10 @@ namespace Server.Controllers
                     return null;
                 }
 
-                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(Int32.Parse(productToUpdate.Id));
+                Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
                     return null;
-                }
-                else
-                {
-                    _unitOfWork.Context.Entry(product).State = EntityState.Detached;
                 }
 
                 //product = _productMapper.ToEntity(productToUpdate);
@@ -157,8 +152,7 @@ namespace Server.Controllers
                     product.Image = await _imageService.InsertAsync(productToUpdate.Image);
                 }
                 
-                _unitOfWork.ProductRepository.Update(product);
-                await _unitOfWork.SaveAsync();
+                await _productService.UpdateProduct(product);
                 return _productMapper.ToDto(product);
             }
             catch(Exception e)
