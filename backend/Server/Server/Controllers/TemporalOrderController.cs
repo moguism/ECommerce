@@ -44,7 +44,7 @@ namespace Server.Controllers
             }
 
             TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
-            Wishlist wishlist = await _wishListService.GetWishlistById(temporalOrder.WishlistId);
+            Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
             if(temporalOrder == null || wishlist == null)
             {
                 return null;
