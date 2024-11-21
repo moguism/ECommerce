@@ -26,12 +26,12 @@
                 }
                 <div class="dropdown-list">
                     
-                    <p (click)="goToRoute('login')">Perfil</p>
+                    <p (click)="goToRoute('user')">Perfil</p>
                     <p (click)="deleteToken()">Cerrar sesión</p>
                 </div>
             </div>
         }@else {
-            <div class="red" (click)="goToRoute('login')">
+            <div class="red" (click)="goToRoute('user')">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>
         }

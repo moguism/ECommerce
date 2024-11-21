@@ -59,14 +59,14 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-    if (this.apiService.jwt != "") {
+    /*if (this.apiService.jwt != "") {
       console.log(this.apiService.jwt)
       this.router.navigateByUrl("user")
       return
     }
     else {
       console.log(this.apiService.jwt)
-    }
+    }*/
 
     let container = document.querySelector(".container")
     let sign_in_button = document.getElementById("btn-sign-in")
