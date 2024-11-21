@@ -135,7 +135,7 @@ namespace Server.Controllers
                     return null;
                 }
 
-                Product product = await _unitOfWork.ProductRepository.GetFullProductById(Int32.Parse(productToUpdate.Id));
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
                     return null;
