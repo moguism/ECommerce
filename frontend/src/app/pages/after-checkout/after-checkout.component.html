@@ -4,21 +4,19 @@
     {
 
     <div id="title">
-        <h1>Muchas gracias por su compra {{user?.name}}, que disfrute su compra ❤</h1>
+        <h1>Muchas gracias por su compra {{user?.name}}, que disfrute su compra <img
+                src="assets/afterCheckout/corazon.png" alt="corazon" /></h1>
     </div>
 
     <div class="information">
         <div class="purchased ">
             @for (productPurchased of lastOrder.wishlist.products; track productPurchased.id){
             <div class="purchased -products">
-                <img class="purchased-products-image" [src]="productPurchased.product.image" alt="">
+                <div>
+                    <img class="purchased-products-image" [src]="productPurchased.product.image" alt="">
+                </div>
                 <div class="purchased-products-information">
-                    <div class="purchased-products-information-functions">
-                        <h4 class="purchased-products-information-functions-title">{{productPurchased.product.name}}
-                        </h4>
-                        <h5 class="purchased-products-information-functions-title">{{ productPurchased.product.total }}
-                        </h5>
-                    </div>
+                    <h2>{{productPurchased.product.name}} </h2>
                     <h3>Total: {{(productPurchased.quantity * productPurchased.product.price) | eurosToCents}}</h3>
                     <h3>Precio por kg {{productPurchased.product.price | eurosToCents}}</h3>
                 </div>
@@ -27,10 +25,10 @@
 
         </div>
         <div class="final-price">
-            <h3>Resumen</h3>
+            <h1>Resumen</h1>
             <div class="final-price-price">
-                <h3>Total:</h3>
-                <h3>{{totalprice() | eurosToCents}}</h3>
+                <h2>Total:</h2>
+                <h2>{{totalprice() | eurosToCents}}</h2>
             </div>
             <hr>
         </div>
@@ -38,9 +36,9 @@
     }
     @else
     {
-        <div id="loading">
-            <img src="assets/gif/carga.gif" alt="gif de carga" />
-        </div>
+    <div id="load">
+        <img src="assets/afterCheckout/carga.gif" alt="gif de carga" />
+    </div>
     }
 
 </div>

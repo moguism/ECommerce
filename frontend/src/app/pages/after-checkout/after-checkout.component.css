@@ -1,124 +1,130 @@
 .body {
     min-height: 100vh;
-
+    background-color: #f5f5f5; 
+    padding: 20px;
+    font-family: 'Arial', sans-serif; 
+    color: #333;
 }
 
-
-#title{
+#title {
     text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #444;
 }
 
-.information{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+#title img {
+    width: 100px; 
+    height: 100px;
+    vertical-align: middle; /* Alinea con el texto */
+    margin-left: 8px; 
+}
 
-}
-.purchased  {
+#load {
+    min-height: 80vh;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    gap:20px;
-}
-.purchased-products{
-    display: flex;
-    background-color: black;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    height: 200px;
-    width: 100%;
-    gap: 20px;
-    border-radius: 8px;
-}
-.purchased-products-image{
-    width: 100%;
-    max-width: 150px;
-    height: 150px;
-    padding: 5%;
-    border-radius: 25px;
-}
-.purchased-products-information-functions{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    gap: 20px;
-}
-.purchased-products-information-functions-title{
-    color: white;
-    width: 100%;
-}
-.purchased-products-information-functions-input{
-    width: 50%;
-}
-h3{
-    color: white;
-}
-h2{
-    color: white;
-}
-h4{
-    color: white;
-}
-.final-price{
-    background-color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    width: 20%;
-    height: 250px;
-    border-radius: 8px;
-}
-hr{
-    width: 50%;
-    border: 2px dopped;
-}
-.final-price-button-card{
-    width: 50%;
-    height: 30%;
-    border-radius: 8px;
-    background-color: #99C080;
-    cursor: pointer;
-}
-.final-price-button-Etherium{
-    width: 50%;
-    height: 30%;
-    border-radius: 8px;
-    background-color: #99C080;
-    cursor: pointer;
-}
-.final-price-price{
-    display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 70px;
 }
-.products-description-anadir{
+
+.information {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 10%;
+}
+
+.purchased {
+    display: flex;
+    background-color: #e3e3e3;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
+    padding: 20px;
+    gap: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-/*responsive*/
-@media (max-width: 1120px){
-    .information{
+
+.purchased-products {
+    display: grid;
+    grid-template-columns: 50%;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.purchased-products-image {
+    max-width: 150px;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
+
+
+.final-price {
+    background-color: #333;
+    color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    padding: 20px;
+    height: auto;
+    gap: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+hr {
+    width: 80%;
+    border: 2px dashed #999;
+    margin: 10px 0;
+}
+
+
+
+
+.final-price-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    font-weight: bold;
+    margin: 0% 20%;
+}
+
+
+/* Responsiv */
+@media (max-width: 1120px) {
+    .information {
         flex-direction: column;
-        gap: 30px;
+        align-items: center;
     }
-    .final-price{
-        width: 50%;
+
+    .final-price {
+        width: 80%;
     }
 }
-@media (max-width: 1120px){
-    .information{
+
+@media (max-width: 768px) {
+    .purchased-products {
         flex-direction: column;
-        gap: 30px;
+        align-items: center;
     }
-    .final-price{
-        width: 50%;
+
+    .final-price {
+        width: 100%;
     }
 }
