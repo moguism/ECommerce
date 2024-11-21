@@ -1,5 +1,10 @@
-﻿using Server.Models;
+﻿using Examples.WebApi.Models.Dtos;
+using Nethereum.Hex.HexTypes;
+using Server.DTOs;
+using Server.Models;
+using Server.Services.Blockchain;
 using Stripe.Checkout;
+using System.Numerics;
 
 namespace Server.Services
 {
@@ -23,18 +28,9 @@ namespace Server.Services
             }
             User user = await _unitOfWork.UserRepository.GetByEmailAsync(session.CustomerEmail);
 
-            /*if (user.TemporalOrders.Count() == 0)
-            {
-                throw new Exception("ALGUIEN LA HA LIADO CON LAS ORDENES TEMPORALES");
-            }*/
-
             //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
+            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(session.Id);
 
-            /*if(temporalOrder == null)
-            {
-                temporalOrder = user.TemporalOrders.LastOrDefault();
-            }*/
             
             Order order = new Order();
             order.CreatedAt = DateTime.UtcNow;
@@ -72,9 +68,13 @@ namespace Server.Services
             return saveOrder;
         }
 
-        public async Task<Order> CompleteEthTransaction(string hash, User user)
+        public async Task<Order> CompleteEthTransaction(CheckTransactionRequest data, User user)
         {
-            Order existingOrder = await _unitOfWork.OrderRepository.GetByHash(hash);
+            CoinGeckoApi coinGeckoApi = new CoinGeckoApi();
+            EthereumService ethereumService = new EthereumService(data.NetworkUrl);
+            decimal ethEurPrice = await coinGeckoApi.GetEthereumPriceAsync();
+
+            Order existingOrder = await _unitOfWork.OrderRepository.GetByHash(data.Hash);
             if (existingOrder != null)
             {
                 return existingOrder;
@@ -83,7 +83,28 @@ namespace Server.Services
 
             //Recoge la ultima orden temporal del usuario
             TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
+            if(temporalOrder == null)
+            {
+                return null;
+            }
+            Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(user.Id);
+            if (wishlist == null)
+            {
+                return null;
+            }
 
+            decimal total = wishlist.Products.Sum(product => product.PurchasePrice);
+
+            BigInteger value = ethereumService.ToWei(total / ethEurPrice);
+            HexBigInteger gas = ethereumService.GetGas();
+            HexBigInteger gasPrice = await ethereumService.GetGasPriceAsync();
+
+            EthereumTransaction ethereumTransaction = new EthereumTransaction
+            {
+                Value = new HexBigInteger(value).HexValue,
+                Gas = gas.HexValue,
+                GasPrice = gasPrice.HexValue,
+            };
 
             Order order = new Order {
                 CreatedAt = DateTime.UtcNow,
@@ -91,7 +112,7 @@ namespace Server.Services
                 //La misma wishlist que la ultima orden temporal que ha realizado el usuario
                 WishlistId = temporalOrder.WishlistId,
                 UserId = user.Id,
-                Hash = hash
+                Hash = data.Hash
             };
 
 

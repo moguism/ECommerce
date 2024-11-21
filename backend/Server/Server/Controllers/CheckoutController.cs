@@ -78,7 +78,7 @@ public class CheckoutController : ControllerBase
 
     }
 
-    [HttpPost("hosted")]
+    /*[HttpPost("hosted")]
     public async Task<ActionResult> HostedCheckout([FromBody] int temporalOrderId)
     {
         User user = await GetAuthorizedUser();
@@ -95,7 +95,7 @@ public class CheckoutController : ControllerBase
         Session session = await GetOptions(temporalOrder, "hosted", user);
 
         return Ok(new { sessionUrl = session.Url });
-    }
+    }*/
 
     private async Task<TemporalOrder> GetTemporal(int id, User user)
     {
@@ -147,25 +147,20 @@ public class CheckoutController : ControllerBase
         // Configurar la sesión de pago con los LineItems del carrito
         SessionCreateOptions options = new SessionCreateOptions
         {
-            UiMode = mode,
+            UiMode = "embedded",
             Mode = "payment",
             PaymentMethodTypes = ["card"],
             LineItems = lineItems, //Lista de productos del usuario
-            CustomerEmail = user.Email
+            CustomerEmail = user.Email,
+            RedirectOnCompletion = "never"
         };
-
-        if(mode.Equals("embedded"))
-        {
-            options.ReturnUrl = _settings.ClientBaseUrl + "/after-checkout?session_id={CHECKOUT_SESSION_ID}";
-        }
-        else
-        {
-            options.SuccessUrl = _settings.ClientBaseUrl + "/after-checkout?session_id={CHECKOUT_SESSION_ID}";
-            options.CancelUrl = _settings.ClientBaseUrl + "/after-checkout";
-        }
 
         SessionService service = new SessionService();
         Session session = await service.CreateAsync(options);
+
+        temporalOrder.HashOrSession = session.Id;
+        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+
         return session;
     }
 
@@ -190,28 +185,6 @@ public class CheckoutController : ControllerBase
             if (session.CustomerEmail != null)
             {
                 await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
-                /*decimal totalprice=0;
-                string to = session.CustomerEmail;
-                string subject = "Envio de la compra realizada";
-                string body = "<html> <h1>QUE BISHO GRACIAS POR COMPRAR</h1> <table><tr><td>Nombre</td><td>Imagen</td><td>Precio</td><td>Cantidad</td><td>Suma</td></tr>";
-                foreach (ProductsToBuy products in productsorder.Products) 
-                {
-                    decimal price = 0;
-                    decimal totalpricequantity = 0;
-                    Models.Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
-                    price = oneproduct.Price / 100m;
-                    totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
-                    body += $"<tr><td>{oneproduct.Name}</td><td><img src='/images/{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>";
-                     totalprice += products.Quantity * oneproduct.Price;
-                }
-                body += "</table></html>";
-                body += $"<h2>Su pedido ha costado: {totalprice/100}€</h2>";
-                if (order.PaymentTypeId == 1)
-                {
-                    body += $"<h3>Metodo de pago: Tarjeta</h3>";
-                }
-                body += $"<h4>Direccion de envio: {user.Address}</h4>";
-                await _emailService.SendEmailAsync(to, subject, body,true);*/
             }
             return await _orderService.GetOrderById(order.Id);
         }
