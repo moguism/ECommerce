@@ -110,6 +110,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.checkoutDialogRef.nativeElement.showModal();
           }
         });
+
+      console.log("MONDONGOOOOOOOOOOOOOOOOO")
     }
   }
 
