@@ -1,18 +1,20 @@
 export class ProductToInsert {
-    image: File
+    id: number
+    image: File | null
     name: string
     description: string
     price: number
     stock: number
-    categoryId: number
+    categoryName: string
 
-    constructor(image: File, name: string, description: string, price: number, stock: number, categoryId: number)
+    constructor(image: File | null, name: string, description: string, price: number, stock: number, categoryName: string, id: number)
     {
         this.image = image
         this.name = name
         this.description = description
         this.price = price
         this.stock = stock,
-        this.categoryId = categoryId
+        this.categoryName = categoryName
+        this.id = id
     }
 }

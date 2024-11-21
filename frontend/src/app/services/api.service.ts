@@ -17,6 +17,10 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
+    /*if(localStorage.getItem("remember") == "false")
+    {
+      this.deleteToken()
+    }*/
     //window.onbeforeunload = this.closeWindow
   }
 
@@ -83,6 +87,15 @@ export class ApiService {
       observe: 'response'
     });
 
+    return this.sendRequest<T>(request$);
+  }
+
+  async putWithImage<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.put(url, body, {
+      headers: this.getHeader(contentType, ""),
+      observe: 'response'
+    });
     return this.sendRequest<T>(request$);
   }
 
