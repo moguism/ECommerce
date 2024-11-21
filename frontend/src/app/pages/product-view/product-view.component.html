@@ -8,7 +8,7 @@
         <div class="main">
             <div class="products">
                 <div class="products-image">
-                    <img class="image" [src]="product.image" alt="Imagen">
+                    <img class="image" [src]="product.image.replace('/images/images/', '/images/')" alt="Imagen">
                 </div>
         
                 <div class="products-description">

@@ -20,14 +20,16 @@ namespace Server.Controllers
         private readonly UserService _userService;
         private readonly ImageService _imageService;
         private readonly ProductService _productService;
+        private readonly CategoryService _categoryService;
 
-        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService)
+        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService, CategoryService categoryService)
         {
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
             _imageService = imageService;
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [Authorize]
@@ -104,14 +106,15 @@ namespace Server.Controllers
                 }
                 Product product = _productMapper.ToEntity(newProduct);
 
-                // TODO: Agregar lógica
-                switch (newProduct.CategoryName)
+                Category category = await _categoryService.GetByName(newProduct.CategoryName);
+                if(category == null)
                 {
-
+                    return null;
                 }
 
+                product.CategoryId = category.Id;
+
                 product.Image = await _imageService.InsertAsync(newProduct.Image);
-                product.CategoryId = 1; // TODO: Cambiar
                 Product savedProduct = await _productService.InsertProduct(product);
                 return _productMapper.ToDto(savedProduct);
             }
@@ -146,7 +149,13 @@ namespace Server.Controllers
                 product.Description = productToUpdate.Description;
                 product.Price = Int64.Parse(productToUpdate.Price);
                 product.Stock = Int32.Parse(productToUpdate.Stock);
-                product.CategoryId = 1; // TODO: Cambiar
+                Category category = await _categoryService.GetByName(productToUpdate.CategoryName);
+                if (category == null)
+                {
+                    return null;
+                }
+
+                product.CategoryId = category.Id;
 
                 if (productToUpdate.Image != null)
                 {
