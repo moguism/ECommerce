@@ -43,7 +43,8 @@ namespace Server.Controllers
 
             IEnumerable<Product> products = await _productService.GetFullProducts();
 
-            return _productMapper.ToDto(products);
+            IEnumerable<Product> correctProducts = _productMapper.AddCorrectPath(products);
+            return _productMapper.ToDto(correctProducts);
         }
 
         [HttpGet]

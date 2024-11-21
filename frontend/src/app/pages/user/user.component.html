@@ -86,7 +86,7 @@
     @else if (elementShowing == "products") {
     @for (product of allProducts; track product.id) {
     <div class="product">
-        <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
+        <img [src]="product.image.replace('/images/images/', '/images/')" alt="{{ product.name }}" class="product-image" />
         <p><b>ID:</b> {{ product.id }}</p>
         <p><b>Nombre:</b> {{ product.name }}</p>
         <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
@@ -125,7 +125,7 @@
             <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription"
                 required />
             <label for="productImage">Foto del producto:</label>
-            <input type="file" accept="image/png, image/jpeg, image/jpg" required />
+            <input type="file" accept="image/png, image/jpeg, image/jpg" required (change)="onFileSelected($event)">
             @if(create)
             {
             <button type="submit" (click)="submitCreateProduct()">Crear producto</button>
