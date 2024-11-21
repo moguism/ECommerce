@@ -31,8 +31,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 15px; 
-    margin: 0 5%;
     align-items: flex-start;
 }
 
@@ -44,16 +42,15 @@
 
 /* Caja de cada producto */
 .purchased-products {
+    margin-left: 20%;
     display: grid;
     grid-template-columns: auto auto;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    gap: 20px; 
     width: 100%;
     background-color: #ffffff;
     margin-bottom: 5%;
-    padding: 15px; 
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -71,14 +68,14 @@
 .purchased-products-information {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
     margin-left: 50%;
     width: 100%;
+
 }
 
 
 .final-price {
+    margin-right: 10%;
     background-color: #333;
     color: rgb(255, 255, 255);
     display: flex;
@@ -86,7 +83,6 @@
     justify-content: center;
     align-items: center;
     width: 25%; 
-    padding: 15px; 
     height: auto;
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -104,28 +100,49 @@ hr {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 8px; /* Reduje el espacio entre los elementos */
     font-weight: bold;
-    margin: 0% 10%;
 }
 
-/* Responsivo */
+.final-price-price h2{
+    margin: 10%;
+}
+
+
+
+/******** RESPONSIVE *********/
+
+@media (max-width: 1400px) {
+    
+    .purchased {
+        width: 50%; 
+    }
+
+}
+
+
 @media (max-width: 1120px) {
     .information {
-        flex-direction: column; /* Los elementos se apilan verticalmente */
+        flex-direction: column; 
         align-items: center;
     }
 
+    .purchased-products {
+        margin: 0;
+        margin-bottom: 5%;
+    }
+
     .purchased {
-        width: 85%; /* Los productos ocupan más espacio en pantallas pequeñas */
+        width: 85%; 
     }
 
     .final-price {
-        width: 80%; /* El resumen ocupa menos espacio */
+        width: 85%; 
+        margin-left: 10%;
     }
 }
 
 @media (max-width: 768px) {
+
     #title{
         font-size: 1rem;
     }
@@ -136,8 +153,20 @@ hr {
 
     }
 
+    .purchased{
+        margin: 0;
+        width: 100%;
+    }
+    
     .purchased-products {
         width: 100%;
+    }
+    .purchased-products-information{
+        margin-left: 20%;
+    }
+
+    .purchased-products-image{
+        margin-left: 10%;
     }
 
     .final-price {
