@@ -61,6 +61,18 @@ namespace Server.Services
             _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
             await _unitOfWork.SaveAsync();
         }
-        
+
+        public async Task UpdateTemporalOrder(TemporalOrder temporalOrder)
+        {
+            _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<TemporalOrder> GetBySessionId(string sessionid)
+        {
+            TemporalOrder order = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(sessionid);
+            return order;
+        }
+
     }
 }

@@ -65,7 +65,7 @@ public class BlockchainController : ControllerBase
         bool done = await _blockchainService.CheckTransactionAsync(data);
         if(done == true)
         {
-            Order order = await _orderService.CompleteEthTransaction(data.Hash, user);
+            Order order = await _orderService.CompleteEthTransaction(data, user);
 
             int wishlistId = order.WishlistId;
             Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(wishlistId);

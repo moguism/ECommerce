@@ -76,23 +76,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.autoRefreshSubscription = this.startAutoRefresh();
   }
 
-  /*async initiatePayment() {
-    //const response = await this.apiService.post('Checkout/embedded', this.shoppingCartProducts);
-    const response = await this.apiService.post('Checkout/embedded');
-    if(response.data == null) return;
-    const data : any = JSON.parse(response.data);
-    const sessionId = data.sessionId;
-
-    this.stripeService.redirectToCheckout({ sessionId })
-      .subscribe({
-        next: (result) => {
-          if (result.error) {
-            console.error('Error al redirigir a Stripe Checkout:', result.error.message);
-          }
-        }
-      });
-  }*/
-
   async embeddedCheckout() {
     const request = await this.apiService.post('Checkout/embedded', this.id);
 
@@ -110,12 +93,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.checkoutDialogRef.nativeElement.showModal();
           }
         });
-
-      console.log("MONDONGOOOOOOOOOOOOOOOOO")
     }
   }
 
-  async hostedCheckout() {
+  /*async hostedCheckout() {
     const request = await this.apiService.post('Checkout/hosted', this.id);
 
     if (request.success && request.data) {
@@ -123,7 +104,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       // Abrimos la url de la session de stripe sin crear una nueva pestaña en el navegador 
       window.open(data.sessionUrl, '_self');
     }
-  }
+  }*/
 
   cancelCheckoutDialog() {
     if (this.stripeEmbedCheckout && this.checkoutDialogRef) {
