@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { lastValueFrom, Observable } from 'rxjs';
+import { debounceTime, fromEvent, lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
 
 @Injectable({
@@ -17,10 +17,14 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
-    window.onbeforeunload = this.closeWindow
+    /*if(localStorage.getItem("remember") == "false")
+    {
+      this.deleteToken()
+    }*/
+    //window.onbeforeunload = this.closeWindow
   }
 
-  closeWindow()
+  /*closeWindow()
   {
     const remember = localStorage.getItem("remember")
     if(remember)
@@ -30,7 +34,7 @@ export class ApiService {
         localStorage.removeItem("token")
       }
     }
-  }
+  }*/
 
   deleteToken() {
     this.jwt = null;
@@ -66,6 +70,16 @@ export class ApiService {
     }
   }
 
+  async postWithImage<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.post(url, body, {
+      headers: this.getHeader(null, ""),
+      observe: 'response',
+      responseType: 'text'
+    });
+    return this.sendRequest<T>(request$);
+  }
+
   async put<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.put(url, body, {
@@ -73,6 +87,15 @@ export class ApiService {
       observe: 'response'
     });
 
+    return this.sendRequest<T>(request$);
+  }
+
+  async putWithImage<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.put(url, body, {
+      headers: this.getHeader(contentType, ""),
+      observe: 'response'
+    });
     return this.sendRequest<T>(request$);
   }
 
@@ -133,7 +156,7 @@ export class ApiService {
     if (accept)
       header['Accept'] = accept;
 
-    if (contentType)
+    if (contentType && contentType !== "")
       header['Content-Type'] = contentType;
 
     const headerObject = new HttpHeaders(header)

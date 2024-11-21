@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-product-view',
@@ -29,7 +30,7 @@ export class ProductViewComponent implements OnInit {
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService) { }
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService : ShoppingCartService) { }
 
   ngOnInit(): void {
     //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
@@ -52,7 +53,12 @@ export class ProductViewComponent implements OnInit {
 
   isLogged()
   {
-    return this.apiService.jwt == null
+    let boolean = false;
+    if(this.apiService.jwt != null && this.apiService.jwt != "")
+    {
+      boolean = true
+    }
+    return boolean
   }
 
   async addReview() {
@@ -126,6 +132,7 @@ export class ProductViewComponent implements OnInit {
       await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
     alert("Producto añadido al carrito correctamente")
+    this.shoppingCartService.getShoppingCartCount()
   }
 
   ngOnDestroy(): void {

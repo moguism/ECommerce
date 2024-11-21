@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-header',
@@ -15,10 +16,11 @@ export class HeaderComponent implements OnInit {
   protected jwt : string = "";
   @Input() name : string = "";
 
-  constructor(private apiService: ApiService, private router: Router){
+  constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService){
   }
 
   async ngOnInit(): Promise<void> {
+    this.shoppingCartService.getShoppingCartCount()
     await this.apiService.post<string>("User/getJwtAfterlogin")
     if(this.apiService.jwt == null)
     {

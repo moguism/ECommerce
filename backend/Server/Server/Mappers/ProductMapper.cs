@@ -59,17 +59,16 @@ public class ProductMapper
         };
     }
 
-    /*public Product ToEntity(ProductToInsert productDto)
+    public Product ToEntity(ProductToInsert productDto)
     {
         return new Product
         {
             Name = productDto.Name,
-            CategoryId = productDto.CategoryId,
             Description = productDto.Description,
-            Price = productDto.Price,
-            Stock = productDto.Stock
+            Price = Int64.Parse(productDto.Price),
+            Stock = Int32.Parse(productDto.Stock)
         };
-    }*/
+    }
 
     public IEnumerable<Product> ToEntity(IEnumerable<ProductDto> productsDto)
     {
