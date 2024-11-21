@@ -90,7 +90,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ProductDto> CreateProduct([FromBody] ProductToInsert newProduct)
+        public async Task<ProductDto> CreateProduct([FromForm] ProductToInsert productToInsert)
         {
             User user = await GetAuthorizedUser();
             if(user == null || !user.Role.Equals("Admin"))
