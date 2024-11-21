@@ -20,10 +20,10 @@ namespace Server.Services
             return _unitOfWork.ProductsToBuyRepository.GetAllProductsByWishlistId(wishlistId);
         }
 
-        public async Task<Wishlist> GetWishlistById(int wishlistId)
+        /*public async Task<Wishlist> GetWishlistById(int wishlistId)
         {
             return await _unitOfWork.WishlistRepository.GetFullByIdAsync(wishlistId);
-        }
+        }*/
 
         public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {

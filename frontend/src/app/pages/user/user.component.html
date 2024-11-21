@@ -2,10 +2,10 @@
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
     @if(user){
-    <p><b>Nombre:</b>{{user.name}}</p>
-    <p><b>Correo:</b>{{user.email}}</p>
-    <p><b>Dirección:</b>{{user.address}}</p>
-    <p><b>Rol:</b>{{user.role}}</p>
+    <p><b>Nombre: </b>{{user.name}}</p>
+    <p><b>Correo: </b>{{user.email}}</p>
+    <p><b>Dirección: </b>{{user.address}}</p>
+    <p><b>Rol: </b>{{user.role}}</p>
     <button class="btn-edit-data" (click)="btnEdit = true">Editar datos del usuario</button>
     @if (btnEdit) {
     <div class="popUp-container">
@@ -21,22 +21,16 @@
     @for (order of orders; track order.id){
     <div class="order-container">
         <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
-        <table>
-            <tr>
-                <th>Imagen</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Kg</th>
-            </tr>
-            @for(productToBuy of order.wishlist.products; track productToBuy.id){
-            <tr>
-                <td class="product-img"><img src={{productToBuy.product.image}}></td>
-                <td class="product-data">{{productToBuy.product.name}}</td>
-                <td class="product-data">{{productToBuy.quantity}}</td>
-                <td class="product-data">{{productToBuy.product.price| eurosToCents}}</td>
-            </tr>
-            }
-        </table>
+        @for(productToBuy of order.wishlist.products; track productToBuy.id){
+            <div class="order-product">
+                <img class="order-product-img" [src]="productToBuy.product.image">
+                <div class="order-product-data">
+                    <p class="order-product-data-title">{{productToBuy.product.name}}</p>
+                    <p>Cantidad: {{productToBuy.quantity}}</p>
+                    <p>Precio el kg: {{productToBuy.product.price| eurosToCents}}</p>
+                </div>
+            </div>
+        }
         @if(order.paymentTypeId == 1){
         <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
         }@else {
