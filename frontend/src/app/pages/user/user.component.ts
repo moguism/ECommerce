@@ -68,6 +68,13 @@ export class UserComponent implements OnInit {
     const result = await this.userService.getAllOrders();
     if (result) {
       this.orders = result;
+      this.orders.forEach(order => {
+        order.wishlist.products.forEach(async productToBuy => {
+          const product = await this.productService.getById(productToBuy.productId);
+          if(product)
+            productToBuy.product = product;  
+        })
+      });
     }
   }
 

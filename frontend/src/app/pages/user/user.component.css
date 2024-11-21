@@ -1,3 +1,33 @@
+/* Css para productos de las ordenes*/
+.order-container{
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-product{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.order-product-img{
+    width: 100px;
+    height: auto;
+    padding-right: 20px;
+}
+
+.order-product-data{
+    width: 150px;
+}
+
+.order-product-data p{
+    font-weight: bold;
+}
+
+.order-product-data-title{
+    padding-bottom: 15px;
+}
+
+/* Css para el usuario de la vista admin */
 .user-data-container {
     padding: 20px;
     max-width: 800px;
