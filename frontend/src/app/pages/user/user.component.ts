@@ -220,7 +220,7 @@ export class UserComponent implements OnInit {
   totalprice(products: ProductsToBuy[]) {
     let totalcount = 0;
     for (const product of products) {
-      totalcount += product.quantity * product.product.price;
+      totalcount += product.quantity * product.purchasePrice; //Precio total pagado, no se modifica cuando se cambian el precio de los productos
     }
     return totalcount;
   }
