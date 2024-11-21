@@ -52,7 +52,7 @@ export class ProductService {
     if(result.data){
       const products : any = result.data;
       for (const product of products) {
-        product.image = environment.imageRoute + product.image 
+        product.image = environment.imageRouteBasic + product.image 
       }
       return products;
     }

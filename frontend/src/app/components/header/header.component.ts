@@ -31,24 +31,7 @@ export class HeaderComponent implements OnInit {
     {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)
-      /*const result = await this.apiService.get("ShoppingCart", {}, 'json');
-      if(result.data)
-      {
-        const data: any = result.data;
-        console.log("DATA MONDONGO: ", data)
-        this.total = data.cartContent.length
-      }*/
     }
-    /*else
-    {
-      const cart = localStorage.getItem("shoppingCart")
-      if(cart)
-      {
-        const cartObject = JSON.parse(cart)
-        console.log("CART OBJECT: ", cartObject)
-        this.total = cartObject.length
-      }
-    }*/
   }
 
   async deleteToken()
