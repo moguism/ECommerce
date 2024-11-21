@@ -17,7 +17,8 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
-    window.onbeforeunload = this.closeWindow
+      window.onbeforeunload = this.closeWindow
+    
   }
 
   closeWindow()

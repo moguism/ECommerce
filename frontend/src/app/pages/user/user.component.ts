@@ -44,13 +44,15 @@ export class UserComponent implements OnInit {
   newProductCategory:string="";
   newProductStock: number = 0;
   newproductDescription: string="";
+  newProductPriceDecimal:number=0;
   selectedUser: User | null = null;
   Product:Product|null=null;
   category:string="";
   categorytranslate:string="";
   image: File | null = null
   pricedecimal:string="";
-  priceoriginal:number=0;
+  productPriceCent:number=0;
+  
 
   async ngOnInit(): Promise<void> {
     await this.getUser();
@@ -131,7 +133,6 @@ export class UserComponent implements OnInit {
     this.formState="modifyProduct"
     this.Product=this.allProducts[id-1];
     this.newProductName = this.Product.name;
-    this.priceoriginal=this.Product.price;
     const convert=this.decimalPipe.transform(this.Product.price/100,"1.2-2");
     console.log(convert);
     if(convert==null){
@@ -182,9 +183,14 @@ export class UserComponent implements OnInit {
   }
   async submitModifyProduct() {
     //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    console.log(this.newProductPrice);
+    this.productPriceCent=this.newProductPrice*100
+    console.log(this.productPriceCent);
+    console.log(this.newProductStock);
+    console.log(this.newProductCategory)
     if(this.image){
       const modifyProduct = new ProductToInsert(
-        this.image,this.newProductName,this.newproductDescription,this.priceoriginal,this.newProductStock,2
+        this.image,this.newProductName,this.newproductDescription,this.productPriceCent,this.newProductStock,2
       )
       await this.productService.modifyProduct(modifyProduct);
     }
