@@ -15,6 +15,8 @@ import { ProductsToBuy } from '../../models/products-to-buy';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Category } from '../../models/category';
 import { ProductToInsert } from '../../models/product-to-insert';
+import { Router } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 
 
 
@@ -27,7 +29,7 @@ import { ProductToInsert } from '../../models/product-to-insert';
   providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe) {
+  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
   }
 
 
@@ -52,6 +54,10 @@ export class UserComponent implements OnInit {
   pricedecimal:string="";
 
   async ngOnInit(): Promise<void> {
+    if(this.api.jwt == null || this.api.jwt == "")
+    {
+      this.router.navigateByUrl("login")
+    }
     await this.getUser();
     await this.getAllOrders();
   }
