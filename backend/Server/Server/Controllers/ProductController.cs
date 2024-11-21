@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Bogus.DataSets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Enums;
 using Server.Mappers;
@@ -90,41 +92,81 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ProductDto> CreateProduct([FromForm] ProductToInsert productToInsert)
+        public async Task<ProductDto> CreateProduct([FromForm] ProductToInsert newProduct)
         {
-            User user = await GetAuthorizedUser();
-            if(user == null || !user.Role.Equals("Admin"))
+            try
             {
+                User user = await GetAuthorizedUser();
+                if (user == null || !user.Role.Equals("Admin"))
+                {
+                    return null;
+                }
+                Product product = _productMapper.ToEntity(newProduct);
+
+                // TODO: Agregar lógica
+                switch (newProduct.CategoryName)
+                {
+
+                }
+
+                product.Image = await _imageService.InsertAsync(newProduct.Image);
+                product.CategoryId = 1; // TODO: Cambiar
+                Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
+                await _unitOfWork.SaveAsync();
+                return _productMapper.ToDto(savedProduct);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Ha ocurrido una excepción:");
+                Console.WriteLine(e);
                 return null;
             }
-            /*Product product = _productMapper.ToEntity(newProduct);
-            product.Image = await _imageService.InsertAsync(newProduct.Image);
-            Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
-            await _unitOfWork.SaveAsync();
-            return _productMapper.ToDto(savedProduct);*/
-            return null;
         }
 
         [Authorize]
         [HttpPut]
-        public async Task UpdateProduct([FromBody] ProductToInsert productToUpdate)
+        public async Task<ProductDto> UpdateProduct([FromForm] ProductToInsert productToUpdate)
         {
-            User user = await GetAuthorizedUser();
-            if (user == null || !user.Role.Equals("Admin"))
+            try
             {
-                return;
-            }
+                User user = await GetAuthorizedUser();
+                if (user == null || !user.Role.Equals("Admin"))
+                {
+                    return null;
+                }
 
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToUpdate.Id);
-            if (product == null)
+                Product product = await _unitOfWork.ProductRepository.GetFullProductById(Int32.Parse(productToUpdate.Id));
+                if (product == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    _unitOfWork.Context.Entry(product).State = EntityState.Detached;
+                }
+
+                //product = _productMapper.ToEntity(productToUpdate);
+                product.Name = productToUpdate.Name;
+                product.Description = productToUpdate.Description;
+                product.Price = Int64.Parse(productToUpdate.Price);
+                product.Stock = Int32.Parse(productToUpdate.Stock);
+                product.CategoryId = 1; // TODO: Cambiar
+
+                if (productToUpdate.Image != null)
+                {
+                    product.Image = await _imageService.InsertAsync(productToUpdate.Image);
+                }
+                
+                _unitOfWork.ProductRepository.Update(product);
+                await _unitOfWork.SaveAsync();
+                return _productMapper.ToDto(product);
+            }
+            catch(Exception e)
             {
-                return;
+                Console.WriteLine($"Ha ocurrido una excepción:");
+                Console.WriteLine(e);
+                return null;
             }
-
-            /*product = _productMapper.ToEntity(productToUpdate);
-            product.Image = await _imageService.InsertAsync(productToUpdate.Image);
-            _unitOfWork.ProductRepository.Update(product);
-            await _unitOfWork.SaveAsync();*/
         }
 
         private async Task<User> GetAuthorizedUser()
