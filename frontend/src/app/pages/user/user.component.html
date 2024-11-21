@@ -21,19 +21,19 @@
     @for (order of orders; track order.id){
     <div class="order-container">
         <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
-
         @for(productToBuy of order.wishlist.products; track productToBuy.id){
             <div class="order-product">
                 <img class="order-product-img" [src]="productToBuy.product.image">
                 <div class="order-product-data">
                     <p class="order-product-data-title">{{productToBuy.product.name}}</p>
                     <p>Cantidad: {{productToBuy.quantity}}</p>
-                    <p>Precio el kg: {{productToBuy.purchasePrice| eurosToCents}}</p>
+                    <p>Precio el kg: {{productToBuy.purchasePrice | eurosToCents}}</p>
                 </div>
             </div>
         }
+        
+        @if(order.paymentTypeId == 1){
 
-      @if(order.paymentTypeId == 1){
         <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
         }@else {
         <h3>Pagado con: ethereum Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
