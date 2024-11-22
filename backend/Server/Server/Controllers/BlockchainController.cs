@@ -23,10 +23,11 @@ public class BlockchainController : ControllerBase
     private readonly OrderMapper _orderMapper;
     private readonly EmailService _emailService;
     private readonly WishListService _wishListService;
+    private readonly TemporalOrderService _temporalOrderService;
 
     public BlockchainController(BlockchainService blockchainService, OrderService orderService, 
         UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper, 
-        EmailService emailService, WishListService wishListService)
+        EmailService emailService, WishListService wishListService, TemporalOrderService temporalOrderService)
     {
         _blockchainService = blockchainService;
         _orderService = orderService;
@@ -35,6 +36,7 @@ public class BlockchainController : ControllerBase
         _orderMapper = orderMapper;
         _emailService = emailService;
         _wishListService = wishListService;
+        _temporalOrderService = temporalOrderService;
     }
 
     [HttpGet]
@@ -44,12 +46,40 @@ public class BlockchainController : ControllerBase
     }
 
     // OBTIENE LOS DATOS DE LA TRANSACCIÓN
+    [Authorize]
     [HttpPost("transaction")]
-    public Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
+    public async Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
     {
+        User user = await GetAuthorizedUser();
+        if(user == null)
+        {
+            return null;
+        }
+
         data.NetworkUrl = HttpUtility.UrlDecode(data.NetworkUrl);
 
-        return _blockchainService.GetEthereumInfoAsync(data);
+        EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
+
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderByUserId(user.Id);
+        if (temporalOrder == null)
+        {
+            return null;
+        }
+        Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
+        if (wishlist == null)
+        {
+            return null;
+        }
+
+        decimal total = wishlist.Products.Sum(product => product.PurchasePrice / 100m);
+
+        if(data.Euros == total)
+        {
+            temporalOrder.HashOrSession = ethereumTransaction.Value;
+            await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+        }
+
+        return ethereumTransaction;
     }
 
     [Authorize]
@@ -67,14 +97,28 @@ public class BlockchainController : ControllerBase
         {
             Order order = await _orderService.CompleteEthTransaction(data, user);
 
+            if(order == null)
+            {
+                return null;
+            }
+
             int wishlistId = order.WishlistId;
             Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(wishlistId);
             await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
 
+            order.Wishlist = productsorder;
+            order.User = null;
+
             //Productos comprados por el usuario
             //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
 
-            return await _orderService.GetOrderById(order.Id);
+            /*Order completedOrder = await _orderService.GetOrderById(order.Id);
+            return completedOrder;>*/
+
+            Order returnOrder = await _orderService.GetOrder(order);
+            returnOrder.User = null;
+
+            return returnOrder;
         }
         return null;
     }

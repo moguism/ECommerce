@@ -1,22 +1,20 @@
 ﻿using Examples.WebApi.Models.Dtos;
-using Nethereum.Hex.HexTypes;
 using Server.DTOs;
 using Server.Models;
 using Server.Services.Blockchain;
 using Stripe.Checkout;
-using System.Numerics;
 
 namespace Server.Services
 {
     public class OrderService
     {
-        UnitOfWork _unitOfWork;
-        /*private readonly ShoppingCartService _shoppingCartService;*/
+        private readonly UnitOfWork _unitOfWork;
+        private readonly BlockchainService _blockchainService;
 
-        public OrderService(UnitOfWork unitOfWork)
+        public OrderService(UnitOfWork unitOfWork, BlockchainService blockchainService)
         {
             _unitOfWork = unitOfWork;
-            /*_shoppingCartService = shoppingCartService;*/
+            _blockchainService = blockchainService;
         }
 
         public async Task<Order> CompletePayment(Session session)
@@ -68,43 +66,38 @@ namespace Server.Services
             return saveOrder;
         }
 
+
+        public async Task<decimal> GetValueOfLastOrder(User user)
+        {
+            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
+            if (temporalOrder == null)
+            {
+                return 0;
+            }
+            Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(user.Id);
+            if (wishlist == null)
+            {
+                return 0;
+            }
+
+            decimal total = wishlist.Products.Sum(product => product.PurchasePrice / 100m);
+            return total;
+        }
+
         public async Task<Order> CompleteEthTransaction(CheckTransactionRequest data, User user)
         {
-            CoinGeckoApi coinGeckoApi = new CoinGeckoApi();
-            EthereumService ethereumService = new EthereumService(data.NetworkUrl);
-            decimal ethEurPrice = await coinGeckoApi.GetEthereumPriceAsync();
-
             Order existingOrder = await _unitOfWork.OrderRepository.GetByHash(data.Hash);
             if (existingOrder != null)
             {
                 return existingOrder;
             }
 
-
             //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(user.Id);
+            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(data.Value);
             if(temporalOrder == null)
             {
                 return null;
             }
-            Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(user.Id);
-            if (wishlist == null)
-            {
-                return null;
-            }
-
-            decimal total = wishlist.Products.Sum(product => product.PurchasePrice);
-
-            BigInteger value = ethereumService.ToWei(total / ethEurPrice);
-            HexBigInteger gas = ethereumService.GetGas();
-            HexBigInteger gasPrice = await ethereumService.GetGasPriceAsync();
-
-            EthereumTransaction ethereumTransaction = new EthereumTransaction
-            {
-                Value = new HexBigInteger(value).HexValue,
-                Gas = gas.HexValue,
-                GasPrice = gasPrice.HexValue,
-            };
 
             Order order = new Order {
                 CreatedAt = DateTime.UtcNow,
@@ -114,8 +107,6 @@ namespace Server.Services
                 UserId = user.Id,
                 Hash = data.Hash
             };
-
-
             
             //Elimina el carrito si se ha hecho la compra con sesión iniciada           
             if (!temporalOrder.Quick)
@@ -126,15 +117,15 @@ namespace Server.Services
 
             //Order en la base de datos
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
-            await _unitOfWork.SaveAsync();
 
-            saveOrder.Wishlist = temporalOrder.Wishlist;
-            //saveOrder.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(saveOrder.WishlistId);
+            /*saveOrder.Wishlist = temporalOrder.Wishlist;
             _unitOfWork.OrderRepository.Update(saveOrder);
 
             //Añade la orden a la lista de ordenes del usuario
             user.Orders.Add(saveOrder);
-            _unitOfWork.UserRepository.Update(user);
+            _unitOfWork.UserRepository.Update(user);*/
+
+            await _unitOfWork.SaveAsync();
 
             return saveOrder;
         }
@@ -161,6 +152,12 @@ namespace Server.Services
         public async Task<Order> GetOrderById(int orderId)
         {
             Order order =  await _unitOfWork.OrderRepository.GetByIdAsync(orderId);
+            order = await GetOrder(order);
+            return order;
+        }
+
+        public async Task<Order> GetOrder(Order order)
+        {
             order.Wishlist = await _unitOfWork.WishlistRepository.GetByIdAsync(order.WishlistId);
             order.Wishlist.Products = _unitOfWork.ProductsToBuyRepository
                     .GetAllProductsByWishlistId(order.WishlistId);
