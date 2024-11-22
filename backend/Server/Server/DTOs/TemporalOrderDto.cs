@@ -9,5 +9,6 @@ namespace Server.DTOs
         public IEnumerable<CartContentDto> CartContentDtos  { get; set; }
 
         public bool Quick { get; set; }
+        public string SessionId { get; set; }
     }
 }

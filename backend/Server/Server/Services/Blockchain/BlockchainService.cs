@@ -34,7 +34,6 @@ public class BlockchainService
         EthereumService ethereumService = new EthereumService(data.NetworkUrl);
 
         decimal ethEurPrice = await coinGeckoApi.GetEthereumPriceAsync();
-        decimal ethAmount = data.Euros / ethEurPrice;
         BigInteger value = ethereumService.ToWei(data.Euros / ethEurPrice);
         HexBigInteger gas = ethereumService.GetGas();
         HexBigInteger gasPrice = await ethereumService.GetGasPriceAsync();
@@ -54,6 +53,32 @@ public class BlockchainService
         EthereumService ethereumService = new EthereumService(data.NetworkUrl);
 
         return ethereumService.CheckTransactionAsync(data.Hash, data.From, data.To, data.Value);
+    }
+
+    public decimal ConvertHexToDecimal(string hexValue)
+    {
+        try
+        {
+            // Convertir el valor hexadecimal a BigInteger
+            BigInteger bigIntValue = BigInteger.Parse(hexValue, System.Globalization.NumberStyles.HexNumber);
+
+            // Dividir el valor por 10^18 para convertir de Wei a Ether
+            decimal etherValue = (decimal)bigIntValue / 1000000000000000000m;
+
+            return etherValue;
+        }
+        catch (FormatException ex)
+        {
+            // Manejo de error si el formato del valor hexadecimal no es válido
+            Console.WriteLine($"Error de formato hexadecimal: {ex.Message}");
+            return 0m; // Retornar 0 en caso de error
+        }
+        catch (OverflowException ex)
+        {
+            // Manejo de error si el número es demasiado grande para BigInteger
+            Console.WriteLine($"Error de desbordamiento: {ex.Message}");
+            return 0m; // Retornar 0 en caso de error
+        }
     }
 
 

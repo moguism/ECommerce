@@ -15,18 +15,15 @@ namespace Server.Controllers
     [ApiController]
     public class TemporalOrderController : ControllerBase
     {
-
-        private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly TemporalOrderMapper _temporalOrderMapper;
         private readonly ShoppingCartService _shoppingCartService;
         private readonly TemporalOrderService _temporalOrderService;
         private readonly WishListService _wishListService; 
 
-        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, TemporalOrderService temporalOrderService, 
+        public TemporalOrderController(TemporalOrderService temporalOrderService, 
             ShoppingCartService shoppingCartService, TemporalOrderMapper temporalOrderMapper,
             WishListService wishListService)
         {
-            _shoppingCartMapper = shoppingCartMapper;
             _temporalOrderService = temporalOrderService;
             _shoppingCartService = shoppingCartService;
             _temporalOrderMapper = temporalOrderMapper;
@@ -77,22 +74,24 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet("refresh")]
-        public async Task RefreshTemporalOrder([FromQuery] int id)
+        public async Task<TemporalOrderDto> RefreshTemporalOrder([FromQuery] int id)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return;
+                return null;
             }
 
             TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
 
             if (temporalOrder == null || temporalOrder.UserId != user.Id)
             {
-                return;
+                return null;
             }
 
             await _temporalOrderService.UpdateExpiration(temporalOrder);
+
+            return _temporalOrderMapper.ToDto(temporalOrder);
         }
 
         private async Task<User> GetAuthorizedUser()

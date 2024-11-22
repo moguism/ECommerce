@@ -14,5 +14,6 @@ namespace Server.Models
         public DateTime ExpirationDate { get; set; }
 
         public bool Quick { get; set; }
+        public string HashOrSession { get; set; }
     }
 }
