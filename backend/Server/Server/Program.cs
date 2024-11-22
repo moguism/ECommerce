@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.ML;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Mappers;
 using Server.Models;
-using Server.Repositories;
 using Server.Services;
+using Server.Services.Blockchain;
+using System.Globalization;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -15,7 +17,13 @@ namespace Server
     {
         public static void Main(string[] args)
         {
+            // Configuramos cultura invariante para que al pasar los decimales a texto no tengan comas
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
 
             // Add services to the container.
 
@@ -49,16 +57,36 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
+            
             builder.Services.AddScoped<ProductMapper>();
             builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
+            builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
             builder.Services.AddScoped<ReviewMapper>();
+            builder.Services.AddScoped<TemporalOrderMapper>();
+            builder.Services.AddScoped<TemporalOrderService>();
+            builder.Services.AddScoped<CartContentMapper>();
+            builder.Services.AddScoped<BlockchainService>();
+            builder.Services.AddScoped<EmailService>();
+
+            builder.Services.AddScoped<WishListService>();
+            builder.Services.AddScoped<ProductsToBuyMapper>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<OrderMapper>();
+            builder.Services.AddScoped<ProductService>();
+            builder.Services.AddScoped<ImageService>();
+            builder.Services.AddScoped<CategoryService>();
 
 
-
+            //builder.Services.AddHostedService<CleanTemporalOrdersService>();
+            // Aqui esta la clave privada
+            Stripe.StripeConfiguration.ApiKey = "sk_test_51QJzjI2MpRBL4z2Cyh3NiBYhF4kXzVk7QJppRv2cAwoM8vPFrDwUjKnwZOiIDw0yYZfzNxNybQWenGMmmj83NunP00UGENKK29";
+            
+            builder.Services.AddHostedService<CleanTemporalOrdersService>();
+            
 
             // Permite CORS
             if (builder.Environment.IsDevelopment())
@@ -104,7 +132,7 @@ namespace Server
                 FarminhouseContext dbContext = scope.ServiceProvider.GetService<FarminhouseContext>();
                 if (dbContext.Database.EnsureCreated())
                 {
-                    // CategorÌas
+                    // Categor√≠as
                     Category fruitsCategory = new Category { Name = "fruits" };
                     Category vegetablesCategory = new Category { Name = "vegetables" };
                     Category meatCategory = new Category { Name = "meat" };
@@ -113,15 +141,15 @@ namespace Server
                     var fruits = new List<Product>
                     {
                         new Product { Name = "Manzana", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 250, Image = "manzana.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Pl·tano", Description = "Una fuente r·pida de energÌa, perfecta para llevar.", Price = 150, Stock = 200, Average = 400, Image = "platano.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Naranja", Description = "CÌtrico jugoso y refrescante, rico en vitamina C.", Price = 300, Stock = 0, Average = 350, Image = "naranja.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Pl√°tano", Description = "Una fuente r√°pida de energ√≠a, perfecta para llevar.", Price = 150, Stock = 200, Average = 400, Image = "platano.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Naranja", Description = "C√≠trico jugoso y refrescante, rico en vitamina C.", Price = 300, Stock = 0, Average = 350, Image = "naranja.jpg", CategoryId = 1, Category = fruitsCategory },
                         new Product { Name = "Fresa", Description = "Fruta dulce y roja, excelente en postres y batidos.", Price = 400, Stock = 120, Average = 450, Image = "fresa.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Kiwi", Description = "Fruta exÛtica con un sabor ˙nico y refrescante.", Price = 350, Stock = 90, Average = 400, Image = "kiwi.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Kiwi", Description = "Fruta ex√≥tica con un sabor √∫nico y refrescante.", Price = 350, Stock = 90, Average = 400, Image = "kiwi.jpg", CategoryId = 1, Category = fruitsCategory },
                         new Product { Name = "Pera", Description = "Fruta suave y jugosa, ideal para ensaladas.", Price = 280, Stock = 160, Average = 420, Image = "pera.jpg", CategoryId = 1, Category = fruitsCategory},
                         new Product { Name = "Arandano", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 250, Image = "arandano.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Uva", Description = "PequeÒas frutas dulces, perfectas para picar o hacer vino.", Price = 500, Stock = 130, Average = 430, Image = "uva.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "SandÌa", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 600, Stock = 75, Average = 480, Image = "sandia.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "MelÛn", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 450, Stock = 80, Average = 410, Image = "melon.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Uva", Description = "Peque√±as frutas dulces, perfectas para picar o hacer vino.", Price = 500, Stock = 130, Average = 430, Image = "uva.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Sand√≠a", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 600, Stock = 75, Average = 480, Image = "sandia.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Mel√≥n", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 450, Stock = 80, Average = 410, Image = "melon.jpg", CategoryId = 1, Category = fruitsCategory },
                         new Product { Name = "Mango", Description = "Fruta tropical dulce, perfecta para smoothies y postres.", Price = 320, Stock = 110, Average = 440, Image = "mango.jpg", CategoryId = 1, Category = fruitsCategory }
                     };
 
@@ -130,35 +158,35 @@ namespace Server
                     {
                         new Product { Name = "Apio", Description = "Vegetal crujiente, ideal para dips y ensaladas.", Price = 300, Stock = 200, Average = 400, Image = "apio.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Zanahoria", Description = "Dulce y crujiente, rica en vitamina A, perfecta para snacks.", Price = 150, Stock = 180, Average = 420, Image = "zanahoria.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Tomate", Description = "Vers·til y jugoso, excelente para ensaladas y salsas.", Price = 200, Stock = 150, Average = 450, Image = "tomate.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Tomate", Description = "Vers√°til y jugoso, excelente para ensaladas y salsas.", Price = 200, Stock = 150, Average = 450, Image = "tomate.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Lechuga", Description = "Base fresca para ensaladas, ligera y nutritiva.", Price = 120, Stock = 220, Average = 410, Image = "lechuga.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Cebolla", Description = "Sabor fuerte y caracterÌstico, ideal para sazonar.", Price = 180, Stock = 170, Average = 430, Image = "cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Cebolla", Description = "Sabor fuerte y caracter√≠stico, ideal para sazonar.", Price = 180, Stock = 170, Average = 430, Image = "cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 250, Stock = 140, Average = 400, Image = "pimiento.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "BrÛcoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 280, Stock = 0, Average = 460, Image = "brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Br√≥coli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 280, Stock = 0, Average = 460, Image = "brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 320, Stock = 90, Average = 440, Image = "espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Coliflor", Description = "Vegetal vers·til, ideal para purÈs y como sustituto del arroz.", Price = 270, Stock = 80, Average = 430, Image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Berenjena", Description = "Sabor ˙nico, excelente para asar y guisar.", Price = 350, Stock = 70, Average = 410, Image = "berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
+                        new Product { Name = "Coliflor", Description = "Vegetal vers√°til, ideal para pur√©s y como sustituto del arroz.", Price = 270, Stock = 80, Average = 430, Image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Berenjena", Description = "Sabor √∫nico, excelente para asar y guisar.", Price = 350, Stock = 70, Average = 410, Image = "berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
                     };
 
                     // Carnes
                     var meats = new List<Product>
                     {
                         new Product { Name = "Ternera", Description = "Carne tierna y jugosa, ideal para guisos y asados.", Price = 550, Stock = 100, Average = 300, Image = "ternera.jpg", CategoryId = 3, Category = meatCategory},
-                        new Product { Name = "Pollo", Description = "Carne magra, vers·til y rica en proteÌnas.", Price = 400, Stock = 150, Average = 350, Image = "pollo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Pollo", Description = "Carne magra, vers√°til y rica en prote√≠nas.", Price = 400, Stock = 150, Average = 350, Image = "pollo.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Cerdo", Description = "Carne sabrosa, ideal para parrillas y guisos.", Price = 600, Stock = 80, Average = 380, Image = "cerdo.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Cordero", Description = "Carne rica y suculenta, perfecta para asados.", Price = 700, Stock = 60, Average = 400, Image = "cordero.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Pavo", Description = "Alternativa magra al pollo, ideal para celebraciones.", Price = 550, Stock = 90, Average = 390, Image = "pavo.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Conejo", Description = "Carne suave y saludable, ideal para guisos.", Price = 800, Stock = 50, Average = 420, Image = "conejo.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Salchicha", Description = "Deliciosa y jugosa, perfecta para barbacoas.", Price = 250, Stock = 200, Average = 370, Image = "salchicha.jpg", CategoryId = 3, Category = meatCategory },
                         new Product { Name = "Bacon", Description = "Crujiente y sabroso, ideal para desayunos y burgers.", Price = 450, Stock = 0, Average = 430, Image = "bacon.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para aÒadir sabor a tus platos.", Price = 500, Stock = 70, Average = 400, Image = "panceta.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "At˙n", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 650, Stock = 40, Average = 410, Image = "atun.jpg", CategoryId = 3, Category = meatCategory }
+                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para a√±adir sabor a tus platos.", Price = 500, Stock = 70, Average = 400, Image = "panceta.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "At√∫n", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 650, Stock = 40, Average = 410, Image = "atun.jpg", CategoryId = 3, Category = meatCategory }
                     };
 
 
                    
 
-                    // AÒadir categorÌas y productos al contexto de la base de datos
+                    // A√±adir categor√≠as y productos al contexto de la base de datos
                     dbContext.Categories.Add(fruitsCategory);
                     dbContext.Categories.Add(vegetablesCategory);
                     dbContext.Categories.Add(meatCategory);
@@ -168,7 +196,7 @@ namespace Server
 
 
 
-                    // Obtener el producto de Ar·ndano
+                    // Obtener el producto de Ar√°ndano
                     var arandanoProduct = fruits.FirstOrDefault(p => p.Name == "Arandano");
 
                     if (arandanoProduct != null)
@@ -178,19 +206,19 @@ namespace Server
                         var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
                         var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
 
-                        // Asegurarse de que los usuarios est·n aÒadidos al contexto
+                        // Asegurarse de que los usuarios est√°n a√±adidos al contexto
                         dbContext.Users.Add(user1);
                         dbContext.Users.Add(user2);
 
-                        // Crear reseÒas para el producto de ar·ndano
+                        // Crear rese√±as para el producto de ar√°ndano
                         var review1 = new Review
                         {
-                            Text = "Los mejores ar·ndanos que he probado, muy frescos y jugosos.",
+                            Text = "Los mejores ar√°ndanos que he probado, muy frescos y jugosos.",
                             Score = 5,
                             UserId = user1.Id,
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
-                            User = user1
+                            User = user1,
                         };
 
                         var review2 = new Review
@@ -200,31 +228,25 @@ namespace Server
                             UserId = user2.Id,
                             ProductId = arandanoProduct.Id,
                             Product = arandanoProduct,
-                            User = user2
+                            User = user2,
+                      
                         };
 
-                        // AÒadir reseÒas al contexto de la base de datos
+                        // A√±adir rese√±as al contexto de la base de datos
                         dbContext.Reviews.Add(review1);
                         dbContext.Reviews.Add(review2);
 
-                        // AÒadir reseÒas a la colecciÛn de Reviews del producto de ar·ndano
+                        // A√±adir rese√±as a la colecci√≥n de Reviews del producto de ar√°ndano
                         arandanoProduct.Reviews.Add(review1);
                         arandanoProduct.Reviews.Add(review2);
 
-                        // AÒadir reseÒas a la colecciÛn de Reviews de cada usuario
+                        // A√±adir rese√±as a la colecci√≥n de Reviews de cada usuario
                         user1.Reviews.Add(review1);
                         user2.Reviews.Add(review2);
 
                         dbContext.SaveChanges();
 
                     }
-
-
-
-
-
-
-
 
                     // Guardar cambios en la base de datos
                     dbContext.SaveChanges();

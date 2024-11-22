@@ -7,6 +7,7 @@ using Server.Mappers;
 using Server.Models;
 using Server.Repositories;
 using Server.Services;
+using TorchSharp;
 
 namespace Server.Controllers
 {
@@ -14,37 +15,83 @@ namespace Server.Controllers
     [ApiController]
     public class TemporalOrderController : ControllerBase
     {
-
-        private readonly ShoppingCartMapper _shoppingCartMapper;
+        private readonly TemporalOrderMapper _temporalOrderMapper;
         private readonly ShoppingCartService _shoppingCartService;
         private readonly TemporalOrderService _temporalOrderService;
+        private readonly WishListService _wishListService; 
 
-        public TemporalOrderController(ShoppingCartMapper shoppingCartMapper, TemporalOrderService temporalOrderService, ShoppingCartService shoppingCartService)
+        public TemporalOrderController(TemporalOrderService temporalOrderService, 
+            ShoppingCartService shoppingCartService, TemporalOrderMapper temporalOrderMapper,
+            WishListService wishListService)
         {
-            _shoppingCartMapper = shoppingCartMapper;
             _temporalOrderService = temporalOrderService;
             _shoppingCartService = shoppingCartService;
+            _temporalOrderMapper = temporalOrderMapper;
+            _wishListService = wishListService;
         }
 
         [Authorize]
-        [HttpPost]
-        public async Task<TemporalOrder> CreateTemporalOrder()
+        [HttpGet]
+        public async Task<TemporalOrderDto> GetTemporalOrderById([FromQuery] int id)
         {
-
             User user = await GetAuthorizedUser();
             if (user == null)
             {
                 return null;
             }
 
-            ShoppingCart cart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+            Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
+            if(temporalOrder == null || wishlist == null)
+            {
+                return null;
+            }
 
-            TemporalOrder temporalOrder = new TemporalOrder();
-            temporalOrder.UserId = user.Id;
-            temporalOrder.ShoppingCartId = cart.Id;
+            temporalOrder.Wishlist = wishlist;
 
-            TemporalOrder savedTemporalOrder = await _temporalOrderService.CreateTemporalOrder(temporalOrder);
-            return savedTemporalOrder;
+            return _temporalOrderMapper.ToDto(temporalOrder);
+        }
+
+
+        [Authorize]
+        [HttpPost("newTemporalOrder")]
+        public async Task<TemporalOrder> CreateTemporal([FromBody] TemporalOrderDto temporalOrderDto)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return null;
+            }
+
+
+            Wishlist wishlist = await _wishListService.CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
+
+            //Añade una nueva orden temporal con los datos del usuario
+            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,wishlist,temporalOrderDto.Quick);
+            return order;
+
+        }
+
+        [Authorize]
+        [HttpGet("refresh")]
+        public async Task<TemporalOrderDto> RefreshTemporalOrder([FromQuery] int id)
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return null;
+            }
+
+            TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+
+            if (temporalOrder == null || temporalOrder.UserId != user.Id)
+            {
+                return null;
+            }
+
+            await _temporalOrderService.UpdateExpiration(temporalOrder);
+
+            return _temporalOrderMapper.ToDto(temporalOrder);
         }
 
         private async Task<User> GetAuthorizedUser()

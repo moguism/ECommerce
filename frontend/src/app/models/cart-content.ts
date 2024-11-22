@@ -1,10 +1,9 @@
 export class CartContent {
-    quantity: number;
-    productId: number;
-
-    constructor(quantity: number, productId: number)
+    ProductId: number;
+    Quantity: number;
+    constructor(productId: number, quantity: number)
     {
-        this.quantity = quantity;
-        this.productId = productId;
+        this.ProductId = productId;
+        this.Quantity = quantity;
     }
 }

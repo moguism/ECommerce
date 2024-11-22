@@ -12,16 +12,34 @@ public class OrderRepository : Repository<Order, int>
     public async Task<ICollection<Order>> GetAllWithFullDataAsync()
     {
         return await GetQueryable()
-            .Include(order => order.UserId)
+            //.Include(order => order.UserId)
             .ToArrayAsync();
     }
 
-    public async Task<Order> GetById(int id)
+    public async Task<IEnumerable<Order>> GetAllOrdersByUserId(int userId)
     {
-        // "FirstOrDefaultAsync" DEVUELVE NULO SI NO EXISTE
-        Order order = await GetQueryable()
-            .Include(order => order.UserId)
-            .FirstOrDefaultAsync(order => order.Id == id);
+        return await GetQueryable()
+        .Include(o => o.Wishlist)
+        .Where(o => o.UserId == userId)
+        .ToListAsync();
+    }
+
+    public async Task<Order> GetById(int orderId)
+    {
+        return await GetQueryable()
+            .FirstOrDefaultAsync(order => order.Id == orderId);
+    }
+
+
+    public async Task<Order> GetBySessionId(string sessionid)
+    {
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.SessionId.Equals(sessionid));
+        return order;
+    }
+
+    public async Task<Order> GetByHash(string hash)
+    {
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.Hash.Equals(hash));
         return order;
     }
 }

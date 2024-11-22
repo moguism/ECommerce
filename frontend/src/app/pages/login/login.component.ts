@@ -6,11 +6,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -58,14 +59,14 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-    if (this.apiService.jwt != "") {
+    /*if (this.apiService.jwt != "") {
       console.log(this.apiService.jwt)
       this.router.navigateByUrl("user")
       return
     }
     else {
       console.log(this.apiService.jwt)
-    }
+    }*/
 
     let container = document.querySelector(".container")
     let sign_in_button = document.getElementById("btn-sign-in")
@@ -92,7 +93,15 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
         this.rememberFunction()
-        this.router.navigateByUrl("user")
+        const goToCheckout = localStorage.getItem("goToCheckout")
+        if(goToCheckout && goToCheckout == "true")
+        {
+          this.router.navigateByUrl("shopping-cart")
+        }
+        else
+        {
+          this.router.navigateByUrl("user")
+        }
       }
       else {
         alert("Los datos introducidos no son correctos")
@@ -105,6 +114,7 @@ export class LoginComponent implements OnInit {
 
   rememberFunction()
   {
+    if(this.apiService.jwt == null) { return; }
     if (this.rememberUser) {
       console.log("Recordando al usuario...")
       localStorage.setItem("token", this.apiService.jwt)
@@ -112,17 +122,17 @@ export class LoginComponent implements OnInit {
     }
     else {
       console.log("No recordando al usuario...")
-      localStorage.setItem("token", this.apiService.jwt)
       localStorage.setItem("remember", "false")
       //localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
     }
+    localStorage.setItem("token", this.apiService.jwt)
   }
 
   async registerUser(): Promise<void> {
     if(this.registerForm.controls['password'].value != this.registerForm.controls['confirmPassword'].value){
       alert("Las  contraseñas tienen que ser iguales");
     }else if (this.registerForm.valid) {
-      let user = new User(this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
+      let user = new User(0, this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         this.rememberFunction()

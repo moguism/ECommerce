@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HostListener, Injectable, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { lastValueFrom, Observable } from 'rxjs';
+import { debounceTime, fromEvent, lastValueFrom, Observable } from 'rxjs';
 import { Result } from '../models/result';
 
 @Injectable({
@@ -10,30 +10,21 @@ import { Result } from '../models/result';
 export class ApiService {
 
   private BASE_URL = environment.apiUrl;
-  jwt: string = ""
+  jwt: string | null = ""
 
   constructor(private http: HttpClient) {
     let token: string | null = localStorage.getItem("token")
     if (token) {
       this.jwt = token
     }
-    window.onbeforeunload = this.closeWindow
-  }
-
-  closeWindow()
-  {
-    const remember = localStorage.getItem("remember")
-    if(remember)
+    if(localStorage.getItem("remember") == "false")
     {
-      if(remember == "false")
-      {
-        localStorage.removeItem("token")
-      }
+      this.deleteToken()
     }
   }
 
   deleteToken() {
-    this.jwt = "";
+    this.jwt = null;
     localStorage.removeItem("token");
   }
 
@@ -66,6 +57,16 @@ export class ApiService {
     }
   }
 
+  async postWithImage<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.post(url, body, {
+      headers: this.getHeader(null, ""),
+      observe: 'response',
+      responseType: 'text'
+    });
+    return this.sendRequest<T>(request$);
+  }
+
   async put<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.put(url, body, {
@@ -73,6 +74,15 @@ export class ApiService {
       observe: 'response'
     });
 
+    return this.sendRequest<T>(request$);
+  }
+
+  async putWithImage<T = void>(path: string, body: Object = {}, contentType = null): Promise<Result<T>> {
+    const url = `${this.BASE_URL}${path}`;
+    const request$ = this.http.put(url, body, {
+      headers: this.getHeader(contentType, ""),
+      observe: 'response'
+    });
     return this.sendRequest<T>(request$);
   }
 
@@ -118,7 +128,7 @@ export class ApiService {
     console.log("RESULT: ", result)
     if (result.data && saveJwt) {
       this.jwt = result.data.toString();
-      //console.log("AY MI MADRE EL BICHO: ", this.jwt)
+      console.log("AY MI MADRE EL BICHO: ", this.jwt)
     }
     return result;
   }
@@ -133,7 +143,7 @@ export class ApiService {
     if (accept)
       header['Accept'] = accept;
 
-    if (contentType)
+    if (contentType && contentType !== "")
       header['Content-Type'] = contentType;
 
     const headerObject = new HttpHeaders(header)

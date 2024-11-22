@@ -1,0 +1,175 @@
+.body {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+#title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem; 
+    color: #444;
+}
+
+#title img {
+    width: 80px; 
+    height: 80px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+#load {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.information {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Caja de todos los productos */
+.purchased {
+    display: block;
+    width: 40%;
+}
+
+/* Caja de cada producto */
+.purchased-products {
+    margin-left: 20%;
+    display: grid;
+    grid-template-columns: auto auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    background-color: #ffffff;
+    margin-bottom: 5%;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.purchased-products-image {
+    max-width: 200px;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-left: 20%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+
+}
+
+.purchased-products-information {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50%;
+    width: 100%;
+
+}
+
+
+.final-price {
+    margin-right: 10%;
+    background-color: #333;
+    color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%; 
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+hr {
+    width: 80%;
+    border: 2px dashed #999;
+    margin: 10px 0;
+}
+
+.final-price-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-weight: bold;
+}
+
+.final-price-price h2{
+    margin: 10%;
+}
+
+
+
+/******** RESPONSIVE *********/
+
+@media (max-width: 1400px) {
+    
+    .purchased {
+        width: 50%; 
+    }
+
+}
+
+
+@media (max-width: 1120px) {
+    .information {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .purchased-products {
+        margin: 0;
+        margin-bottom: 5%;
+    }
+
+    .purchased {
+        width: 85%; 
+    }
+
+    .final-price {
+        width: 85%; 
+        margin-left: 10%;
+    }
+}
+
+@media (max-width: 768px) {
+
+    #title{
+        font-size: 1rem;
+    }
+
+    #title img{
+        width: 50px;
+        height: 50px;
+
+    }
+
+    .purchased{
+        margin: 0;
+        width: 100%;
+    }
+    
+    .purchased-products {
+        width: 100%;
+    }
+    .purchased-products-information{
+        margin-left: 20%;
+    }
+
+    .purchased-products-image{
+        margin-left: 10%;
+    }
+
+    .final-price {
+        width: 100%;
+    }
+}

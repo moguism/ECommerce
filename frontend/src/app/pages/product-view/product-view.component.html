@@ -8,13 +8,15 @@
         <div class="main">
             <div class="products">
                 <div class="products-image">
-                    <img class="image" [src]="product.image" alt="Imagen">
+                    <img class="image" [src]="product.image.replace('/images/images/', '/images/')" alt="Imagen">
                 </div>
         
                 <div class="products-description">
                     <h2 class="products-description-title">{{ product.name }}</h2>
+                    <h3 class="products-description-description">{{ product.description }}</h3>
                     <div class="products-description-price">
-                        <h2>{{ product.price}}</h2>
+                        <h2>{{ (product.price / 100) | number:'1.2-2' }} €</h2> <!--Formato 0.00€-->
+
                         <h2 class="stock">Stock: {{ product.stock}}</h2>
                     </div>
                     @if(product.stock > 0)
@@ -24,30 +26,32 @@
                             <p class="count">{{count}}</p>
                             <button class="button-mas" (click)="sumar()">+</button>
                         </div>
-                        <div class="image-anadir-carrito">
+                        <div class="products-description-anadir">
                             <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
                         </div>
                     }
                 </div>
             </div>
         </div>
-        <div class="description">
-            <p class="description-text">{{ product.description }}</p>
-        </div>
 
         
         <div class="review">
             <h1>Reseñas</h1>
-            <div class="review-input">
-                <textarea id="review-text" class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es mala te baneo) "></textarea>
-                <button (click)="addReview()" class="review-input-button">Enviar</button>
-            </div>
+            @if(isLogged())
+            {
+                <div class="review-input">
+                    <textarea id="review-text" class="review-input-text" rows="5" cols="50" placeholder="Danos tu opinion(Si es mala te baneo) "></textarea>
+                    <button (click)="addReview()" class="review-input-button">Enviar</button>
+                </div>
+            }
             <div class="review-users">
                 @for (review of product.reviews; track review.id) 
                 {
                     <div class="review-users-opinion">
+                        <p>{{ review.dateTime | correctDate }}</p>
                         <h3><i class="fa-solid fa-star"></i>{{ review.score }}</h3>
                         <p class="review-users-opinion-text">{{review.text}}</p>
+                        <p class="review-users-opinion-user">{{review.user.name}}</p>
                     </div>
                 }
             </div>

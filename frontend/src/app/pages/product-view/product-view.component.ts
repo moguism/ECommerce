@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../models/product';
@@ -9,27 +9,33 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
+import { CommonModule } from '@angular/common';
+
+// Pipe Import
+import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
+
 @Component({
   selector: 'app-product-view',
   standalone: true,
-  imports: [HeaderComponent, FormsModule],
+  imports: [HeaderComponent, FormsModule, CommonModule, CorrectDatePipe],
+  //providers: [{provide: LOCALE_ID, useValue: 'es'}],
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
 })
 export class ProductViewComponent implements OnInit {
 
-  protected count = 0;
+  protected count = 1;
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService) { }
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService : ShoppingCartService) { }
 
   ngOnInit(): void {
     //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.getProduct()
     //this.makeReviews()
-
   }
 
   async getProduct() {
@@ -45,58 +51,15 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  /*async makeReviews() {
-    const reviews = this.product?.reviews;
-
-    if (reviews != null) {
-
-      this.prductReviews = reviews
-      reviews.forEach(review => {
-        const reviewInputDiv = document.querySelector('.review-input');
-
-        if(reviewInputDiv){ // Para que no salga posible nulo
-          const newReviewDiv = document.createElement('div');
-          newReviewDiv.className = 'review-users';
-
-          const innerDiv = document.createElement('div');
-          innerDiv.className = 'review-users-opinion';
-
-          const scoreContainer = document.createElement('h3');
-          const star = document.createElement('i');
-          star.className = 'fa-solid fa-star';
-          
-          scoreContainer.appendChild(star);
-
-          if(review.score == -1){
-            scoreContainer.textContent = '1';
-          }else if(review.score == 0){
-            scoreContainer.textContent = '3';
-          }else{
-            scoreContainer.textContent = '5';
-          }
-
-          const img = document.createElement('img');
-          img.className = 'review-users-opinion-image';
-          img.src = '/assets/images/macacco.jpg'; // Cambiar esto cuando tengamos foto de perfil de usuario
-
-          const paragraph = document.createElement('p');
-          paragraph.className = 'review-users-opinion-text';
-          
-          paragraph.textContent = review.text;
-          
-
-          // Añade los elementos al div
-          innerDiv.appendChild(img);
-          innerDiv.appendChild(paragraph);
-          newReviewDiv.appendChild(innerDiv);
-
-          // Inserta el nuevo div justo después del div con la clase "review-input"
-          reviewInputDiv.insertAdjacentElement('afterend', newReviewDiv);
-        }
-      });
+  isLogged()
+  {
+    let boolean = false;
+    if(this.apiService.jwt != null && this.apiService.jwt != "")
+    {
+      boolean = true
     }
-
-  }*/
+    return boolean
+  }
 
   async addReview() {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
@@ -104,27 +67,24 @@ export class ProductViewComponent implements OnInit {
     if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
       alert("No has hecho ningun comentario");
     } else {
-      const newReview = new NewReview(reviewTextElement.value, this.product.id);
+      const newReview = new NewReview(reviewTextElement.value, this.product.id, new Date().toISOString());
 
       console.log(newReview)
 
-      await this.reviewService.addReview(newReview); 
+      await this.reviewService.addReview(newReview);
 
       if (reviewTextElement) {
         reviewTextElement.value = "";
       }
 
       this.getProduct();
-      //this.makeReviews();
     }
 
   }
 
   sumar() {
-    if(this.product)
-    {
-      if(this.count + 1 <= this.product?.stock)
-      {
+    if (this.product) {
+      if (this.count + 1 <= this.product?.stock) {
         this.count++;
       }
     }
@@ -136,46 +96,43 @@ export class ProductViewComponent implements OnInit {
   }
 
 
-  async addToCart(product: Product)
-  {
-    if(this.count <= 0)
-    {
+  async addToCart(product: Product) {
+    if (this.count <= 0) {
       alert("Cantidad no válida")
       return
     }
-    if(this.apiService.jwt == "")
-    {
-        let allProducts : Product[] = []
-        const productsLocalStore = localStorage.getItem("shoppingCart")
-        if(productsLocalStore)
-        {
-          allProducts = JSON.parse(productsLocalStore)
-          const index = allProducts.findIndex(p => p.id === product.id);
-          let newProduct = product
-          if(index != -1)
-          {
-            newProduct = allProducts[index]
-            newProduct.total += this.count
-          }
-          else
-          {
-            newProduct.total = 1
-          }
+
+    if (this.apiService.jwt == "") {
+      let allProducts: Product[] = []
+      const productsLocalStore = localStorage.getItem("shoppingCart")
+      if (productsLocalStore) {
+        allProducts = JSON.parse(productsLocalStore)
+        const index = allProducts.findIndex(p => p.id === product.id);
+        let newProduct = product
+        if (index != -1) {
+          newProduct = allProducts[index]
+          newProduct.total += this.count
         }
-        else
-        {
-          product.total = this.count
+        else {
+          newProduct.total = 1
           allProducts.push(product)
         }
-        localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
+      }
+      else {
+        product.total = this.count
+        allProducts.push(product)
+      }
+      localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
     }
     else {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(this.count, product.id) // 0 no es para borrar, sino para agregar uno nuevo
-      await this.apiService.post("ShoppingCart/add", cartContent)
+      const cartContent = new CartContent(product.id, this.count)
+      // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
+      await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
     alert("Producto añadido al carrito correctamente")
+    this.shoppingCartService.getShoppingCartCount()
   }
 
   ngOnDestroy(): void {

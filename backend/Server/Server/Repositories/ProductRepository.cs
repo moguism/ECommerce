@@ -29,8 +29,18 @@ namespace Server.Repositories
             Product product = await GetQueryable()
             .Include(product => product.Category)
             .Include(product => product.Reviews)
-            .FirstOrDefaultAsync(order => order.Id == id);
+            .Include(product => product.CartContents)
+            .FirstOrDefaultAsync(p => p.Id == id);
             return product;
+        }
+
+        public async Task<IEnumerable<Product>> GetFullProducts()
+        {
+            return await GetQueryable()
+            .Include(product => product.Category)
+            .Include(product => product.Reviews)
+            .Include(product => product.CartContents)
+            .ToArrayAsync();
         }
     }
 }

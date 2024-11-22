@@ -9,23 +9,24 @@ namespace Server.Services
 
         UnitOfWork _unitOfWork;
 
-        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper) 
+        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto, bool add)
+        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
         {
             ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+
+            //Si el usuario es nuevo y no tenía carrito, le crea uno nuevo
             if (cart == null)
             {
-                cart = new ShoppingCart();
-                cart.UserId = user.Id;
-                cart = await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+                cart = await _unitOfWork.ShoppingCartRepository.CreateShoppingCartAsync(user);
                 await _unitOfWork.SaveAsync();
             }
-            
-            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto, add);
+
+            //añade el producto a este
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
 
             await _unitOfWork.SaveAsync();
 
@@ -52,15 +53,13 @@ namespace Server.Services
 
             return shoppingCart;
         }
-        
+
         public async Task<User> GetUserFromDbByStringId(string stringId)
         {
 
             // Pilla el usuario de la base de datos
             return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
         }
-
-
 
     }
 }

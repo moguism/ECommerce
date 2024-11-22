@@ -8,44 +8,58 @@ namespace Server.Repositories
     public class ShoppingCartRepository : Repository<ShoppingCart, int>
     {
 
-        UserRepository _userRepository;
-
-        public ShoppingCartRepository(FarminhouseContext context) : base(context) 
-        { 
+        public ShoppingCartRepository(FarminhouseContext context) : base(context)
+        {
         }
 
 
         public async Task<ShoppingCart> GetAllByUserIdAsync(int id)
         {
-            return await GetQueryable().Include(cart => cart.CartContent).FirstOrDefaultAsync(cart => cart.UserId == id);
+            return await GetQueryable()
+                .Include(cart => cart.CartContent)
+                .Include(cart => cart.TemporalOrders)
+                .FirstOrDefaultAsync(cart => cart.UserId == id);
+        }
+
+        public async Task<ShoppingCart> GetAllShoppingCartByShoppingCartIdAsync(int id)
+        {
+            return await GetQueryable()
+                .Include(cart => cart.CartContent)
+                .Include(cart => cart.TemporalOrders)
+                .FirstOrDefaultAsync(cart => cart.UserId == id);
         }
 
 
         //Método que añade un nuevo carrito a un usuario si no tenía
-        //Devuelve True si tenía carrito, False si no
-        public async Task AddNewShoppingCart(User user)
+        public async Task<ShoppingCart> CreateShoppingCartAsync(User user)
         {
-            // Verificar si existe un carrito del usuario
-            var existingShoppingCart = await _context.ShoppingCart
-                .Where(cart => cart.UserId == user.Id)
-                .FirstOrDefaultAsync();
 
-            //Si no existe, lo crea
-            if(existingShoppingCart == null)
+            ShoppingCart shoppingCart = await GetQueryable()
+                .Include(cart => cart.User)
+                .Include(cart => cart.CartContent)
+                .Include(cart => cart.TemporalOrders)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            //Si el usuario no tenia carrito, crea uno nuevo
+            if (shoppingCart == null)
             {
-                _context.ShoppingCart.Add(new ShoppingCart {
+
+                ShoppingCart newCart = new ShoppingCart{
                     UserId = user.Id,
-                    User = user,
-                });
+                };
+
+                _context.ShoppingCart.Add(newCart);
+                return newCart;
             }
 
+            return shoppingCart;
 
         }
 
 
-        public async Task AddCartContent(ShoppingCart shoppingCart, CartContent cartContent)
+        public void AddCartContent(ShoppingCart shoppingCart, CartContent cartContent)
         {
-            CartContent c =  shoppingCart.CartContent.Where(c => c.Id == cartContent.Id).FirstOrDefault();
+            CartContent c = shoppingCart.CartContent.Where(c => c.Id == cartContent.Id).FirstOrDefault();
 
             //Si el contenido del carrito del usuario no existe, lo añade
             if (c == null)
@@ -59,6 +73,11 @@ namespace Server.Repositories
                 //shoppingCart.CartContent.ToList().Update(c);
 
             }
+        }
+        public async Task<ShoppingCart> GetIdShoppingCartByUserId(int userId)
+        {
+            ShoppingCart shoppingCart = await GetQueryable().Include(shoppingCart => shoppingCart.CartContent).FirstOrDefaultAsync(c => c.UserId == userId);
+            return shoppingCart;
         }
 
 

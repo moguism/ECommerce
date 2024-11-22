@@ -59,6 +59,17 @@ public class ProductMapper
         };
     }
 
+    public Product ToEntity(ProductToInsert productDto)
+    {
+        return new Product
+        {
+            Name = productDto.Name,
+            Description = productDto.Description,
+            Price = Int64.Parse(productDto.Price),
+            Stock = Int32.Parse(productDto.Stock)
+        };
+    }
+
     public IEnumerable<Product> ToEntity(IEnumerable<ProductDto> productsDto)
     {
         return productsDto.Select(ToEntity);
