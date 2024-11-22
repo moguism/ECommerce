@@ -73,6 +73,9 @@ public class CheckoutController : ControllerBase
 
         Session session = await GetOptions(temporalOrder, "embedded", user);
 
+        temporalOrder.HashOrSession = session.Id;
+        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+
         return Ok(new { clientSecret = session.ClientSecret });
         //return Ok(new { sessionId = session.Id });
 

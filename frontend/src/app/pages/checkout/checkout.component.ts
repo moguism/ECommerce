@@ -34,6 +34,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   eurosToSend: number = 0;
   addressToSend: string = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2"; //Café para mauricio
 
+  sessionId: string = "";
+
   constructor(private productService: ProductService, private apiService: ApiService,
     private router: Router, private activatedRoute: ActivatedRoute,
     private stripeService: StripeService, private blockchainService: BlockchainService) {
@@ -72,8 +74,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }
       }
     }
-
     this.autoRefreshSubscription = this.startAutoRefresh();
+  }
+
+  async goToAfterCheckout()
+  {
+    await this.refreshOrder()
+    if(this.sessionId != "")
+    {
+      this.router.navigateByUrl("after-checkout?session_id=" + this.sessionId)
+    }
   }
 
   async embeddedCheckout() {
@@ -82,7 +92,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (request.success && request.data) {
       const data: any = JSON.parse(request.data)
       const options: StripeEmbeddedCheckoutOptions = {
-        clientSecret: data.clientSecret
+        clientSecret: data.clientSecret,
+        onComplete: () => this.goToAfterCheckout()
       };
 
       this.stripeService.initEmbeddedCheckout(options)
@@ -128,7 +139,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   async refreshOrder() {
     console.log("Mandando petición...")
-    return await this.apiService.get("TemporalOrder/refresh", { "id": this.id })
+    const response = await this.apiService.get("TemporalOrder/refresh", { "id": this.id })
+    if(response.data)
+    {
+      const data : any = response.data
+      if(data.sessionId)
+      {
+        this.sessionId = data.sessionId
+      }
+    }
+    console.log("RESPUESTA XD: ", response)
   }
 
 
@@ -223,6 +243,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl("after-checkout")
             sessionStorage.setItem("method", 'eth')
             sessionStorage.setItem("orderCheckout", JSON.stringify(checkTransactionResult.data))
+            console.log("ORDER CHECKOUT: ", checkTransactionResult.data)
           }
           else
             console.log("Error al crear la orden")
