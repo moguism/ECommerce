@@ -22,6 +22,7 @@
 
         <a class="product-card" (click)="goToProduct(product.id)">
             <div class="product-card-name">{{product.name}}</div>
+            <p>Media de reseñas: {{ product.average }}</p>
             <div class="product-card-image"><img class="image" [src]="product.image.replace('/images/images/', '/images/')"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
             @if (product.stock > 0) {

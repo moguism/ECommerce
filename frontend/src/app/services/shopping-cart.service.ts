@@ -12,6 +12,7 @@ export class ShoppingCartService {
 
   async getShoppingCartCount()
   {
+    // Si quisiésemos podríamos recorrer el Array e ir sumando las cantidades con un for, ya como veáis
     if(this.api.jwt != "" && this.api.jwt != null)
       {
         const result = await this.api.get("ShoppingCart", {}, 'json');
