@@ -21,15 +21,17 @@ namespace Server.Controllers
         private readonly ShoppingCartService _shoppingCartService;
         private readonly ReviewMapper _reviewMapper;
         private readonly PredictionEnginePool<ModelInput, ModelOutput> _model;
+        private readonly ProductService _productService;
 
 
         public ReviewController(ReviewService reviewService, UnitOfWork unitOfWork, ReviewMapper reviewMapper, PredictionEnginePool<ModelInput, ModelOutput> model,
-            ShoppingCartService shoppingCartService)
+            ShoppingCartService shoppingCartService, ProductService productService)
         {
             _reviewService = reviewService;
             _reviewMapper = reviewMapper;
             _model = model;
             _shoppingCartService = shoppingCartService;
+            _productService = productService;
         }
 
 
@@ -64,10 +66,17 @@ namespace Server.Controllers
 
             Review review = _reviewMapper.ToEntity(reviewDto);
             review = _reviewService.RateReview(review);
-            //Aï¿½ade el usuario
             review.UserId = user.Id;
             review.DateTime = DateTime.UtcNow;
-            //review.User = user;
+
+            Product product = await _productService.GetFullProductById(review.ProductId);
+
+            List<Review> reviews = (List<Review>)await _reviewService.GetAllProductReviewsAsync(review.ProductId);
+            reviews.Add(review);
+            double averageScore = reviews.Average(r => r.Score);
+            product.Average = averageScore;
+
+            await _productService.UpdateProduct(product);
 
             //guarda la review con todos los datos
             await _reviewService.AddReview(review);

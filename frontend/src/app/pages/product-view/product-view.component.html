@@ -14,6 +14,7 @@
                 <div class="products-description">
                     <h2 class="products-description-title">{{ product.name }}</h2>
                     <h3 class="products-description-description">{{ product.description }}</h3>
+                    <p>Media de reseñas: {{ product.average }}</p>
                     <div class="products-description-price">
                         <h2>{{ (product.price / 100) | number:'1.2-2' }} €</h2> <!--Formato 0.00€-->
 
