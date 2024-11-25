@@ -210,40 +210,6 @@ namespace Server
                         dbContext.Users.Add(user1);
                         dbContext.Users.Add(user2);
 
-                        // Crear reseñas para el producto de arándano
-                        var review1 = new Review
-                        {
-                            Text = "Los mejores arándanos que he probado, muy frescos y jugosos.",
-                            Score = 5,
-                            UserId = user1.Id,
-                            ProductId = arandanoProduct.Id,
-                            Product = arandanoProduct,
-                            User = user1,
-                        };
-
-                        var review2 = new Review
-                        {
-                            Text = "Buen sabor, pero algunos estaban un poco blandos.",
-                            Score = 3,
-                            UserId = user2.Id,
-                            ProductId = arandanoProduct.Id,
-                            Product = arandanoProduct,
-                            User = user2,
-                      
-                        };
-
-                        // Añadir reseñas al contexto de la base de datos
-                        dbContext.Reviews.Add(review1);
-                        dbContext.Reviews.Add(review2);
-
-                        // Añadir reseñas a la colección de Reviews del producto de arándano
-                        arandanoProduct.Reviews.Add(review1);
-                        arandanoProduct.Reviews.Add(review2);
-
-                        // Añadir reseñas a la colección de Reviews de cada usuario
-                        user1.Reviews.Add(review1);
-                        user2.Reviews.Add(review2);
-
                         dbContext.SaveChanges();
 
                     }
