@@ -86,10 +86,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  async getFullProduct(){
-
-  }
-
   async saveUserData(){
     const newName = document.getElementById("new-name") as HTMLInputElement
     const newEmail = document.getElementById("new-email") as HTMLInputElement
@@ -147,6 +143,7 @@ export class UserComponent implements OnInit {
     this.newproductDescription = "";
     this.idToUpdate = 0
     this.create = true;
+    this.image = null;
   }
   showEditProductForm(id: number){
     const translatepipe=new TranslatePipe();
@@ -167,6 +164,7 @@ export class UserComponent implements OnInit {
     this.newproductDescription=this.Product.description;
     this.idToUpdate = id
     this.create = false;
+    this.image = null;
   }
 
   closeForm() {
@@ -239,7 +237,12 @@ export class UserComponent implements OnInit {
     const image = event.target.files[0] as File;
     if(image)
     {
+      console.log("NUEVA IMAGEN")
       this.image = image
+    }
+    else
+    {
+      console.log("NO HAY IMAGEN")
     }
   }
 
@@ -256,7 +259,7 @@ export class UserComponent implements OnInit {
   totalprice(products: ProductsToBuy[]) {
     let totalcount = 0;
     for (const product of products) {
-      totalcount += product.quantity * product.product.price;
+      totalcount += product.quantity * product.purchasePrice; //Precio total pagado, no se modifica cuando se cambian el precio de los productos
     }
     return totalcount;
   }

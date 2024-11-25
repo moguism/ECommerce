@@ -27,11 +27,13 @@
                 <div class="order-product-data">
                     <p class="order-product-data-title">{{productToBuy.product.name}}</p>
                     <p>Cantidad: {{productToBuy.quantity}}</p>
-                    <p>Precio el kg: {{productToBuy.product.price| eurosToCents}}</p>
+                    <p>Precio el kg: {{productToBuy.purchasePrice | eurosToCents}}</p>
                 </div>
             </div>
         }
+        
         @if(order.paymentTypeId == 1){
+
         <h3>Pagado con: tarjeta Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
         }@else {
         <h3>Pagado con: ethereum Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
@@ -86,7 +88,7 @@
     @else if (elementShowing == "products") {
     @for (product of allProducts; track product.id) {
     <div class="product">
-        <img [src]="product.image" alt="{{ product.name }}" class="product-image" />
+        <img [src]="product.image.replace('/images/images/', '/images/')" alt="{{ product.name }}" class="product-image" />
         <p><b>ID:</b> {{ product.id }}</p>
         <p><b>Nombre:</b> {{ product.name }}</p>
         <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
@@ -125,7 +127,7 @@
             <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription"
                 required />
             <label for="productImage">Foto del producto:</label>
-            <input type="file" accept="image/png, image/jpeg, image/jpg" required />
+            <input type="file" accept="image/png, image/jpeg, image/jpg" required (change)="onFileSelected($event)">
             @if(create)
             {
             <button type="submit" (click)="submitCreateProduct()">Crear producto</button>

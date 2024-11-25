@@ -20,14 +20,16 @@ namespace Server.Controllers
         private readonly UserService _userService;
         private readonly ImageService _imageService;
         private readonly ProductService _productService;
+        private readonly CategoryService _categoryService;
 
-        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService)
+        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService, CategoryService categoryService)
         {
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
             _imageService = imageService;
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [Authorize]
@@ -43,7 +45,8 @@ namespace Server.Controllers
 
             IEnumerable<Product> products = await _productService.GetFullProducts();
 
-            return _productMapper.ToDto(products);
+            IEnumerable<Product> correctProducts = _productMapper.AddCorrectPath(products);
+            return _productMapper.ToDto(correctProducts);
         }
 
         [HttpGet]
@@ -103,16 +106,16 @@ namespace Server.Controllers
                 }
                 Product product = _productMapper.ToEntity(newProduct);
 
-                // TODO: Agregar lógica
-                switch (newProduct.CategoryName)
+                Category category = await _categoryService.GetByName(newProduct.CategoryName);
+                if(category == null)
                 {
-
+                    return null;
                 }
 
+                product.CategoryId = category.Id;
+
                 product.Image = await _imageService.InsertAsync(newProduct.Image);
-                product.CategoryId = 1; // TODO: Cambiar
-                Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
-                await _unitOfWork.SaveAsync();
+                Product savedProduct = await _productService.InsertProduct(product);
                 return _productMapper.ToDto(savedProduct);
             }
             catch(Exception e)
@@ -135,14 +138,10 @@ namespace Server.Controllers
                     return null;
                 }
 
-                Product product = await _unitOfWork.ProductRepository.GetFullProductById(Int32.Parse(productToUpdate.Id));
+                Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
                     return null;
-                }
-                else
-                {
-                    _unitOfWork.Context.Entry(product).State = EntityState.Detached;
                 }
 
                 //product = _productMapper.ToEntity(productToUpdate);
@@ -150,15 +149,20 @@ namespace Server.Controllers
                 product.Description = productToUpdate.Description;
                 product.Price = Int64.Parse(productToUpdate.Price);
                 product.Stock = Int32.Parse(productToUpdate.Stock);
-                product.CategoryId = 1; // TODO: Cambiar
+                Category category = await _categoryService.GetByName(productToUpdate.CategoryName);
+                if (category == null)
+                {
+                    return null;
+                }
+
+                product.CategoryId = category.Id;
 
                 if (productToUpdate.Image != null)
                 {
                     product.Image = await _imageService.InsertAsync(productToUpdate.Image);
                 }
                 
-                _unitOfWork.ProductRepository.Update(product);
-                await _unitOfWork.SaveAsync();
+                await _productService.UpdateProduct(product);
                 return _productMapper.ToDto(product);
             }
             catch(Exception e)

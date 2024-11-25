@@ -10,5 +10,7 @@
 
         public int WishlistId { get; set; }
         public Wishlist Wishlist { get; set; }
+
+        public long PurchasePrice { get; set; }
     }
 }

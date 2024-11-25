@@ -42,12 +42,14 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
       const orderCheckout = sessionStorage.getItem("orderCheckout")
       if (orderCheckout) {
         this.lastOrder = JSON.parse(orderCheckout)
+        const dataRaw = JSON.parse(orderCheckout)
+        this.lastOrder = JSON.parse(dataRaw)
       }
     }
     await this.convertToCompleteProduct()
     await this.getUser()
 
-    console.log(this.lastOrder)
+    console.log("LAST ORDER: ", this.lastOrder)
   }
 
   async createOrder() {

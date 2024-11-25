@@ -27,7 +27,6 @@ namespace Server.Repositories
         public async Task<Product> GetFullProductById(int id)
         {
             Product product = await GetQueryable()
-            .AsNoTracking()
             .Include(product => product.Category)
             .Include(product => product.Reviews)
             .Include(product => product.CartContents)

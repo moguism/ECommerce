@@ -9,6 +9,7 @@ import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { Router } from '@angular/router';
 import { TemporalOrder } from '../../models/temporal-order';
 import { HeaderComponent } from '../../components/header/header.component';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -20,9 +21,8 @@ import { HeaderComponent } from '../../components/header/header.component';
 export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
-
   
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router) {}
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) {}
 
   async ngOnInit(): Promise<void> {
     const goToCheckout = localStorage.getItem("goToCheckout")
@@ -45,6 +45,7 @@ export class ShoppingCartComponent implements OnInit {
 
 
   async getShoppingCart() {
+    this.shoppingCartService.getShoppingCartCount()
     this.getLocalStorageCart();
 
     if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
@@ -94,7 +95,14 @@ export class ShoppingCartComponent implements OnInit {
       alert("Cantidad no válida")
       return
     }
-    else if (input) {
+
+    if(parseInt(input.value) > product.stock)
+    {
+      alert("No hay stock suficiente")
+      return
+    }
+
+    if (input) {
       if (this.apiService.jwt == "") {
         const p = this.findProductInArray(product.id)
         p.total = parseInt(input.value);
