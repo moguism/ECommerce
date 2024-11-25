@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Bogus.DataSets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.DTOs;
 using Server.Enums;
 using Server.Mappers;
@@ -13,19 +15,21 @@ namespace Server.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly UnitOfWork _unitOfWork;
         private readonly ProductMapper _productMapper;
         private readonly SmartSearchService _smartSearchService;
         private readonly UserService _userService;
         private readonly ImageService _imageService;
+        private readonly ProductService _productService;
+        private readonly CategoryService _categoryService;
 
-        public ProductController(UnitOfWork unitOfWork, ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService)
+        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService, CategoryService categoryService)
         {
-            _unitOfWork = unitOfWork;
             _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
             _imageService = imageService;
+            _productService = productService;
+            _categoryService = categoryService;
         }
 
         [Authorize]
@@ -39,9 +43,10 @@ namespace Server.Controllers
                 return null;
             }
 
-            IEnumerable<Product> products = await _unitOfWork.ProductRepository.GetFullProducts();
+            IEnumerable<Product> products = await _productService.GetFullProducts();
 
-            return _productMapper.ToDto(products);
+            IEnumerable<Product> correctProducts = _productMapper.AddCorrectPath(products);
+            return _productMapper.ToDto(correctProducts);
         }
 
         [HttpGet]
@@ -66,8 +71,8 @@ namespace Server.Controllers
             }
 
             string productType = query.ProductType.ToString().ToLower();
-
-            PagedDto pagedDto = _unitOfWork.ProductRepository.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
+            
+            PagedDto pagedDto = _productService.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
             pagedDto.Products = _productMapper.AddCorrectPath(pagedDto.Products);
 
             return pagedDto;
@@ -76,10 +81,10 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<Product> GetProductById(int id)
         {
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(id);
+            Product product = await _productService.GetFullProductById(id);
             foreach (Review review in product.Reviews)
             {
-                User user = await _unitOfWork.UserRepository.GetByIdAsync(review.UserId);
+                User user = await _userService.GetUserByIdAsync(review.UserId);
                 review.User = new User()
                 {
                     Name = user.Name
@@ -90,40 +95,82 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ProductDto> CreateProduct([FromBody] ProductToInsert newProduct)
+        public async Task<ProductDto> CreateProduct([FromForm] ProductToInsert newProduct)
         {
-            User user = await GetAuthorizedUser();
-            if(user == null || !user.Role.Equals("Admin"))
+            try
             {
+                User user = await GetAuthorizedUser();
+                if (user == null || !user.Role.Equals("Admin"))
+                {
+                    return null;
+                }
+                Product product = _productMapper.ToEntity(newProduct);
+
+                Category category = await _categoryService.GetByName(newProduct.CategoryName);
+                if(category == null)
+                {
+                    return null;
+                }
+
+                product.CategoryId = category.Id;
+
+                product.Image = await _imageService.InsertAsync(newProduct.Image);
+                Product savedProduct = await _productService.InsertProduct(product);
+                return _productMapper.ToDto(savedProduct);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Ha ocurrido una excepción:");
+                Console.WriteLine(e);
                 return null;
             }
-            Product product = _productMapper.ToEntity(newProduct);
-            product.Image = await _imageService.InsertAsync(newProduct.Image);
-            Product savedProduct = await _unitOfWork.ProductRepository.InsertAsync(product);
-            await _unitOfWork.SaveAsync();
-            return _productMapper.ToDto(savedProduct);
         }
 
         [Authorize]
         [HttpPut]
-        public async Task UpdateProduct([FromBody] ProductToInsert productToUpdate)
+        public async Task<ProductDto> UpdateProduct([FromForm] ProductToInsert productToUpdate)
         {
-            User user = await GetAuthorizedUser();
-            if (user == null || !user.Role.Equals("Admin"))
+            try
             {
-                return;
-            }
+                User user = await GetAuthorizedUser();
+                if (user == null || !user.Role.Equals("Admin"))
+                {
+                    return null;
+                }
 
-            Product product = await _unitOfWork.ProductRepository.GetFullProductById(productToUpdate.Id);
-            if (product == null)
+                Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
+                if (product == null)
+                {
+                    return null;
+                }
+
+                //product = _productMapper.ToEntity(productToUpdate);
+                product.Name = productToUpdate.Name;
+                product.Description = productToUpdate.Description;
+                product.Price = Int64.Parse(productToUpdate.Price);
+                product.Stock = Int32.Parse(productToUpdate.Stock);
+                Category category = await _categoryService.GetByName(productToUpdate.CategoryName);
+                if (category == null)
+                {
+                    return null;
+                }
+
+                product.CategoryId = category.Id;
+
+                if (productToUpdate.Image != null)
+                {
+                    product.Image = await _imageService.InsertAsync(productToUpdate.Image);
+                }
+                
+                await _productService.UpdateProduct(product);
+                return _productMapper.ToDto(product);
+            }
+            catch(Exception e)
             {
-                return;
+                Console.WriteLine($"Ha ocurrido una excepción:");
+                Console.WriteLine(e);
+                return null;
             }
-
-            product = _productMapper.ToEntity(productToUpdate);
-            product.Image = await _imageService.InsertAsync(productToUpdate.Image);
-            _unitOfWork.ProductRepository.Update(product);
-            await _unitOfWork.SaveAsync();
         }
 
         private async Task<User> GetAuthorizedUser()

@@ -32,6 +32,13 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
 
+    public async Task<TemporalOrder> GetFullTemporalOderByHashOrSession(string id)
+    {
+        return await GetQueryable()
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .FirstOrDefaultAsync(temporalOrder => temporalOrder.HashOrSession.Equals(id));
+    }
+
     public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
     {
         return await GetQueryable().Where(temporalOrder => temporalOrder.ExpirationDate >= currentTime).ToListAsync();

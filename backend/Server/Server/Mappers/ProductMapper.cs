@@ -64,10 +64,9 @@ public class ProductMapper
         return new Product
         {
             Name = productDto.Name,
-            CategoryId = productDto.CategoryId,
             Description = productDto.Description,
-            Price = productDto.Price,
-            Stock = productDto.Stock
+            Price = Int64.Parse(productDto.Price),
+            Stock = Int32.Parse(productDto.Stock)
         };
     }
 

@@ -6,11 +6,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -58,14 +59,14 @@ export class LoginComponent implements OnInit {
   rememberUser = false;
 
   async ngOnInit(): Promise<void> {
-    if (this.apiService.jwt != "") {
+    /*if (this.apiService.jwt != "") {
       console.log(this.apiService.jwt)
       this.router.navigateByUrl("user")
       return
     }
     else {
       console.log(this.apiService.jwt)
-    }
+    }*/
 
     let container = document.querySelector(".container")
     let sign_in_button = document.getElementById("btn-sign-in")
@@ -92,15 +93,6 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
         this.rememberFunction()
-        const goToCheckout = localStorage.getItem("goToCheckout")
-        if(goToCheckout && goToCheckout == "true")
-        {
-          this.router.navigateByUrl("shopping-cart")
-        }
-        else
-        {
-          this.router.navigateByUrl("user")
-        }
       }
       else {
         alert("Los datos introducidos no son correctos")
@@ -117,13 +109,22 @@ export class LoginComponent implements OnInit {
     if (this.rememberUser) {
       console.log("Recordando al usuario...")
       localStorage.setItem("token", this.apiService.jwt)
-      localStorage.setItem("remember", "true")
+      //localStorage.setItem("remember", "true")
     }
     else {
       console.log("No recordando al usuario...")
-      localStorage.setItem("token", this.apiService.jwt)
-      localStorage.setItem("remember", "false")
+      sessionStorage.setItem("token", this.apiService.jwt)
       //localStorage.removeItem("token") // Por si el usuario cierra sesión y vuelve a abrirla pero sin recordar
+    }
+    const goToCheckout = localStorage.getItem("goToCheckout")
+    if(goToCheckout && goToCheckout == "true")
+    {
+      this.router.navigateByUrl("shopping-cart")
+      localStorage.removeItem("goToCheckout")
+    }
+    else
+    {
+      this.router.navigateByUrl("user")
     }
   }
 
@@ -135,7 +136,6 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         this.rememberFunction()
-        this.router.navigateByUrl("user")
       }
     }else {
         alert("Campos inválidos.");

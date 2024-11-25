@@ -6,7 +6,7 @@
             <h4>{{shoppingCartProducts.length}} articulos</h4>
             @for (product of shoppingCartProducts; track product.id){
             <div class="basket-products">
-                <img class="basket-products-image" [src]="product.image" alt="">
+                <img class="basket-products-image" [src]="product.image.replace('/images/images/', '/images/')" alt="">
                 <div class="basket-products-information">
                     <div class="basket-products-information-functions">
                         <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
@@ -33,7 +33,7 @@
                 @if(method == "card")
                 {
                     <button (click)="embeddedCheckout()">Comprar embebido</button>
-                    <button (click)="hostedCheckout()">Comprar en página externa</button>
+                    <!--<button (click)="hostedCheckout()">Comprar en página externa</button>-->
                 }
                 @else {
                     <button (click)="createTransaction()">Pagar con ETH</button>

@@ -20,10 +20,10 @@ namespace Server.Services
             return _unitOfWork.ProductsToBuyRepository.GetAllProductsByWishlistId(wishlistId);
         }
 
-        public async Task<Wishlist> GetWishlistById(int wishlistId)
+        /*public async Task<Wishlist> GetWishlistById(int wishlistId)
         {
             return await _unitOfWork.WishlistRepository.GetFullByIdAsync(wishlistId);
-        }
+        }*/
 
         public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
@@ -39,9 +39,10 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = wishlist.Id;
-                product.Product = await _unitOfWork.ProductRepository.GetFullProductById(product.Id);
+                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                product.ProductId = realProduct.Id;
+                product.PurchasePrice = realProduct.Price;
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
-                
             }
 
             await _unitOfWork.SaveAsync();
@@ -51,7 +52,10 @@ namespace Server.Services
             return wishlist;
         }
 
-
-
+        public async Task<Wishlist> GetWishlistByIdAsync(int wishlistId)
+        {
+            Wishlist wishlist = await _unitOfWork.WishlistRepository.GetFullByIdAsync(wishlistId);
+            return wishlist;
+        }
     }
 }

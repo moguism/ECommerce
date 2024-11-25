@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server.Models;
+using Stripe;
 using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -73,4 +74,23 @@ public class UserService
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+    public async Task InsertUser(User user)
+    {
+        await _unitOfWork.UserRepository.InsertAsync(user);
+        await _unitOfWork.SaveAsync();
+    }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+        return user;
+    }
+
+    public async Task<User> GetUserByIdAsync(int id)
+    {
+        return await _unitOfWork.UserRepository.GetByIdAsync(id);
+    }
+        
+
 }
