@@ -59,6 +59,10 @@ export class ProductService {
     return null;
   }
 
+  async modifyProduct(productToInsert: ProductToInsert) : Promise<Product|null>{
+    const result=await this.api.put("Product/modify",{});
+    return null;
+  }
   async createProduct(productToInsert: ProductToInsert)
   {
     const result = await this.api.postWithImage("Product", this.createForm(productToInsert))
