@@ -46,7 +46,6 @@ export class UserComponent implements OnInit {
   newProductCategory:string="";
   newProductStock: number = 0;
   newproductDescription: string="";
-  newProductPriceDecimal:number=0;
   selectedUser: User | null = null;
   Product:Product|null=null;
   category:string="";
@@ -55,8 +54,6 @@ export class UserComponent implements OnInit {
   pricedecimal:string="";
   create : boolean = false;
   idToUpdate : number = 0
-  productPriceCent:number=0;
-  
 
   async ngOnInit(): Promise<void> {
     if(this.api.jwt == null || this.api.jwt == "")
@@ -221,21 +218,11 @@ export class UserComponent implements OnInit {
       alert("No todos los datos están completos")
     }
   }
-  async submitModifyProduct() {
-    //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
-    console.log(this.newProductPrice);
-    this.productPriceCent=this.newProductPrice*100
-    console.log(this.productPriceCent);
-    console.log(this.newProductStock);
-    console.log(this.newProductCategory)
-    if(this.image){
-      const modifyProduct = new ProductToInsert(
-        this.image,this.newProductName,this.newproductDescription,this.productPriceCent,this.newProductStock,2
-      )
-      await this.productService.modifyProduct(modifyProduct);
-    }
+  /*async submitModifyProduct() {
+    alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
+    await this.productService.modifyProduct();
     this.closeForm();
-  }
+  }*/
 
   async deleteUser(id: number) {
     const response = confirm("¿Seguro que quieres borrar al usuario?");
