@@ -7,9 +7,9 @@ namespace Server.Services
     public class ShoppingCartService
     {
 
-        UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
 
-        public ShoppingCartService(UnitOfWork unitOfWork, ShoppingCartMapper shoppingCartMapper)
+        public ShoppingCartService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

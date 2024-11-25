@@ -95,7 +95,14 @@ export class ShoppingCartComponent implements OnInit {
       alert("Cantidad no válida")
       return
     }
-    else if (input) {
+
+    if(parseInt(input.value) > product.stock)
+    {
+      alert("No hay stock suficiente")
+      return
+    }
+
+    if (input) {
       if (this.apiService.jwt == "") {
         const p = this.findProductInArray(product.id)
         p.total = parseInt(input.value);

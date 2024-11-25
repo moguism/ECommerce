@@ -17,10 +17,10 @@ export class ApiService {
     if (token) {
       this.jwt = token
     }
-    if(localStorage.getItem("remember") == "false")
+    /*if(localStorage.getItem("remember") == "false")
     {
       this.deleteToken()
-    }
+    }*/
   }
 
   deleteToken() {

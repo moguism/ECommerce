@@ -14,9 +14,6 @@ namespace Server.Controllers;
 [ApiController]
 public class CheckoutController : ControllerBase
 {
-
-    // TODO: QUITAR LA UNIT OF WORK
-
     private readonly Settings _settings;
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
