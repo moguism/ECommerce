@@ -155,6 +155,17 @@ gap: 10%;
 .review-users-opinion-text{
     width: 80%;
 }
+.review-users-opinion-date{
+    width: 180px;
+}
+.review-users-opinion-score{
+    width: 70px;
+}
+
+.review-users-opinion-user{
+    margin-right: 5px;
+}
+
 /*responsive*/
 
 @media (max-width: 780px) {
@@ -177,11 +188,12 @@ gap: 10%;
         width: 100%;
         height: 900px;
     }
-    .products-description-anadir{
-        width: 50%;
-        height: auto;
+    .products-description-title{
+        text-align: center;
     }
-    .products-description{
+    .products-description-anadir{
+        width: 100%;
+        height: auto;
         align-items: center;
     }
     .image-anadir-carrito{
