@@ -14,7 +14,7 @@
                 <div class="products-description">
                     <h2 class="products-description-title">{{ product.name }}</h2>
                     <h3 class="products-description-description">{{ product.description }}</h3>
-                    <p>Media de reseñas: {{ product.average }}</p>
+                    <h3>Media de reseñas: {{ product.average }} <i class="fa-solid fa-star"></i></h3>
                     <div class="products-description-price">
                         <h2>{{ (product.price / 100) | number:'1.2-2' }} €</h2> <!--Formato 0.00€-->
 
@@ -49,8 +49,8 @@
                 @for (review of product.reviews; track review.id) 
                 {
                     <div class="review-users-opinion">
-                        <p>{{ review.dateTime | correctDate }}</p>
-                        <h3><i class="fa-solid fa-star"></i>{{ review.score }}</h3>
+                        <p class="review-users-opinion-date">{{ review.dateTime | correctDate }}</p>
+                        <h3 class="review-users-opinion-score"><i class="fa-solid fa-star"></i>{{ review.score }}</h3>
                         <p class="review-users-opinion-text">{{review.text}}</p>
                         <p class="review-users-opinion-user">{{review.user.name}}</p>
                     </div>
