@@ -185,8 +185,7 @@ export class UserComponent implements OnInit {
 
   async submitCreateProduct() { // Por defecto actualiza el producto
     //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
-    console.log(this.newProductCategory)
-    if(this.newProductName && this.newproductDescription && this.newProductPrice && this.newProductStock && this.newProductCategory)
+    if(this.newProductName && this.newproductDescription && this.newProductPrice > 0 && this.newProductStock >= 0 && this.newProductCategory)
     {
       if(this.create && this.image == null)
       {
@@ -215,7 +214,7 @@ export class UserComponent implements OnInit {
     }
     else
     {
-      alert("No todos los datos están completos")
+      alert("No todos los datos son válidos")
     }
   }
   /*async submitModifyProduct() {
