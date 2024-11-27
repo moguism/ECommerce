@@ -14,25 +14,27 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     padding-top: 2%;
     gap: 10%;
-    height: 500px;
+    height: 100%;
 }
 .image{/*Esta clase sera necesaria para poder poner de un mismo tamaño la imagen si no se sabe como se hace es igual que las imagenes de product-list*/
     width: 100%; 
     max-width: 350px;
-    height: 350px;
+    height: 100%;
+    /*height: 370px;*/
     border-radius: 8px;
 }
 .products-description{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5%;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     width: 30%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding-left: 5px;
 }
 products-description-description{
     word-break: break-word;
@@ -113,6 +115,21 @@ gap: 10%;
     justify-content: space-around;
     gap: 20px;
 }
+.review-title{
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    align-items: center;
+    height: 30px;
+    width: 41%;
+    margin-top: 50px;
+}
+.review-title p{
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+}
 .review-input{
     display: flex;
     flex-direction: column;
@@ -174,11 +191,11 @@ gap: 10%;
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 662px) {
     .products {
         flex-direction: column;
         gap: 10px;
-        height: 900px;
+        height: 80%;
     }
     .products-image{
         display: flex;
@@ -186,7 +203,7 @@ gap: 10%;
     }
     .products-description{
         width: 100%;
-        height: 900px;
+        height: 100%;
     }
     .products-description-title{
         text-align: center;

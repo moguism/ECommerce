@@ -5,7 +5,6 @@
 
     @if(product)
     {
-        <div class="main">
             <div class="products">
                 <div class="products-image">
                     <img class="image" [src]="product.image.replace('/images/images/', '/images/')" alt="Imagen">
@@ -14,7 +13,7 @@
                 <div class="products-description">
                     <h2 class="products-description-title">{{ product.name }}</h2>
                     <h3 class="products-description-description">{{ product.description }}</h3>
-                    <h3>Media de reseñas: {{ product.average }} <i class="fa-solid fa-star"></i></h3>
+                    <h3>Media de reseñas: {{ product.average | number:'1.1-1' }} <i class="fa-solid fa-star"></i></h3>
                     <div class="products-description-price">
                         <h2>{{ (product.price / 100) | number:'1.2-2' }} €</h2> <!--Formato 0.00€-->
 
@@ -33,11 +32,12 @@
                     }
                 </div>
             </div>
-        </div>
 
         
         <div class="review">
-            <h1>Reseñas</h1>
+            <div class="review-title">
+                <p>Reseñas</p>
+            </div>
             @if(isLogged())
             {
                 <div class="review-input">
