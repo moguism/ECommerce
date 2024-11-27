@@ -3,7 +3,7 @@
 <div class="main">
 
     <div id="progressBar">
-        <h2>Envio gratis en pedidos mayores a 50€ 
+        <h2>Envio gratis en pedidos superiores a 50€ 
             <img src="assets/shoppingCart/distributeIcon.png" alt="corazon" /></h2>
     </div>
 
@@ -19,7 +19,7 @@
                 <div class="basket-products-information">
                     <div class="basket-products-information-functions">
                         <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
-                        <button (click)="deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
+                        <button class="basket-products-information-deleteButton" (click)="deleteProduct(product.id)"> <img src="assets/shoppingCart/bin.png" alt=""></button>
                         <button (click)="changeQuantity(product)">Cambiar cantidad</button>
                         <input class="basket-products-information-functions-input" [id]="product.id" type="number" [placeholder]="product.total">
                     </div>
