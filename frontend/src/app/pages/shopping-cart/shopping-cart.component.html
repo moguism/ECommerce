@@ -1,10 +1,18 @@
 <!--<app-header-shop></app-header-shop>-->
 <app-header></app-header>
 <div class="main">
+
+    <div id="progressBar">
+        <h2>Envio gratis en pedidos mayores a 50€ 
+            <img src="assets/shoppingCart/distributeIcon.png" alt="corazon" /></h2>
+    </div>
+
+    <div id="cartCounter">
+        <h2>Mi carrito</h2>
+        <h4>{{shoppingCartProducts.length}} articulos</h4>
+    </div>
     <div class="information">
         <div class="basket">
-            <h2>Mi carrito</h2>
-            <h4>{{shoppingCartProducts.length}} articulos</h4>
             @for (product of shoppingCartProducts; track product.id){
             <div class="basket-products">
                 <img class="basket-products-image" [src]="product.image.replace('/images/images/', '/images/')" alt="">
