@@ -120,3 +120,8 @@ hr{
         width: 50%;
     }
 }
+
+#payment-window
+{
+    width: 100%;
+}
