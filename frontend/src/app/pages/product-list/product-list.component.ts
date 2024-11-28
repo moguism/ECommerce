@@ -10,11 +10,12 @@ import { OrdinationType } from '../../models/enums/ordination-type';
 import { OrdinationDirection } from '../../models/enums/ordination-direction';
 import { QuerySelector } from '../../models/query-selector';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [HeaderComponent, SearchBarComponent, EurosToCentsPipe],
+  imports: [HeaderComponent, SearchBarComponent, EurosToCentsPipe, CommonModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
