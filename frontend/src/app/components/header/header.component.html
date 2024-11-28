@@ -25,9 +25,12 @@
                     <i id="arrow" class="fa-solid fa-chevron-up"></i>
                 }
                 <div class="dropdown-list">
-                    
-                    <p (click)="goToRoute('user')">Perfil</p>
-                    <p (click)="deleteToken()">Cerrar sesión</p>
+                    <div (click)="goToRoute('user')">
+                        <p>Perfil</p>
+                    </div>
+                    <div (click)="deleteToken()">
+                        <p>Cerrar sesión</p>
+                    </div>
                 </div>
             </div>
         }@else {

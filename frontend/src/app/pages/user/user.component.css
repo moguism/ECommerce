@@ -1,6 +1,11 @@
+
 /* Css para productos de las ordenes*/
 .order-container{
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-container h3{
+    padding: 10px;
 }
 
 .order-product{
@@ -11,8 +16,10 @@
 
 .order-product-img{
     width: 100px;
-    height: auto;
-    padding-right: 20px;
+    height: 100px;
+    margin-right: 20px;
+    border-radius: 20px;
+    margin-left: 10px;
 }
 
 .order-product-data{
@@ -25,6 +32,7 @@
 
 .order-product-data-title{
     padding-bottom: 15px;
+    font-size: 20px;
 }
 
 /* Css para el usuario de la vista admin */
@@ -47,11 +55,26 @@
     margin: 10px 0 5px;
 }
 
-.user-data-container .user-data {
+.user-data {
     display: block;
-    font-size: 16px;
+    font-size: 20px;
     color: #333;
     margin-bottom: 15px;
+}
+
+.btn-data{
+    margin: 5px 5px 0 0;
+    padding: 8px 12px;
+    background-color: #99C080;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-data:hover{
+    background-color: #6f9b53;
 }
 
 .admin-menu {
@@ -89,17 +112,17 @@
 .product button {
     margin: 5px 5px 0 0;
     padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
+    background-color: #99C080;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: bold;
 }
 
 .user button:hover,
 .product button:hover {
-    background-color: #0056b3;
+    background-color: #6f9b53;
 }
 
 .user button:disabled,
@@ -151,7 +174,7 @@
 
 .modal input:focus,
 .modal select:focus {
-    border-color: #007bff;
+    border-color: #99C080;
 }
 
 .modal button {
@@ -161,11 +184,11 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .modal button[type="submit"] {
-    background: #007bff;
-    color: white;
+    background: #99C080;
 }
 
 .modal button[type="button"] {
@@ -174,7 +197,7 @@
 }
 
 .modal button:hover[type="submit"] {
-    background: #0056b3;
+    background: #6f9b53;
 }
 
 .modal button:hover[type="button"] {

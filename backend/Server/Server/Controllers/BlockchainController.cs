@@ -78,6 +78,10 @@ public class BlockchainController : ControllerBase
             temporalOrder.HashOrSession = ethereumTransaction.Value;
             await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
         }
+        else
+        {
+            return null;
+        }
 
         return ethereumTransaction;
     }
