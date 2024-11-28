@@ -29,7 +29,7 @@
     justify-content: space-between;
     align-items: flex-start;
 
-    margin: 0 10%;
+    margin: 0 7%;
 
 }
 .basket{
@@ -54,8 +54,17 @@
     padding: 5%;
     border: solid grey 2px;
     border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
 
 }
+
+.basket-products-product{
+    text-align: center;
+}
+.basket-products-product h2{
+    color: #99C080;
+}
+
 .basket-products-image{
     width: 100%;
     max-width: 150px;
@@ -67,17 +76,9 @@
 
 .basket-products-information-deleteButton{
     width: 50px;
-    height: 50px;
+    height: 30px;
     text-align: center;
 }
-
-
-
-.basket-products-information-deleteButton img{
-    width: 30px;
-    height: 30px;
-}
-
 
 
 .basket-products-information-functions{
@@ -100,28 +101,58 @@
     justify-content: space-around;
     align-items: center;
     width: 30%;
-    height: 250px;
+    height: auto;
     border: solid grey 2px;
     border-radius: 8px;
+    margin-left: 5%;
+    padding: 2%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+
 }
+
+.final-price-buttons{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
 hr{
     width: 50%;
     border: 2px dopped;
 }
 .final-price-button-card{
-    width: 50%;
-    height: 30%;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     background-color: #99C080;
     cursor: pointer;
 }
+
+.final-price-button-card  img{
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
 .final-price-button-Etherium{
-    width: 50%;
-    height: 30%;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     background-color: #99C080;
     cursor: pointer;
+    margin-left: 2%;
 }
+
+.final-price-button-Etherium img{
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+
+
 .final-price-price{
     display: flex;
     flex-direction: row;
