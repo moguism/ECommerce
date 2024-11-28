@@ -52,16 +52,19 @@ namespace Server.Services
             }
 
             Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
+
+            _unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+
             await _unitOfWork.SaveAsync();
 
 
             //Añade la orden a la lista de ordenes del usuario
-            user.Orders.Add(saveOrder);
+            /*user.Orders.Add(saveOrder);
             _unitOfWork.UserRepository.Update(user);
 
             //Añade la misma wishlist que la de la orden temporal
             saveOrder.Wishlist = temporalOrder.Wishlist;
-            _unitOfWork.OrderRepository.Update(saveOrder);
+            _unitOfWork.OrderRepository.Update(saveOrder);*/
 
             return saveOrder;
         }
@@ -124,6 +127,8 @@ namespace Server.Services
             //Añade la orden a la lista de ordenes del usuario
             user.Orders.Add(saveOrder);
             _unitOfWork.UserRepository.Update(user);*/
+
+            _unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
 
             await _unitOfWork.SaveAsync();
 
