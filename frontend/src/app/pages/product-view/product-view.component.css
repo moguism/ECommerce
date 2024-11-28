@@ -14,24 +14,27 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     padding-top: 2%;
     gap: 10%;
+    height: 100%;
 }
 .image{/*Esta clase sera necesaria para poder poner de un mismo tamaño la imagen si no se sabe como se hace es igual que las imagenes de product-list*/
     width: 100%; 
     max-width: 350px;
-    height: 350px;
+    height: 100%;
+    /*height: 370px;*/
     border-radius: 8px;
 }
 .products-description{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5%;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
     width: 30%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding-left: 5px;
 }
 products-description-description{
     word-break: break-word;
@@ -42,7 +45,7 @@ products-description-description{
 display: flex;
 flex-direction: row;
 justify-content: space-around;
-gap: 100px;
+gap: 10%;
 }
 .stock{
     color: green;
@@ -112,6 +115,21 @@ gap: 100px;
     justify-content: space-around;
     gap: 20px;
 }
+.review-title{
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    align-items: center;
+    height: 30px;
+    width: 41%;
+    margin-top: 50px;
+}
+.review-title p{
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+}
 .review-input{
     display: flex;
     flex-direction: column;
@@ -151,22 +169,33 @@ gap: 100px;
     width: 90%;
     border-radius: 8px;
 }
-.review-users-opinion-image{
-    clip-path: circle();
-    width: 100%;
-    height: 80%;
-    max-width: 100px;
-    height: 100px;
-}
 .review-users-opinion-text{
     width: 80%;
 }
+.review-users-opinion-date{
+    width: 180px;
+}
+.review-users-opinion-score{
+    width: 70px;
+}
+
+.review-users-opinion-user{
+    margin-right: 5px;
+}
+
 /*responsive*/
 
-@media (max-width: 650px) {
+@media (max-width: 780px) {
+    .anadir{
+        width: 125px;
+    }
+}
+
+@media (max-width: 662px) {
     .products {
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
+        height: 80%;
     }
     .products-image{
         display: flex;
@@ -174,12 +203,14 @@ gap: 100px;
     }
     .products-description{
         width: 100%;
-    }
-    .products-description-anadir{
-        width: 50%;
         height: 100%;
     }
-    .products-description{
+    .products-description-title{
+        text-align: center;
+    }
+    .products-description-anadir{
+        width: 100%;
+        height: auto;
         align-items: center;
     }
     .image-anadir-carrito{
