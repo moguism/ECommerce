@@ -20,18 +20,19 @@
     <div id="product-list">
         @for (product of allProducts; track product.id) {
 
-        <a class="product-card" (click)="goToProduct(product.id)">
+        <div class="product-card" >
             <div class="product-card-name">{{product.name}}</div>
-            <p>Media de reseñas: {{ product.average }}</p>
             <div class="product-card-image"><img class="image" [src]="product.image.replace('/images/images/', '/images/')"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
+            <p>Media de reseñas: {{ product.average }} <i id="star" class="fa-solid fa-star"></i></p>
             @if (product.stock > 0) {
             <div class="product-card-stock">Stock: {{ product.stock }} KG</div>
             }
             @else {
             <div class="product-card-no-stock">No hay stock</div>
             }
-        </a>
+            <button class="product-card-button" (click)="goToProduct(product.id)">Más detalles</button>
+        </div>
         }
     </div>
     }@else {
