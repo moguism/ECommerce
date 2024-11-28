@@ -42,10 +42,10 @@
         
         @if(order.paymentTypeId == 1){
 
-        <h3>Pagado con: Tarjeta</h3>
+        <h3>Método de pago: Tarjeta</h3>
         <h3>Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
         }@else {
-        <h3>Pagado con: Ethereum</h3>
+        <h3>Método de pago: Ethereum</h3>
         <h3>Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
         }
 
