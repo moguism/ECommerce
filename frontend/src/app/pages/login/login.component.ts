@@ -120,11 +120,11 @@ export class LoginComponent implements OnInit {
     if(goToCheckout && goToCheckout == "true")
     {
       this.router.navigateByUrl("shopping-cart")
-      localStorage.removeItem("goToCheckout")
     }
     else
     {
       this.router.navigateByUrl("user")
+      localStorage.removeItem("goToCheckout")
     }
   }
 
