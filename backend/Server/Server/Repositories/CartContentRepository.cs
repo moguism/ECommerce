@@ -14,8 +14,6 @@ namespace Server.Repositories
         public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
         {
             CartContent cartContent = await GetQueryable()
-                .Include(c => c.Product)
-                .Include(c => c.ShoppingCart)
                 .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id
                 && c.ProductId == cartContentDto.ProductId);
                 
@@ -23,13 +21,13 @@ namespace Server.Repositories
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)
             {
-                Add(new CartContent
+                await InsertAsync(new CartContent
                 {
                     ProductId = cartContentDto.ProductId,
                     Quantity = cartContentDto.Quantity,
                     ShoppingCartId = shoppingCart.Id,
-                    Product = _context.Products.FirstOrDefault(p => p.Id == cartContentDto.ProductId),
-                    ShoppingCart = _context.ShoppingCart.FirstOrDefault(c => c.Id == shoppingCart.Id)
+                    //Product = _context.Products.FirstOrDefault(p => p.Id == cartContentDto.ProductId),w
+                    //ShoppingCart = _context.ShoppingCart.FirstOrDefault(c => c.Id == shoppingCart.Id)
                 });
             }
             else
@@ -44,7 +42,7 @@ namespace Server.Repositories
         }
 
 
-        public async Task RemoveProductFromCartAsync(ShoppingCart cart, int productId)
+        public async Task RemoveProductFromCartAsync(int productId)
         {
             CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ProductId == productId);
             if(cartContent == null)

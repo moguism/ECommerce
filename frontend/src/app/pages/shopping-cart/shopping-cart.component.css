@@ -74,10 +74,15 @@
     
 }
 
-.basket-products-information-deleteButton{
+.basket-products-information-Button{
     width: 50px;
     height: 30px;
     text-align: center;
+    background-color: #99C080;
+}
+
+.basket-products-information-Button:hover {
+    background-color: #789963;
 }
 
 
@@ -93,6 +98,8 @@
 }
 .basket-products-information-functions-input{
     width: 50%;
+    height: 25px;
+    font-size: 20px;
 }
 .final-price{
     background-color: white;

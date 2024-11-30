@@ -1,6 +1,6 @@
 .main
 {
-    background-image: url("../../../../public/background.png");
+    background-color: #c3dfb8;
     background-repeat: repeat-y;
     background-size: 100% auto;
     background-position: top center;
@@ -40,7 +40,7 @@
 }
 
 .image-box {
-    width: 50%;
+    width: 35%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,10 +52,26 @@
     object-fit: cover;
 }
 
-h2 {
-    color: #444;
+.title1 {
+    color: white;
     font-size: 1.5em;
     margin-bottom: 10px;
+}
+.title2 {
+    color: black;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+.title3 {
+    color: black;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+.text2{
+    color: black;
+}
+.text3{
+    color:black
 }
 
 p {
@@ -63,7 +79,7 @@ p {
     line-height: 1.6;
 }
 
-.team {
+/*.team {
     text-align: center;
     margin-top: 40px;
     display: flex;
@@ -94,14 +110,37 @@ p {
 .team-member p
 {
     color: black;
+}*/
+.team{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20%;
+}
+.team-person{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10%;
 }
 
-.team-photo {
+.team-person-photo{
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
+}
+.team-person-information{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+}
+.team-person-information-description{
+    width: 100%;
 }
 
 .prank

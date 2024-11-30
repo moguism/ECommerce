@@ -59,7 +59,7 @@ namespace Server.Controllers
             }
 
             Product product = await _productService.GetProductById(cartContentDto.ProductId);
-            if(product == null || cartContentDto.Quantity > product.Stock)
+            if(product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
             {
                 return;
             }

@@ -120,6 +120,15 @@
     align-items: center;
     flex-direction: row;
 }
+#cart-responsive{
+    visibility: hidden;
+}
+.quantity-responsive{
+    visibility: hidden;
+}
+.easteregg{
+   display: none;
+}
 
 /* Responsive */
 @media (max-width: 1100px){
@@ -209,6 +218,7 @@
         position: relative;
         top: 10px;
         color: white;
+        visibility: visible;
     }
     .quantity-responsive{
         background-color: #A82222;
@@ -224,5 +234,9 @@
         align-items: center;
         flex-direction: row;
         color: white;
+        visibility: visible;
     }
+    .easteregg{
+        display:block;
+     }
 }
