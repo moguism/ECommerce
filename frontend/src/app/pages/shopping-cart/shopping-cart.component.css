@@ -1,16 +1,35 @@
 .main{
     min-height: 100vh;
-    background-image: url("../../../../public/background.png");
     background-repeat: repeat-y;
     background-size: 100% auto;
     background-position: top center;
     background-size: cover;
 }
+
+#progressBar{
+    width: 100%;
+    text-align: center;
+}
+
+#progressBar img{
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+#cartCounter{
+    margin: 0 10%;
+}
+
+
 .information{
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin: 0 7%;
 
 }
 .basket{
@@ -19,6 +38,8 @@
     justify-content: space-around;
     align-items: center;
     gap:20px;
+
+
 }
 .basket-products{
     display: flex;
@@ -30,14 +51,41 @@
     width: 100%;
     gap: 20px;
     border-radius: 8px;
+    padding: 5%;
+    border: solid grey 2px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+
 }
+
+.basket-products-product{
+    text-align: center;
+}
+.basket-products-product h2{
+    color: #5b9636;
+}
+
 .basket-products-image{
     width: 100%;
     max-width: 150px;
     height: 150px;
-    padding: 5%;
     border-radius: 25px;
+
+    
 }
+
+.basket-products-information-Button{
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    background-color: #99C080;
+}
+
+.basket-products-information-Button:hover {
+    background-color: #789963;
+}
+
+
 .basket-products-information-functions{
     display: flex;
     flex-direction: row;
@@ -50,6 +98,8 @@
 }
 .basket-products-information-functions-input{
     width: 50%;
+    height: 25px;
+    font-size: 20px;
 }
 .final-price{
     background-color: white;
@@ -57,28 +107,59 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    width: 20%;
-    height: 250px;
+    width: 30%;
+    height: auto;
+    border: solid grey 2px;
     border-radius: 8px;
+    margin-left: 5%;
+    padding: 2%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+
 }
+
+.final-price-buttons{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
 hr{
     width: 50%;
     border: 2px dopped;
 }
 .final-price-button-card{
-    width: 50%;
-    height: 30%;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     background-color: #99C080;
     cursor: pointer;
 }
+
+.final-price-button-card  img{
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
 .final-price-button-Etherium{
-    width: 50%;
-    height: 30%;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
     background-color: #99C080;
     cursor: pointer;
+    margin-left: 2%;
 }
+
+.final-price-button-Etherium img{
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+
+
 .final-price-price{
     display: flex;
     flex-direction: row;
@@ -91,32 +172,9 @@ hr{
     flex-direction: row;
     align-items: center;
 }
-.button-menos{
-    background-color: green;
-    width: 25%;
-    height: 38%;
-    border:1px solid black;
-    border-top-left-radius: 10%;
-    border-bottom-left-radius: 10%;
-    cursor: pointer;
-}
-.count{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid black;
-    height: 34%;
-    width: 25%;
-}
-.button-mas{
-    background-color: green;
-    width: 25%;
-    height: 38%;
-    border: 1px solid black;
-    border-top-right-radius: 10%;
-    border-bottom-right-radius: 10%;
-    cursor: pointer;
-}
+
+
+
 /*responsive*/
 @media (max-width: 1120px){
     .information{

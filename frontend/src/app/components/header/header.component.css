@@ -80,6 +80,12 @@
     position: relative;
 }
 
+.view-dropdown div 
+{
+    width: 100%;
+    text-align: center;
+}
+
 #arrow{
     color: white;
     margin: 0;

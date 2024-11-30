@@ -6,12 +6,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
+//import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf, HeaderComponent],
+  imports: [FormsModule, ReactiveFormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -119,8 +119,8 @@ export class LoginComponent implements OnInit {
     const goToCheckout = localStorage.getItem("goToCheckout")
     if(goToCheckout && goToCheckout == "true")
     {
-      this.router.navigateByUrl("shopping-cart")
       localStorage.removeItem("goToCheckout")
+      this.router.navigateByUrl("shopping-cart")
     }
     else
     {

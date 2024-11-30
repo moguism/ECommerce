@@ -10,7 +10,6 @@ import { StripeService } from 'ngx-stripe';
 import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
 import { BlockchainService } from '../../services/blockchain.service';
 import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
-import { EthereumInfo } from '../../models/ethereum-info';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -33,6 +32,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   networkUrl: string = 'https://rpc.bordel.wtf/test'; // Red de pruebas;
   eurosToSend: number = 0;
   addressToSend: string = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2"; //Café para mauricio
+  showLoading: boolean = false
 
   sessionId: string = "";
 
@@ -223,8 +223,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         }
 
 
+        this.showLoading = true
         const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
-
+        this.showLoading = false
 
         console.log("Data : ",          
           "\n" + checkTransactionRequest.networkUrl, 

@@ -2,7 +2,7 @@
     <div id="black">
         @if(buttonChange) {
             <i (click)="showMenu()" id="menu" class="fa-solid fa-bars"></i>
-            <h1 class="easteregg" (click)="goToRoute('shopping-cart')"><i id="cart-responsive" class="fa-solid fa-cart-shopping"></i><span class="quantity-responsive">{{ shoppingCartService.total }}</span></h1>
+            <h1 (click)="goToRoute('shopping-cart')"><i id="cart-responsive" class="fa-solid fa-cart-shopping"></i><span class="quantity-responsive">{{ shoppingCartService.total }}</span></h1>
         } @else {
             <i (click)="closeMenu()" id="menu" class="fa-solid fa-xmark"></i>
         }
@@ -26,9 +26,11 @@
                 }
                 <div class="dropdown-list">
                     <div (click)="goToRoute('user')">
-                        <p >Perfil</p>
+                        <p>Perfil</p>
                     </div>
-                    <p (click)="deleteToken()">Cerrar sesión</p>
+                    <div (click)="deleteToken()">
+                        <p>Cerrar sesión</p>
+                    </div>
                 </div>
             </div>
         }@else {

@@ -73,10 +73,14 @@ public class BlockchainController : ControllerBase
 
         decimal total = wishlist.Products.Sum(product => product.PurchasePrice / 100m);
 
-        if(data.Euros == total)
+        if(data.Euros >= total)
         {
             temporalOrder.HashOrSession = ethereumTransaction.Value;
             await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+        }
+        else
+        {
+            return null;
         }
 
         return ethereumTransaction;

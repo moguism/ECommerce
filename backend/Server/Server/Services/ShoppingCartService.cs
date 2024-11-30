@@ -36,8 +36,7 @@ namespace Server.Services
 
         public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
-            ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
-            await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(shoppingCart, productId);
+            await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(productId);
             await _unitOfWork.SaveAsync();
         }
 

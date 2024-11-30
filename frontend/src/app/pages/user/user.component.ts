@@ -34,7 +34,6 @@ export class UserComponent implements OnInit {
 
 
   user: User | null = null;
-  btnEdit: boolean = false;
   orders: Order[] = [];
   elementShowing: string = "";
   allUsers: User[] = [];
@@ -110,7 +109,7 @@ export class UserComponent implements OnInit {
       //await this.userService.obtainNewJwt()
     }
     
-    this.btnEdit = false
+    this.formState = null;
   }
 
   async changeElementShowing(newElement: string) {

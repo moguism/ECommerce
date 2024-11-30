@@ -1,9 +1,21 @@
 <app-header></app-header>
 <div class="main">
+    @if(showLoading)
+    {
+        <div id="load">
+            <img src="assets/afterCheckout/carga.gif" alt="gif de carga" />
+        </div>
+    }
+    @else {
     <div class="information">
         <div class="basket">
             <h2>Mi carrito</h2>
-            <h4>{{shoppingCartProducts.length}} articulos</h4>
+            @if(shoppingCartProducts.length == 1){
+                <h4>{{shoppingCartProducts.length}} articulo</h4>
+            }
+            @else {
+                <h4>{{shoppingCartProducts.length}} articulos</h4>
+            } 
             @for (product of shoppingCartProducts; track product.id){
             <div class="basket-products">
                 <img class="basket-products-image" [src]="product.image.replace('/images/images/', '/images/')" alt="">
@@ -32,11 +44,11 @@
             @if (shoppingCartProducts.length > 0) {
                 @if(method == "card")
                 {
-                    <button (click)="embeddedCheckout()">Comprar embebido</button>
+                    <button (click)="embeddedCheckout()" class="final-price-button-card">Comprar embebido</button>
                     <!--<button (click)="hostedCheckout()">Comprar en página externa</button>-->
                 }
                 @else {
-                    <button (click)="createTransaction()">Pagar con ETH</button>
+                    <button (click)="createTransaction()" class="final-price-button-card">Pagar con ETH</button>
                 }
             }
             
@@ -44,6 +56,7 @@
             <hr>
         </div>
     </div>
+}
 </div>
 <dialog #checkoutDialog id="payment-window">
     <div id="checkout"></div>
