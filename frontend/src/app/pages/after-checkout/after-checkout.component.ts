@@ -52,11 +52,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
     console.log("LAST ORDER: ", this.lastOrder)
 
-    if(localStorage.getItem("goToCheckout") != "true")
-    {
-      this.shoppingCartService.total = 0
-      localStorage.removeItem("goToCheckout")
-    }
+    this.shoppingCartService.getShoppingCartCount()
   }
 
   async createOrder() {

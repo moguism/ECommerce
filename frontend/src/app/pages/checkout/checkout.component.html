@@ -1,5 +1,12 @@
 <app-header></app-header>
 <div class="main">
+    @if(showLoading)
+    {
+        <div id="load">
+            <img src="assets/afterCheckout/carga.gif" alt="gif de carga" />
+        </div>
+    }
+    @else {
     <div class="information">
         <div class="basket">
             <h2>Mi carrito</h2>
@@ -44,6 +51,7 @@
             <hr>
         </div>
     </div>
+}
 </div>
 <dialog #checkoutDialog id="payment-window">
     <div id="checkout"></div>
