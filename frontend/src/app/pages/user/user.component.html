@@ -70,8 +70,8 @@
         <p><b>Nombre:</b> {{ users.name }}</p>
         <p><b>Correo electrónico:</b> {{ users.email }}</p>
         <p><b>Rol:</b> {{ users.role }}</p>
-        <button (click)="showEditRoleForm(users)">Modificar rol</button>
-        <button (click)="deleteUser(users.id)">Eliminar usuario</button>
+        <button class="custom-button" (click)="showEditRoleForm(users)">Modificar rol</button>
+        <button class="custom-button" (click)="deleteUser(users.id)">Eliminar usuario</button>
     </div>
     }
     @empty {
@@ -96,6 +96,7 @@
     }
 
     @else if (elementShowing == "products") {
+    <br><button class="custom-button" (click)="showCreateProductForm()">Crear nuevo producto</button><br><br>
     @for (product of allProducts; track product.id) {
     <div class="product">
         <img [src]="product.image.replace('/images/images/', '/images/')" alt="{{ product.name }}" class="product-image" />
@@ -104,7 +105,7 @@
         <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
         <p><b>Stock:</b> {{ product.stock }}</p>
         <p><b>Categoría:</b> {{ product.category.name | translate}}</p>
-        <button (click)="showEditProductForm(product.id)">Editar producto</button>
+        <button class="custom-button" (click)="showEditProductForm(product.id)">Editar producto</button>
         <!--<button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
     </div>
     }
@@ -113,7 +114,6 @@
     }
 
     <!-- Formulario para crear producto (faltan más datos) -->
-    <button (click)="showCreateProductForm()">Crear nuevo producto</button>
     @if (formState == "createProduct" || formState == "modifyProduct") {
     <div class="modal">
         <h3>Datos a introducir: </h3>
