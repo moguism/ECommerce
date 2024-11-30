@@ -28,25 +28,23 @@
     @if(orders.length != 0 && orders){
     @for (order of orders; track order.id){
     <div class="order-container">
-        <h3>Fecha del pedido: {{ order.createdAt | correctDate }}</h3>
+        <h3 class="order-date">Fecha del pedido: <b>{{ order.createdAt | correctDate }}</b></h3>
         @for(productToBuy of order.wishlist.products; track productToBuy.id){
             <div class="order-product">
                 <img class="order-product-img" [src]="productToBuy.product.image.replace('/images/images/', '/images/')">
                 <div class="order-product-data">
                     <p class="order-product-data-title">{{productToBuy.product.name}}</p>
-                    <p>Cantidad: {{productToBuy.quantity}}</p>
-                    <p>Precio el kg: {{productToBuy.purchasePrice | eurosToCents}}</p>
+                    <p>Cantidad: <b>{{productToBuy.quantity}}</b></p>
+                    <p>Precio el kg: <b>{{productToBuy.purchasePrice | eurosToCents}}</b></p>
                 </div>
             </div>
         }
         
         @if(order.paymentTypeId == 1){
 
-        <h3>Método de pago: Tarjeta</h3>
-        <h3>Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
+        <h3 class="order-price">Método de pago: <b>Tarjeta</b> | <span class="order-price-total">Total pagado: <b>{{totalprice(order.wishlist.products) | eurosToCents}}</b></span></h3>
         }@else {
-        <h3>Método de pago: Ethereum</h3>
-        <h3>Total pagado: {{totalprice(order.wishlist.products) | eurosToCents}}</h3>
+        <h3 class="order-price">Método de pago: <b>Ethereum</b> | <span class="order-price-total">Total pagado: <b>{{totalprice(order.wishlist.products) | eurosToCents}}</b></span></h3>
         }
 
     </div>
@@ -70,8 +68,8 @@
         <p><b>Nombre:</b> {{ users.name }}</p>
         <p><b>Correo electrónico:</b> {{ users.email }}</p>
         <p><b>Rol:</b> {{ users.role }}</p>
-        <button (click)="showEditRoleForm(users)">Modificar rol</button>
-        <button (click)="deleteUser(users.id)">Eliminar usuario</button>
+        <button class="custom-button" (click)="showEditRoleForm(users)">Modificar rol</button>
+        <button class="custom-button" (click)="deleteUser(users.id)">Eliminar usuario</button>
     </div>
     }
     @empty {
@@ -96,6 +94,7 @@
     }
 
     @else if (elementShowing == "products") {
+    <br><button class="custom-button" (click)="showCreateProductForm()">Crear nuevo producto</button><br><br>
     @for (product of allProducts; track product.id) {
     <div class="product">
         <img [src]="product.image.replace('/images/images/', '/images/')" alt="{{ product.name }}" class="product-image" />
@@ -104,7 +103,7 @@
         <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
         <p><b>Stock:</b> {{ product.stock }}</p>
         <p><b>Categoría:</b> {{ product.category.name | translate}}</p>
-        <button (click)="showEditProductForm(product.id)">Editar producto</button>
+        <button class="custom-button" (click)="showEditProductForm(product.id)">Editar producto</button>
         <!--<button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
     </div>
     }
@@ -113,7 +112,6 @@
     }
 
     <!-- Formulario para crear producto (faltan más datos) -->
-    <button (click)="showCreateProductForm()">Crear nuevo producto</button>
     @if (formState == "createProduct" || formState == "modifyProduct") {
     <div class="modal">
         <h3>Datos a introducir: </h3>

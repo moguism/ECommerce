@@ -97,7 +97,7 @@ namespace Server.Controllers
             oldUser.Address = updatedUser.Address;
             oldUser.Name = updatedUser.Name;
 
-            if(updatedUser.Role.Equals("Admin") || updatedUser.Role.Equals("User"))
+            if(user.Role.Equals("Admin") && (updatedUser.Role.Equals("Admin") || updatedUser.Role.Equals("User")))
             {
                 oldUser.Role = updatedUser.Role;
             }

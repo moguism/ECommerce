@@ -1,20 +1,43 @@
-
 /* Css para productos de las ordenes*/
-.order-container{
+.order-container {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.order-container h3{
+.order-container h3 {
     padding: 10px;
+    padding-left: 20px;
+    background-color: #99C080;
 }
 
-.order-product{
+.order-date{
+    margin-top: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price{
+    margin-bottom: 0;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price-total{
+    white-space: nowrap; /* Para que se pase la frase entera si no tiene espacio*/
+}
+
+.order-product {
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
 }
 
-.order-product-img{
+.order-product-img {
     width: 100px;
     height: 100px;
     margin-right: 20px;
@@ -22,17 +45,13 @@
     margin-left: 10px;
 }
 
-.order-product-data{
+.order-product-data {
     width: 150px;
 }
 
-.order-product-data p{
-    font-weight: bold;
-}
-
-.order-product-data-title{
-    padding-bottom: 15px;
+.order-product-data-title {
     font-size: 20px;
+    font-weight: bold;
 }
 
 /* Css para el usuario de la vista admin */
@@ -62,7 +81,7 @@
     margin-bottom: 15px;
 }
 
-.btn-data{
+.btn-data {
     margin: 5px 5px 0 0;
     padding: 8px 12px;
     background-color: #99C080;
@@ -73,7 +92,7 @@
     font-weight: bold;
 }
 
-.btn-data:hover{
+.btn-data:hover {
     background-color: #6f9b53;
 }
 
@@ -108,8 +127,7 @@
     margin: 5px 0;
 }
 
-.user button,
-.product button {
+.custom-button {
     margin: 5px 5px 0 0;
     padding: 8px 12px;
     background-color: #99C080;
@@ -120,15 +138,14 @@
     font-weight: bold;
 }
 
-.user button:hover,
-.product button:hover {
-    background-color: #6f9b53;
-}
-
-.user button:disabled,
-.product button:disabled {
+.custom-button:disabled
+{
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.custom-button:hover {
+    background-color: #6f9b53;
 }
 
 .modal {
@@ -232,8 +249,9 @@
 .product-image {
     width: 100px;
     height: 100px;
-    object-fit: cover; /* Mantiene las proporciones de la imagen dentro del contenedor */
+    object-fit: cover;
+    /* Mantiene las proporciones de la imagen dentro del contenedor */
     border-radius: 8px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-  }
+}
