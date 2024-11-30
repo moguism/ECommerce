@@ -56,8 +56,8 @@
 }
 
 .purchased-products-image {
-    max-width: 200px;
-    height: auto;
+    width: 150px;
+    height: 150px;
     border-radius: 10px;
     border: 1px solid #ddd;
     margin-left: 20%;

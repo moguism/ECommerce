@@ -55,20 +55,8 @@
     height: 30px;
     text-align: center;
 }
-
-
-.basket-products-information-functions{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    gap: 20px;
-}
-.basket-products-information-functions-title{
-    width: 100%;
-}
-.basket-products-information-functions-input{
-    width: 50%;
+.basket-products-information h4{
+    color: rgb(49, 49, 49);
 }
 .final-price{
     background-color: white;
