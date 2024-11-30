@@ -163,8 +163,8 @@ namespace Server
                         new Product { Name = "Cebolla", Description = "Sabor fuerte y característico, ideal para sazonar.", Price = 180, Stock = 170, Average = 0, Image = "cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 250, Stock = 140, Average = 0, Image = "pimiento.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Brócoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 280, Stock = 0, Average = 0, Image = "brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 320, Stock = 0, Average = 440, Image = "espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 270, Stock = 0, Average = 430, Image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 320, Stock = 0, Average = 0, Image = "espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 270, Stock = 0, Average = 0, Image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
                         new Product { Name = "Berenjena", Description = "Sabor único, excelente para asar y guisar.", Price = 350, Stock = 70, Average = 0, Image = "berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
                     };
 

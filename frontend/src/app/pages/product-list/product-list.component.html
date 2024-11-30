@@ -22,10 +22,9 @@
 
         <div class="product-card" >
             <div class="product-card-name">{{product.name}}</div>
-            <p>Media de reseñas: {{ product.average | number:'1.1-1' }}</p>
             <div class="product-card-image"><img class="image" [src]="product.image.replace('/images/images/', '/images/')"></div>
             <div class="product-card-price">Precio : {{product.price | eurosToCents }}</div>
-            <p>Media de reseñas: {{ product.average }} <i id="star" class="fa-solid fa-star"></i></p>
+            <p>Media de reseñas: {{ product.average | number:'1.1-1' }}<i id="star" class="fa-solid fa-star"></i></p>
             @if (product.stock > 0) {
             <div class="product-card-stock">Stock: {{ product.stock }} KG</div>
             }
