@@ -1,16 +1,40 @@
 /* Css para productos de las ordenes*/
 .order-container {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .order-container h3 {
     padding: 10px;
+    padding-left: 20px;
+    background-color: #99C080;
+}
+
+.order-date{
+    margin-top: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price{
+    margin-bottom: 0;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price-total{
+    white-space: nowrap; /* Para que se pase la frase entera si no tiene espacio*/
 }
 
 .order-product {
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
 }
 
 .order-product-img {
@@ -25,13 +49,9 @@
     width: 150px;
 }
 
-.order-product-data p {
-    font-weight: bold;
-}
-
 .order-product-data-title {
-    padding-bottom: 15px;
     font-size: 20px;
+    font-weight: bold;
 }
 
 /* Css para el usuario de la vista admin */
