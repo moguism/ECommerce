@@ -32,13 +32,13 @@ namespace Server.Controllers
             _categoryService = categoryService;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("complete")]
         public async Task<IEnumerable<ProductDto>> GetCompleteProducts()
         {
             User user = await GetAuthorizedUser();
 
-            if (user == null || !user.Role.Equals("Admin"))
+            if (user == null)
             {
                 return null;
             }
@@ -93,14 +93,14 @@ namespace Server.Controllers
             return _productMapper.AddCorrectPath(product);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ProductDto> CreateProduct([FromForm] ProductToInsert newProduct)
         {
             try
             {
                 User user = await GetAuthorizedUser();
-                if (user == null || !user.Role.Equals("Admin"))
+                if (user == null)
                 {
                     return null;
                 }
@@ -126,14 +126,14 @@ namespace Server.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ProductDto> UpdateProduct([FromForm] ProductToInsert productToUpdate)
         {
             try
             {
                 User user = await GetAuthorizedUser();
-                if (user == null || !user.Role.Equals("Admin"))
+                if (user == null)
                 {
                     return null;
                 }

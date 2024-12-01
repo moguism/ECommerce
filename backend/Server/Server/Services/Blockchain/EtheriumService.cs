@@ -14,6 +14,8 @@ public class EthereumService
 
     private readonly Web3 _web3;
 
+    private readonly string addressToSend = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2";
+
     public EthereumService(string networkUrl)
     {
         _web3 = new Web3(networkUrl);
@@ -51,6 +53,11 @@ public class EthereumService
 
         try
         {
+            if(!to.Equals(addressToSend))
+            {
+                return false;
+            }
+
             Transaction transaction = await _web3.Eth.Transactions.GetTransactionByHash.SendRequestAsync(txHash);
             TransactionReceipt txReceipt = await _web3.TransactionReceiptPolling.PollForReceiptAsync(txHash);
 

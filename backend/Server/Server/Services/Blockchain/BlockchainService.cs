@@ -55,33 +55,6 @@ public class BlockchainService
         return ethereumService.CheckTransactionAsync(data.Hash, data.From, data.To, data.Value);
     }
 
-    public decimal ConvertHexToDecimal(string hexValue)
-    {
-        try
-        {
-            // Convertir el valor hexadecimal a BigInteger
-            BigInteger bigIntValue = BigInteger.Parse(hexValue, System.Globalization.NumberStyles.HexNumber);
-
-            // Dividir el valor por 10^18 para convertir de Wei a Ether
-            decimal etherValue = (decimal)bigIntValue / 1000000000000000000m;
-
-            return etherValue;
-        }
-        catch (FormatException ex)
-        {
-            // Manejo de error si el formato del valor hexadecimal no es válido
-            Console.WriteLine($"Error de formato hexadecimal: {ex.Message}");
-            return 0m; // Retornar 0 en caso de error
-        }
-        catch (OverflowException ex)
-        {
-            // Manejo de error si el número es demasiado grande para BigInteger
-            Console.WriteLine($"Error de desbordamiento: {ex.Message}");
-            return 0m; // Retornar 0 en caso de error
-        }
-    }
-
-
     // Definición del ABI de ERC-20
     private static readonly string ERC20ABI = """
     [

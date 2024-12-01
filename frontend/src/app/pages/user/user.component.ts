@@ -34,7 +34,6 @@ export class UserComponent implements OnInit {
 
 
   user: User | null = null;
-  btnEdit: boolean = false;
   orders: Order[] = [];
   elementShowing: string = "";
   allUsers: User[] = [];
@@ -110,7 +109,7 @@ export class UserComponent implements OnInit {
       //await this.userService.obtainNewJwt()
     }
     
-    this.btnEdit = false
+    this.formState = null;
   }
 
   async changeElementShowing(newElement: string) {
@@ -185,8 +184,7 @@ export class UserComponent implements OnInit {
 
   async submitCreateProduct() { // Por defecto actualiza el producto
     //alert(`Producto creado: ${this.newProductName}, Precio: ${this.newProductPrice}, Categoría: ${this.newProductCategory}`);
-    console.log(this.newProductCategory)
-    if(this.newProductName && this.newproductDescription && this.newProductPrice && this.newProductStock && this.newProductCategory)
+    if(this.newProductName && this.newproductDescription && this.newProductPrice > 0 && this.newProductStock >= 0 && this.newProductCategory)
     {
       if(this.create && this.image == null)
       {
@@ -215,7 +213,7 @@ export class UserComponent implements OnInit {
     }
     else
     {
-      alert("No todos los datos están completos")
+      alert("No todos los datos son válidos")
     }
   }
   /*async submitModifyProduct() {

@@ -8,6 +8,7 @@ import { ProductService } from '../../services/product.service';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
 import { Order } from '../../models/order';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-after-checkout',
@@ -24,7 +25,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   id: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
-    private userService: UserService, private activatedRoute: ActivatedRoute) {
+    private userService: UserService, private activatedRoute: ActivatedRoute, private shoppingCartService : ShoppingCartService) {
   }
 
   ngOnDestroy(): void {
@@ -50,6 +51,8 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
     await this.getUser()
 
     console.log("LAST ORDER: ", this.lastOrder)
+
+    this.shoppingCartService.getShoppingCartCount()
   }
 
   async createOrder() {

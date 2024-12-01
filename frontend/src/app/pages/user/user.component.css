@@ -1,30 +1,57 @@
 /* Css para productos de las ordenes*/
-.order-container{
+.order-container {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.order-product{
+.order-container h3 {
+    padding: 10px;
+    padding-left: 20px;
+    background-color: #99C080;
+}
+
+.order-date{
+    margin-top: 0;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price{
+    margin-bottom: 0;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    font-weight: lighter;
+}
+
+.order-price-total{
+    white-space: nowrap; /* Para que se pase la frase entera si no tiene espacio*/
+}
+
+.order-product {
     display: flex;
     flex-direction: row;
-    margin-bottom: 20px;
 }
 
-.order-product-img{
+.order-product-img {
     width: 100px;
-    height: auto;
-    padding-right: 20px;
+    height: 100px;
+    margin-right: 20px;
+    border-radius: 20px;
+    margin-left: 10px;
 }
 
-.order-product-data{
+.order-product-data {
     width: 150px;
 }
 
-.order-product-data p{
+.order-product-data-title {
+    font-size: 20px;
     font-weight: bold;
-}
-
-.order-product-data-title{
-    padding-bottom: 15px;
 }
 
 /* Css para el usuario de la vista admin */
@@ -47,11 +74,26 @@
     margin: 10px 0 5px;
 }
 
-.user-data-container .user-data {
+.user-data {
     display: block;
-    font-size: 16px;
+    font-size: 20px;
     color: #333;
     margin-bottom: 15px;
+}
+
+.btn-data {
+    margin: 5px 5px 0 0;
+    padding: 8px 12px;
+    background-color: #99C080;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-data:hover {
+    background-color: #6f9b53;
 }
 
 .admin-menu {
@@ -85,27 +127,25 @@
     margin: 5px 0;
 }
 
-.user button,
-.product button {
+.custom-button {
     margin: 5px 5px 0 0;
     padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
+    background-color: #99C080;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: bold;
 }
 
-.user button:hover,
-.product button:hover {
-    background-color: #0056b3;
-}
-
-.user button:disabled,
-.product button:disabled {
+.custom-button:disabled
+{
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.custom-button:hover {
+    background-color: #6f9b53;
 }
 
 .modal {
@@ -151,7 +191,7 @@
 
 .modal input:focus,
 .modal select:focus {
-    border-color: #007bff;
+    border-color: #99C080;
 }
 
 .modal button {
@@ -161,11 +201,11 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .modal button[type="submit"] {
-    background: #007bff;
-    color: white;
+    background: #99C080;
 }
 
 .modal button[type="button"] {
@@ -174,7 +214,7 @@
 }
 
 .modal button:hover[type="submit"] {
-    background: #0056b3;
+    background: #6f9b53;
 }
 
 .modal button:hover[type="button"] {
@@ -209,8 +249,9 @@
 .product-image {
     width: 100px;
     height: 100px;
-    object-fit: cover; /* Mantiene las proporciones de la imagen dentro del contenedor */
+    object-fit: cover;
+    /* Mantiene las proporciones de la imagen dentro del contenedor */
     border-radius: 8px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-  }
+}

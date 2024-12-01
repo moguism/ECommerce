@@ -5,9 +5,9 @@
             <img src="" alt="" class="header-image" />
         </div>
 
-        <div class="section" style="background-color: #f7f7f7; background-image: url('assets/images/Finca_SierraMorena.jpg');">
+        <div class="section">
             <div class="content-box" style="background-color: rgb(21, 170, 230);">
-                <h2>Nuestra misión</h2>
+                <h2 class="title1">Nuestra misión</h2>
                 <p style="color: white;">Queremos entregar productos frescos que estén a la altura del compromiso y la dedicación que tiene
                     con su familia.
                     <br><br>
@@ -15,18 +15,18 @@
                     cultivan sus productos con cariño.
                 </p>
             </div>
-            <div class="image-box">
-                <img src="assets/aboutus_images/tomates.png" alt="Tomates" />
+            <div>
+                <img src="https://edu-farm-in-house.odoo.com/web_editor/image_shape/website.s_image_text_default_image/web_editor/composition/composition_mixed_1.svg?c1=o-color-2&c2=o-color-2&c5=o-color-5" alt="Tomates" />
             </div>
         </div>
 
-        <div class="section" style="background-color: #e7e7e7; background-image: url('assets/images/granja-avicola_2.jpg');">
-            <div class="image-box">
-                <img src="assets/aboutus_images/furgoneta.png" alt="Furgonetilla" />
+        <div class="section">
+            <div>
+                <img src="https://edu-farm-in-house.odoo.com/web_editor/image_shape/website.s_text_image_default_image/web_editor/solid/solid_blob_shadow_2.svg?c2=o-color-2" alt="Furgonetilla" />
             </div>
-            <div class="content-box" style="background-color: #F5F5DC;">
-                <h2>Nuestra visión</h2>
-                <p>Queremos recompensar el duro trabajo de los agricultores pagándoles bien por sus productos, y así
+            <div class="content-box" style="background-color: #F5F5DC; box-shadow: 5px black;">
+                <h2 class="title2">Nuestra visión</h2>
+                <p class="text2">Queremos recompensar el duro trabajo de los agricultores pagándoles bien por sus productos, y así
                     ganarnos su favor.
                     <br><br>
                     Además, empezaremos con una furgoneta, pero iremos aumentando la flota de vehiculos con los
@@ -35,10 +35,10 @@
             </div>
         </div>
 
-        <div class="section" style="background-color: #f7f7f7; background-image: url('assets/images/franesunpesao.jpg');">
+        <div class="section">
             <div class="content-box" style="background-color: #D9A72E;">
-                <h2>Nuestros valores</h2>
-                <p>La empresa se compromete a promover la sostenibilidad mediante prácticas que respeten el medio
+                <h2 class="title3">Nuestros valores</h2>
+                <p class="text3">La empresa se compromete a promover la sostenibilidad mediante prácticas que respeten el medio
                     ambiente y fomenten la agricultura responsable.
                     <br><br>
                     Nos esforzamos por ofrecer productos de alta calidad que satisfagan las expectativas de nuestros
@@ -46,7 +46,7 @@
                 </p>
             </div>
             <div class="image-box">
-                <img src="assets/cultivo-de-maiz.jpg" alt="Cultivo de maíz" />
+                <img src="assets/images/Logo.png" alt="Cultivo de maíz" />
             </div>
         </div>
 
@@ -89,14 +89,18 @@
         </div>
 
         <div class="team">
-            @for (member of teamMembers; track $index)
-            {
-                <div class="team-member">
-                    <img [src]="member.image" alt="{{ member.name }}" class="team-photo" />
-                    <h3>{{ member.name }}</h3>
-                    <p>{{ member.description }}</p>
-                </div>
-            }
+           <div class="team-person">
+            <img class="team-person-photo" src="assets/aboutus_images/mauricio.png">
+            <div class="team-person-information">
+                <h2>Mauricio</h2>
+                <p class="team-person-information-description">Mauricio es una de las fuerzas que mueve a la granja. Le encanta participar en el cultivo de productos orgánicos y en la educación sobre prácticas agrícolas sostenibles.</p>
+            </div>
+            
+           </div>
+           <div>
+            <img class="team-person-photo" src="assets/aboutus_images/daniel.png">
+            
+           </div>
         </div>
     </div>
 </div>
