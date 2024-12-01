@@ -116,7 +116,6 @@ p {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 20%;
 }
 .team-person{
     display: flex;
@@ -137,7 +136,7 @@ p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 50%;
 }
 .team-person-information-description{
     width: 100%;
@@ -168,5 +167,15 @@ p {
     .section
     {
         flex-direction: column;
+        justify-content: center;
+    }
+    .team{
+        flex-direction: column;
+    }
+    .animate{
+        width: 100%;
+    }
+    .image-box{
+        width: 100%;
     }
 }
