@@ -10,11 +10,12 @@ import { StripeService } from 'ngx-stripe';
 import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/stripe-js';
 import { BlockchainService } from '../../services/blockchain.service';
 import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
+import { LoadingComponent } from '../../components/loading/loading.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [EurosToCentsPipe, HeaderComponent],
+  imports: [EurosToCentsPipe, HeaderComponent, LoadingComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })

@@ -29,7 +29,7 @@ namespace Server.Services
         {
             Wishlist wishlist = new Wishlist();
 
-            IEnumerable<ProductsToBuy> productsToBuyList = await _productsToBuyMapper.ToEntity(products);
+            IEnumerable<ProductsToBuy> productsToBuyList = _productsToBuyMapper.ToEntity(products);
 
             await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
             await _unitOfWork.SaveAsync();

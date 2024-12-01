@@ -9,12 +9,13 @@
 #title {
     text-align: center;
     margin-bottom: 20px;
-    font-size: 1.8rem; 
+    font-size: 1.8rem;
     color: #444;
+    width: 90%;
 }
 
 #title img {
-    width: 80px; 
+    width: 80px;
     height: 80px;
     vertical-align: middle;
     margin-left: 8px;
@@ -32,35 +33,34 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    width: 100%;
 }
 
 /* Caja de todos los productos */
 .purchased {
-    display: block;
     width: 40%;
 }
 
 /* Caja de cada producto */
 .purchased-products {
-    margin-left: 20%;
-    display: grid;
-    grid-template-columns: auto auto;
+    display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
     width: 100%;
     background-color: #ffffff;
     margin-bottom: 5%;
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+    gap: 5%;
 }
 
 .purchased-products-image {
-    max-width: 200px;
-    height: auto;
+    width: 150px;
+    height: 150px;
     border-radius: 10px;
     border: 1px solid #ddd;
-    margin-left: 20%;
+    border-radius: 20px;
+    margin-left: 10%;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
 
 }
@@ -68,21 +68,18 @@
 .purchased-products-information {
     display: flex;
     flex-direction: column;
-    margin-left: 50%;
-    width: 100%;
-
 }
 
 
 .final-price {
-    margin-right: 10%;
+    margin-right: 5%;
     background-color: #333;
     color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 25%; 
+    width: 25%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -103,7 +100,7 @@ hr {
     font-weight: bold;
 }
 
-.final-price-price h2{
+.final-price-price h2 {
     margin: 10%;
 }
 
@@ -112,64 +109,88 @@ hr {
 /******** RESPONSIVE *********/
 
 @media (max-width: 1400px) {
-    
+
     .purchased {
-        width: 50%; 
+        width: 50%;
     }
+
 
 }
 
 
-@media (max-width: 1120px) {
+@media (max-width: 1300px) {
+    .body {
+        font-size: 2rem;
+    }
+
     .information {
-        flex-direction: column; 
+        flex-direction: column;
         align-items: center;
     }
 
-    .purchased-products {
-        margin: 0;
-        margin-bottom: 5%;
+    .purchased-products-image {
+        width: 300px;
+        height: 300px;
     }
 
     .purchased {
-        width: 85%; 
+        width: 85%;
     }
 
     .final-price {
-        width: 85%; 
-        margin-left: 10%;
+        width: 85%;
+        margin-right: 0;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 950px) {
 
-    #title{
+    #title {
         font-size: 1rem;
+        width: 100%;
     }
 
-    #title img{
+    #title img {
         width: 50px;
         height: 50px;
-
     }
 
-    .purchased{
+    .purchased {
         margin: 0;
         width: 100%;
     }
-    
+
     .purchased-products {
         width: 100%;
     }
-    .purchased-products-information{
-        margin-left: 20%;
+
+    .purchased-products-information h2{
+        font-size: 30px;
     }
 
-    .purchased-products-image{
-        margin-left: 10%;
+    .purchased-products-information h3{
+        font-size: 25px;
+    }
+
+    .purchased-products-image {
+        width: 250px;
+        height: 250px;
+        margin: 5%;
     }
 
     .final-price {
         width: 100%;
+    }
+}
+
+@media (max-width: 625px){
+    .purchased-products {
+        flex-direction: column;
+    }
+    .final-price h1{
+        font-size: 35px;
+    }
+    .final-price-price{
+        font-size: 20px;
     }
 }

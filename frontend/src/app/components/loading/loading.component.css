@@ -1,0 +1,11 @@
+#load {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text
+{
+    text-align: center;
+}
