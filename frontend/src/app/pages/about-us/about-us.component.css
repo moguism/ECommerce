@@ -29,6 +29,7 @@
     align-items: center;
     padding: 20px 0;
     background-size: cover;
+    justify-content: center;
 }
 
 .content-box {
@@ -167,7 +168,6 @@ p {
     .section
     {
         flex-direction: column;
-        justify-content: center;
     }
     .team{
         flex-direction: column;
