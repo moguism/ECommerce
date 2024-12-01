@@ -47,7 +47,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    height: 200px;
+    height: auto;
     width: 100%;
     gap: 20px;
     border-radius: 8px;
@@ -56,6 +56,10 @@
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
 
+
+    align-items:first center;
+    justify-content: center;
+    height: 100%;
 }
 
 .basket-products-product{
@@ -67,12 +71,27 @@
 
 .basket-products-image{
     width: 100%;
-    max-width: 150px;
-    height: 150px;
+    max-width: 200px;
+    height: 200px;
     border-radius: 25px;
+    border: solid black 2px;
+    margin-top: 10%;
 
     
 }
+
+.basket-products-product {
+    width: 50%;
+
+}
+
+.basket-products-information {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    font-size: 1.2rem;
+}
+
+
 
 .basket-products-information-Button{
     width: 50px;
@@ -127,28 +146,25 @@ hr{
     width: 50%;
     border: 2px dopped;
 }
-.final-price-button-card{
+
+
+.final-price-button-card,
+.final-price-button-Etherium {
+    font-weight: bold; 
     width: 100%;
     height: auto;
     border-radius: 8px;
     background-color: #99C080;
     cursor: pointer;
 }
+
+
 
 .final-price-button-card  img{
     width: 30px;
     height: 30px;
     vertical-align: middle;
     margin-left: 8px;
-}
-
-.final-price-button-Etherium{
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    background-color: #99C080;
-    cursor: pointer;
-    margin-left: 2%;
 }
 
 .final-price-button-Etherium img{
@@ -174,23 +190,130 @@ hr{
 }
 
 
+@media (max-width: 1300px) {
+    .main {
+        padding: 0 5%;
+        font-size: 2rem;
+    }
 
-/*responsive*/
-@media (max-width: 1120px){
-    .information{
+    #cartCounter {
+        margin: 0 5%;
+        text-align: center;
+    }
+
+    .information {
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
+        align-items: center;
     }
-    .final-price{
+
+    .basket {
+        width: 100%;
+        align-items: center;
+    }
+
+    .basket-products {
+        flex-direction: column;
+        height: auto;
+        text-align: center;
+        padding: 10%;
+        width: 90%;
+    }
+
+    .basket-products-product {
+        margin-bottom: -10%;
+    }
+
+    .basket-products-product h2 {
+        font-size: 50px;
+    }
+
+    .basket-products-information {
+        grid-template-columns: 100%;
+        margin-bottom: 5%;
+    }
+
+    .basket-products-image {
+        width: 100%;
+        max-width: 500px;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .basket-products-information-price {
+        margin-bottom: 15%;
+        font-size: 1.8rem;
+    }
+
+    .basket-products-information-functions {
+        gap: 10px;
+        text-align: center;
+        height: 50px;
+
+    }
+    .basket-products-information-Button{
+        width: 20%;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .basket-products-information-functions-input {
         width: 50%;
+        height: 50px;
+        padding: 2%;
+        font-size: 2rem;
+        text-align: center;
     }
+
+    .final-price {
+        font-size: 2.5rem;
+        width: 100%;
+        margin: 0 auto;
+        padding: 5%;
+        margin: 0;
+    }
+    .final-price-button-card{
+        font-size: 2.5rem;
+
+    }
+
+    .final-price-button-card img{
+        width: 50px;
+        height: 50px;
+    }
+    .final-price-button-Etherium{
+        font-size: 2.5rem;
+
+    }
+
+    .final-price-button-Etherium img{
+        width: 50px;
+        height: 50px;
+    }
+
 }
-@media (max-width: 1120px){
-    .information{
-        flex-direction: column;
-        gap: 30px;
+
+
+@media (max-width: 800px) {
+    .main {
+        padding: 0 2%;
     }
-    .final-price{
-        width: 50%;
+
+    #progressBar img {
+        width: 40px;
+        height: 40px;
     }
+
+    .basket-products {
+        padding: 15%;
+        width: 100%;
+    }
+
+
+    .basket-products-information-functions {
+        gap: 15px;
+    }
+
+  
+    
 }
