@@ -191,10 +191,10 @@
         display: flex;
         font-size: 25px;
     }
-    .logo {
+    /*.logo {
         visibility: hidden;
         display: none;
-    }
+    }*/
     #blackVisible {
         flex-direction: column;
         height: 300px;
@@ -239,4 +239,9 @@
     .easteregg{
         display:block;
      }
+}
+
+.not-display
+{
+    display: none;
 }

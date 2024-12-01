@@ -34,7 +34,7 @@ public class ProductsToBuyMapper
     }
 
 
-    public async Task<ProductsToBuy> ToEntity(CartContentDto cartContentDto)
+    public ProductsToBuy ToEntity(CartContentDto cartContentDto)
     {
 
         return new ProductsToBuy
@@ -44,14 +44,14 @@ public class ProductsToBuyMapper
         };
     }
 
-    public async Task<IEnumerable<ProductsToBuy>> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
+    public IEnumerable<ProductsToBuy> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
     {
 
         List<ProductsToBuy> result = new List<ProductsToBuy>();
 
         foreach (CartContentDto product in cartContentDtos)
         {
-            ProductsToBuy productToBuy = await ToEntity(product);
+            ProductsToBuy productToBuy = ToEntity(product);
             result.Add(productToBuy);
         }
         return result;
