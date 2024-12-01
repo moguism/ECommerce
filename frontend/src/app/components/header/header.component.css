@@ -9,7 +9,7 @@
     align-items: center;
 }
 .red {
-    height: 50px;
+    height: 100%;
     width: 5%;
     background-color: #A82222;
     display: flex;
@@ -47,6 +47,7 @@
 }
 .logo {
     width: 5%;
+    cursor: pointer;
 }
 #menu {
     margin-left: 2%;
@@ -128,6 +129,9 @@
 }
 .easteregg{
    display: none;
+}
+h1{
+    display: none;
 }
 
 /* Responsive */
@@ -238,7 +242,10 @@
     }
     .easteregg{
         display:block;
-     }
+    }
+    h1{
+        display: block;
+    }
 }
 
 .not-display
