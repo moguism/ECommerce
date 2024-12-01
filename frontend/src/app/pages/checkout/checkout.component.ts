@@ -43,6 +43,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.stripeEmbedCheckout?.destroy();
     this.autoRefreshSubscription?.unsubscribe();
   }
 
