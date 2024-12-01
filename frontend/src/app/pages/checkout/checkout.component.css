@@ -121,17 +121,9 @@ hr{
         gap: 30px;
     }
     .final-price{
-        width: 50%;
+        width: 300px;
         margin-left: 0;
-    }
-}
-@media (max-width: 1120px){
-    .information{
-        flex-direction: column;
-        gap: 30px;
-    }
-    .final-price{
-        width: 50%;
+        height: 200px;
     }
 }
 
@@ -140,6 +132,9 @@ hr{
         flex-direction: column;
         width: 225px;
         height: 40%;
+    }
+    .final-price{
+        width: 225px;
     }
 }
 
