@@ -126,8 +126,8 @@
     min-height: 170vh;
     background-image: url("../../../../public/finalBackground.png");
     background-repeat: no-repeat;
-    background-size: 100%;
-    background-repeat: inherit;
+    background-size: cover;
+    background-position: center;
 }
 
 .btn-buy {
@@ -137,7 +137,6 @@
     padding: 15px 30px;
     font-size: 18px;
     font-weight: bold;
-    text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
