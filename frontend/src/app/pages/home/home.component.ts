@@ -15,15 +15,11 @@ export class HomeComponent {
   {
     const currentScroll = window.scrollY;
 
-    if(currentScroll >= 100 && currentScroll <= 700)
-    {
-      document.getElementById("animated-section")?.classList.add("animation-class");
-    }
-    else if(currentScroll >= 2800 && currentScroll <= 3800)
+    if(currentScroll >= 800 && currentScroll <= 1500)
     {
       document.getElementById("second-animated-section")?.classList.add("animation-class");
     }
-    else if(currentScroll >= 5400 && currentScroll <= 6500)
+    else if(currentScroll >= 1500 && currentScroll <= 3000)
     {
       document.getElementById("third-animated-section")?.classList.add("animation-class");
     }

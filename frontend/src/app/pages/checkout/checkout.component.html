@@ -2,9 +2,7 @@
 <div class="main">
     @if(showLoading)
     {
-        <div id="load">
-            <img src="assets/afterCheckout/carga.gif" alt="gif de carga" />
-        </div>
+        <app-loading></app-loading>
     }
     @else {
     <div class="information">
@@ -20,12 +18,10 @@
             <div class="basket-products">
                 <img class="basket-products-image" [src]="product.image.replace('/images/images/', '/images/')" alt="">
                 <div class="basket-products-information">
-                    <div class="basket-products-information-functions">
-                        <h4 class="basket-products-information-functions-title">{{product.name}}</h4>
-                        <h5 class="basket-products-information-functions-title">{{ product.total }}</h5>
-                    </div>
-                    <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
-                    <h3>Precio por kg {{product.price | eurosToCents}}</h3>
+                    <h2 class="basket-products-information-title">{{product.name}}</h2>
+                    <h4 class="basket-products-information-quantity">Cantidad: {{ product.total }}</h4>
+                    <h4>Total: {{(product.total*product.price) | eurosToCents}}</h4>
+                    <h4>Precio por kg {{product.price | eurosToCents}}</h4>
                 </div>
             </div>
             }
@@ -36,7 +32,7 @@
         </div>
 
         <div class="final-price">
-            <h3>Resumen</h3>
+            <h2>Resumen</h2>
             <div class="final-price-price">
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>
@@ -44,7 +40,7 @@
             @if (shoppingCartProducts.length > 0) {
                 @if(method == "card")
                 {
-                    <button (click)="embeddedCheckout()" class="final-price-button-card">Comprar embebido</button>
+                    <button (click)="embeddedCheckout()" class="final-price-button-card">Pagar con tarjeta</button>
                     <!--<button (click)="hostedCheckout()">Comprar en página externa</button>-->
                 }
                 @else {

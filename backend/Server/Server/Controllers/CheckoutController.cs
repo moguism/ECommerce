@@ -14,7 +14,6 @@ namespace Server.Controllers;
 [ApiController]
 public class CheckoutController : ControllerBase
 {
-    private readonly Settings _settings;
     private readonly CartContentMapper _cartContentMapper;
     private readonly ShoppingCartService _shoppingCartService;
     private readonly OrderService _orderService;
@@ -23,12 +22,11 @@ public class CheckoutController : ControllerBase
     private readonly WishListService _wishListService;
     private readonly Services.ProductService _productService;
 
-    public CheckoutController(Settings settings, CartContentMapper cartContentMapper, 
+    public CheckoutController(CartContentMapper cartContentMapper, 
         ShoppingCartService shoppingCartService, OrderService orderService,
         EmailService emailService, TemporalOrderService temporalOrderService,
         WishListService wishListService, Services.ProductService productService)
     {
-        _settings = settings;
         _cartContentMapper = cartContentMapper;
         _shoppingCartService = shoppingCartService;
         _orderService = orderService;

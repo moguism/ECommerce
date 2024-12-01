@@ -59,7 +59,7 @@
 #animated-section {
     position: absolute;
     left: -25vw;
-    top: 1000px;
+    top: 500px;
     background-color: rgba(0, 255, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
@@ -72,7 +72,7 @@
 #second-animated-section {
     position: absolute;
     left: -25vw;
-    top: 3600px;
+    top: 1500px;
     background-color: rgba(255, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
@@ -85,7 +85,7 @@
 #third-animated-section {
     position: absolute;
     left: -25vw;
-    top: 6250px;
+    top: 2500px;
     background-color: rgba(253, 221, 202, 0.5);
     padding: 20px;
     border-radius: 10px;
