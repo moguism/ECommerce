@@ -96,20 +96,17 @@ namespace Server
             
 
             // Permite CORS
-            if (builder.Environment.IsDevelopment())
-            {
                 builder.Services.AddCors(
                     options =>
                     options.AddDefaultPolicy(
                         builder =>
                         {
-                            builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                            builder.AllowAnyOrigin()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                             ;
                         })
                     );
-            }
 
 
             var app = builder.Build();
@@ -125,10 +122,10 @@ namespace Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-
-                // Permite CORS
-                app.UseCors();
             }
+
+            // Permite CORS
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
