@@ -75,6 +75,36 @@
     }
 }
 
+@media (max-width: 430px) {
+    #animated-section {
+        width: 25%;
+        left: -70vw;
+        font-size: 6px;
+    }
+
+    #second-animated-section {
+        width: 25%;
+        left: -70vw;
+        font-size: 6px;
+    }
+
+    #third-animated-section {
+        width: 25%;
+        left: -70vw;
+        font-size: 6px;
+    }
+
+    @keyframes textAnimation {
+        from {
+            transform: translate(-70vw, 0);
+        }
+
+        to {
+            transform: translate(1vw, 0);
+        }
+    }
+}
+
 #animated-section {
     position: absolute;
     left: -25vw;
