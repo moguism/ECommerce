@@ -214,6 +214,25 @@ option{
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+/*responsive*/
+@media (max-width: 1300px) {
+    #product-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+/*responsive*/
+@media (max-width: 900px) {
+    #product-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+
+
 /*responsive*/
 @media (max-width: 700px) {
     #product-list {
