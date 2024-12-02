@@ -4,14 +4,17 @@
 
 <div class="body">
     <div class="sort-buttons">
-        <select id="order-by" (change)="order()">
-            <option value="name-asc">Nombre ascendente</option>
-            <option value="name-desc">Nombre descendiente</option>
-            <option value="price-asc">Precio ascendente</option>
-            <option value="price-desc">Precio descendiente</option>
-        </select>
         <div class="search-bar">
             <app-search-bar (newItemEvent)="getSearchedProducts($event)" [query]="this.querySelector.search"></app-search-bar>
+        </div>
+
+        <div>
+            <select id="order-by" (change)="order()">
+                <option value="name-asc">Nombre ascendente</option>
+                <option value="name-desc">Nombre descendiente</option>
+                <option value="price-asc">Precio ascendente</option>
+                <option value="price-desc">Precio descendiente</option>
+            </select>
         </div>
     </div>
 
