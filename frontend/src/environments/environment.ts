@@ -1,5 +1,5 @@
 export const environment = {
-    apiUrl: "https://localhost:7150/api/",
-    imageRouteBasic: "https://localhost:7150/",
-    imageRoute: "https://localhost:7150/images/"
+    apiUrl: "https://farminhouse.runasp.net/api/",
+    imageRouteBasic: "https://lfarminhouse.runasp.net",
+    imageRoute: "https://farminhouse.runasp.net/images/"
 };
