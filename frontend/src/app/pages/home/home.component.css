@@ -4,8 +4,26 @@
 }
 
 .centered-image {
+    transition: 2s;
     position: fixed;
     top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    width: 15vw;
+    height: 15vw;
+    max-width: 200px;
+    max-height: 200px;
+    background-image: url("../../../../public/truck.gif");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.centered-image-stop{
+    transition: 2s;
+    position: fixed;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 999;
@@ -118,19 +136,30 @@
 }
 
 .final-content{
-    display: flex;
-    flex-direction: column;
-    justify-items: center;
-    align-items: center;
-    width: 100%;
-    min-height: 170vh;
-    background-image: url("../../../../public/finalBackground.png");
+    width: 20vw;
+    height: 20vw;
+    background-image: url("../../../../public/final-house.png");
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    cursor: pointer;
+    margin-bottom: 5%;
 }
 
-.btn-buy {
+.final-content:hover{
+    width: 22vw;
+    height: 22vw;
+}
+
+.activate-text{
+    display: flex;
+}
+
+.defuse-text{
+    display: none;
+}
+
+/*.btn-buy {
     background-color: #4da8da;
     color: #fff;
     border: none;
@@ -156,4 +185,4 @@
     background-color: #2887b3;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     transform: translateY(1px);
-}
+}*/
