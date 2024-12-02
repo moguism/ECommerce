@@ -206,13 +206,10 @@ namespace Server
                     {
                         PasswordService passwordService = new PasswordService();
                         // Crear usuarios de ejemplo
-                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
-                        var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
-
+                        var user1 = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
+                        
                         // Asegurarse de que los usuarios están añadidos al contexto
                         dbContext.Users.Add(user1);
-                        dbContext.Users.Add(user2);
-
                         dbContext.SaveChanges();
 
                     }
