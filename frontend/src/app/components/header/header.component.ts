@@ -77,7 +77,8 @@ export class HeaderComponent implements OnInit {
       const textElements = document.querySelectorAll(".text");
       const blackDiv = document.getElementById("black");
       const dropdown = document.getElementsByClassName("dropdown");
-      
+      document.getElementById("logo")?.classList.add("not-display");
+
       if(this.jwt != ""){
         dropdown[0].className = "undisplay-dropdown";
       }
@@ -102,6 +103,7 @@ export class HeaderComponent implements OnInit {
     const textVisibleElements = document.querySelectorAll(".textVisible");
     const blackVisibleDiv = document.getElementById("blackVisible");
     const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
+    document.getElementById("logo")?.classList.remove("not-display");
     const screenWidth = window.innerWidth;
 
     if(this.jwt != ""){

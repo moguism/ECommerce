@@ -2,18 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from '../../models/product';
 import { ApiService } from '../../services/api.service';
 import { ProductService } from '../../services/product.service';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user';
 import { Order } from '../../models/order';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
+import { LoadingComponent } from '../../components/loading/loading.component';
 
 @Component({
   selector: 'app-after-checkout',
   standalone: true,
-  imports: [EurosToCentsPipe, HeaderComponent],
+  imports: [EurosToCentsPipe, HeaderComponent, LoadingComponent],
   templateUrl: './after-checkout.component.html',
   styleUrl: './after-checkout.component.css'
 })

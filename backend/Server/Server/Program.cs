@@ -25,6 +25,9 @@ namespace Server
             builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
 
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<EmailSettings>>().Value);
+
             // Add services to the container.
 
             builder.Services.AddControllers().AddJsonOptions(options => 
@@ -83,8 +86,8 @@ namespace Server
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
             // Aqui esta la clave privada
-            Stripe.StripeConfiguration.ApiKey = "sk_test_51QJzjI2MpRBL4z2Cyh3NiBYhF4kXzVk7QJppRv2cAwoM8vPFrDwUjKnwZOiIDw0yYZfzNxNybQWenGMmmj83NunP00UGENKK29";
-            
+            Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:Key"];
+
             builder.Services.AddHostedService<CleanTemporalOrdersService>();
             
 

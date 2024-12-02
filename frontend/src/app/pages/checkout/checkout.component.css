@@ -71,6 +71,7 @@
     margin-left: 5%;
     padding: 2%;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 225px;
 
 }
 
@@ -120,16 +121,20 @@ hr{
         gap: 30px;
     }
     .final-price{
-        width: 50%;
+        width: 300px;
+        margin-left: 0;
+        height: 200px;
     }
 }
-@media (max-width: 1120px){
-    .information{
+
+@media (max-width: 425px){
+    .basket-products{
         flex-direction: column;
-        gap: 30px;
+        width: 225px;
+        height: 40%;
     }
     .final-price{
-        width: 50%;
+        width: 225px;
     }
 }
 

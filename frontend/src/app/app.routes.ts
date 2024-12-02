@@ -9,6 +9,7 @@ import { ShoppingCartComponent } from './pages/shopping-cart/shopping-cart.compo
 import { ProductListComponent } from './pages/product-list/product-list.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { AfterCheckoutComponent } from './pages/after-checkout/after-checkout.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
@@ -19,5 +20,6 @@ export const routes: Routes = [
     {path: "product-list/:category", component: ProductListComponent},
     {path: "shopping-cart", component: ShoppingCartComponent},
     {path: "checkout/:method/:id", component: CheckoutComponent},
-    {path: "after-checkout",component:AfterCheckoutComponent}
+    {path: "after-checkout",component:AfterCheckoutComponent},
+    {path: "**", component:NotFoundComponent}
 ];

@@ -1,5 +1,6 @@
 .main-container {
     display: flex;
+    flex-direction: column;
 }
 
 .centered-image {
@@ -59,8 +60,8 @@
 #animated-section {
     position: absolute;
     left: -25vw;
-    top: 1000px;
-    background-color: rgba(0, 255, 0, 0.5);
+    top: 500px;
+    background-color: #698558;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -72,8 +73,8 @@
 #second-animated-section {
     position: absolute;
     left: -25vw;
-    top: 3600px;
-    background-color: rgba(255, 0, 0, 0.5);
+    top: 1500px;
+    background-color: #D9A72E;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -85,13 +86,13 @@
 #third-animated-section {
     position: absolute;
     left: -25vw;
-    top: 6250px;
-    background-color: rgba(253, 221, 202, 0.5);
+    top: 2500px;
+    background-color: #A82222;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    text-align: center;
     color: white;
+    text-align: center;
     font-family: 'Arial', sans-serif;
 }
 
@@ -116,6 +117,19 @@
     text-align: center;
 }
 
+.final-content{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    min-height: 170vh;
+    background-image: url("../../../../public/finalBackground.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
 .btn-buy {
     background-color: #4da8da;
     color: #fff;
@@ -123,13 +137,13 @@
     padding: 15px 30px;
     font-size: 18px;
     font-weight: bold;
-    text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.3s ease;
     outline: none;
+    margin-top: 80%;
 }
 
 .btn-buy:hover {
