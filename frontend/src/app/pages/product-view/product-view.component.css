@@ -1,4 +1,4 @@
-.body{
+.body {
     min-height: 100vh;
     background-image: url("../../../../public/assets/images/campo.jpg");
     background-repeat: repeat-y;
@@ -9,8 +9,9 @@
     flex-direction: column;
     justify-content: space-around;
 }
+
 /*Esto seria par la visualizacion de mis productos y sus caracteristicas*/
-.products{
+.products {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -19,14 +20,17 @@
     gap: 10%;
     height: 100%;
 }
-.image{/*Esta clase sera necesaria para poder poner de un mismo tamaño la imagen si no se sabe como se hace es igual que las imagenes de product-list*/
-    width: 100%; 
+
+.image {
+    /*Esta clase sera necesaria para poder poner de un mismo tamaño la imagen si no se sabe como se hace es igual que las imagenes de product-list*/
+    width: 100%;
     max-width: 350px;
     height: 100%;
-    /*height: 370px;*/
     border-radius: 8px;
 }
-.products-description{
+
+.products-description {
+    padding: 2%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,47 +38,57 @@
     border-radius: 8px;
     width: 30%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    padding-left: 5px;
 }
-products-description-description{
+
+.products-description-description {
     word-break: break-word;
     white-space: normal;
     width: 50%;
 }
-.products-description-price{
-display: flex;
-flex-direction: row;
-justify-content: space-around;
-gap: 10%;
+
+.products-description-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 10%;
 }
-.stock{
+
+.stock {
     color: green;
 }
-.products-description-anadir{
+
+.products-description-anadir {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-.button-menos{
-    background-color: green;
+
+.button-menos {
+    background-color: #99C080;
     width: 25%;
     height: 38%;
-    border:1px solid black;
+    border: 1px solid black;
     border-top-left-radius: 10%;
     border-bottom-left-radius: 10%;
     cursor: pointer;
+    font-size: 1.2rem;
+
 }
-.count{
+
+.count {
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid black;
     height: 34%;
     width: 25%;
+    font-size: 1.2rem;
 }
-.button-mas{
-    background-color: green;
+
+.button-mas {
+    background-color: #99C080;
+    font-size: 1.2rem;
     width: 25%;
     height: 38%;
     border: 1px solid black;
@@ -82,23 +96,26 @@ gap: 10%;
     border-bottom-right-radius: 10%;
     cursor: pointer;
 }
-.anadir{
+
+.anadir {
     width: 50%;
     height: 150%;
-    background-color: green;
+    background-color: #99C080;
     font-weight: bold;
-    border:  1px solid black;
+    font-size: 1.2rem;
+    border: 1px solid black;
     border-radius: 8px;
     cursor: pointer;
 }
+
 /*Descripcion*/
-.description{
+.description {
     display: flex;
     justify-content: center;
     padding-top: 4%;
 }
-.description p
-{
+
+.description p {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: white;
@@ -107,15 +124,17 @@ gap: 10%;
     border-radius: 10px;
     font-size: 30px;
 }
+
 /*Valoraciones*/
-.review{
+.review {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
     gap: 20px;
 }
-.review-title{
+
+.review-title {
     background-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
@@ -123,14 +142,17 @@ gap: 10%;
     height: 30px;
     width: 41%;
     margin-top: 50px;
+    padding: 1%;
 }
-.review-title p{
+
+.review-title p {
     font-size: 30px;
     font-weight: bold;
     margin: 0;
     text-align: center;
 }
-.review-input{
+
+.review-input {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -138,21 +160,27 @@ gap: 10%;
     gap: 20px;
     width: 41%;
 }
-.review-input-text{
+
+.review-input-text {
     background-color: white;
     border-radius: 8px;
     color: black;
     width: 100%;
+    padding: 2%;
 }
-.review-input-button{
+
+.review-input-button {
     width: 50%;
-    background-color: green;
+    background-color: #99C080;
     font-weight: bold;
-    border:  1px solid black;
+    font-size: 1.5rem;
+    border: 1px solid black;
     border-radius: 8px;
     cursor: pointer;
+    padding: 1%;
 }
-.review-users{
+
+.review-users {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -160,7 +188,8 @@ gap: 10%;
     width: 100%;
     gap: 20px;
 }
-.review-users-opinion{
+
+.review-users-opinion {
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -169,24 +198,27 @@ gap: 10%;
     width: 90%;
     border-radius: 8px;
 }
-.review-users-opinion-text{
+
+.review-users-opinion-text {
     width: 80%;
 }
-.review-users-opinion-date{
+
+.review-users-opinion-date {
     width: 180px;
 }
-.review-users-opinion-score{
+
+.review-users-opinion-score {
     width: 70px;
 }
 
-.review-users-opinion-user{
+.review-users-opinion-user {
     margin-right: 5px;
 }
 
 /*responsive*/
 
 @media (max-width: 780px) {
-    .anadir{
+    .anadir {
         width: 125px;
     }
 }
@@ -197,30 +229,37 @@ gap: 10%;
         gap: 10px;
         height: 80%;
     }
-    .products-image{
+
+    .products-image {
         display: flex;
         justify-content: center;
     }
-    .products-description{
+
+    .products-description {
         width: 100%;
         height: 100%;
     }
-    .products-description-title{
+
+    .products-description-title {
         text-align: center;
     }
-    .products-description-anadir{
+
+    .products-description-anadir {
         width: 100%;
         height: auto;
         align-items: center;
     }
-    .image-anadir-carrito{
+
+    .image-anadir-carrito {
         width: 50%;
     }
-    .products-description-price{
+
+    .products-description-price {
         gap: 25%;
     }
-    .review-input{
+
+    .review-input {
         width: 95%;
     }
-    
+
 }

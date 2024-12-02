@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using Server.Models;
 using Server.Services;
 using Server.Services.Blockchain;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -21,6 +23,8 @@ namespace Server
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
             var builder = WebApplication.CreateBuilder(args);
+
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
             builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
@@ -111,7 +115,10 @@ namespace Server
             var app = builder.Build();
 
             //PA QUE FUNCIONE EL WWWROOT NO LO TOQUEIS HIJOS DE PUTA
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -206,13 +213,10 @@ namespace Server
                     {
                         PasswordService passwordService = new PasswordService();
                         // Crear usuarios de ejemplo
-                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
-                        var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
-
+                        var user1 = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
+                        
                         // Asegurarse de que los usuarios están añadidos al contexto
                         dbContext.Users.Add(user1);
-                        dbContext.Users.Add(user2);
-
                         dbContext.SaveChanges();
 
                     }

@@ -2,7 +2,7 @@
     <app-header></app-header>
 </div>
 <div class="main-container">
-    <div class="centered-image"></div>
+    <div id="centered-image" class="centered-image"></div>
     <div class="content">
         <div id="animated-section" class="animation-class">
             <h1>FARM IN HOUSE</h1>
@@ -23,10 +23,12 @@
             <p>Nos comprometemos a entregar los productos que solicites <br>en el mismo día en que son producidos</p>
         </div>
 
-        <div style="height: 1260px;"></div>
-    </div>
-    <div class="final-content">
-        <button class="btn-buy" [routerLink]="'product-list/frutas'">COMPRAR AHORA</button>
-        <div></div>
+        <!--<div id="buy-text" class="defuse-text">
+            <h1>COMPRAR AHORA</h1>
+        </div>-->
+        <div id="final-content" class="final-content" [routerLink]="'product-list/frutas'" (mouseover)="text_activate()" (mouseleave)="text_defuse()">
+            
+            <!--<button class="btn-buy" [routerLink]="'product-list/frutas'">COMPRAR AHORA</button>-->
+        </div>
     </div>
 </div>
