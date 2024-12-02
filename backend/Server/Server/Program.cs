@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using Server.Models;
 using Server.Services;
 using Server.Services.Blockchain;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -21,6 +23,8 @@ namespace Server
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
             var builder = WebApplication.CreateBuilder(args);
+
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
             builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
@@ -111,7 +115,10 @@ namespace Server
             var app = builder.Build();
 
             //PA QUE FUNCIONE EL WWWROOT NO LO TOQUEIS HIJOS DE PUTA
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

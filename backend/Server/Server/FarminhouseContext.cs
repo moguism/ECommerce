@@ -7,6 +7,12 @@ namespace Server;
 
 public class FarminhouseContext : DbContext
 {
+    private readonly Settings _settings;
+    public FarminhouseContext(Settings settings)
+    {
+        _settings = settings;
+    }
+
     private const string DATABASE_PATH = "farminhouse.db";
 
     public DbSet<Order> Orders { get; set; }
@@ -26,11 +32,13 @@ public class FarminhouseContext : DbContext
     public DbSet<Wishlist> Wishlists { get; set; }
     public DbSet<ProductsToBuy> ProductsToBuys { get; set; }
 
-
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        optionsBuilder.UseSqlite($"DataSource={baseDir}{DATABASE_PATH}");
+        #if DEBUG
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            optionsBuilder.UseSqlite($"DataSource={baseDir}{DATABASE_PATH}");
+        #else
+            optionsBuilder.UseMySql(_settings.DatabaseConnection, ServerVersion.AutoDetect(_settings.DatabaseConnection));
+        #endif
     }
 }
