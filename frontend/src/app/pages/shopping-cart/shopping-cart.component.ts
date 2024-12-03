@@ -163,7 +163,8 @@ export class ShoppingCartComponent implements OnInit {
       //Añade productos a lista de los productos que el usuario quiere comprar
       const orderProduct: CartContent = {
         ProductId: product.id,
-        Quantity: product.total ?? product.stock // Usar `product.stock` si `product.total` no existe
+        Quantity: product.total ?? product.stock,
+        Product: product // Usar `product.stock` si `product.total` no existe
       };
 
       this.productsToBuy.push(orderProduct)
