@@ -61,7 +61,7 @@ namespace Server.Services
         {
 
             // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
+            return await _unitOfWork.UserRepository.GetAllInfoButOrdersById(Int32.Parse(stringId));
         }
 
     }

@@ -29,6 +29,25 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
+        public async Task<User> GetAllInfoWithTemporal(int id)
+        {
+            return await GetQueryable()
+                .Include(user => user.TemporalOrders)
+                    .ThenInclude(t => t.Wishlist)
+                    .ThenInclude(w => w.Products)
+                    .ThenInclude (product => product.Product)    
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
+
+        public async Task<User> GetAllInfoButOrdersById(int id)
+        {
+            return await GetQueryable()
+                .Include(user => user.ShoppingCart)
+                    .ThenInclude(shoppingCart => shoppingCart.CartContent)
+                    .ThenInclude(c => c.Product)
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
+
         public async Task<ICollection<User>> GetAllInfoExceptId(int id)
         {
             return await GetQueryable()

@@ -33,6 +33,13 @@ public class UserService
         return await _unitOfWork.UserRepository.GetByIdAsync(Int32.Parse(stringId));
     }
 
+    public async Task<User> GetUserFromStringWithTemporal(string stringId)
+    {
+
+        // Pilla el usuario de la base de datos
+        return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
+    }
+
     public async Task<User> GetUserAndOrdersFromDbByStringId(string stringId)
     {
 

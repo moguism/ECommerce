@@ -49,7 +49,7 @@ public class CheckoutController : ControllerBase
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
-        TemporalOrder temporalOrder = await GetTemporal(temporalOrderId, user);
+        TemporalOrder temporalOrder = GetTemporal(temporalOrderId, user);
 
         if(temporalOrder == null)
         {
@@ -82,11 +82,11 @@ public class CheckoutController : ControllerBase
         return Ok(new { sessionUrl = session.Url });
     }*/
 
-    private async Task<TemporalOrder> GetTemporal(int id, User user)
-    {
-        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
+    private TemporalOrder GetTemporal(int id, User user)
+    { 
+        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.Id == id);
 
-        if (temporalOrder.UserId != user.Id)
+        if (temporalOrder == null)
         {
             return null;
         }
@@ -182,7 +182,7 @@ public class CheckoutController : ControllerBase
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _userService.GetUserFromDbByStringId(idString);
+        return await _userService.GetUserFromStringWithTemporal(idString);
     }
 
 
