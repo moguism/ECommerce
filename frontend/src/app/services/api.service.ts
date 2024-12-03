@@ -26,6 +26,7 @@ export class ApiService {
   deleteToken() {
     this.jwt = null;
     localStorage.removeItem("token");
+    localStorage.removeItem("shoppingCart")
   }
 
   async get<T = void>(path: string, params: any = {}, responseType: any = null): Promise<Result<T>> {

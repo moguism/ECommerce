@@ -14,16 +14,11 @@ namespace Server.Controllers
     [ApiController]
     public class ShoppingCartController : ControllerBase
     {
-
-        private readonly ShoppingCartMapper _shoppingCartMapper;
         private readonly ShoppingCartService _shoppingCartService;
-        private readonly ProductService _productService;
 
-        public ShoppingCartController(ShoppingCartMapper shoppingCartMapper, ShoppingCartService shoppingCartService, UnitOfWork unitOfWork, ProductService productService)
+        public ShoppingCartController(ShoppingCartService shoppingCartService)
         {
-            _shoppingCartMapper = shoppingCartMapper;
             _shoppingCartService = shoppingCartService;
-            _productService = productService;
         }
 
         [Authorize]
@@ -36,20 +31,19 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = user.ShoppingCart;
             if (shoppingCart == null)
             {
                 return null;
             }
 
-            return _shoppingCartMapper.ToDto(shoppingCart);
-
-
+            ShoppingCartMapper shoppingCartMapper = new ShoppingCartMapper();
+            return shoppingCartMapper.ToDto(shoppingCart);
         }
 
         [Authorize]
         [HttpPost("addProductOrChangeQuantity")]
-        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
+        public async Task AddProductosToShoppingCart([FromBody] CartContent cartContent)
         {
 
             User user = await GetAuthorizedUser();
@@ -58,13 +52,7 @@ namespace Server.Controllers
                 return;
             }
 
-            Product product = await _productService.GetProductById(cartContentDto.ProductId);
-            if(product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
-            {
-                return;
-            }
-
-            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContent);
 
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nethereum.Util;
 using Server.DTOs;
 using Server.Models;
 using Server.Repositories.Base;
@@ -12,8 +13,9 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
     public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int userId)
     {
         return await GetQueryable()
-            .Include(temporalOrder => temporalOrder.User)
             .Include(temporalOrder => temporalOrder.Wishlist)
+            .Include(temporalOrder => temporalOrder.Wishlist.Products)
+            .ThenInclude(product => product.Product)
             .OrderBy(temporalOrder => temporalOrder.Id)
             .LastOrDefaultAsync(temporalOrder => temporalOrder.UserId == userId);
     }
@@ -21,14 +23,17 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
     public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
     {
         return await GetQueryable()
-            .Include(temporalOrder => temporalOrder.User)
             .Include(temporalOrder => temporalOrder.Wishlist)
+            .Include(temporalOrder => temporalOrder.Wishlist.Products)
+            .ThenInclude(product => product.Product)
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
     public async Task<TemporalOrder> GetFullTemporalOderByIdWithoutUser(int id)
     {
         return await GetQueryable()
             .Include(temporalOrder => temporalOrder.Wishlist)
+            .Include(temporalOrder => temporalOrder.Wishlist.Products)
+            .ThenInclude(product => product.Product)
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
 
@@ -36,6 +41,8 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
     {
         return await GetQueryable()
             .Include(temporalOrder => temporalOrder.Wishlist)
+            .Include(temporalOrder => temporalOrder.Wishlist.Products)
+            .ThenInclude(product => product.Product)
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.HashOrSession.Equals(id));
     }
 

@@ -28,7 +28,6 @@ export class ShoppingCartComponent implements OnInit {
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
-      localStorage.removeItem("goToCheckout")
       return
     }
     else {
@@ -37,7 +36,7 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   getLocalStorageCart() {
-    this.shoppingCartProducts = [];
+    //this.shoppingCartProducts = [];
     const productsRaw = localStorage.getItem("shoppingCart");
     if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
   }
@@ -45,10 +44,10 @@ export class ShoppingCartComponent implements OnInit {
 
 
   async getShoppingCart() {
-    this.shoppingCartService.getShoppingCartCount()
-    this.getLocalStorageCart();
+    //this.shoppingCartService.getShoppingCartCount()
+    this.shoppingCartProducts = [];
 
-    if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
+    /*if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
       console.log("Sincronizando productos locales al carrito del backend...");
 
       for (const product of this.shoppingCartProducts) {
@@ -57,35 +56,28 @@ export class ShoppingCartComponent implements OnInit {
       }
 
       localStorage.removeItem("shoppingCart");
-      this.shoppingCartProducts = [];
-    }
+      
+    }*/
 
+    // Podríamos optimizar esto haciendo que en el login ponga el contenido del carrito en el localStorage, de manera que no tenga que hacer peticiones
+    // Sin embargo, si un admin borra o cambia un producto, cagamos
     if (this.apiService.jwt !== "") {
       const result = await this.apiService.get("ShoppingCart", {}, 'json');
       if (result.data) {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
         for (const product of cartContent) {
-          const productResult = await this.productService.getById(product.productId);
-          if (productResult != null) {
-            const p: Product = {
-              id: productResult.id,
-              name: productResult.name,
-              average: productResult.average,
-              category: productResult.category,
-              categoryId: productResult.categoryId,
-              description: productResult.description,
-              image: productResult.image,
-              price: productResult.price,
-              reviews: productResult.reviews,
-              stock: productResult.stock,
-              total: product.quantity
-            };
-            this.shoppingCartProducts.push(p);
-          }
+          let p = product.product
+          p.total = product.quantity
+          p = this.shoppingCartService.addCorrectPath(p)
+          this.shoppingCartProducts.push(p);
         }
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
+    }
+    else
+    {
+      this.getLocalStorageCart();
     }
   }
 
@@ -111,7 +103,7 @@ export class ShoppingCartComponent implements OnInit {
       else {
         localStorage.removeItem("shoppingCart")
 
-        const cartContent = new CartContent( product.id, parseInt(input.value))
+        const cartContent = new CartContent(product.id, parseInt(input.value), product)
 
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
@@ -196,7 +188,7 @@ export class ShoppingCartComponent implements OnInit {
     localStorage.removeItem("goToCheckout")
     const cartContents: CartContent[] = []
     for (const product of this.shoppingCartProducts) {
-      const cartContent = new CartContent(product.id, product.total)
+      const cartContent = new CartContent(product.id, product.total, product)
       cartContents.push(cartContent)
     }
     const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(cartContents, true))

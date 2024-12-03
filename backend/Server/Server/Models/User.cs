@@ -24,7 +24,6 @@ public class User
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public ICollection<TemporalOrder> TemporalOrders { get; set; } = new List<TemporalOrder>();
-
     public ICollection<Order> Orders { get; set;} = new List<Order>();
-
+    public ShoppingCart ShoppingCart { get; set; }
 }

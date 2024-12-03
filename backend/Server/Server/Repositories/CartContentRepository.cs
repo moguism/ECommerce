@@ -11,12 +11,11 @@ namespace Server.Repositories
         public CartContentRepository(FarminhouseContext context) : base(context) { }
         
 
-        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
+        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContent cartContentDto)
         {
-            CartContent cartContent = await GetQueryable()
-                .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id
-                && c.ProductId == cartContentDto.ProductId);
-                
+            // ESTO SE PUEDE OPTIMIZAR 100%
+
+            CartContent cartContent = shoppingCart.CartContent.FirstOrDefault(c => c.ProductId == cartContentDto.ProductId);
 
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)

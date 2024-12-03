@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 using Stripe;
 using System.Collections;
@@ -13,10 +16,12 @@ public class UserService
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly TokenValidationParameters _tokenParameters;
+    private readonly UserMapper _userMapper;
 
-    public UserService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions)
+    public UserService(UnitOfWork unitOfWork, IOptionsMonitor<JwtBearerOptions> jwtOptions, UserMapper userMapper)
     {
         _unitOfWork = unitOfWork;
+        _userMapper = userMapper;
         _tokenParameters = jwtOptions.Get(JwtBearerDefaults.AuthenticationScheme)
                 .TokenValidationParameters;
     }
@@ -25,7 +30,14 @@ public class UserService
     {
 
         // Pilla el usuario de la base de datos
-        return await _unitOfWork.UserRepository.GetOnlyOrdersById(Int32.Parse(stringId));
+        return await _unitOfWork.UserRepository.GetByIdAsync(Int32.Parse(stringId));
+    }
+
+    public async Task<User> GetUserAndOrdersFromDbByStringId(string stringId)
+    {
+
+        // Pilla el usuario de la base de datos
+        return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
     }
 
     public async Task<User> GetUserById(int id)
@@ -62,7 +74,7 @@ public class UserService
                     {
                         { "id", user.Id },
                         { "name", user.Name },
-                        { ClaimTypes.Role, "Admin" } // TODO: CAMBIAR ESTO
+                        { ClaimTypes.Role, user.Role }
                     },
             Expires = DateTime.UtcNow.AddYears(3),
             SigningCredentials = new SigningCredentials(
@@ -75,16 +87,51 @@ public class UserService
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task InsertUser(User user)
+    public UserAfterLoginDto ToDto(User user)
     {
-        await _unitOfWork.UserRepository.InsertAsync(user);
-        await _unitOfWork.SaveAsync();
+        return _userMapper.ToDto(user);
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public IEnumerable<UserAfterLoginDto> ToDto(IEnumerable<User> users)
+    {
+        return _userMapper.ToDto(users);
+    }
+
+    public async Task<User> InsertUser(User user)
+    {
+        User newUser = await _unitOfWork.UserRepository.InsertAsync(user);
+        await _unitOfWork.SaveAsync();
+        return newUser;
+    }
+
+    public async Task<User> GetUserByEmailAndPassword(string email, string password)
     {
         User user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
-        return user;
+        if (user == null)
+        {
+            return null;
+        }
+        PasswordService passwordService = new PasswordService();
+        if(passwordService.IsPasswordCorrect(user.Password, password))
+        {
+            return user;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public async Task<string> RegisterUser(UserSignUpDto receivedUser)
+    {
+        User user = _userMapper.ToEntity(receivedUser);
+
+        PasswordService passwordService = new PasswordService();
+        user.Password = passwordService.Hash(receivedUser.Password);
+
+        user.Role = "User";
+        User newUser = await InsertUser(user);
+        return ObtainToken(newUser);
     }
 
     public async Task<User> GetUserByIdAsync(int id)

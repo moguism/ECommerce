@@ -13,25 +13,11 @@ namespace Server.Controllers;
 [ApiController]
 public class OrderController : ControllerBase
 {
-
-
-    //Hay que poner Services.OrderService porque da conflictos en Stripe
     private readonly UserService _userService;
-    private readonly Services.OrderService _orderService;
-    private readonly Services.ProductService _productService;
-    private readonly WishListService _wishListService;
-    private readonly ProductsToBuyMapper _productsToBuyMapper;
 
-
-    public OrderController(UserService userService, Services.OrderService orderService, 
-        WishListService wishListService, ProductsToBuyMapper productsToBuyMapper,
-        Services.ProductService productService)
+    public OrderController(UserService userService)
     {
         _userService = userService;
-        _orderService = orderService;
-        _wishListService = wishListService;
-        _productsToBuyMapper = productsToBuyMapper;
-        _productService = productService;
     }
 
 
@@ -46,7 +32,7 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return await _orderService.GetAllOrders(user);
+        return user.Orders;
 
     }
 
@@ -59,6 +45,6 @@ public class OrderController : ControllerBase
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _userService.GetUserFromDbByStringId(idString);
+        return await _userService.GetUserAndOrdersFromDbByStringId(idString);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
+using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -53,7 +55,7 @@ namespace Server.Services
         }
 
         
-        public async Task AddReview(Review review)
+        public async Task AddReview(ReviewDto reviewDto, int userId)
         {
             //añade la review al usuario
             /*if (review.User != null)
@@ -67,6 +69,23 @@ namespace Server.Services
                 review.Product.Reviews.Add(review);
             }*/
 
+            ReviewMapper reviewMapper = new ReviewMapper();
+
+            Review review = reviewMapper.ToEntity(reviewDto);
+            review = RateReview(review);
+            review.UserId = userId;
+            review.DateTime = DateTime.UtcNow;
+
+            Product product = await GetFullProductById(review.ProductId);
+
+            List<Review> reviews = (List<Review>)product.Reviews;
+            reviews.Add(review);
+            double averageScore = reviews.Average(r => r.Score);
+            product.Average = averageScore;
+
+            _unitOfWork.ProductRepository.Update(product);
+
+            // Agrega la Review
             await _unitOfWork.ReviewRepository.InsertAsync(review);
             await _unitOfWork.SaveAsync();
         }
@@ -95,6 +114,13 @@ namespace Server.Services
 
             return review;
         }
-        
+
+        public async Task<Product> GetFullProductById(int id)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.ProductRepository.GetFullProductById(id);
+        }
+
     }
 }

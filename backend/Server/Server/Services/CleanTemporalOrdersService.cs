@@ -35,14 +35,11 @@ public class CleanTemporalOrdersService : BackgroundService
                             unitOfWork.Context.Entry(existingEntity).State = EntityState.Detached;
                         }
 
-                        Wishlist wishlist = existingEntity.Wishlist;
-                        wishlist = await unitOfWork.WishlistRepository.GetFullByIdAsync(wishlist.Id);
-
                         unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
 
-                        foreach (ProductsToBuy cartContent in wishlist.Products)
+                        foreach (ProductsToBuy cartContent in existingEntity.Wishlist.Products)
                         {
-                            Product product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
+                            Product product = cartContent.Product;
                             product.Stock += cartContent.Quantity;
                             unitOfWork.ProductRepository.Update(product);
                             /*unitOfWork.ProductsToBuyRepository.Delete(cartContent);*/

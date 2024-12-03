@@ -15,32 +15,24 @@ namespace Server.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-
-        private readonly UserMapper _userMapper;
-        private readonly PasswordService _passwordService;
         private readonly UserService _userService;
 
-        public AuthController( UserMapper userMapper, PasswordService passwordService, UserService userService)
+        public AuthController(UserService userService)
         {
-            _userMapper = userMapper;
-            _passwordService = passwordService;
             _userService = userService;
         }
 
         [HttpPost("signup")]
         public async Task<string> RegisterUserAsync([FromBody] UserSignUpDto receivedUser)
         {
-            User user = _userMapper.ToEntity(receivedUser);
-            user.Password = _passwordService.Hash(receivedUser.Password);
-            await _userService.InsertUser(user);
-            return _userService.ObtainToken(user);
+            return await _userService.RegisterUser(receivedUser);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginUser([FromBody] LoginDto userLogin)
         {
-            User user = await _userService.GetUserByEmailAsync(userLogin.Email);
-            if (user != null && _passwordService.IsPasswordCorrect(user.Password, userLogin.Password))
+            User user = await _userService.GetUserByEmailAndPassword(userLogin.Email, userLogin.Password);
+            if (user != null)
             {
                 string stringToken = _userService.ObtainToken(user);
                 return Ok(stringToken);
