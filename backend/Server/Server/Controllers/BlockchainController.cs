@@ -17,25 +17,17 @@ namespace Server.Controllers;
 public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
-    private readonly OrderService _orderService;
     private readonly UserService _userService;
-    private readonly ProductsToBuyMapper _productsToBuyMapper;
-    private readonly OrderMapper _orderMapper;
     private readonly EmailService _emailService;
-    private readonly WishListService _wishListService;
     private readonly TemporalOrderService _temporalOrderService;
 
-    public BlockchainController(BlockchainService blockchainService, OrderService orderService, 
-        UserService userService, ProductsToBuyMapper productsToBuyMapper, OrderMapper orderMapper, 
-        EmailService emailService, WishListService wishListService, TemporalOrderService temporalOrderService)
+    public BlockchainController(BlockchainService blockchainService,
+        UserService userService,
+        EmailService emailService, TemporalOrderService temporalOrderService)
     {
         _blockchainService = blockchainService;
-        _orderService = orderService;
         _userService = userService;
-        _productsToBuyMapper = productsToBuyMapper;
-        _orderMapper = orderMapper;
         _emailService = emailService;
-        _wishListService = wishListService;
         _temporalOrderService = temporalOrderService;
     }
 
@@ -65,13 +57,8 @@ public class BlockchainController : ControllerBase
         {
             return null;
         }
-        Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
-        if (wishlist == null)
-        {
-            return null;
-        }
 
-        decimal total = wishlist.Products.Sum(product => product.PurchasePrice / 100m);
+        decimal total = temporalOrder.Wishlist.Products.Sum(product => product.PurchasePrice / 100m);
 
         if(data.Euros >= total)
         {
@@ -99,30 +86,18 @@ public class BlockchainController : ControllerBase
         bool done = await _blockchainService.CheckTransactionAsync(data);
         if(done == true)
         {
-            Order order = await _orderService.CompleteEthTransaction(data, user);
+            Order order = await _temporalOrderService.CreateOrderFromTemporal(data.Hash, data.Value, user.Id, 2);
+            //Order order = await _orderService.CompleteEthTransaction(data, user);
 
             if(order == null)
             {
                 return null;
             }
 
-            int wishlistId = order.WishlistId;
-            Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(wishlistId);
-            await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
-
-            order.Wishlist = productsorder;
+            await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
             order.User = null;
 
-            //Productos comprados por el usuario
-            //IEnumerable<CartContentDto> products = _productsToBuyMapper.ToDto(order.Wishlist.Products);
-
-            /*Order completedOrder = await _orderService.GetOrderById(order.Id);
-            return completedOrder;>*/
-
-            Order returnOrder = await _orderService.GetOrder(order);
-            returnOrder.User = null;
-
-            return returnOrder;
+            return order;
         }
         return null;
     }

@@ -13,25 +13,16 @@ namespace Server.Repositories
         public async Task<User> GetByEmailAsync(string email)
         {
             return await GetQueryable()
-                .Include(user => user.Reviews)
-                .Include(user => user.TemporalOrders)
-                .Include(user => user.Orders)
                 .FirstOrDefaultAsync(user => user.Email.Equals(email));
         }
 
         public async Task<User> GetAllInfoById(int id)
         {
             return await GetQueryable()
-                .Include(user => user.Reviews)
-                .Include(user => user.TemporalOrders)
                 .Include(user => user.Orders)
-                .FirstOrDefaultAsync(user => user.Id == id);
-        }
-
-        public async Task<User> GetOnlyOrdersById(int id)
-        {
-            return await GetQueryable()
-                .Include(user => user.Orders)
+                    .ThenInclude(order => order.Wishlist)
+                    .ThenInclude(wishList => wishList.Products)
+                    .ThenInclude(product => product.Product)
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 

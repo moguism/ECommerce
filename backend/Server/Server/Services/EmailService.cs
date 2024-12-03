@@ -45,7 +45,7 @@ namespace Server.Services
             {
                 decimal price = 0;
                 decimal totalpricequantity = 0;
-                Product oneproduct = await _unitOfWork.ProductRepository.GetFullProductById(products.ProductId);
+                Product oneproduct = await _unitOfWork.ProductRepository.GetByIdAsync(products.ProductId);
                 price = oneproduct.Price / 100m;
                 totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
                 body.AppendLine($"<tr style='text-align: center;'><td>{oneproduct.Name}</td><td><img src='{_productMapper.AddCorrectPath(oneproduct)}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>");

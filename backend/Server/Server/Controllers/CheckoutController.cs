@@ -14,26 +14,16 @@ namespace Server.Controllers;
 [ApiController]
 public class CheckoutController : ControllerBase
 {
-    private readonly CartContentMapper _cartContentMapper;
-    private readonly ShoppingCartService _shoppingCartService;
-    private readonly OrderService _orderService;
     private readonly EmailService _emailService;
     private readonly TemporalOrderService _temporalOrderService;
-    private readonly WishListService _wishListService;
-    private readonly Services.ProductService _productService;
+    private readonly UserService _userService;
 
-    public CheckoutController(CartContentMapper cartContentMapper, 
-        ShoppingCartService shoppingCartService, OrderService orderService,
-        EmailService emailService, TemporalOrderService temporalOrderService,
-        WishListService wishListService, Services.ProductService productService)
+    public CheckoutController( 
+        EmailService emailService, TemporalOrderService temporalOrderService, UserService userService)
     {
-        _cartContentMapper = cartContentMapper;
-        _shoppingCartService = shoppingCartService;
-        _orderService = orderService;
         _emailService = emailService;
         _temporalOrderService = temporalOrderService;
-        _wishListService = wishListService;
-        _productService = productService;
+        _userService = userService;
     }
 
 
@@ -66,7 +56,7 @@ public class CheckoutController : ControllerBase
             return null;
         }
 
-        Session session = await GetOptions(temporalOrder, "embedded", user);
+        Session session = await GetOptions(temporalOrder, user);
 
         temporalOrder.HashOrSession = session.Id;
         await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
@@ -107,7 +97,7 @@ public class CheckoutController : ControllerBase
         return temporalOrder;
     }
 
-    private async Task<Session> GetOptions(TemporalOrder temporalOrder, string mode, User user)
+    private async Task<Session> GetOptions(TemporalOrder temporalOrder, User user)
     {
         /*ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
         IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
@@ -116,11 +106,9 @@ public class CheckoutController : ControllerBase
 
         var lineItems = new List<SessionLineItemOptions>();
 
-        Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
-
-        foreach (ProductsToBuy cartContent in wishlist.Products)
+        foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)
         {
-            var product = await _productService.GetFullProductById(cartContent.ProductId);
+            var product = cartContent.Product;
             // Crea un SessionLineItemOptions para cada producto en el carrito
             var lineItem = new SessionLineItemOptions
             {
@@ -177,14 +165,12 @@ public class CheckoutController : ControllerBase
 
         if (session.PaymentStatus == "paid")
         {
-            Order order= await _orderService.CompletePayment(session);
-            int whislistId = order.WishlistId;
-            Wishlist productsorder = await _wishListService.GetWishlistByIdAsync(whislistId);
+            Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user.Id, 1);
             if (session.CustomerEmail != null)
             {
-                await _emailService.CreateEmailUser(user, productsorder, order.PaymentTypeId);
+                await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
             }
-            return await _orderService.GetOrderById(order.Id);
+            return order;
         }
         return null;
     }
@@ -199,7 +185,7 @@ public class CheckoutController : ControllerBase
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _shoppingCartService.GetUserFromDbByStringId(idString);
+        return await _userService.GetUserFromDbByStringId(idString);
     }
 
 

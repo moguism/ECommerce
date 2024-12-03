@@ -16,15 +16,11 @@ namespace Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserMapper _userMapper;
         private readonly UserService _userService;
-        private readonly PasswordService _passwordService;
 
-        public UserController(UserMapper userMapper, UserService userService, PasswordService passwordService)
+        public UserController(UserService userService)
         {
-            _userMapper = userMapper;
             _userService = userService;
-            _passwordService = passwordService;
         }
 
         //Obtiene todos los usuarios sin contraseña
@@ -43,7 +39,7 @@ namespace Server.Controllers
             IEnumerable<User> users = await _userService.GetAllUsersExceptId(user.Id);
 
             //Paso a DTO
-            IEnumerable<UserAfterLoginDto> userDtos = _userMapper.ToDto(users);
+            IEnumerable<UserAfterLoginDto> userDtos = _userService.ToDto(users);
 
             return userDtos;
         }
@@ -58,7 +54,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            UserAfterLoginDto userDto = _userMapper.ToDto(user);
+            UserAfterLoginDto userDto = _userService.ToDto(user);
 
             return userDto;
         }
@@ -87,12 +83,18 @@ namespace Server.Controllers
                 return null;
             }
 
+            // Si intenta modificar un usuario que no es él mismo y tampoco es admin
             if (!user.Role.Equals("Admin") && updatedUser.Id != user.Id)
             {
                 return null;
             }
 
             User oldUser = await _userService.GetUserById(updatedUser.Id);
+            if (oldUser == null)
+            {
+                return null;
+            }
+
             oldUser.Email = updatedUser.Email;
             oldUser.Address = updatedUser.Address;
             oldUser.Name = updatedUser.Name;
@@ -104,12 +106,13 @@ namespace Server.Controllers
 
             if(updatedUser.Password != null && updatedUser.Password != "")
             {
-                oldUser.Password = _passwordService.Hash(updatedUser.Password);
+                PasswordService passwordService = new PasswordService();
+                oldUser.Password = passwordService.Hash(updatedUser.Password);
             }
 
             User afterUpdate = await _userService.UpdateUser(oldUser);
 
-            UserAfterLoginDto userDto = _userMapper.ToDto(afterUpdate);
+            UserAfterLoginDto userDto = _userService.ToDto(afterUpdate);
             return userDto;
         }
 

@@ -34,11 +34,11 @@ namespace Server
 
             // Add services to the container.
 
-            builder.Services.AddControllers().AddJsonOptions(options => 
+            builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
-            
+
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -52,7 +52,7 @@ namespace Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
-            
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -64,9 +64,8 @@ namespace Server
             builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<UserMapper>();
-            
+
             builder.Services.AddScoped<ProductMapper>();
-            builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
@@ -93,20 +92,20 @@ namespace Server
             Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:Key"];
 
             builder.Services.AddHostedService<CleanTemporalOrdersService>();
-            
+
 
             // Permite CORS
-                builder.Services.AddCors(
-                    options =>
-                    options.AddDefaultPolicy(
-                        builder =>
-                        {
-                            builder.AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                            ;
-                        })
-                    );
+            builder.Services.AddCors(
+                options =>
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                        ;
+                    })
+                );
 
 
             var app = builder.Build();
@@ -191,8 +190,6 @@ namespace Server
                     };
 
 
-                   
-
                     // Añadir categorías y productos al contexto de la base de datos
                     dbContext.Categories.Add(fruitsCategory);
                     dbContext.Categories.Add(vegetablesCategory);
@@ -201,22 +198,13 @@ namespace Server
                     dbContext.Products.AddRange(vegetables);
                     dbContext.Products.AddRange(meats);
 
+                    PasswordService passwordService = new PasswordService();
+                    // Crear usuarios de ejemplo
+                    var user = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
 
-
-                    // Obtener el producto de Arándano
-                    var arandanoProduct = fruits.FirstOrDefault(p => p.Name == "Arandano");
-
-                    if (arandanoProduct != null)
-                    {
-                        PasswordService passwordService = new PasswordService();
-                        // Crear usuarios de ejemplo
-                        var user1 = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
-                        
-                        // Asegurarse de que los usuarios están añadidos al contexto
-                        dbContext.Users.Add(user1);
-                        dbContext.SaveChanges();
-
-                    }
+                    // Asegurarse de que los usuarios están añadidos al contexto
+                    dbContext.Users.Add(user);
+                    dbContext.SaveChanges();
 
                     // Guardar cambios en la base de datos
                     dbContext.SaveChanges();
