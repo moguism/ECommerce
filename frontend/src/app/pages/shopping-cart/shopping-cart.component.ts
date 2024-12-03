@@ -67,23 +67,10 @@ export class ShoppingCartComponent implements OnInit {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
         for (const product of cartContent) {
-          const productResult = await this.productService.getById(product.productId);
-          if (productResult != null) {
-            const p: Product = {
-              id: productResult.id,
-              name: productResult.name,
-              average: productResult.average,
-              category: productResult.category,
-              categoryId: productResult.categoryId,
-              description: productResult.description,
-              image: productResult.image,
-              price: productResult.price,
-              reviews: productResult.reviews,
-              stock: productResult.stock,
-              total: product.quantity
-            };
-            this.shoppingCartProducts.push(p);
-          }
+          let p = product.product
+          p.total = product.quantity
+          p = this.shoppingCartService.addCorrectPath(p)
+          this.shoppingCartProducts.push(p);
         }
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);

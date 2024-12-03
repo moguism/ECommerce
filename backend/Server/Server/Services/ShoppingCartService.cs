@@ -16,6 +16,12 @@ namespace Server.Services
 
         public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
         {
+            Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContentDto.ProductId);
+            if (product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
+            {
+                return;
+            }
+
             ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
 
             //Si el usuario es nuevo y no tenía carrito, le crea uno nuevo
@@ -29,8 +35,6 @@ namespace Server.Services
             await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
 
             await _unitOfWork.SaveAsync();
-
-
         }
 
 

@@ -12,138 +12,82 @@ public class SmartSearchService
 {
     private const double THRESHOLD = 0.75;
     private readonly UnitOfWork _unitOfWork;
-
-    private static List<string> items = new List<string>();
-
     private readonly INormalizedStringSimilarity _stringSimilarityComparer;
 
     public SmartSearchService(UnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _stringSimilarityComparer = new JaroWinkler();
-        AsignProductNames();
     }
 
-    private async void AsignProductNames()
+    public async Task<IEnumerable<Product>> Search(string query, string productType)
     {
-        ICollection<Product> products = await _unitOfWork.ProductRepository.GetAllAsync();
-        products.ToArray();
-        foreach(Product product in products)
-        {
-            items.Add(product.Name);
-        }
-    }
+        ICollection<Product> products = await _unitOfWork.ProductRepository
+            .GetQueryable()
+            .Include(product => product.Category)
+            .Where(product => product.Category.Name.Equals(productType))
+            .ToArrayAsync();
 
-    public async Task<IEnumerable<Product>> Search(string query)
-    {
-        ICollection<Product> products = await _unitOfWork.ProductRepository.GetQueryable().Include(product => product.Category).ToArrayAsync();
-
-        if(query == null || query.Equals(""))
+        if (query == null || query.Equals(""))
         {
             return products;
         }
 
-        IEnumerable<string> results = FindNames(query);
+        IEnumerable<Product> matchingProducts = FindMatchingProducts(query, products);
 
-        List<Product> sendProducts = new List<Product>();
+        return matchingProducts;
+    }
 
-        foreach (Product product in products)
+    public IEnumerable<Product> FindMatchingProducts(string query, IEnumerable<Product> products)
+    {
+        string[] queryKeys = GetKeys(ClearText(query));
+        List<Product> matchingProducts = new List<Product>();
+
+        foreach (var product in products)
         {
-            if (results.Contains(product.Name))
+            string[] productKeys = GetKeys(ClearText(product.Name));
+
+            if (IsMatch(queryKeys, productKeys))
             {
-                sendProducts.Add(product);
+                matchingProducts.Add(product);
             }
         }
 
-        return sendProducts;
+        return matchingProducts;
     }
 
-    public IEnumerable<string> FindNames(string query)
+    private bool IsMatch(string[] queryKeys, string[] productKeys)
     {
-        try
+        foreach (var queryKey in queryKeys)
         {
-            IEnumerable<string> result;
-
-            // Si la consulta está vacía o solo tiene espacios en blanco, devolvemos todos los items
-            if (string.IsNullOrWhiteSpace(query))
+            foreach (var productKey in productKeys)
             {
-                result = items;
-            }
-            // En caso contrario, realizamos la búsqueda
-            else
-            {
-                // Limpiamos la query y la separamos por espacios
-                string[] queryKeys = GetKeys(ClearText(query));
-                // Aquí guardaremos los items que coincidan
-                List<string> matches = new List<string>();
-
-                foreach (string item in items)
+                if (IsMatch(queryKey, productKey))
                 {
-                    // Limpiamos el item y lo separamos por espacios
-                    string[] itemKeys = GetKeys(ClearText(item));
-
-                    // Si coincide alguna de las palabras de item con las de query
-                    // entonces añadimos item a la lista de coincidencias
-                    if (IsMatch(queryKeys, itemKeys))
-                    {
-                        matches.Add(item);
-                    }
+                    return true;
                 }
-
-                result = matches;
-            }
-
-            return result;
-        }
-        catch
-        {
-            Console.WriteLine("Ha habido un cambio de contexto."); // Por si el usuario quiere darnos por culo y cambiar página mientras se busca
-            IEnumerable<string> result = [""];
-            return result;
-        }
-        
-    }
-
-    private bool IsMatch(string[] queryKeys, string[] itemKeys)
-    {
-        bool isMatch = false;
-
-        for (int i = 0; !isMatch && i < itemKeys.Length; i++)
-        {
-            string itemKey = itemKeys[i];
-
-            for (int j = 0; !isMatch && j < queryKeys.Length; j++)
-            {
-                string queryKey = queryKeys[j];
-
-                isMatch = IsMatch(itemKey, queryKey);
             }
         }
-
-        return isMatch;
+        return false;
     }
 
-    // Hay coincidencia si las palabras son las mismas o si item contiene query o si son similares
-    private bool IsMatch(string itemKey, string queryKey)
+    private bool IsMatch(string queryKey, string productKey)
     {
-        return itemKey == queryKey
-            || itemKey.Contains(queryKey)
-            || _stringSimilarityComparer.Similarity(itemKey, queryKey) >= THRESHOLD;
+        return queryKey == productKey
+            || productKey.Contains(queryKey)
+            || _stringSimilarityComparer.Similarity(queryKey, productKey) >= THRESHOLD;
     }
 
-    // Separa las palabras quitando los espacios y 
-    private string[] GetKeys(string query)
+    private string[] GetKeys(string text)
     {
-        return query.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return text.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 
-    // Normaliza el texto quitándole las tildes y pasándolo a minúsculas
     private string ClearText(string text)
     {
         return RemoveDiacritics(text.ToLower());
     }
 
-    // Quita las tildes a un texto
     private string RemoveDiacritics(string text)
     {
         string normalizedString = text.Normalize(NormalizationForm.FormD);

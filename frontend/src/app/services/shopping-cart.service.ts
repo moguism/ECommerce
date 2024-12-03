@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
+import { Product } from '../models/product';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +35,11 @@ export class ShoppingCartService {
           this.total = cartObject.length
         }
       }
+  }
+
+  addCorrectPath(product : Product)
+  {
+    product.image = environment.imageRoute + product.image 
+    return product
   }
 }

@@ -15,24 +15,18 @@ namespace Server.Controllers
     [ApiController]
     public class TemporalOrderController : ControllerBase
     {
-        private readonly TemporalOrderMapper _temporalOrderMapper;
-        private readonly ShoppingCartService _shoppingCartService;
         private readonly TemporalOrderService _temporalOrderService;
-        private readonly WishListService _wishListService; 
+        private readonly UserService _userService;
 
-        public TemporalOrderController(TemporalOrderService temporalOrderService, 
-            ShoppingCartService shoppingCartService, TemporalOrderMapper temporalOrderMapper,
-            WishListService wishListService)
+        public TemporalOrderController(TemporalOrderService temporalOrderService, UserService userService)
         {
             _temporalOrderService = temporalOrderService;
-            _shoppingCartService = shoppingCartService;
-            _temporalOrderMapper = temporalOrderMapper;
-            _wishListService = wishListService;
+            _userService = userService;
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<TemporalOrderDto> GetTemporalOrderById([FromQuery] int id)
+        public async Task<TemporalOrder> GetTemporalOrderById([FromQuery] int id)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -46,15 +40,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            Wishlist wishlist = await _wishListService.GetWishlistByIdAsync(temporalOrder.WishlistId);
-            if (wishlist == null)
-            {
-                return null;
-            }
-
-            temporalOrder.Wishlist = wishlist;
-
-            return _temporalOrderMapper.ToDto(temporalOrder);
+            return temporalOrder;
         }
 
 
@@ -68,18 +54,15 @@ namespace Server.Controllers
                 return null;
             }
 
-
-            Wishlist wishlist = await _wishListService.CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
-
             //Añade una nueva orden temporal con los datos del usuario
-            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,wishlist,temporalOrderDto.Quick);
+            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,temporalOrderDto.Quick, temporalOrderDto);
             return order;
 
         }
 
         [Authorize]
         [HttpGet("refresh")]
-        public async Task<TemporalOrderDto> RefreshTemporalOrder([FromQuery] int id)
+        public async Task<TemporalOrder> RefreshTemporalOrder([FromQuery] int id)
         {
             User user = await GetAuthorizedUser();
             if (user == null)
@@ -96,7 +79,7 @@ namespace Server.Controllers
 
             await _temporalOrderService.UpdateExpiration(temporalOrder);
 
-            return _temporalOrderMapper.ToDto(temporalOrder);
+            return temporalOrder;
         }
 
         private async Task<User> GetAuthorizedUser()
@@ -106,7 +89,7 @@ namespace Server.Controllers
             string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
             // Pilla el usuario de la base de datos
-            return await _shoppingCartService.GetUserFromDbByStringId(idString);
+            return await _userService.GetUserFromDbByStringId(idString);
         }
 
     }

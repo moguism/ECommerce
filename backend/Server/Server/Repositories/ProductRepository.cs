@@ -11,12 +11,11 @@ namespace Server.Repositories
 
         public ProductRepository(FarminhouseContext context) : base(context) { }
 
-        public PagedDto GetAllProductsByCategory(string productCategory,int pageNumber,int pageSize, IEnumerable<Product> products)
+        public PagedDto GetAllProductsByCategory(int pageNumber,int pageSize, IEnumerable<Product> products)
         {
-            IEnumerable<Product> productsByCategory = products.Where(product => product.Category.Name.Equals(productCategory));
-            int totalProducts = productsByCategory.Count();
+            int totalProducts = products.Count();
 
-            IEnumerable<Product> filteredProducts = productsByCategory.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            IEnumerable<Product> filteredProducts = products.Skip((pageNumber - 1) * pageSize).Take(pageSize);
             return new PagedDto
             {
                 Products = filteredProducts,
@@ -29,18 +28,9 @@ namespace Server.Repositories
             Product product = await GetQueryable()
             .Include(product => product.Category)
             .Include(product => product.Reviews)
-            .Include(product => product.CartContents)
+            .ThenInclude(review => review.User)
             .FirstOrDefaultAsync(p => p.Id == id);
             return product;
-        }
-
-        public async Task<IEnumerable<Product>> GetFullProducts()
-        {
-            return await GetQueryable()
-            .Include(product => product.Category)
-            .Include(product => product.Reviews)
-            .Include(product => product.CartContents)
-            .ToArrayAsync();
         }
     }
 }

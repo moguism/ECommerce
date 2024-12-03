@@ -20,9 +20,37 @@ namespace Server.Services
             return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
         }
 
-        
-        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist, bool quick)
+        public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
+            Wishlist wishlist = new Wishlist();
+
+            ProductsToBuyMapper productsToBuyMapper = new ProductsToBuyMapper();
+            IEnumerable<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products);
+
+            Wishlist newWishlist = await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
+
+            await _unitOfWork.SaveAsync();
+
+            // Asignar el Id de la wishlist a los productos después de guardar
+            foreach (var product in productsToBuyList)
+            {
+                // Asignamos correctamente el Id de la wishlist a cada producto
+                product.WishlistId = newWishlist.Id;
+                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                product.ProductId = realProduct.Id;
+                product.PurchasePrice = realProduct.Price;
+                await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            // Devolver la wishlist creada
+            return newWishlist;
+        }
+
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, bool quick, TemporalOrderDto temporalOrderDto)
+        {
+            Wishlist wishlist = await CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
 
             //La añade a la base de datos
             TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder

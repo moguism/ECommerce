@@ -71,14 +71,12 @@ namespace Server
             builder.Services.AddScoped<ShoppingCartService>();
             builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
-            builder.Services.AddScoped<ReviewMapper>();
             builder.Services.AddScoped<TemporalOrderMapper>();
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
             builder.Services.AddScoped<BlockchainService>();
             builder.Services.AddScoped<EmailService>();
 
-            builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<OrderMapper>();

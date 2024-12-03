@@ -11,6 +11,7 @@ import { StripeEmbeddedCheckout, StripeEmbeddedCheckoutOptions } from '@stripe/s
 import { BlockchainService } from '../../services/blockchain.service';
 import { CreateEthTransactionRequest } from '../../models/create-eth-transaction-request';
 import { LoadingComponent } from '../../components/loading/loading.component';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -37,7 +38,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   sessionId: string = "";
 
-  constructor(private productService: ProductService, private apiService: ApiService,
+  constructor(private shoppingCartService: ShoppingCartService, private apiService: ApiService,
     private router: Router, private activatedRoute: ActivatedRoute,
     private stripeService: StripeService, private blockchainService: BlockchainService) {
   }
@@ -58,25 +59,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     console.log("RESULTADO AAAAAA: ", shoppinCartResult)
     if (shoppinCartResult.data) {
       const data: any = shoppinCartResult.data;
-      const cartContent: any[] = data.cartContentDtos;
+      const cartContent = data.wishlist.products
+
       for (const product of cartContent) {
-        const productResult = await this.productService.getById(product.productId);
-        if (productResult != null) {
-          const p: Product = {
-            id: productResult.id,
-            name: productResult.name,
-            average: productResult.average,
-            category: productResult.category,
-            categoryId: productResult.categoryId,
-            description: productResult.description,
-            image: productResult.image,
-            price: productResult.price,
-            reviews: productResult.reviews,
-            stock: productResult.stock,
-            total: product.quantity
-          };
-          this.shoppingCartProducts.push(p);
-        }
+        let p = product.product
+        p.total = product.quantity
+        p = this.shoppingCartService.addCorrectPath(p)
+        this.shoppingCartProducts.push(p);
       }
     }
     this.autoRefreshSubscription = this.startAutoRefresh();
@@ -148,9 +137,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if(response.data)
     {
       const data : any = response.data
-      if(data.sessionId)
+      if(data.hashOrSession)
       {
-        this.sessionId = data.sessionId
+        this.sessionId = data.hashOrSession
       }
     }
     console.log("RESPUESTA XD: ", response)

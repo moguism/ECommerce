@@ -17,7 +17,7 @@ namespace Server.Repositories
         {
             return await GetQueryable()
                 .Include(cart => cart.CartContent)
-                .Include(cart => cart.TemporalOrders)
+                    .ThenInclude(content => content.Product)
                 .FirstOrDefaultAsync(cart => cart.UserId == id);
         }
 
@@ -25,7 +25,7 @@ namespace Server.Repositories
         {
             return await GetQueryable()
                 .Include(cart => cart.CartContent)
-                .Include(cart => cart.TemporalOrders)
+                .ThenInclude(content => content.Product)
                 .FirstOrDefaultAsync(cart => cart.UserId == id);
         }
 
@@ -37,7 +37,7 @@ namespace Server.Repositories
             ShoppingCart shoppingCart = await GetQueryable()
                 .Include(cart => cart.User)
                 .Include(cart => cart.CartContent)
-                .Include(cart => cart.TemporalOrders)
+                .ThenInclude(content => content.Product)
                 .FirstOrDefaultAsync(c => c.UserId == user.Id);
 
             //Si el usuario no tenia carrito, crea uno nuevo
