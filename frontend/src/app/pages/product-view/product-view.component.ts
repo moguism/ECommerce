@@ -132,7 +132,7 @@ export class ProductViewComponent implements OnInit {
       await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
     alert("Producto añadido al carrito correctamente")
-    this.shoppingCartService.getShoppingCartCount()
+    //this.shoppingCartService.getShoppingCartCount()
   }
 
   ngOnDestroy(): void {

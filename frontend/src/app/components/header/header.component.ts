@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.shoppingCartService.getShoppingCartCount()
+    //this.shoppingCartService.getShoppingCartCount()
     if(this.apiService.jwt == null)
     {
       return;

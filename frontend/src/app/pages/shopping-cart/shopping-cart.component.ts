@@ -44,7 +44,7 @@ export class ShoppingCartComponent implements OnInit {
 
 
   async getShoppingCart() {
-    this.shoppingCartService.getShoppingCartCount()
+    //this.shoppingCartService.getShoppingCartCount()
     this.shoppingCartProducts = [];
 
     /*if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {

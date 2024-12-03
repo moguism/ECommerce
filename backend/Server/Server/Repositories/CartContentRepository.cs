@@ -13,6 +13,8 @@ namespace Server.Repositories
 
         public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
         {
+            // ESTO SE PUEDE OPTIMIZAR 100%
+
             CartContent cartContent = await GetQueryable()
                 .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id
                 && c.ProductId == cartContentDto.ProductId);
