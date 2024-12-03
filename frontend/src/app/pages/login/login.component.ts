@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { Product } from '../../models/product';
+import { CartContent } from '../../models/cart-content';
 //import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
@@ -89,7 +91,7 @@ export class LoginComponent implements OnInit {
       const login = new Login(this.email.trim(), this.password.trim())
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
-        this.rememberFunction()
+        await this.rememberFunction()
       }
       else {
         alert("Los datos introducidos no son correctos")
@@ -100,7 +102,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  rememberFunction()
+  async rememberFunction()
   {
     if(this.apiService.jwt == null) { return; }
     if (this.rememberUser) {
@@ -116,12 +118,33 @@ export class LoginComponent implements OnInit {
     const goToCheckout = localStorage.getItem("goToCheckout")
     if(goToCheckout && goToCheckout == "true")
     {
-      localStorage.removeItem("goToCheckout")
       this.router.navigateByUrl("shopping-cart")
     }
     else
     {
       this.router.navigateByUrl("user")
+      await this.getShoppingCart()
+    }
+  }
+
+  async getShoppingCart() {
+    const productsRaw = localStorage.getItem("shoppingCart");
+    let products : Product[] = []
+    if (productsRaw == null) 
+    {
+      return
+    }
+    products = JSON.parse(productsRaw);
+
+    if (this.apiService.jwt !== "" && products.length > 0) {
+      console.log("Sincronizando productos locales al carrito del backend...");
+
+      for (const product of products) {
+        const cartContent = new CartContent(product.id, product.total);
+        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent);
+      }
+
+      localStorage.removeItem("shoppingCart");
     }
   }
 
@@ -132,7 +155,7 @@ export class LoginComponent implements OnInit {
       let user = new User(0, this.name.trim(), this.email.trim(), this.password.trim(), this.address.trim(), this.role.trim());
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
-        this.rememberFunction()
+        await this.rememberFunction()
       }
     }else {
         alert("Campos inválidos.");

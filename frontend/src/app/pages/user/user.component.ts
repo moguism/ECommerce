@@ -106,7 +106,7 @@ export class UserComponent implements OnInit {
       }
       
       await this.userService.updateUser(this.user);
-      //await this.userService.obtainNewJwt()
+      await this.userService.obtainNewJwt()
     }
     
     this.formState = null;

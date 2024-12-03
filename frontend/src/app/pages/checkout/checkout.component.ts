@@ -43,8 +43,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stripeEmbedCheckout?.destroy();
-    this.autoRefreshSubscription?.unsubscribe();
+    // El try-catch es necesario porque si no, si se abre y cierra la pasarela de pago y luego se cambia de página, no deja
+    try {
+      this.autoRefreshSubscription?.unsubscribe();
+      this.stripeEmbedCheckout?.destroy();
+    } catch (error) {}
   }
 
 

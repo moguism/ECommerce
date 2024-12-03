@@ -21,7 +21,6 @@ export class HeaderComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.shoppingCartService.getShoppingCartCount()
-    await this.apiService.post<string>("User/getJwtAfterlogin")
     if(this.apiService.jwt == null)
     {
       return;
