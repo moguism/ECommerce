@@ -103,7 +103,7 @@ export class ShoppingCartComponent implements OnInit {
       else {
         localStorage.removeItem("shoppingCart")
 
-        const cartContent = new CartContent( product.id, parseInt(input.value))
+        const cartContent = new CartContent(product.id, parseInt(input.value), product)
 
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
@@ -188,7 +188,7 @@ export class ShoppingCartComponent implements OnInit {
     localStorage.removeItem("goToCheckout")
     const cartContents: CartContent[] = []
     for (const product of this.shoppingCartProducts) {
-      const cartContent = new CartContent(product.id, product.total)
+      const cartContent = new CartContent(product.id, product.total, product)
       cartContents.push(cartContent)
     }
     const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(cartContents, true))

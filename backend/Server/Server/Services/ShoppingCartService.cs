@@ -14,13 +14,13 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(User user, CartContentDto cartContentDto)
+        public async Task AddProductsToShoppingCart(User user, CartContent cartContent)
         {
-            Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContentDto.ProductId);
+            /*Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContentDto.ProductId);
             if (product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
             {
                 return;
-            }
+            }*/
 
             ShoppingCart cart = user.ShoppingCart;
 
@@ -32,7 +32,7 @@ namespace Server.Services
             }
 
             //añade el producto a este
-            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContentDto);
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContent);
 
             await _unitOfWork.SaveAsync();
         }

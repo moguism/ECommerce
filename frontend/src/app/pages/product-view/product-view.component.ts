@@ -127,7 +127,7 @@ export class ProductViewComponent implements OnInit {
     }
     else {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(product.id, this.count)
+      const cartContent = new CartContent(product.id, this.count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
       await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
     }
