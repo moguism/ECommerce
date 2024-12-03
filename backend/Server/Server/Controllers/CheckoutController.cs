@@ -14,14 +14,11 @@ namespace Server.Controllers;
 [ApiController]
 public class CheckoutController : ControllerBase
 {
-    private readonly EmailService _emailService;
     private readonly TemporalOrderService _temporalOrderService;
     private readonly UserService _userService;
 
-    public CheckoutController( 
-        EmailService emailService, TemporalOrderService temporalOrderService, UserService userService)
+    public CheckoutController(TemporalOrderService temporalOrderService, UserService userService)
     {
-        _emailService = emailService;
         _temporalOrderService = temporalOrderService;
         _userService = userService;
     }
