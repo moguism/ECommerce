@@ -39,8 +39,6 @@ namespace Server.Controllers
 
             ShoppingCartMapper shoppingCartMapper = new ShoppingCartMapper();
             return shoppingCartMapper.ToDto(shoppingCart);
-
-
         }
 
         [Authorize]

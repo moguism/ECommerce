@@ -33,27 +33,13 @@ namespace Server.Repositories
         //Método que añade un nuevo carrito a un usuario si no tenía
         public async Task<ShoppingCart> CreateShoppingCartAsync(User user)
         {
-
-            ShoppingCart shoppingCart = await GetQueryable()
-                .Include(cart => cart.User)
-                .Include(cart => cart.CartContent)
-                .ThenInclude(content => content.Product)
-                .FirstOrDefaultAsync(c => c.UserId == user.Id);
-
-            //Si el usuario no tenia carrito, crea uno nuevo
-            if (shoppingCart == null)
+            ShoppingCart newCart = new ShoppingCart
             {
+                UserId = user.Id,
+            };
 
-                ShoppingCart newCart = new ShoppingCart{
-                    UserId = user.Id,
-                };
-
-                _context.ShoppingCart.Add(newCart);
-                return newCart;
-            }
-
-            return shoppingCart;
-
+            ShoppingCart returnedCart = await InsertAsync(newCart);
+            return returnedCart;
         }
 
 
