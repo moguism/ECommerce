@@ -15,10 +15,7 @@ namespace Server.Repositories
         {
             // ESTO SE PUEDE OPTIMIZAR 100%
 
-            CartContent cartContent = await GetQueryable()
-                .FirstOrDefaultAsync(c => c.ShoppingCartId == shoppingCart.Id
-                && c.ProductId == cartContentDto.ProductId);
-                
+            CartContent cartContent = shoppingCart.CartContent.FirstOrDefault(c => c.ProductId == cartContentDto.ProductId);
 
             //Si el producto no estaba añadido al carrito, añade uno nuevo
             if (cartContent == null)

@@ -19,6 +19,9 @@ namespace Server.Repositories
         public async Task<User> GetAllInfoById(int id)
         {
             return await GetQueryable()
+                .Include(user => user.ShoppingCart)
+                    .ThenInclude(shoppingCart => shoppingCart.CartContent)
+                    .ThenInclude(c => c.Product)
                 .Include(user => user.Orders)
                     .ThenInclude(order => order.Wishlist)
                     .ThenInclude(wishList => wishList.Products)

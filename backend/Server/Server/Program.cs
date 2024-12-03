@@ -61,8 +61,11 @@ namespace Server
             builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
                 .FromFile("IAFarminhouse.mlnet");
 
-            builder.Services.AddScoped<FarminhouseContext>();
-            builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddSingleton<FarminhouseContext>();
+            builder.Services.AddSingleton<UnitOfWork>();
+
+            /*builder.Services.AddScoped<FarminhouseContext>();
+            builder.Services.AddScoped<UnitOfWork>();*/
             builder.Services.AddScoped<UserMapper>();
 
             builder.Services.AddScoped<ProductMapper>();

@@ -31,7 +31,7 @@ namespace Server.Controllers
                 return null;
             }
 
-            ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
+            ShoppingCart shoppingCart = user.ShoppingCart;
             if (shoppingCart == null)
             {
                 return null;

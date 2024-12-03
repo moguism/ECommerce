@@ -165,7 +165,7 @@ public class CheckoutController : ControllerBase
 
         if (session.PaymentStatus == "paid")
         {
-            Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user.Id, 1);
+            Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user, 1);
             if (session.CustomerEmail != null)
             {
                 //await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);

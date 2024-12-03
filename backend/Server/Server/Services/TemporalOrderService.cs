@@ -20,6 +20,7 @@ namespace Server.Services
             return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
         }
 
+        // ESTO Y LO SIGUIENTE CREO QUE ESTÁ DANDO POR CULO
         public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
             Wishlist wishlist = new Wishlist();
@@ -99,7 +100,7 @@ namespace Server.Services
             return order;
         }
 
-        public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, int userId, int paymentType)
+        public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
         {
             Order existingOrder = await _unitOfWork.OrderRepository.GetByHashOrSession(hashOrSessionOrder);
             if (existingOrder != null)
@@ -120,14 +121,14 @@ namespace Server.Services
                 PaymentTypeId = paymentType,
                 //La misma wishlist que la ultima orden temporal que ha realizado el usuario
                 WishlistId = temporalOrder.WishlistId,
-                UserId = userId,
+                UserId = user.Id,
                 HashOrSession = hashOrSessionOrder
             };
 
             //Elimina el carrito si se ha hecho la compra con sesión iniciada           
             if (!temporalOrder.Quick)
             {
-                ShoppingCart shoppingCart = await _unitOfWork.ShoppingCartRepository.GetIdShoppingCartByUserId(userId);
+                ShoppingCart shoppingCart = user.ShoppingCart;
                 if(shoppingCart != null)
                 {
                     await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);

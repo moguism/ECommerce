@@ -22,7 +22,7 @@ namespace Server.Services
                 return;
             }
 
-            ShoppingCart cart = await _unitOfWork.ShoppingCartRepository.GetAllByUserIdAsync(user.Id);
+            ShoppingCart cart = user.ShoppingCart;
 
             //Si el usuario es nuevo y no tenía carrito, le crea uno nuevo
             if (cart == null)
