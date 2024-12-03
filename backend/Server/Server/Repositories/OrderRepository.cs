@@ -30,16 +30,9 @@ public class OrderRepository : Repository<Order, int>
             .FirstOrDefaultAsync(order => order.Id == orderId);
     }
 
-
-    public async Task<Order> GetBySessionId(string sessionid)
+    public async Task<Order> GetByHashOrSession(string hash)
     {
-        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.SessionId.Equals(sessionid));
-        return order;
-    }
-
-    public async Task<Order> GetByHash(string hash)
-    {
-        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.Hash.Equals(hash));
+        Order order = await GetQueryable().FirstOrDefaultAsync(order => order.HashOrSession.Equals(hash));
         return order;
     }
 }

@@ -24,6 +24,22 @@ export class HomeComponent {
       document.getElementById("third-animated-section")?.classList.add("animation-class");
     }
 
+    if(currentScroll > 2500){
+      document.getElementById("centered-image")?.classList.remove("centered-image");
+      document.getElementById("centered-image")?.classList.add("centered-image-stop");
+    }else{
+      document.getElementById("centered-image")?.classList.add("centered-image");
+      document.getElementById("centered-image")?.classList.remove("centered-image-stop");
+    }
     //console.log(currentScroll)
+  }
+  text_activate(){
+      document.getElementById("buy-text")?.classList.add("activate-text");
+      document.getElementById("buy-text")?.classList.remove("defuse-text");
+  }
+
+  text_defuse(){
+      document.getElementById("buy-text")?.classList.add("defuse-text");
+      document.getElementById("buy-text")?.classList.remove("activate-text");
   }
 }

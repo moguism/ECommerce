@@ -8,6 +8,7 @@ using Server.Enums;
 using Server.Mappers;
 using Server.Models;
 using Server.Services;
+using System.Xml.Linq;
 
 namespace Server.Controllers
 {
@@ -15,21 +16,15 @@ namespace Server.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly ProductMapper _productMapper;
         private readonly SmartSearchService _smartSearchService;
         private readonly UserService _userService;
-        private readonly ImageService _imageService;
         private readonly ProductService _productService;
-        private readonly CategoryService _categoryService;
 
-        public ProductController(ProductMapper productmapper, SmartSearchService smartSearchService, UserService userService, ImageService imageService, ProductService productService, CategoryService categoryService)
+        public ProductController(SmartSearchService smartSearchService, UserService userService, ProductService productService)
         {
-            _productMapper = productmapper;
             _smartSearchService = smartSearchService;
             _userService = userService;
-            _imageService = imageService;
             _productService = productService;
-            _categoryService = categoryService;
         }
 
         [Authorize(Roles = "Admin")]
@@ -45,8 +40,8 @@ namespace Server.Controllers
 
             IEnumerable<Product> products = await _productService.GetFullProducts();
 
-            IEnumerable<Product> correctProducts = _productMapper.AddCorrectPath(products);
-            return _productMapper.ToDto(correctProducts);
+            IEnumerable<Product> correctProducts = _productService.AddCorrectPath(products);
+            return _productService.ToDto(correctProducts);
         }
 
         [HttpGet]
@@ -54,7 +49,7 @@ namespace Server.Controllers
         {
             // 1) Busca 2) Ordena 3) Pagina
 
-            IEnumerable<Product> products = await _smartSearchService.Search(query.Search);
+            IEnumerable<Product> products = await _smartSearchService.Search(query.Search, query.ProductType.ToString().ToLower());
 
             switch (query.OrdinationType)
             {
@@ -69,11 +64,9 @@ namespace Server.Controllers
                         : products.OrderByDescending(product => product.Price);
                     break;
             }
-
-            string productType = query.ProductType.ToString().ToLower();
-            
-            PagedDto pagedDto = _productService.GetAllProductsByCategory(productType, query.ActualPage, query.ProductPageSize, products);
-            pagedDto.Products = _productMapper.AddCorrectPath(pagedDto.Products);
+           
+            PagedDto pagedDto = _productService.GetAllProductsByCategory(query.ActualPage, query.ProductPageSize, products);
+            pagedDto.Products = _productService.AddCorrectPath(pagedDto.Products);
 
             return pagedDto;
         }
@@ -82,15 +75,7 @@ namespace Server.Controllers
         public async Task<Product> GetProductById(int id)
         {
             Product product = await _productService.GetFullProductById(id);
-            foreach (Review review in product.Reviews)
-            {
-                User user = await _userService.GetUserByIdAsync(review.UserId);
-                review.User = new User()
-                {
-                    Name = user.Name
-                };
-            }
-            return _productMapper.AddCorrectPath(product);
+            return _productService.AddCorrectPath(product);
         }
 
         [Authorize(Roles = "Admin")]
@@ -104,19 +89,28 @@ namespace Server.Controllers
                 {
                     return null;
                 }
-                Product product = _productMapper.ToEntity(newProduct);
 
-                Category category = await _categoryService.GetByName(newProduct.CategoryName);
-                if(category == null)
+                Product product = _productService.ToEntity(newProduct);
+                switch (product.Name)
                 {
-                    return null;
+                    case "Frutas":
+                        product.CategoryId = 1;
+                        break;
+                    case "Verduras":
+                        product.CategoryId = 2;
+                        break;
+                    case "Carne":
+                        product.CategoryId = 3;
+                        break;
+                    default:
+                        return null;
                 }
 
-                product.CategoryId = category.Id;
+                ImageService imageService = new ImageService();
 
-                product.Image = await _imageService.InsertAsync(newProduct.Image);
+                product.Image = await imageService.InsertAsync(newProduct.Image);
                 Product savedProduct = await _productService.InsertProduct(product);
-                return _productMapper.ToDto(savedProduct);
+                return _productService.ToDto(savedProduct);
             }
             catch(Exception e)
             {
@@ -138,7 +132,7 @@ namespace Server.Controllers
                     return null;
                 }
 
-                Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
+                Product product = await _productService.GetFullProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
                     return null;
@@ -149,7 +143,7 @@ namespace Server.Controllers
                 product.Description = productToUpdate.Description;
                 product.Price = Int64.Parse(productToUpdate.Price);
                 product.Stock = Int32.Parse(productToUpdate.Stock);
-                Category category = await _categoryService.GetByName(productToUpdate.CategoryName);
+                Category category = product.Category;
                 if (category == null)
                 {
                     return null;
@@ -159,11 +153,12 @@ namespace Server.Controllers
 
                 if (productToUpdate.Image != null)
                 {
-                    product.Image = await _imageService.InsertAsync(productToUpdate.Image);
+                    ImageService imageService = new ImageService();
+                    product.Image = await imageService.InsertAsync(productToUpdate.Image);
                 }
                 
                 await _productService.UpdateProduct(product);
-                return _productMapper.ToDto(product);
+                return _productService.ToDto(product);
             }
             catch(Exception e)
             {

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ML;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using Server.Models;
 using Server.Services;
 using Server.Services.Blockchain;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
@@ -22,6 +24,8 @@ namespace Server
 
             var builder = WebApplication.CreateBuilder(args);
 
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
+
             builder.Services.Configure<Settings>(builder.Configuration.GetSection("Settings"));
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
 
@@ -30,11 +34,11 @@ namespace Server
 
             // Add services to the container.
 
-            builder.Services.AddControllers().AddJsonOptions(options => 
+            builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });
-            
+
             // CONFIGURANDO JWT
             builder.Services.AddAuthentication()
                 .AddJwtBearer(options =>
@@ -48,7 +52,7 @@ namespace Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                 });
-            
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -57,25 +61,25 @@ namespace Server
             builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
                 .FromFile("IAFarminhouse.mlnet");
 
-            builder.Services.AddScoped<FarminhouseContext>();
-            builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddSingleton<FarminhouseContext>();
+            builder.Services.AddSingleton<UnitOfWork>();
+
+            /*builder.Services.AddScoped<FarminhouseContext>();
+            builder.Services.AddScoped<UnitOfWork>();*/
             builder.Services.AddScoped<UserMapper>();
-            
+
             builder.Services.AddScoped<ProductMapper>();
-            builder.Services.AddScoped<PasswordService>();
             builder.Services.AddScoped<SmartSearchService>();
             builder.Services.AddScoped<ShoppingCartMapper>();
             builder.Services.AddScoped<ShoppingCartService>();
             builder.Services.AddScoped<OrderService>();
             builder.Services.AddScoped<ReviewService>();
-            builder.Services.AddScoped<ReviewMapper>();
             builder.Services.AddScoped<TemporalOrderMapper>();
             builder.Services.AddScoped<TemporalOrderService>();
             builder.Services.AddScoped<CartContentMapper>();
             builder.Services.AddScoped<BlockchainService>();
             builder.Services.AddScoped<EmailService>();
 
-            builder.Services.AddScoped<WishListService>();
             builder.Services.AddScoped<ProductsToBuyMapper>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<OrderMapper>();
@@ -89,39 +93,39 @@ namespace Server
             Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:Key"];
 
             builder.Services.AddHostedService<CleanTemporalOrdersService>();
-            
+
 
             // Permite CORS
-            if (builder.Environment.IsDevelopment())
-            {
-                builder.Services.AddCors(
-                    options =>
-                    options.AddDefaultPolicy(
-                        builder =>
-                        {
-                            builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                            ;
-                        })
-                    );
-            }
+            builder.Services.AddCors(
+                options =>
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                        ;
+                    })
+                );
 
 
             var app = builder.Build();
 
             //PA QUE FUNCIONE EL WWWROOT NO LO TOQUEIS HIJOS DE PUTA
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-
-                // Permite CORS
-                app.UseCors();
             }
+
+            // Permite CORS
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
@@ -187,8 +191,6 @@ namespace Server
                     };
 
 
-                   
-
                     // Añadir categorías y productos al contexto de la base de datos
                     dbContext.Categories.Add(fruitsCategory);
                     dbContext.Categories.Add(vegetablesCategory);
@@ -197,25 +199,13 @@ namespace Server
                     dbContext.Products.AddRange(vegetables);
                     dbContext.Products.AddRange(meats);
 
+                    PasswordService passwordService = new PasswordService();
+                    // Crear usuarios de ejemplo
+                    var user = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
 
-
-                    // Obtener el producto de Arándano
-                    var arandanoProduct = fruits.FirstOrDefault(p => p.Name == "Arandano");
-
-                    if (arandanoProduct != null)
-                    {
-                        PasswordService passwordService = new PasswordService();
-                        // Crear usuarios de ejemplo
-                        var user1 = new User { Name = "Carlos", Email = "carlos@example.com", Password = passwordService.Hash("123456"), Role = "Admin", Address = "Calle 123" };
-                        var user2 = new User { Name = "Ana", Email = "ana@example.com", Password = "pass456", Role = "Customer", Address = "Avenida 456" };
-
-                        // Asegurarse de que los usuarios están añadidos al contexto
-                        dbContext.Users.Add(user1);
-                        dbContext.Users.Add(user2);
-
-                        dbContext.SaveChanges();
-
-                    }
+                    // Asegurarse de que los usuarios están añadidos al contexto
+                    dbContext.Users.Add(user);
+                    dbContext.SaveChanges();
 
                     // Guardar cambios en la base de datos
                     dbContext.SaveChanges();

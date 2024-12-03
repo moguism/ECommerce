@@ -1,6 +1,7 @@
 ﻿using Server.DTOs;
 using Server.Mappers;
 using Server.Models;
+using static TorchSharp.torch.utils;
 
 namespace Server.Services
 {
@@ -8,14 +9,10 @@ namespace Server.Services
     {
 
         private readonly UnitOfWork _unitOfWork;
-        private readonly CartContentMapper _cartContentMapper;
-        private readonly IServiceProvider _serviceProvider;
 
-        public TemporalOrderService(UnitOfWork unitOfWork, CartContentMapper cartContentMapper, IServiceProvider serviceProvider)
+        public TemporalOrderService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _cartContentMapper = cartContentMapper;
-            _serviceProvider = serviceProvider;
         }
 
         public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int id)
@@ -23,9 +20,38 @@ namespace Server.Services
             return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
         }
 
-        
-        public async Task<TemporalOrder> CreateTemporalOrder(User user, Wishlist wishlist, bool quick)
+        // ESTO Y LO SIGUIENTE CREO QUE ESTÁ DANDO POR CULO
+        public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
+            Wishlist wishlist = new Wishlist();
+
+            ProductsToBuyMapper productsToBuyMapper = new ProductsToBuyMapper();
+            IEnumerable<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products);
+
+            Wishlist newWishlist = await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
+
+            await _unitOfWork.SaveAsync();
+
+            // Asignar el Id de la wishlist a los productos después de guardar
+            foreach (var product in productsToBuyList)
+            {
+                // Asignamos correctamente el Id de la wishlist a cada producto
+                product.WishlistId = newWishlist.Id;
+                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                product.ProductId = realProduct.Id;
+                product.PurchasePrice = realProduct.Price;
+                await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            // Devolver la wishlist creada
+            return newWishlist;
+        }
+
+        public async Task<TemporalOrder> CreateTemporalOrder(User user, bool quick, TemporalOrderDto temporalOrderDto)
+        {
+            Wishlist wishlist = await CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
 
             //La añade a la base de datos
             TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder
@@ -72,6 +98,60 @@ namespace Server.Services
         {
             TemporalOrder order = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(sessionid);
             return order;
+        }
+
+        public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
+        {
+            Order existingOrder = await _unitOfWork.OrderRepository.GetByHashOrSession(hashOrSessionOrder);
+            if (existingOrder != null)
+            {
+                return existingOrder;
+            }
+
+            //Recoge la ultima orden temporal del usuario
+            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(hashOrSessionTemporal);
+            if (temporalOrder == null)
+            {
+                return null;
+            }
+
+            Order order = new Order
+            {
+                CreatedAt = DateTime.UtcNow,
+                PaymentTypeId = paymentType,
+                //La misma wishlist que la ultima orden temporal que ha realizado el usuario
+                WishlistId = temporalOrder.WishlistId,
+                UserId = user.Id,
+                HashOrSession = hashOrSessionOrder
+            };
+
+            //Elimina el carrito si se ha hecho la compra con sesión iniciada           
+            if (!temporalOrder.Quick)
+            {
+                ShoppingCart shoppingCart = user.ShoppingCart;
+                if(shoppingCart != null)
+                {
+                    await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);
+                }
+            }
+
+            //Order en la base de datos
+            Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
+
+            /*saveOrder.Wishlist = temporalOrder.Wishlist;
+            _unitOfWork.OrderRepository.Update(saveOrder);
+
+            //Añade la orden a la lista de ordenes del usuario
+            user.Orders.Add(saveOrder);
+            _unitOfWork.UserRepository.Update(user);*/
+
+            saveOrder.Wishlist = temporalOrder.Wishlist;
+
+            _unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+
+            await _unitOfWork.SaveAsync();
+
+            return saveOrder;
         }
 
     }

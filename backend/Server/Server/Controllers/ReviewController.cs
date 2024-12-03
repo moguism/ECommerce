@@ -18,38 +18,15 @@ namespace Server.Controllers
     {
 
         private readonly ReviewService _reviewService;
-        private readonly ShoppingCartService _shoppingCartService;
-        private readonly ReviewMapper _reviewMapper;
+        private readonly UserService _userService;
         private readonly PredictionEnginePool<ModelInput, ModelOutput> _model;
-        private readonly ProductService _productService;
 
-
-        public ReviewController(ReviewService reviewService, UnitOfWork unitOfWork, ReviewMapper reviewMapper, PredictionEnginePool<ModelInput, ModelOutput> model,
-            ShoppingCartService shoppingCartService, ProductService productService)
+        public ReviewController(ReviewService reviewService, UnitOfWork unitOfWork, PredictionEnginePool<ModelInput, ModelOutput> model,
+            UserService userService)
         {
             _reviewService = reviewService;
-            _reviewMapper = reviewMapper;
             _model = model;
-            _shoppingCartService = shoppingCartService;
-            _productService = productService;
-        }
-
-
-
-        //Pruebas
-        [HttpGet("AllReviews")]
-        public async Task<IEnumerable<Review>> GetAllReviews()
-        {
-            IEnumerable<Review> reviews = await _reviewService.GetAllReviewsAsync();
-
-            return reviews;
-        }
-
-
-        [HttpGet("Product/{id}")]
-        public async Task<IEnumerable<Review>> GetReviewByProductId(int id)
-        {
-            return await _reviewService.GetAllProductReviewsAsync(id);
+            _userService = userService;
         }
 
         [Authorize]
@@ -64,25 +41,8 @@ namespace Server.Controllers
                 return;
             }
 
-            Review review = _reviewMapper.ToEntity(reviewDto);
-            review = _reviewService.RateReview(review);
-            review.UserId = user.Id;
-            review.DateTime = DateTime.UtcNow;
-
-            Product product = await _productService.GetFullProductById(review.ProductId);
-
-            List<Review> reviews = (List<Review>)await _reviewService.GetAllProductReviewsAsync(review.ProductId);
-            reviews.Add(review);
-            double averageScore = reviews.Average(r => r.Score);
-            product.Average = averageScore;
-
-            await _productService.UpdateProduct(product);
-
-            //guarda la review con todos los datos
-            await _reviewService.AddReview(review);
+            await _reviewService.AddReview(reviewDto, user.Id);
         }
-
-
 
         private async Task<User> GetAuthorizedUser()
         {
@@ -91,7 +51,7 @@ namespace Server.Controllers
             string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
             // Pilla el usuario de la base de datos
-            return await _shoppingCartService.GetUserFromDbByStringId(idString);
+            return await _userService.GetUserFromDbByStringId(idString);
         }
 
     }

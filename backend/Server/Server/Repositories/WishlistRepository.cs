@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.DTOs;
+using Server.Mappers;
 using Server.Models;
 using Server.Repositories.Base;
 
@@ -14,5 +16,6 @@ namespace Server.Repositories
             .Include(wishlist => wishlist.Products)
             .FirstOrDefaultAsync(wishlist => wishlist.Id == id); 
         }
+
     }
 }

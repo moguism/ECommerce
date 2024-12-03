@@ -46,8 +46,7 @@ namespace Server.Mappers
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Password = userDto.Password,
-                Address = userDto.Address,
-                Role = userDto.Role,
+                Address = userDto.Address
             };
         }
 

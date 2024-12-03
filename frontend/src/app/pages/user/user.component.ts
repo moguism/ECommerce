@@ -55,10 +55,10 @@ export class UserComponent implements OnInit {
   idToUpdate : number = 0
 
   async ngOnInit(): Promise<void> {
-    if(this.api.jwt == null || this.api.jwt == "")
+    /*if(this.api.jwt == null || this.api.jwt == "")
     {
       this.router.navigateByUrl("login")
-    }
+    }*/
     await this.getUser();
     await this.getAllOrders();
   }
@@ -106,7 +106,7 @@ export class UserComponent implements OnInit {
       }
       
       await this.userService.updateUser(this.user);
-      //await this.userService.obtainNewJwt()
+      await this.userService.obtainNewJwt()
     }
     
     this.formState = null;
