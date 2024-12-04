@@ -103,14 +103,14 @@ namespace Server.Services
 
         public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
         {
-            Order existingOrder = await _unitOfWork.OrderRepository.GetByHashOrSession(hashOrSessionOrder);
+            Order existingOrder = user.Orders.FirstOrDefault(o => o.HashOrSession.Equals(hashOrSessionOrder));
             if (existingOrder != null)
             {
                 return existingOrder;
             }
 
             //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(hashOrSessionTemporal);
+            TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.HashOrSession.Equals(hashOrSessionTemporal));
             if (temporalOrder == null)
             {
                 return null;
@@ -155,5 +155,18 @@ namespace Server.Services
             return saveOrder;
         }
 
+        public async Task<User> GetUserFromStringWithTemporal(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
+        }
+
+        public async Task<User> GetUserFromString(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
+        }
     }
 }

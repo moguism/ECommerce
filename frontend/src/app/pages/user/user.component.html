@@ -31,7 +31,7 @@
         <h3 class="order-date">Fecha del pedido: <b>{{ order.createdAt | correctDate }}</b></h3>
         @for(productToBuy of order.wishlist.products; track productToBuy.id){
             <div class="order-product">
-                <img class="order-product-img" [src]="productToBuy.product.image.replace('/images/images/', '/images/')">
+                <img class="order-product-img" [src]="productToBuy.product.image">
                 <div class="order-product-data">
                     <p class="order-product-data-title">{{productToBuy.product.name}}</p>
                     <p>Cantidad: <b>{{productToBuy.quantity}}</b></p>
@@ -97,7 +97,7 @@
     <br><button class="custom-button" (click)="showCreateProductForm()">Crear nuevo producto</button><br><br>
     @for (product of allProducts; track product.id) {
     <div class="product">
-        <img [src]="product.image.replace('/images/images/', '/images/')" alt="{{ product.name }}" class="product-image" />
+        <img [src]="product.image.replace('images//images/', '/images/')" alt="{{ product.name }}" class="product-image" />
         <p><b>ID:</b> {{ product.id }}</p>
         <p><b>Nombre:</b> {{ product.name }}</p>
         <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
@@ -136,14 +136,7 @@
                 required />
             <label for="productImage">Foto del producto:</label>
             <input type="file" accept="image/png, image/jpeg, image/jpg" required (change)="onFileSelected($event)">
-            @if(create)
-            {
-            <button type="submit" (click)="submitCreateProduct()">Crear producto</button>
-            }
-            @else
-            {
-            <button type="submit" (click)="submitCreateProduct()">Modificar producto</button>
-            }
+            <button type="submit" (click)="submitCreateProduct()">Subir datos</button>
             <button type="button" (click)="closeForm()">Cancelar</button>
         </form>
     </div>

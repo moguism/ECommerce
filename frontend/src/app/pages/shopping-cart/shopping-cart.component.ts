@@ -203,6 +203,7 @@ export class ShoppingCartComponent implements OnInit {
       const data = JSON.parse(result.data)
       const url: string = "checkout/" + localStorage.getItem("method") + "/" + data.id
       this.router.navigateByUrl(url)
+      localStorage.setItem("temporal", JSON.stringify(data))
     }
     else {
       alert("Ha ocurrido un error")

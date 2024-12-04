@@ -32,5 +32,12 @@ namespace Server.Repositories
             .FirstOrDefaultAsync(p => p.Id == id);
             return product;
         }
+
+        public async Task<IEnumerable<Product>> GetFullProducs()
+        {
+            return await GetQueryable()
+            .Include(product => product.Category)
+            .ToListAsync();
+        }
     }
 }

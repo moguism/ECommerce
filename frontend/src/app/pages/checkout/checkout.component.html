@@ -16,7 +16,7 @@
             } 
             @for (product of shoppingCartProducts; track product.id){
             <div class="basket-products">
-                <img class="basket-products-image" [src]="product.image.replace('/images/images/', '/images/')" alt="">
+                <img class="basket-products-image" [src]="product.image.replace('/images//images/', '/images/')" alt="">
                 <div class="basket-products-information">
                     <h2 class="basket-products-information-title">{{product.name}}</h2>
                     <h4 class="basket-products-information-quantity">Cantidad: {{ product.total }}</h4>
