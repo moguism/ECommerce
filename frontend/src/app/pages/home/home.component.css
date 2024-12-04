@@ -39,75 +39,18 @@
 
 @keyframes textAnimation {
     from {
-        transform: translate(-25vw, 0);
+        transform: translate(-40vw, 0);
     }
 
     to {
-        transform: translate(85vw, 0);
+        transform: translate(100vw, 0);
     }
 }
 
-/* ES POSIBLE QUE HAYA QUE HACER LA ANIMACIÓN AÚN MÁS RESPONSIVA */
-@media (max-width: 920px) {
-    #animated-section {
-        left: -80vw;
-        font-size: 8px;
-    }
-
-    #second-animated-section {
-        left: -80vw;
-        font-size: 6px;
-    }
-
-    #third-animated-section {
-        left: -80vw;
-        font-size: 5px;
-    }
-
-    @keyframes textAnimation {
-        from {
-            transform: translate(-80vw, 0);
-        }
-
-        to {
-            transform: translate(1vw, 0);
-        }
-    }
-}
-
-@media (max-width: 430px) {
-    #animated-section {
-        width: 25%;
-        left: -70vw;
-        font-size: 6px;
-    }
-
-    #second-animated-section {
-        width: 25%;
-        left: -70vw;
-        font-size: 6px;
-    }
-
-    #third-animated-section {
-        width: 25%;
-        left: -70vw;
-        font-size: 6px;
-    }
-
-    @keyframes textAnimation {
-        from {
-            transform: translate(-70vw, 0);
-        }
-
-        to {
-            transform: translate(1vw, 0);
-        }
-    }
-}
 
 #animated-section {
     position: absolute;
-    left: -25vw;
+    left: -40vw;
     top: 500px;
     background-color: #698558;
     padding: 20px;
@@ -120,7 +63,7 @@
 
 #second-animated-section {
     position: absolute;
-    left: -25vw;
+    left: -40vw;
     top: 1500px;
     background-color: #D9A72E;
     padding: 20px;
@@ -133,7 +76,7 @@
 
 #third-animated-section {
     position: absolute;
-    left: -25vw;
+    left: -40vw;
     top: 2500px;
     background-color: #A82222;
     padding: 20px;
@@ -216,3 +159,69 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     transform: translateY(1px);
 }*/
+
+/* RESPONSIVE */
+@media (max-width: 1160px) {
+    #animated-section {
+        left: -100vw;
+        font-size: 18px;
+        width: 30%;
+    }
+
+    #second-animated-section {
+        position: relative;
+        left: -100vw;
+        font-size: 17px;
+        width: 31%;
+    }
+
+    #third-animated-section {
+        left: -100vw;
+        font-size: 16px;
+        width: 32%;
+    }
+}
+
+@media (max-width: 981px) {
+    #animated-section {
+        left: -80vw;
+        font-size: 12px;
+        width: 30%;
+    }
+
+    #second-animated-section {
+        left: -80vw;
+        font-size: 12px;
+        width: 30%;
+    }
+
+    #third-animated-section {
+        left: -80vw;
+        font-size: 12px;
+        width: 30%;
+    }
+}
+
+@media (max-width: 430px) {
+    #animated-section {
+        left: -70vw;
+        font-size: 6px;
+        width: 25%;
+    }
+
+    #second-animated-section {
+        left: -70vw;
+        font-size: 6px;
+        width: 25%;
+    }
+
+    #third-animated-section {
+        left: -70vw;
+        font-size: 6px;
+        width: 27%;
+    }
+
+    .centered-image-stop{
+        top: 70%;
+    }
+}

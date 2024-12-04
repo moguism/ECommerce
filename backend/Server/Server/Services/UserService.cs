@@ -33,6 +33,13 @@ public class UserService
         return await _unitOfWork.UserRepository.GetByIdAsync(Int32.Parse(stringId));
     }
 
+    public async Task<User> GetUserFromStringWithTemporal(string stringId)
+    {
+
+        // Pilla el usuario de la base de datos
+        return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
+    }
+
     public async Task<User> GetUserAndOrdersFromDbByStringId(string stringId)
     {
 
@@ -58,11 +65,10 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<User> UpdateUser(User user)
+    public async Task UpdateUser(User user)
     {
-        User updatedUser = _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveAsync();
-        return updatedUser;
     }
 
     public string ObtainToken(User user)
