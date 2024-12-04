@@ -31,7 +31,7 @@
         <h3 class="order-date">Fecha del pedido: <b>{{ order.createdAt | correctDate }}</b></h3>
         @for(productToBuy of order.wishlist.products; track productToBuy.id){
             <div class="order-product">
-                <img class="order-product-img" [src]="productToBuy.product.image.replace('/images/images/', '/images/')">
+                <img class="order-product-img" [src]="productToBuy.product.image">
                 <div class="order-product-data">
                     <p class="order-product-data-title">{{productToBuy.product.name}}</p>
                     <p>Cantidad: <b>{{productToBuy.quantity}}</b></p>
