@@ -114,6 +114,15 @@ public class UserService
     {
         User newUser = await _unitOfWork.UserRepository.InsertAsync(user);
         await _unitOfWork.SaveAsync();
+
+        ShoppingCart cart = new ShoppingCart()
+        {
+            UserId = user.Id,
+        };
+
+        await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
+        await _unitOfWork.SaveAsync();
+
         return newUser;
     }
 

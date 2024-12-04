@@ -2,7 +2,7 @@
     <div id="black">
         @if(buttonChange) {
             <i (click)="showMenu()" id="menu" class="fa-solid fa-bars"></i>
-            <h1 (click)="goToRoute('shopping-cart')"><i id="cart-responsive" class="fa-solid fa-cart-shopping"></i><span class="quantity-responsive">{{ shoppingCartService.total }}</span></h1>
+            <h1 (click)="goToRoute('shopping-cart')"><i id="cart-responsive" class="fa-solid fa-cart-shopping"></i><span class="quantity-responsive">{{ shoppingCartService.contProduct }}</span></h1>
         } @else {
             <i (click)="closeMenu()" id="menu" class="fa-solid fa-xmark"></i>
         }
@@ -17,7 +17,7 @@
 
         @if(jwt != ""){
             <h2 class="text-welcome">Bienvenido, {{ name }}</h2>
-            <h2 class="text" (click)="goToRoute('shopping-cart')"><i id="cart" class="fa-solid fa-cart-shopping"></i><span class="quantity">{{ shoppingCartService.total }}</span></h2>
+            <h2 class="text" (click)="goToRoute('shopping-cart')"><i id="cart" class="fa-solid fa-cart-shopping"></i><span class="quantity">{{ shoppingCartService.contProduct }}</span></h2>
             <div class="dropdown" (click)="showAndClose()">
                 @if(dropdownChange){
                     <i id="arrow" class="fa-solid fa-chevron-down"></i>
@@ -34,7 +34,7 @@
                 </div>
             </div>
         }@else {
-            <h2 class="text" (click)="goToRoute('shopping-cart')"><i id="cart" class="fa-solid fa-cart-shopping"></i><span class="quantity">{{ shoppingCartService.total }}</span></h2>
+            <h2 class="text" (click)="goToRoute('shopping-cart')"><i id="cart" class="fa-solid fa-cart-shopping"></i><span class="quantity">{{ shoppingCartService.contProduct }}</span></h2>
             <div class="red" (click)="goToRoute('login')">
                 <i id="person-icon" class="fa-solid fa-user"></i>
             </div>

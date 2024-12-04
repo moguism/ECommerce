@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
+import { ShoppingCart } from '../../models/shopping-cart';
+
 
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
@@ -29,8 +31,9 @@ export class ProductViewComponent implements OnInit {
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
+  shoppingCart: ShoppingCart | null = null
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService : ShoppingCartService) { }
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
     //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
@@ -51,11 +54,9 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  isLogged()
-  {
+  isLogged() {
     let boolean = false;
-    if(this.apiService.jwt != null && this.apiService.jwt != "")
-    {
+    if (this.apiService.jwt != null && this.apiService.jwt != "") {
       boolean = true
     }
     return boolean
@@ -124,15 +125,32 @@ export class ProductViewComponent implements OnInit {
       }
       localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
+      //Contador en local storage del número de productos en el carrito
+      this.shoppingCartService.contProduct = allProducts.length
+
     }
     else {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(product.id, this.count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
-      await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
+      const result = await this.apiService.post<ShoppingCart>("ShoppingCart/addProductOrChangeQuantity", cartContent)
+
+      if(result.data){
+        const dataRaw : any =  result.data
+        this.shoppingCart = JSON.parse(dataRaw)
+      }
+
+      //Contador en local storage del número de productos en el carrito
+      if (this.shoppingCart?.cartContent) {
+        var cont = this.shoppingCart?.cartContent.length
+        console.log("Carrito " + cont)
+        this.shoppingCartService.contProduct = this.shoppingCart?.cartContent.length
+      }
     }
+    
     alert("Producto añadido al carrito correctamente")
     //this.shoppingCartService.getShoppingCartCount()
+    
   }
 
   ngOnDestroy(): void {
