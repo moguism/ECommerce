@@ -12,7 +12,7 @@
         <div class="purchased ">
             @for (productPurchased of lastOrder.wishlist.products; track productPurchased.id){
             <div class="purchased-products">
-                <img class="purchased-products-image" [src]="productPurchased.product.image.replace('/images/images/', '/images/')" alt="">
+                <img class="purchased-products-image" [src]="productPurchased.product.image.replace('images/images/images/images/', '/images/')" alt="">
 
                 <div class="purchased-products-information">
                     <h2>{{productPurchased.product.name}} {{productPurchased.quantity}}kg</h2>
