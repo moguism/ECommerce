@@ -46,7 +46,7 @@
     padding: 20.5px;
 }
 .logo {
-    width: 5%;
+    width: 6%;
     cursor: pointer;
 }
 #menu {
@@ -195,10 +195,9 @@ h1{
         display: flex;
         font-size: 25px;
     }
-    /*.logo {
-        visibility: hidden;
-        display: none;
-    }*/
+    .logo {
+        width: 65px;
+    }
     #blackVisible {
         flex-direction: column;
         height: 300px;
