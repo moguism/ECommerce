@@ -75,24 +75,24 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<UserAfterLoginDto> UpdateUserAdmin([FromBody] User updatedUser)
+        public async Task UpdateUserAdmin([FromBody] User updatedUser)
         {
             User user = await GetCurrentUser();
             if (user == null)
             {
-                return null;
+                return;
             }
 
             // Si intenta modificar un usuario que no es él mismo y tampoco es admin
             if (!user.Role.Equals("Admin") && updatedUser.Id != user.Id)
             {
-                return null;
+                return;
             }
 
             User oldUser = await _userService.GetUserById(updatedUser.Id);
             if (oldUser == null)
             {
-                return null;
+                return;
             }
 
             oldUser.Email = updatedUser.Email;
@@ -110,10 +110,7 @@ namespace Server.Controllers
                 oldUser.Password = passwordService.Hash(updatedUser.Password);
             }
 
-            User afterUpdate = await _userService.UpdateUser(oldUser);
-
-            UserAfterLoginDto userDto = _userService.ToDto(afterUpdate);
-            return userDto;
+            await _userService.UpdateUser(oldUser);
         }
 
         /*[Authorize]

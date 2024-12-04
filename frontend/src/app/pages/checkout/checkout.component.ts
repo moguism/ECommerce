@@ -25,7 +25,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   autoRefreshSubscription: Subscription | undefined;
   private id: number = 0
   method: string = ""
-  
+
   @ViewChild('checkoutDialog')
   checkoutDialogRef: ElementRef<HTMLDialogElement> | null = null;
   stripeEmbedCheckout: StripeEmbeddedCheckout | null = null;
@@ -48,16 +48,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     try {
       this.autoRefreshSubscription?.unsubscribe();
       this.stripeEmbedCheckout?.destroy();
-    } catch (error) {}
+    } catch (error) { }
   }
 
 
   async ngOnInit(): Promise<void> {
     this.id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.method = this.activatedRoute.snapshot.paramMap.get('method') as unknown as string;
-    const shoppinCartResult = await this.apiService.get("TemporalOrder", { "id": this.id }, 'json');
+    const shoppinCartResult = localStorage.getItem("temporal")
     console.log("RESULTADO AAAAAA: ", shoppinCartResult)
-    if (shoppinCartResult.data) {
+    if (shoppinCartResult) {
+      const data = await JSON.parse(shoppinCartResult)
+      const cartContent = data.wishlist.products
+      console.log("DANI PESAO: ", data)
+      for (const product of cartContent) {
+        let p = product.product
+        p.total = product.quantity
+        p = this.shoppingCartService.addCorrectPath(p)
+        this.shoppingCartProducts.push(p);
+      }
+    }
+    /*if (shoppinCartResult.data) {
       const data: any = shoppinCartResult.data;
       const cartContent = data.wishlist.products
 
@@ -67,15 +78,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         p = this.shoppingCartService.addCorrectPath(p)
         this.shoppingCartProducts.push(p);
       }
-    }
+    }*/
     this.autoRefreshSubscription = this.startAutoRefresh();
   }
 
-  async goToAfterCheckout()
-  {
+  async goToAfterCheckout() {
     await this.refreshOrder()
-    if(this.sessionId != "")
-    {
+    if (this.sessionId != "") {
       this.router.navigateByUrl("after-checkout?session_id=" + this.sessionId)
     }
   }
@@ -134,11 +143,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async refreshOrder() {
     console.log("Mandando petición...")
     const response = await this.apiService.get("TemporalOrder/refresh", { "id": this.id })
-    if(response.data)
-    {
-      const data : any = response.data
-      if(data.hashOrSession)
-      {
+    if (response.data) {
+      const data: any = response.data
+      if (data.hashOrSession) {
         this.sessionId = data.hashOrSession
       }
     }
@@ -182,12 +189,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     const ethereumInfoResult = await this.blockchainService.getEthereumInfo(transactionRequest);
     //para no dar problemas con los posibles nulos
-    if(ethereumInfoResult.data == null)
-    {
+    if (ethereumInfoResult.data == null) {
       alert("Ha ocurrido un error")
       return;
     }
-    const ethereumInfo =  JSON.parse(ethereumInfoResult.data.toString());
+    const ethereumInfo = JSON.parse(ethereumInfoResult.data.toString());
 
     console.log("ETHERIUM INFO RESULT: ", ethereumInfoResult)
     console.log("ETHERIUM INFO GOOD ENDING: ", ethereumInfo)
@@ -221,19 +227,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const checkTransactionResult = await this.blockchainService.checkTransaction(checkTransactionRequest);
         this.showLoading = false
 
-        console.log("Data : ",          
-          "\n" + checkTransactionRequest.networkUrl, 
-          "\n" + checkTransactionRequest.hash, 
-          "\n" + checkTransactionRequest.from ,
-          "\n" + checkTransactionRequest.to, 
+        console.log("Data : ",
+          "\n" + checkTransactionRequest.networkUrl,
+          "\n" + checkTransactionRequest.hash,
+          "\n" + checkTransactionRequest.from,
+          "\n" + checkTransactionRequest.to,
           "\n" + checkTransactionRequest.value)
 
         //Si la transacción ha sido exitosa
         if (checkTransactionResult.success) {
           alert('Transacción realizada con éxito');
           console.log(checkTransactionResult.data)
-          if(checkTransactionResult.data)
-          {
+          if (checkTransactionResult.data) {
             console.log("Orden creada")
             this.router.navigateByUrl("after-checkout")
             sessionStorage.setItem("method", 'eth')
@@ -247,7 +252,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           alert('Transacción fallida');
         }
       }
-      else{
+      else {
         console.log("error en la información del ethereum")
       }
     } catch (error) {

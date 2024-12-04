@@ -17,18 +17,14 @@ namespace Server.Controllers;
 public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
-    private readonly UserService _userService;
-    private readonly EmailService _emailService;
     private readonly TemporalOrderService _temporalOrderService;
+    private readonly EmailService _emailService;
 
-    public BlockchainController(BlockchainService blockchainService,
-        UserService userService,
-        EmailService emailService, TemporalOrderService temporalOrderService)
+    public BlockchainController(BlockchainService blockchainService, TemporalOrderService temporalOrderService, EmailService emailService)
     {
         _blockchainService = blockchainService;
-        _userService = userService;
-        _emailService = emailService;
         _temporalOrderService = temporalOrderService;
+        _emailService = emailService;
     }
 
     [HttpGet]
@@ -52,7 +48,7 @@ public class BlockchainController : ControllerBase
 
         EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
 
-        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderByUserId(user.Id);
+        TemporalOrder temporalOrder = user.TemporalOrders.OrderBy(temporalOrder => temporalOrder.Id).LastOrDefault();
         if (temporalOrder == null)
         {
             return null;
@@ -87,7 +83,6 @@ public class BlockchainController : ControllerBase
         if(done == true)
         {
             Order order = await _temporalOrderService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
-            //Order order = await _orderService.CompleteEthTransaction(data, user);
 
             if(order == null)
             {
@@ -102,13 +97,20 @@ public class BlockchainController : ControllerBase
         return null;
     }
 
-    private async Task<User> GetAuthorizedUser()
+    private async Task<User> GetAuthorizedUser(bool all = false)
     {
         // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _userService.GetUserFromDbByStringId(idString);
+        if (!all)
+        {
+            return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
+        }
+        else
+        {
+            return await _temporalOrderService.GetUserFromStringWithBasicInfo(idString);
+        }
     }
 }
