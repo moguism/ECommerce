@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
       console.log("no es nulo" + this.contProducts)
     }
     else
-      localStorage.setItem("contProducts", this.contProducts.toString())
+      localStorage.setItem("contProducts","0")
 
 
 

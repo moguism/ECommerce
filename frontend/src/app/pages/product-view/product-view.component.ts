@@ -129,6 +129,9 @@ export class ProductViewComponent implements OnInit {
       console.log(cont)
       localStorage.setItem("contProducts", cont.toString())
 
+      location.reload();
+
+
     }
     else {
       localStorage.removeItem("shoppingCart")
