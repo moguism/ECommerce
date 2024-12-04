@@ -56,6 +56,7 @@ namespace Server.Controllers
 
             //Añade una nueva orden temporal con los datos del usuario
             TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,temporalOrderDto.Quick, temporalOrderDto);
+            order.User = null;
             return order;
 
         }
@@ -78,6 +79,7 @@ namespace Server.Controllers
             }
 
             await _temporalOrderService.UpdateExpiration(temporalOrder);
+            temporalOrder.User = null;
 
             return temporalOrder;
         }

@@ -66,7 +66,7 @@ namespace Server.Controllers
             }
            
             PagedDto pagedDto = _productService.GetAllProductsByCategory(query.ActualPage, query.ProductPageSize, products);
-            pagedDto.Products = _productService.AddCorrectPath(pagedDto.Products);
+            //pagedDto.Products = _productService.AddCorrectPath(pagedDto.Products);
 
             return pagedDto;
         }
@@ -75,7 +75,8 @@ namespace Server.Controllers
         public async Task<Product> GetProductById(int id)
         {
             Product product = await _productService.GetFullProductById(id);
-            return _productService.AddCorrectPath(product);
+            return product;
+            //return _productService.AddCorrectPath(product);
         }
 
         [Authorize(Roles = "Admin")]

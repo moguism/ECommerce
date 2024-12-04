@@ -46,14 +46,55 @@ public class CheckoutController : ControllerBase
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
-        TemporalOrder temporalOrder = GetTemporal(temporalOrderId, user);
+        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.Id == temporalOrderId);
 
-        if(temporalOrder == null)
+        if (temporalOrder == null)
         {
             return null;
         }
 
-        Session session = await GetOptions(temporalOrder, user);
+        var lineItems = new List<SessionLineItemOptions>();
+
+        foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)
+        {
+            var product = cartContent.Product;
+            // Crea un SessionLineItemOptions para cada producto en el carrito
+            var lineItem = new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "eur",
+                    UnitAmount = (long)(product.Price),
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = product.Name,
+                        Description = product.Description,
+                        //Images = new List<string> { "" }
+                    }
+                },
+                Quantity = cartContent.Quantity
+            };
+
+            lineItems.Add(lineItem);
+
+        }
+
+        // Configurar la sesión de pago con los LineItems del carrito
+        SessionCreateOptions options = new SessionCreateOptions
+        {
+            UiMode = "embedded",
+            Mode = "payment",
+            PaymentMethodTypes = new List<string> { "card" },
+            LineItems = lineItems, //Lista de productos del usuario
+            CustomerEmail = user.Email,
+            RedirectOnCompletion = "never"
+        };
+
+        SessionService service = new SessionService();
+        Session session = await service.CreateAsync(options);
+
+        temporalOrder.HashOrSession = session.Id;
+        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
 
         return Ok(new { clientSecret = session.ClientSecret });
         //return Ok(new { sessionId = session.Id });
@@ -78,71 +119,6 @@ public class CheckoutController : ControllerBase
 
         return Ok(new { sessionUrl = session.Url });
     }*/
-
-    private TemporalOrder GetTemporal(int id, User user)
-    { 
-        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.Id == id);
-
-        if (temporalOrder == null)
-        {
-            return null;
-        }
-
-        return temporalOrder;
-    }
-
-    private async Task<Session> GetOptions(TemporalOrder temporalOrder, User user)
-    {
-        /*ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id);
-        IEnumerable<CartContent> cartContents = shoppingCart.CartContent;
-        if (cartContents == null || !cartContents.Any())
-            return null;*/
-
-        var lineItems = new List<SessionLineItemOptions>();
-
-        foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)
-        {
-            var product = cartContent.Product;
-            // Crea un SessionLineItemOptions para cada producto en el carrito
-            var lineItem = new SessionLineItemOptions
-            {
-                PriceData = new SessionLineItemPriceDataOptions
-                {
-                    Currency = "eur",
-                    UnitAmount = (long)(product.Price),
-                    ProductData = new SessionLineItemPriceDataProductDataOptions
-                    {
-                        Name = product.Name,
-                        Description = product.Description,
-                        Images = new List<string> { product.Image }
-                    }
-                },
-                Quantity = cartContent.Quantity
-            };
-
-            lineItems.Add(lineItem);
-
-        }
-
-        // Configurar la sesión de pago con los LineItems del carrito
-        SessionCreateOptions options = new SessionCreateOptions
-        {
-            UiMode = "embedded",
-            Mode = "payment",
-            PaymentMethodTypes = ["card"],
-            LineItems = lineItems, //Lista de productos del usuario
-            CustomerEmail = user.Email,
-            RedirectOnCompletion = "never"
-        };
-
-        SessionService service = new SessionService();
-        Session session = await service.CreateAsync(options);
-
-        temporalOrder.HashOrSession = session.Id;
-        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
-
-        return session;
-    }
 
     //Verifica el estado de la sesión
     [Authorize]

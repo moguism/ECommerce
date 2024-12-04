@@ -65,11 +65,10 @@ public class UserService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task<User> UpdateUser(User user)
+    public async Task UpdateUser(User user)
     {
-        User updatedUser = _unitOfWork.UserRepository.Update(user);
+        _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveAsync();
-        return updatedUser;
     }
 
     public string ObtainToken(User user)

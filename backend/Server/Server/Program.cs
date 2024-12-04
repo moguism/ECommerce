@@ -61,8 +61,8 @@ namespace Server
             builder.Services.AddPredictionEnginePool<ModelInput, ModelOutput>()
                 .FromFile("IAFarminhouse.mlnet");
 
-            builder.Services.AddSingleton<FarminhouseContext>();
-            builder.Services.AddSingleton<UnitOfWork>();
+            builder.Services.AddScoped<FarminhouseContext>();
+            builder.Services.AddScoped<UnitOfWork>();
 
             /*builder.Services.AddScoped<FarminhouseContext>();
             builder.Services.AddScoped<UnitOfWork>();*/
@@ -147,17 +147,17 @@ namespace Server
                     // Frutas
                     var fruits = new List<Product>
                     {
-                        new Product { Name = "Manzana", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 0, Image = "manzana.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Plátano", Description = "Una fuente rápida de energía, perfecta para llevar.", Price = 150, Stock = 200, Average = 0, Image = "platano.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Naranja", Description = "Cítrico jugoso y refrescante, rico en vitamina C.", Price = 300, Stock = 0, Average = 0, Image = "naranja.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Fresa", Description = "Fruta dulce y roja, excelente en postres y batidos.", Price = 400, Stock = 120, Average = 0, Image = "fresa.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Kiwi", Description = "Fruta exótica con un sabor único y refrescante.", Price = 350, Stock = 90, Average = 0, Image = "kiwi.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Pera", Description = "Fruta suave y jugosa, ideal para ensaladas.", Price = 280, Stock = 160, Average = 0, Image = "pera.jpg", CategoryId = 1, Category = fruitsCategory},
-                        new Product { Name = "Arandano", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 0, Image = "arandano.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Uva", Description = "Pequeñas frutas dulces, perfectas para picar o hacer vino.", Price = 500, Stock = 130, Average = 0, Image = "uva.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Sandía", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 600, Stock = 75, Average = 0, Image = "sandia.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Melón", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 450, Stock = 80, Average = 0, Image = "melon.jpg", CategoryId = 1, Category = fruitsCategory },
-                        new Product { Name = "Mango", Description = "Fruta tropical dulce, perfecta para smoothies y postres.", Price = 320, Stock = 110, Average = 0, Image = "mango.jpg", CategoryId = 1, Category = fruitsCategory }
+                        new Product { Name = "Manzana", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 0, Image = "/images/manzana.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Plátano", Description = "Una fuente rápida de energía, perfecta para llevar.", Price = 150, Stock = 200, Average = 0, Image = "/images/platano.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Naranja", Description = "Cítrico jugoso y refrescante, rico en vitamina C.", Price = 300, Stock = 0, Average = 0, Image = "/images/naranja.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Fresa", Description = "Fruta dulce y roja, excelente en postres y batidos.", Price = 400, Stock = 120, Average = 0, Image = "/images/fresa.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Kiwi", Description = "Fruta exótica con un sabor único y refrescante.", Price = 350, Stock = 90, Average = 0, Image = "/images/kiwi.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Pera", Description = "Fruta suave y jugosa, ideal para ensaladas.", Price = 280, Stock = 160, Average = 0, Image = "/images/pera.jpg", CategoryId = 1, Category = fruitsCategory},
+                        new Product { Name = "Arandano", Description = "Una fruta crujiente y dulce, ideal para snacks.", Price = 250, Stock = 150, Average = 0, Image = "/images/arandano.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Uva", Description = "Pequeñas frutas dulces, perfectas para picar o hacer vino.", Price = 500, Stock = 130, Average = 0, Image = "/images/uva.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Sandía", Description = "Fruta refrescante y jugosa, perfecta para el verano.", Price = 600, Stock = 75, Average = 0, Image = "/images/sandia.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Melón", Description = "Fruta dulce y jugosa, ideal para ensaladas de frutas.", Price = 450, Stock = 80, Average = 0, Image = "/images/melon.jpg", CategoryId = 1, Category = fruitsCategory },
+                        new Product { Name = "Mango", Description = "Fruta tropical dulce, perfecta para smoothies y postres.", Price = 320, Stock = 110, Average = 0, Image = "/images/mango.jpg", CategoryId = 1, Category = fruitsCategory }
                     };
 
                     // Verduras

@@ -53,10 +53,9 @@ public abstract class Repository<TEntity, TId> : IRepository<TEntity, TId> where
         return entry.Entity;
     }
 
-    public TEntity Update(TEntity entity)
+    public void Update(TEntity entity)
     {
-        EntityEntry<TEntity> entry = _context.Set<TEntity>().Update(entity);
-        return entry.Entity;
+        _context.Set<TEntity>().Update(entity);
     }
 }
 

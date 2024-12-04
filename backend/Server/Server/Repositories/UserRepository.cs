@@ -32,6 +32,7 @@ namespace Server.Repositories
         public async Task<User> GetAllInfoWithTemporal(int id)
         {
             return await GetQueryable()
+                .Include (user => user.ShoppingCart)
                 .Include(user => user.TemporalOrders)
                     .ThenInclude(t => t.Wishlist)
                     .ThenInclude(w => w.Products)

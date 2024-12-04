@@ -20,6 +20,14 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
             .LastOrDefaultAsync(temporalOrder => temporalOrder.UserId == userId);
     }
 
+    public async Task<IEnumerable<TemporalOrder>> GetFullTemporalOrders()
+    {
+        return await GetQueryable()
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .ThenInclude(w => w.Products)
+            .ToListAsync();
+    }
+
     public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
     {
         return await GetQueryable()
@@ -48,6 +56,12 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
 
     public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
     {
-        return await GetQueryable().Where(temporalOrder => temporalOrder.ExpirationDate >= currentTime).ToListAsync();
+        return await GetQueryable()
+            .Where(temporalOrder => temporalOrder.ExpirationDate <= currentTime)
+            .Include(temporalOrder => temporalOrder.Wishlist)
+            .ThenInclude(w => w.Products)
+            .ThenInclude(p => p.Product)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

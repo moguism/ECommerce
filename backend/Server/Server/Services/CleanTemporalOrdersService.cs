@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nethereum.Util;
 using Server.Models;
 
 namespace Server.Services;
@@ -24,26 +25,33 @@ public class CleanTemporalOrdersService : BackgroundService
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<UnitOfWork>();
                 try {
                     Console.WriteLine("Ejecutando servicio en segundo plano");
-                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetExpiredOrders(DateTime.UtcNow.AddMinutes(5));
+                    List<TemporalOrder> expiredOrders = (List<TemporalOrder>)await unitOfWork.TemporalOrderRepository.GetFullTemporalOrders();
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
+                        if(temporalOrder.ExpirationDate.AddMinutes(5) < DateTime.UtcNow)
+                        {
+                            unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+                            foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)
+                            {
+                                var product = await unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
+                                //unitOfWork.Context.Entry(cartContent.Product).State = EntityState.Detached;
+                                product.Stock += cartContent.Quantity;
+                                unitOfWork.ProductRepository.Update(product);
+                                /*unitOfWork.ProductsToBuyRepository.Delete(cartContent);*/
+                            }
+                        }
                         // Se desasocia la entidad existente del contexto antes de tocar otra
-                        var existingEntity = await unitOfWork.TemporalOrderRepository.GetFullTemporalOderByIdWithoutUser(temporalOrder.Id);
+                        /*var existingEntity = temporalOrder;
                         if (existingEntity != null)
                         {
                             unitOfWork.Context.Entry(existingEntity).State = EntityState.Detached;
+                            
                         }
 
-                        unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
+                        unitOfWork.TemporalOrderRepository.Delete(temporalOrder);*/
 
-                        foreach (ProductsToBuy cartContent in existingEntity.Wishlist.Products)
-                        {
-                            Product product = cartContent.Product;
-                            product.Stock += cartContent.Quantity;
-                            unitOfWork.ProductRepository.Update(product);
-                            /*unitOfWork.ProductsToBuyRepository.Delete(cartContent);*/
-                        }
+                        
                     }
 
                     await unitOfWork.SaveAsync();

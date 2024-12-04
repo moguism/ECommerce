@@ -16,6 +16,7 @@ namespace Server.Services
 
         public async Task AddProductsToShoppingCart(User user, CartContent cartContent)
         {
+            // TODO: Esto hay que cambiarlo
             /*Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContentDto.ProductId);
             if (product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
             {

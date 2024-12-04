@@ -37,9 +37,11 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = newWishlist.Id;
-                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                Product realProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductId);
                 product.ProductId = realProduct.Id;
                 product.PurchasePrice = realProduct.Price;
+                realProduct.Stock -= product.Quantity;
+                _unitOfWork.ProductRepository.Update(realProduct);
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
             }
 
@@ -58,19 +60,18 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-                Wishlist = wishlist,
                 ExpirationDate = DateTime.UtcNow,
                 Quick = quick
             });
 
 
             //Resta el stock a los productos que quiere comprar el usuario
-            foreach(ProductsToBuy productToBuy in wishlist.Products)
+            /*foreach(ProductsToBuy productToBuy in wishlist.Products)
             {
                 Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
                 product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
-            }
+            }*/
 
             await _unitOfWork.SaveAsync();
             return order;
