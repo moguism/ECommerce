@@ -3,17 +3,17 @@
 <div class="main">
 
     <div id="progressBar">
-        <h2>Envio gratis en pedidos superiores a 50€ 
+        <h2 class="info-order">Envio gratis en pedidos superiores a 50€ 
             <img src="assets/shoppingCart/distributeIcon.png" alt="icon" /></h2>
     </div>
 
     <div id="cartCounter">
-        <h2>Mi carrito</h2>
+        <h2 class="cartCounter-title">Mi carrito</h2>
         @if(shoppingCartProducts.length == 1){
-            <h4>{{shoppingCartProducts.length}} articulo</h4>
+            <h4 class="cartCounter-info">{{shoppingCartProducts.length}} artículo</h4>
         }
         @else {
-            <h4>{{shoppingCartProducts.length}} articulos</h4>
+            <h4 class="cartCounter-info">{{shoppingCartProducts.length}} artículos</h4>
         }
     </div>
     <div class="information">
@@ -28,7 +28,7 @@
                 <div class="basket-products-information">
                     
                     <div class="basket-products-information-price">
-                        <h2 class="basket-products-information-functions-title">{{product.name}}</h2>
+                        <h2 class="basket-products-information-title">{{product.name}}</h2>
                         <h3>Total: {{(product.total*product.price) | eurosToCents}}</h3>
                         <h3>Precio por kg {{product.price | eurosToCents}}</h3>
                     </div>
@@ -49,7 +49,7 @@
             }
         </div>
         <div class="final-price">
-            <h2>Resumen</h2>
+            <h2 class="final-price-title">Resumen</h2>
             <div class="final-price-price">
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>

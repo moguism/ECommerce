@@ -112,7 +112,7 @@
     align-items: center;
     gap: 5%;
 }
-.basket-products-information-functions-title{
+.basket-products-information-title{
     width: 100%;
 }
 .basket-products-information-functions-input{
@@ -138,8 +138,8 @@
 
 .final-price-buttons{
     width: 100%;
-    display: grid;
-    grid-template-columns: 50% 50%;
+    display: flex;
+    flex-direction: row;
 }
 
 hr{
@@ -193,12 +193,23 @@ hr{
 @media (max-width: 1300px) {
     .main {
         padding: 0 5%;
-        font-size: 2rem;
     }
 
     #cartCounter {
         margin: 0 5%;
         text-align: center;
+    }
+
+    .cartCounter-title{
+        font-size: 40px;
+    }
+
+    .cartCounter-info{
+        font-size: 35px;
+    }
+
+    .info-order{
+        font-size: 40px;
     }
 
     .information {
@@ -216,8 +227,9 @@ hr{
         flex-direction: column;
         height: auto;
         text-align: center;
-        padding: 10%;
-        width: 90%;
+        gap: 3%;
+        padding: 5%;
+        width: 50%;
     }
 
     .basket-products-product {
@@ -225,7 +237,7 @@ hr{
     }
 
     .basket-products-stock {
-        font-size: 50px;
+        font-size: 40px;
     }
 
     .basket-products-information {
@@ -234,9 +246,8 @@ hr{
     }
 
     .basket-products-image {
-        width: 100%;
-        max-width: 500px;
-        height: auto;
+        max-width: 150px;
+        height: 150px;
         margin-bottom: 15px;
     }
 
@@ -259,7 +270,7 @@ hr{
 
     .basket-products-information-functions-input {
         width: 50%;
-        height: 50px;
+        height: 30px;
         padding: 2%;
         font-size: 2rem;
         text-align: center;
@@ -267,11 +278,30 @@ hr{
 
     .final-price {
         font-size: 2.5rem;
-        width: 100%;
+        width: 50%;
         margin: 0 auto;
         padding: 5%;
         margin: 0;
     }
+
+    .final-price-title{
+        font-size: 50px;
+    }
+
+    .final-price-price h3{
+        font-size: 35px;
+    }
+
+    .final-price-buttons{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .final-price-buttons button{
+        font-size: 20px;
+        width: 90%;
+    }
+
     .final-price-button-card{
         font-size: 2.5rem;
 
@@ -283,7 +313,7 @@ hr{
     }
     .final-price-button-Etherium{
         font-size: 2.5rem;
-
+        margin-top: 5%;
     }
 
     .final-price-button-Etherium img{
@@ -299,22 +329,100 @@ hr{
         padding: 0 2%;
     }
 
+    .info-order{
+        font-size: 30px;
+    }
+
+    .cartCounter-title{
+        font-size: 30px;
+    }
+
+    .cartCounter-info{
+        font-size: 25px;
+    }
+
     #progressBar img {
         width: 40px;
         height: 40px;
     }
 
     .basket-products {
-        padding: 15%;
-        width: 100%;
+        padding: 5%;
+        width: 50%;
     }
 
+    .basket-products-stock {
+        font-size: 30px;
+    }
 
     .basket-products-information-functions {
         gap: 15px;
     }
+
+    .basket-products-information-title{
+        font-size: 30px;
+    }
+
+    .basket-products-information-price h3{
+        font-size: 30px;
+    }
+
+    .basket-products-information-Button{
+        height: 35px;
+        width: 35px;
+        font-size: 20px;
+    }
+
+    .basket-products-information-functions-input{
+        height: 20px;
+        font-size: 25px;
+    }
+
+    .final-price-title{
+        font-size: 30px;
+    }
+
+    .final-price-price h3{
+        font-size: 25px;
+    }
+
+    .final-price-buttons button{
+        font-size: 15px;
+        width: 80%;
+    }
+
+    .final-price-buttons button img{
+        width: 25px;
+        height: 25px;
+    }
+
+
 }
 @media (max-width: 500px){
+    .info-order{
+        font-size: 20px;
+    }
+
+    .cartCounter-title{
+        font-size: 20px;
+    }
+
+    .cartCounter-info{
+        font-size: 15px;
+    }
+
+    .final-price{
+        width: 80%;
+    }
+
+    .final-price-title{
+        font-size: 25px;
+    }
+
+    .final-price-price h3{
+        font-size: 20px;
+    }
+
     .final-price-button-card{
         font-size: 1.5rem;
         height: 100%;
@@ -330,7 +438,15 @@ hr{
         width: 80%;
     }
     .basket-products-stock{
-        font-size: 35px;
+        font-size: 25px;
+    }
+
+    .basket-products-information-title{
+        font-size: 20px;
+    }
+
+    .basket-products-information-price h3{
+        font-size: 20px;
     }
 
 }
