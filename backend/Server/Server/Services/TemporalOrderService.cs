@@ -37,9 +37,11 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 product.WishlistId = newWishlist.Id;
-                Product realProduct = await _unitOfWork.ProductRepository.GetFullProductById(product.ProductId);
+                Product realProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductId);
                 product.ProductId = realProduct.Id;
                 product.PurchasePrice = realProduct.Price;
+                realProduct.Stock -= product.Quantity;
+                _unitOfWork.ProductRepository.Update(realProduct);
                 await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
             }
 
@@ -58,19 +60,18 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-                Wishlist = wishlist,
                 ExpirationDate = DateTime.UtcNow,
                 Quick = quick
             });
 
 
             //Resta el stock a los productos que quiere comprar el usuario
-            foreach(ProductsToBuy productToBuy in wishlist.Products)
+            /*foreach(ProductsToBuy productToBuy in wishlist.Products)
             {
                 Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
                 product.Stock -= productToBuy.Quantity;
                 _unitOfWork.ProductRepository.Update(product);
-            }
+            }*/
 
             await _unitOfWork.SaveAsync();
             return order;
@@ -102,14 +103,14 @@ namespace Server.Services
 
         public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
         {
-            Order existingOrder = await _unitOfWork.OrderRepository.GetByHashOrSession(hashOrSessionOrder);
+            Order existingOrder = user.Orders.FirstOrDefault(o => o.HashOrSession.Equals(hashOrSessionOrder));
             if (existingOrder != null)
             {
                 return existingOrder;
             }
 
             //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(hashOrSessionTemporal);
+            TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.HashOrSession.Equals(hashOrSessionTemporal));
             if (temporalOrder == null)
             {
                 return null;
@@ -154,5 +155,18 @@ namespace Server.Services
             return saveOrder;
         }
 
+        public async Task<User> GetUserFromStringWithTemporal(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
+        }
+
+        public async Task<User> GetUserFromStringWithBasicInfo(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetAllWithBasicInfo(Int32.Parse(stringId));
+        }
     }
 }

@@ -8,6 +8,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width: 100%;
 }
 
 /*Esto seria par la visualizacion de mis productos y sus caracteristicas*/
@@ -236,7 +237,7 @@
     }
 
     .products-description {
-        width: 100%;
+        width: 90%;
         height: 100%;
     }
 
@@ -260,6 +261,13 @@
 
     .review-input {
         width: 95%;
+    }
+
+    .review-users-opinion {
+        width: 100%;
+    }
+    .review-users-opinion-date {
+        width: 150px;
     }
 
 }

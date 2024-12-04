@@ -37,7 +37,7 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    gap:20px;
+    gap:5%;
 
 
 }
@@ -49,7 +49,7 @@
     align-items: center;
     height: auto;
     width: 100%;
-    gap: 20px;
+    gap: 5%;
     border-radius: 8px;
     padding: 5%;
     border: solid grey 2px;
@@ -65,7 +65,7 @@
 .basket-products-product{
     text-align: center;
 }
-.basket-products-product h2{
+.basket-products-stock{
     color: #5b9636;
 }
 
@@ -110,7 +110,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    gap: 20px;
+    gap: 5%;
 }
 .basket-products-information-functions-title{
     width: 100%;
@@ -181,7 +181,7 @@ hr{
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 70px;
+    gap: 20%;
 }
 .products-description-anadir{
     display: flex;
@@ -224,7 +224,7 @@ hr{
         margin-bottom: -10%;
     }
 
-    .basket-products-product h2 {
+    .basket-products-stock {
         font-size: 50px;
     }
 
@@ -313,7 +313,24 @@ hr{
     .basket-products-information-functions {
         gap: 15px;
     }
+}
+@media (max-width: 500px){
+    .final-price-button-card{
+        font-size: 1.5rem;
+        height: 100%;
+    }
+    .final-price-button-Etherium{
+        font-size: 1.5rem;
+        height: 100%;
+    }
+    .basket-products{
+        width: 80%;
+    }
+    .basket-products-product{
+        width: 80%;
+    }
+    .basket-products-stock{
+        font-size: 35px;
+    }
 
-  
-    
 }
