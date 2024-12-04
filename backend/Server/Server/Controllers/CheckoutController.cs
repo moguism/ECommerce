@@ -16,13 +16,11 @@ public class CheckoutController : ControllerBase
 {
     private readonly TemporalOrderService _temporalOrderService;
     private readonly EmailService _emailService;
-    private readonly UserService _userService;
 
-    public CheckoutController(TemporalOrderService temporalOrderService, EmailService emailService, UserService userService)
+    public CheckoutController(TemporalOrderService temporalOrderService, EmailService emailService)
     {
         _temporalOrderService = temporalOrderService;
         _emailService = emailService;
-        _userService = userService;
     }
 
     /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
@@ -43,7 +41,7 @@ public class CheckoutController : ControllerBase
     [HttpPost("embedded")]
     public async Task<ActionResult> EmbededCheckout([FromBody] int temporalOrderId)
     {
-       User user = await GetMi();
+       User user = await GetMinimumUser();
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
@@ -131,7 +129,7 @@ public class CheckoutController : ControllerBase
         // Además, devuelve la orden completa si ya existe
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
-        User user = await GetAuthorizedUser();
+        User user = await GetAuthorizedUser(false);
         if (user == null) 
         {
         Unauthorized("Usuario no autenticado.");
@@ -149,19 +147,19 @@ public class CheckoutController : ControllerBase
         return null;
     }
 
-    private async Task<User> GetAuthorizedUser(bool all = false)
+    private async Task<User> GetAuthorizedUser(bool products = true)
     {
         // Pilla el usuario autenticado según ASP
         string idString = GetStringId();
 
         // Pilla el usuario de la base de datos
-        if(!all)
+        if(products)
         {
             return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
         }
         else
         {
-            return await _temporalOrderService.GetUserFromString(idString);
+            return await _temporalOrderService.GetUserFromStringWithTemporalButProducts(idString);
         }
         
     }
@@ -174,7 +172,7 @@ public class CheckoutController : ControllerBase
     }
     private async Task<User> GetMinimumUser()
     {
-        User user = await _userService.GetUserFromDbByStringId(GetStringId());
+        User user = await _temporalOrderService.GetMinimumUser(GetStringId());
         return user;
     }
 }

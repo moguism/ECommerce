@@ -153,9 +153,11 @@ namespace Server.Services
             return saveOrder;
         }
 
-        public async Task DeleteById(int id)
+        public async Task<User> GetMinimumUser(string stringId)
         {
 
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetByIdAsync(Int32.Parse(stringId));
         }
 
         public async Task<User> GetUserFromStringWithTemporal(string stringId)
@@ -163,6 +165,13 @@ namespace Server.Services
 
             // Pilla el usuario de la base de datos
             return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
+        }
+
+        public async Task<User> GetUserFromStringWithTemporalButProducts(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetAllInfoWithTemporalButProducts(Int32.Parse(stringId));
         }
 
         public async Task<User> GetUserFromString(string stringId)

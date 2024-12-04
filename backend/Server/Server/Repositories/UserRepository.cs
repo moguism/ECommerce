@@ -63,6 +63,15 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
+        public async Task<User> GetAllInfoWithTemporalButProducts(int id)
+        {
+            return await GetQueryable()
+                .Include(user => user.ShoppingCart)
+                .Include(user => user.TemporalOrders)
+                    .ThenInclude(t => t.Wishlist)
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
+
         public async Task<User> GetAllInfoButOrdersById(int id)
         {
             return await GetQueryable()
