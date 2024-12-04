@@ -236,6 +236,13 @@ option{
         display: grid;
         grid-template-columns: repeat(1, 1fr); 
     }
+    .sort-buttons{
+        flex-direction: column;
+        
+    }
+    #order-by{
+        margin-top: 0;
+    }
 }
 
 .btn-buy {
