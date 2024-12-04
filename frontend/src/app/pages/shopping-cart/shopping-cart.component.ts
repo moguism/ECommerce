@@ -21,8 +21,8 @@ import { ShoppingCartService } from '../../services/shopping-cart.service';
 export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
-  
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) {}
+
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
     const goToCheckout = localStorage.getItem("goToCheckout")
@@ -38,7 +38,9 @@ export class ShoppingCartComponent implements OnInit {
   getLocalStorageCart() {
     //this.shoppingCartProducts = [];
     const productsRaw = localStorage.getItem("shoppingCart");
-    if (productsRaw) this.shoppingCartProducts = JSON.parse(productsRaw);
+    if (productsRaw) {
+      this.shoppingCartProducts = JSON.parse(productsRaw);
+    }
   }
 
 
@@ -74,11 +76,18 @@ export class ShoppingCartComponent implements OnInit {
         }
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
+
+      
     }
-    else
-    {
+    else {
       this.getLocalStorageCart();
     }
+
+
+    //Contador en local storage del número de productos en el carrito
+    var cont = this.shoppingCartProducts.length
+    console.log("carrito local storage " + cont)
+    localStorage.setItem("contProducts", cont.toString())
   }
 
   async changeQuantity(product: Product) {
@@ -88,8 +97,7 @@ export class ShoppingCartComponent implements OnInit {
       return
     }
 
-    if(parseInt(input.value) > product.stock)
-    {
+    if (parseInt(input.value) > product.stock) {
       alert("No hay stock suficiente")
       return
     }
@@ -131,6 +139,12 @@ export class ShoppingCartComponent implements OnInit {
         this.getShoppingCart()
       }
     }
+
+
+    //Contador en local storage del número de productos en el carrito
+    var cont = this.shoppingCartProducts.length
+    console.log("contador carrito " + cont)
+    localStorage.setItem("contProducts", cont.toString())
   }
 
   findProductInArray(id: number): Product {
@@ -231,13 +245,13 @@ export class ShoppingCartComponent implements OnInit {
   }
   restar(index: number) {
     const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
-    if(this.shoppingCartProducts[quantity].total>0){
+    if (this.shoppingCartProducts[quantity].total > 0) {
       this.shoppingCartProducts[quantity].total--;
     }
   }
 
 
- 
+
 
 
 }

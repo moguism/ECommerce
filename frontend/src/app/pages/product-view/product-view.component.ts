@@ -124,6 +124,11 @@ export class ProductViewComponent implements OnInit {
       }
       localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
 
+      //Contador en local storage del número de productos en el carrito
+      var cont = allProducts.length
+      console.log(cont)
+      localStorage.setItem("contProducts", cont.toString())
+
     }
     else {
       localStorage.removeItem("shoppingCart")
