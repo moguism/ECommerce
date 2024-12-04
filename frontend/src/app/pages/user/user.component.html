@@ -136,14 +136,7 @@
                 required />
             <label for="productImage">Foto del producto:</label>
             <input type="file" accept="image/png, image/jpeg, image/jpg" required (change)="onFileSelected($event)">
-            @if(create)
-            {
-            <button type="submit" (click)="submitCreateProduct()">Crear producto</button>
-            }
-            @else
-            {
-            <button type="submit" (click)="submitCreateProduct()">Modificar producto</button>
-            }
+            <button type="submit" (click)="submitCreateProduct()">Subir datos</button>
             <button type="button" (click)="closeForm()">Cancelar</button>
         </form>
     </div>

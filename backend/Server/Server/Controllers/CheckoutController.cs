@@ -160,7 +160,7 @@ public class CheckoutController : ControllerBase
         }
         else
         {
-            return await _temporalOrderService.GetUserFromStringWithBasicInfo(idString);
+            return await _temporalOrderService.GetUserFromString(idString);
         }
         
     }

@@ -5,7 +5,7 @@ namespace Server.Services;
 
 public class ImageService
 {
-    private const string IMAGES_FOLDER = "images/";
+    private const string IMAGES_FOLDER = "/images/";
 
     public async Task<string> InsertAsync(IFormFile file)
     {
