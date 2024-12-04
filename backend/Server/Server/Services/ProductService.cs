@@ -43,7 +43,7 @@ namespace Server.Services
 
         public async Task<IEnumerable<Product>> GetFullProducts()
         {
-            return await _unitOfWork.ProductRepository.GetAllAsync();
+            return await _unitOfWork.ProductRepository.GetFullProducs();
         }
 
         public PagedDto GetAllProductsByCategory(int pageNumber, int pageSize, IEnumerable<Product> products)
