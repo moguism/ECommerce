@@ -97,6 +97,14 @@
     display: none;
     list-style-type: none;
 }
+p{
+    width: 100%;
+    height: 100%;
+}
+.dropdown-list-button{
+    height: 25%;
+    width: 100%;
+}
 
 .view-dropdown-list{
     display: block;

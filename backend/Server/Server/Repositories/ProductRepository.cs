@@ -37,6 +37,7 @@ namespace Server.Repositories
         {
             return await GetQueryable()
             .Include(product => product.Category)
+            .OrderBy(product => product.Id)
             .ToListAsync();
         }
     }

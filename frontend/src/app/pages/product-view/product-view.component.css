@@ -44,7 +44,7 @@
 .products-description-description {
     word-break: break-word;
     white-space: normal;
-    width: 50%;
+    width: 100%;
 }
 
 .products-description-price {
@@ -201,7 +201,7 @@
 }
 
 .review-users-opinion-text {
-    width: 80%;
+    width: 50%;
 }
 
 .review-users-opinion-date {
