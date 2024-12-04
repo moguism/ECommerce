@@ -15,14 +15,13 @@ namespace Server.Controllers;
 public class CheckoutController : ControllerBase
 {
     private readonly TemporalOrderService _temporalOrderService;
-    private readonly UserService _userService;
+    private readonly EmailService _emailService;
 
-    public CheckoutController(TemporalOrderService temporalOrderService, UserService userService)
+    public CheckoutController(TemporalOrderService temporalOrderService, EmailService emailService)
     {
         _temporalOrderService = temporalOrderService;
-        _userService = userService;
+        _emailService = emailService;
     }
-
 
     /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
 
@@ -138,7 +137,7 @@ public class CheckoutController : ControllerBase
             Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user, 1);
             if (session.CustomerEmail != null)
             {
-                //await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
+                await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
             }
             return order;
         }
@@ -148,15 +147,21 @@ public class CheckoutController : ControllerBase
     
 
 
-    private async Task<User> GetAuthorizedUser()
+    private async Task<User> GetAuthorizedUser(bool all = false)
     {
         // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
 
         // Pilla el usuario de la base de datos
-        return await _userService.GetUserFromStringWithTemporal(idString);
+        if(!all)
+        {
+            return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
+        }
+        else
+        {
+            return await _temporalOrderService.GetUserFromStringWithBasicInfo(idString);
+        }
+        
     }
-
-
 }
