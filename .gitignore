@@ -1,2 +1,5 @@
 
 backend/Server/Server/appsettings.Development.json
+
+# Local Netlify folder
+.netlify
