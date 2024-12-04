@@ -75,7 +75,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task UpdateUserAdmin([FromBody] User updatedUser)
+        public async Task UpdateUser([FromBody] User updatedUser)
         {
             User user = await GetCurrentUser();
             if (user == null)
@@ -89,28 +89,31 @@ namespace Server.Controllers
                 return;
             }
 
-            User oldUser = await _userService.GetUserById(updatedUser.Id);
-            if (oldUser == null)
+            if(user.Id != updatedUser.Id)
             {
-                return;
+                user = await _userService.GetUserByIdAsync(updatedUser.Id);
+                if(user == null)
+                {
+                    return;
+                }
             }
 
-            oldUser.Email = updatedUser.Email;
-            oldUser.Address = updatedUser.Address;
-            oldUser.Name = updatedUser.Name;
+            user.Email = updatedUser.Email;
+            user.Address = updatedUser.Address;
+            user.Name = updatedUser.Name;
 
             if(user.Role.Equals("Admin") && (updatedUser.Role.Equals("Admin") || updatedUser.Role.Equals("User")))
             {
-                oldUser.Role = updatedUser.Role;
+                user.Role = updatedUser.Role;
             }
 
             if(updatedUser.Password != null && updatedUser.Password != "")
             {
                 PasswordService passwordService = new PasswordService();
-                oldUser.Password = passwordService.Hash(updatedUser.Password);
+                user.Password = passwordService.Hash(updatedUser.Password);
             }
 
-            await _userService.UpdateUser(oldUser);
+            await _userService.UpdateUser(user);
         }
 
         /*[Authorize]

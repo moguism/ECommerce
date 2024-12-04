@@ -29,7 +29,7 @@ public class CleanTemporalOrdersService : BackgroundService
 
                     foreach (TemporalOrder temporalOrder in expiredOrders)
                     {
-                        if(temporalOrder.ExpirationDate.AddMinutes(5) < DateTime.UtcNow)
+                        if(temporalOrder.ExpirationDate < DateTime.UtcNow)
                         {
                             unitOfWork.TemporalOrderRepository.Delete(temporalOrder);
                             foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)

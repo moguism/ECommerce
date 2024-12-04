@@ -43,7 +43,6 @@ namespace Server.Controllers
             return temporalOrder;
         }
 
-
         [Authorize]
         [HttpPost("newTemporalOrder")]
         public async Task<TemporalOrder> CreateTemporal([FromBody] TemporalOrderDto temporalOrderDto)

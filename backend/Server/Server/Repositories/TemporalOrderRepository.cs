@@ -30,7 +30,7 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
 
     public async Task<TemporalOrder> GetFullTemporalOrderById(int id)
     {
-        return await GetQueryable()
+        return await GetQueryable(false)
             .Include(temporalOrder => temporalOrder.Wishlist)
             .Include(temporalOrder => temporalOrder.Wishlist.Products)
             .ThenInclude(product => product.Product)

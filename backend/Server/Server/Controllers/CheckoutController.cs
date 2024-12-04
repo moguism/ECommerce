@@ -16,11 +16,13 @@ public class CheckoutController : ControllerBase
 {
     private readonly TemporalOrderService _temporalOrderService;
     private readonly EmailService _emailService;
+    private readonly UserService _userService;
 
-    public CheckoutController(TemporalOrderService temporalOrderService, EmailService emailService)
+    public CheckoutController(TemporalOrderService temporalOrderService, EmailService emailService, UserService userService)
     {
         _temporalOrderService = temporalOrderService;
         _emailService = emailService;
+        _userService = userService;
     }
 
     /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
@@ -41,11 +43,11 @@ public class CheckoutController : ControllerBase
     [HttpPost("embedded")]
     public async Task<ActionResult> EmbededCheckout([FromBody] int temporalOrderId)
     {
-        User user = await GetAuthorizedUser();
+       User user = await GetMi();
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
-        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.Id == temporalOrderId);
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(temporalOrderId);
 
         if (temporalOrder == null)
         {
@@ -124,6 +126,9 @@ public class CheckoutController : ControllerBase
     [HttpGet("status/{sessionId}")]
     public async Task<Order> SessionStatus(string sessionId)
     {
+        // Jose ayer dijo de que pasen el id de la orden temporal, pero creo que no me compensa...
+        // ... como está ahora mismo, borra la temporalOrder cuando se crea la orden definitiva
+        // Además, devuelve la orden completa si ya existe
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(sessionId);
         User user = await GetAuthorizedUser();
@@ -144,14 +149,10 @@ public class CheckoutController : ControllerBase
         return null;
     }
 
-    
-
-
     private async Task<User> GetAuthorizedUser(bool all = false)
     {
         // Pilla el usuario autenticado según ASP
-        System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-        string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+        string idString = GetStringId();
 
         // Pilla el usuario de la base de datos
         if(!all)
@@ -163,5 +164,17 @@ public class CheckoutController : ControllerBase
             return await _temporalOrderService.GetUserFromString(idString);
         }
         
+    }
+
+    private string GetStringId()
+    {
+        System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+        string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
+        return idString;
+    }
+    private async Task<User> GetMinimumUser()
+    {
+        User user = await _userService.GetUserFromDbByStringId(GetStringId());
+        return user;
     }
 }

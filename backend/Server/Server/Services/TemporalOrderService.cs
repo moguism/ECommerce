@@ -26,29 +26,27 @@ namespace Server.Services
             Wishlist wishlist = new Wishlist();
 
             ProductsToBuyMapper productsToBuyMapper = new ProductsToBuyMapper();
-            IEnumerable<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products);
-
-            Wishlist newWishlist = await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
-
-            await _unitOfWork.SaveAsync();
+            IList<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products).ToArray();
 
             // Asignar el Id de la wishlist a los productos después de guardar
-            foreach (var product in productsToBuyList)
+            foreach (ProductsToBuy productToBuy in productsToBuyList)
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
-                product.WishlistId = newWishlist.Id;
-                Product realProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductId);
-                product.ProductId = realProduct.Id;
-                product.PurchasePrice = realProduct.Price;
-                realProduct.Stock -= product.Quantity;
-                _unitOfWork.ProductRepository.Update(realProduct);
-                await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                productToBuy.ProductId = product.Id;
+                productToBuy.PurchasePrice = product.Price;
+                product.Stock -= productToBuy.Quantity;
+                _unitOfWork.ProductRepository.Update(product);
             }
+
+            wishlist.Products = productsToBuyList;
+
+            await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
 
             await _unitOfWork.SaveAsync();
 
             // Devolver la wishlist creada
-            return newWishlist;
+            return wishlist;
         }
 
         public async Task<TemporalOrder> CreateTemporalOrder(User user, bool quick, TemporalOrderDto temporalOrderDto)
@@ -60,7 +58,7 @@ namespace Server.Services
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-                ExpirationDate = DateTime.UtcNow,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5),
                 Quick = quick
             });
 
@@ -153,6 +151,11 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
 
             return saveOrder;
+        }
+
+        public async Task DeleteById(int id)
+        {
+
         }
 
         public async Task<User> GetUserFromStringWithTemporal(string stringId)
