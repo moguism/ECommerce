@@ -216,6 +216,9 @@ font-family: "Open Sans", sans-serif;
         align-items: normal;
         padding: 0 30px;
     }
+    .button{
+        width: 130px;
+    }
 }
 
 @media (max-width: 410px){
