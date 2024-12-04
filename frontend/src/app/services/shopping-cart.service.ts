@@ -39,7 +39,7 @@ export class ShoppingCartService {
 
   addCorrectPath(product : Product)
   {
-    product.image = environment.imageRoute + product.image 
+    product.image = environment.imageRouteBasic + product.image 
     return product
   }
 }

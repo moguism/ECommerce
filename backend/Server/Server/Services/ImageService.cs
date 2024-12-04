@@ -5,11 +5,11 @@ namespace Server.Services;
 
 public class ImageService
 {
-    private const string IMAGES_FOLDER = "images/";
+    private const string IMAGES_FOLDER = "/images/";
 
     public async Task<string> InsertAsync(IFormFile file)
     {
-        string relativePath = $"{IMAGES_FOLDER}{Guid.NewGuid()}_{file.FileName}";
+        string relativePath = $"/{IMAGES_FOLDER}{Guid.NewGuid()}_{file.FileName}";
 
         await StoreImageAsync(relativePath, file);
 
