@@ -1,6 +1,7 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { Member } from '../../models/member';
+import * as THREE from 'three';
 
 @Component({
   selector: 'app-about-us',
@@ -10,24 +11,37 @@ import { Member } from '../../models/member';
   styleUrl: './about-us.component.css'
 })
 export class AboutUsComponent {
-  /*readonly position : number = 1500
-  setUp : boolean = false*/
-  /*readonly teamMembers : Member[] = [
-    new Member("assets/aboutus_images/mauricio.png", "MAURICIO", "Mauricio es una de las fuerzas que mueve a la granja. Le encanta participar en el cultivo de productos orgánicos y en la educación sobre prácticas agrícolas sostenibles."),
-    new Member("assets/aboutus_images/daniel.png", "DANIEL", "Daniel cuenta con varios años de experiencia como director comercial en el sector agrícola. Le encantan los desafíos y ha ayudado a la granja a crecer y prosperar."),
-    new Member("assets/aboutus_images/alejandro.png", "ALEJANDRO", "Alejandro es una de las personas icónicas en la empresa. Él es mentor de nuevos agricultores y se ocupa de la comunidad agrícola local."),
-    new Member("assets/aboutus_images/francisco.png", "FRAN", "Francisco Siles tiene una amplia experiencia en agricultura sostenible. Su objetivo es garantizar la calidad y el éxito de nuestra granja.")
-  ]*/
+  @ViewChild('rendererContainer')
+  rendererContainer!: ElementRef;
 
-  /*@HostListener('window:scroll', [])
-  checkScroll() {
-    const currentScroll = window.scrollY;
+  renderer = new THREE.WebGLRenderer();
+    scene ;
+    camera;
+    mesh;
 
-    if(currentScroll >= this.position && !this.setUp)
-    {
-      document.getElementById("test")?.classList.add("test")
-      this.setUp = true;
-    }
-    //console.log(currentScroll)
-  }*/
+
+  constructor() {
+      this.scene = new THREE.Scene();
+
+      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+      this.camera.position.z = 1000;
+
+      const geometry = new THREE.BoxGeometry(200, 200, 200);
+      const material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+      this.mesh = new THREE.Mesh(geometry, material);
+
+      this.scene.add(this.mesh);
+  }
+  ngAfterViewInit() {
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+    this.animate();
+}
+
+animate() {
+    window.requestAnimationFrame(() => this.animate());
+    this.mesh.rotation.x += 0.01;
+    this.mesh.rotation.y += 0.02;
+    this.renderer.render(this.scene, this.camera);
+}
 }
