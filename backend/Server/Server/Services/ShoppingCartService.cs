@@ -16,12 +16,11 @@ namespace Server.Services
 
         public async Task AddProductsToShoppingCart(User user, CartContent cartContent)
         {
-            // TODO: Esto hay que cambiarlo
-            /*Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContentDto.ProductId);
-            if (product == null || cartContentDto.Quantity > product.Stock || cartContentDto.Quantity <= 0)
+            Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
+            if (product == null || cartContent.Quantity > product.Stock || cartContent.Quantity <= 0)
             {
                 return;
-            }*/
+            }
 
             ShoppingCart cart = user.ShoppingCart;
 

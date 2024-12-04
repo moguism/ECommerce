@@ -40,8 +40,8 @@ namespace Server.Controllers
 
             IEnumerable<Product> products = await _productService.GetFullProducts();
 
-            IEnumerable<Product> correctProducts = _productService.AddCorrectPath(products);
-            return _productService.ToDto(correctProducts);
+            //IEnumerable<Product> correctProducts = _productService.AddCorrectPath(products);
+            return _productService.ToDto(products);
         }
 
         [HttpGet]
@@ -92,7 +92,7 @@ namespace Server.Controllers
                 }
 
                 Product product = _productService.ToEntity(newProduct);
-                switch (product.Name)
+                switch (newProduct.CategoryName)
                 {
                     case "Frutas":
                         product.CategoryId = 1;
@@ -133,7 +133,7 @@ namespace Server.Controllers
                     return null;
                 }
 
-                Product product = await _productService.GetFullProductById(Int32.Parse(productToUpdate.Id));
+                Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
                     return null;
@@ -144,13 +144,21 @@ namespace Server.Controllers
                 product.Description = productToUpdate.Description;
                 product.Price = Int64.Parse(productToUpdate.Price);
                 product.Stock = Int32.Parse(productToUpdate.Stock);
-                Category category = product.Category;
-                if (category == null)
+                
+                switch (productToUpdate.CategoryName)
                 {
-                    return null;
+                    case "Frutas":
+                        product.CategoryId = 1;
+                        break;
+                    case "Verduras":
+                        product.CategoryId = 2;
+                        break;
+                    case "Carne":
+                        product.CategoryId = 3;
+                        break;
+                    default:
+                        return null;
                 }
-
-                product.CategoryId = category.Id;
 
                 if (productToUpdate.Image != null)
                 {
