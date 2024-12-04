@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class ShoppingCartService {
 
   total: number = 0
-
+  contProduct : number = 0
   constructor(private api: ApiService) { }
 
   async getShoppingCartCount()

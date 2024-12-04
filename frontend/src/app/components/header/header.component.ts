@@ -2,6 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
+import { ShoppingCart } from '../../models/shopping-cart';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +17,7 @@ export class HeaderComponent implements OnInit {
   protected jwt: string = "";
   @Input() name: string = "";
 
- contProducts : Number = 0
+  contProducts: Number | undefined = 0
 
   constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService) {
   }
@@ -30,18 +31,25 @@ export class HeaderComponent implements OnInit {
     if (this.jwt != "") {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)
+
+      const result = await this.apiService.get<ShoppingCart>("ShoppingCart", {}, 'json');
+      const shoppingCart: ShoppingCart | null = result.data
+      if(shoppingCart?.cartContent.length)
+        this.shoppingCartService.contProduct = shoppingCart?.cartContent.length
+      console.log(this.contProducts)
     }
+    else {
+      const productsRaw = localStorage.getItem("shoppingCart");
+      if (productsRaw) {
+        const shoppingCartProducts = JSON.parse(productsRaw);
+        if (shoppingCartProducts.cartContent) {
+          var cont = shoppingCartProducts.cartContent.length
+          console.log("ftyghujiok  --" + shoppingCartProducts.cartContent.length)
+          localStorage.setItem("contProducts", cont.toString())
+        }
+      } 
 
-
-    const cont = localStorage.getItem("contProducts")
-    console.log("header " + cont)
-
-    if (cont) {
-      this.contProducts = parseInt(cont)
-      console.log("no es nulo" + this.contProducts)
     }
-    else
-      localStorage.setItem("contProducts","0")
 
 
 

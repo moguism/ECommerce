@@ -22,6 +22,7 @@ export class ShoppingCartComponent implements OnInit {
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
 
+
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
@@ -83,11 +84,9 @@ export class ShoppingCartComponent implements OnInit {
       this.getLocalStorageCart();
     }
 
+    
+    this.shoppingCartService.contProduct = this.shoppingCartProducts.length
 
-    //Contador en local storage del número de productos en el carrito
-    var cont = this.shoppingCartProducts.length
-    console.log("carrito local storage " + cont)
-    localStorage.setItem("contProducts", cont.toString())
   }
 
   async changeQuantity(product: Product) {
@@ -112,8 +111,6 @@ export class ShoppingCartComponent implements OnInit {
         localStorage.removeItem("shoppingCart")
 
         const cartContent = new CartContent(product.id, parseInt(input.value), product)
-
-        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
         this.getShoppingCart()
       }
     }
@@ -140,11 +137,6 @@ export class ShoppingCartComponent implements OnInit {
       }
     }
 
-
-    //Contador en local storage del número de productos en el carrito
-    var cont = this.shoppingCartProducts.length
-    console.log("contador carrito " + cont)
-    localStorage.setItem("contProducts", cont.toString())
   }
 
   findProductInArray(id: number): Product {
