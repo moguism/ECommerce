@@ -2,6 +2,7 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
+import { ShoppingCart } from '../../models/shopping-cart';
 
 @Component({
   selector: 'app-header',
@@ -13,42 +14,63 @@ import { ShoppingCartService } from '../../services/shopping-cart.service';
 export class HeaderComponent implements OnInit {
   protected buttonChange: boolean = true;
   protected dropdownChange: boolean = true;
-  protected jwt : string = "";
-  @Input() name : string = "";
+  protected jwt: string = "";
+  @Input() name: string = "";
 
-  constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService){
+  contProducts: Number | undefined = 0
+
+  constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService) {
   }
 
   async ngOnInit(): Promise<void> {
     //this.shoppingCartService.getShoppingCartCount()
-    if(this.apiService.jwt == null)
-    {
+    if (this.apiService.jwt == null) {
       return;
     }
     this.jwt = this.apiService.jwt;
-    if(this.jwt != "")
-    {
+    if (this.jwt != "") {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)
+
+      const result = await this.apiService.get<ShoppingCart>("ShoppingCart", {}, 'json');
+      const shoppingCart: ShoppingCart | null = result.data
+      if(shoppingCart?.cartContent.length)
+        this.shoppingCartService.contProduct = shoppingCart?.cartContent.length
+      console.log(this.contProducts)
     }
+    else {
+      const productsRaw = localStorage.getItem("shoppingCart");
+      if (productsRaw) {
+        const shoppingCartProducts = JSON.parse(productsRaw);
+        if (shoppingCartProducts.cartContent) {
+          var cont = shoppingCartProducts.cartContent.length
+          console.log("ftyghujiok  --" + shoppingCartProducts.cartContent.length)
+          localStorage.setItem("contProducts", cont.toString())
+        }
+      } 
+
+    }
+
+
+
+
+
   }
 
-  async deleteToken()
-  {
+  async deleteToken() {
     this.apiService.deleteToken();
     await this.router.navigateByUrl("");
     window.location.reload();
   }
 
-  goToRoute(route : string)
-  {
+  goToRoute(route: string) {
     this.router.navigateByUrl(route)
   }
 
-  showAndClose(){
-    if(this.dropdownChange){
+  showAndClose() {
+    if (this.dropdownChange) {
       this.showDropdown();
-    }else{
+    } else {
       this.closeDropdown();
     }
   }
@@ -61,14 +83,14 @@ export class HeaderComponent implements OnInit {
     dropdown[0].className = "view-dropdown";
   }
 
-  closeDropdown(){
+  closeDropdown() {
     this.dropdownChange = true;
     const viewdropdown = document.getElementsByClassName("view-dropdown");
     const viewdropdownlist = document.getElementsByClassName("view-dropdown-list");
     viewdropdownlist[0].className = "dropdown-list";
     viewdropdown[0].className = "dropdown";
   }
-  
+
   showMenu() {
     if (this.dropdownChange) {
       this.buttonChange = false;
@@ -78,7 +100,7 @@ export class HeaderComponent implements OnInit {
       const dropdown = document.getElementsByClassName("dropdown");
       document.getElementById("logo")?.classList.add("not-display");
 
-      if(this.jwt != ""){
+      if (this.jwt != "") {
         dropdown[0].className = "undisplay-dropdown";
       }
 
@@ -105,7 +127,7 @@ export class HeaderComponent implements OnInit {
     document.getElementById("logo")?.classList.remove("not-display");
     const screenWidth = window.innerWidth;
 
-    if(this.jwt != ""){
+    if (this.jwt != "") {
       undisplaydropdown[0].className = "dropdown";
     }
 
@@ -120,14 +142,14 @@ export class HeaderComponent implements OnInit {
         blackVisibleDiv.id = "black";
       }
     }
-    
+
     for (let i = 0; i < redVisibleElements.length; i++) {
       redVisibleElements[i].className = "red";
     }
     textVisibleElements.forEach((textVisible) => {
       textVisible.className = "text";
     });
-    
+
     if (blackVisibleDiv) {
       blackVisibleDiv.id = "black";
     }
