@@ -48,7 +48,7 @@ namespace Server.Services
                 Product oneproduct = products.Product;
                 price = oneproduct.Price / 100m;
                 totalpricequantity = (products.Quantity * oneproduct.Price) / 100m;
-                body.AppendLine($"<tr style='text-align: center;'><td>{oneproduct.Name}</td><td><img src='{_productMapper.AddCorrectPath(oneproduct)}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>");
+                body.AppendLine($"<tr style='text-align: center;'><td>{oneproduct.Name}</td><td><img src='https://farminhouse.runasp.net{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>");
                 totalprice += products.Quantity * oneproduct.Price;
             }
             body.AppendLine("</table></html>");
