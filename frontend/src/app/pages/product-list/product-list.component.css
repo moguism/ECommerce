@@ -240,6 +240,10 @@ option{
         flex-direction: column;
         
     }
+    .search-bar{
+        margin-right: 5%;
+        margin-left: 5%;
+    }
     #order-by{
         margin-top: 0;
     }

@@ -163,31 +163,31 @@ namespace Server
                     // Verduras
                     var vegetables = new List<Product>
                     {
-                        new Product { Name = "Apio", Description = "Vegetal crujiente, ideal para dips y ensaladas.", Price = 300, Stock = 200, Average = 0, Image = "apio.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Zanahoria", Description = "Dulce y crujiente, rica en vitamina A, perfecta para snacks.", Price = 150, Stock = 180, Average = 0, Image = "zanahoria.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Tomate", Description = "Versátil y jugoso, excelente para ensaladas y salsas.", Price = 200, Stock = 150, Average = 0, Image = "tomate.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Lechuga", Description = "Base fresca para ensaladas, ligera y nutritiva.", Price = 120, Stock = 220, Average = 0, Image = "lechuga.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Cebolla", Description = "Sabor fuerte y característico, ideal para sazonar.", Price = 180, Stock = 170, Average = 0, Image = "cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 250, Stock = 140, Average = 0, Image = "pimiento.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Brócoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 280, Stock = 0, Average = 0, Image = "brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 320, Stock = 0, Average = 0, Image = "espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 270, Stock = 0, Average = 0, Image = "coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
-                        new Product { Name = "Berenjena", Description = "Sabor único, excelente para asar y guisar.", Price = 350, Stock = 70, Average = 0, Image = "berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
+                        new Product { Name = "Apio", Description = "Vegetal crujiente, ideal para dips y ensaladas.", Price = 300, Stock = 200, Average = 0, Image = "/images/apio.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Zanahoria", Description = "Dulce y crujiente, rica en vitamina A, perfecta para snacks.", Price = 150, Stock = 180, Average = 0, Image = "/images/zanahoria.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Tomate", Description = "Versátil y jugoso, excelente para ensaladas y salsas.", Price = 200, Stock = 150, Average = 0, Image = "/images/tomate.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Lechuga", Description = "Base fresca para ensaladas, ligera y nutritiva.", Price = 120, Stock = 220, Average = 0, Image = "/images/lechuga.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Cebolla", Description = "Sabor fuerte y característico, ideal para sazonar.", Price = 180, Stock = 170, Average = 0, Image = "/images/cebolla.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Pimiento", Description = "Dulce y crujiente, perfecto para saltear o asar.", Price = 250, Stock = 140, Average = 0, Image = "/images/pimiento.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Brócoli", Description = "Vegetal verde lleno de nutrientes, ideal al vapor.", Price = 280, Stock = 0, Average = 0, Image = "/images/brocoli.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Espinaca", Description = "Hoja verde rica en hierro, excelente para ensaladas y guisos.", Price = 320, Stock = 0, Average = 0, Image = "/images/espinaca.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Coliflor", Description = "Vegetal versátil, ideal para purés y como sustituto del arroz.", Price = 270, Stock = 0, Average = 0, Image = "/images/coliflor.jpg", CategoryId = 2, Category = vegetablesCategory },
+                        new Product { Name = "Berenjena", Description = "Sabor único, excelente para asar y guisar.", Price = 350, Stock = 70, Average = 0, Image = "/images/berenjena.jpg", CategoryId = 2, Category = vegetablesCategory }
                     };
 
                     // Carnes
                     var meats = new List<Product>
                     {
-                        new Product { Name = "Ternera", Description = "Carne tierna y jugosa, ideal para guisos y asados.", Price = 550, Stock = 100, Average = 0, Image = "ternera.jpg", CategoryId = 3, Category = meatCategory},
-                        new Product { Name = "Pollo", Description = "Carne magra, versátil y rica en proteínas.", Price = 400, Stock = 150, Average = 0, Image = "pollo.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Cerdo", Description = "Carne sabrosa, ideal para parrillas y guisos.", Price = 600, Stock = 80, Average = 0, Image = "cerdo.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Cordero", Description = "Carne rica y suculenta, perfecta para asados.", Price = 700, Stock = 60, Average = 0, Image = "cordero.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Pavo", Description = "Alternativa magra al pollo, ideal para celebraciones.", Price = 550, Stock = 90, Average = 0, Image = "pavo.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Conejo", Description = "Carne suave y saludable, ideal para guisos.", Price = 800, Stock = 50, Average = 0, Image = "conejo.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Salchicha", Description = "Deliciosa y jugosa, perfecta para barbacoas.", Price = 250, Stock = 200, Average = 0, Image = "salchicha.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Bacon", Description = "Crujiente y sabroso, ideal para desayunos y burgers.", Price = 450, Stock = 0, Average = 0, Image = "bacon.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para añadir sabor a tus platos.", Price = 500, Stock = 70, Average = 0, Image = "panceta.jpg", CategoryId = 3, Category = meatCategory },
-                        new Product { Name = "Atún", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 650, Stock = 40, Average = 0, Image = "atun.jpg", CategoryId = 3, Category = meatCategory }
+                        new Product { Name = "Ternera", Description = "Carne tierna y jugosa, ideal para guisos y asados.", Price = 550, Stock = 100, Average = 0, Image = "/images/ternera.jpg", CategoryId = 3, Category = meatCategory},
+                        new Product { Name = "Pollo", Description = "Carne magra, versátil y rica en proteínas.", Price = 400, Stock = 150, Average = 0, Image = "/images/pollo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Cerdo", Description = "Carne sabrosa, ideal para parrillas y guisos.", Price = 600, Stock = 80, Average = 0, Image = "/images/cerdo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Cordero", Description = "Carne rica y suculenta, perfecta para asados.", Price = 700, Stock = 60, Average = 0, Image = "/images/cordero.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Pavo", Description = "Alternativa magra al pollo, ideal para celebraciones.", Price = 550, Stock = 90, Average = 0, Image = "/images/pavo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Conejo", Description = "Carne suave y saludable, ideal para guisos.", Price = 800, Stock = 50, Average = 0, Image = "/images/conejo.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Salchicha", Description = "Deliciosa y jugosa, perfecta para barbacoas.", Price = 250, Stock = 200, Average = 0, Image = "/images/salchicha.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Bacon", Description = "Crujiente y sabroso, ideal para desayunos y burgers.", Price = 450, Stock = 0, Average = 0, Image = "/images/bacon.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Panceta", Description = "Sabrosa y jugosa, perfecta para añadir sabor a tus platos.", Price = 500, Stock = 70, Average = 0, Image = "/images/panceta.jpg", CategoryId = 3, Category = meatCategory },
+                        new Product { Name = "Atún", Description = "Pescado rico en omega-3, ideal para ensaladas y sushi.", Price = 650, Stock = 40, Average = 0, Image = "/images/atun.jpg", CategoryId = 3, Category = meatCategory }
                     };
 
 
