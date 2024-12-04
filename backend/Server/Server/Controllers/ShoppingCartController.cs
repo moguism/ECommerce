@@ -43,7 +43,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("addProductOrChangeQuantity")]
-        public async Task AddProductosToShoppingCart([FromBody] CartContentDto cartContentDto)
+        public async Task AddProductosToShoppingCart([FromBody] CartContent cartContent)
         {
 
             User user = await GetAuthorizedUser();
@@ -52,7 +52,7 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.AddProductsToShoppingCart(user, cartContentDto);
+            await _shoppingCartService.AddProductsToShoppingCart(user, cartContent);
 
         }
 

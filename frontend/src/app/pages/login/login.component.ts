@@ -140,7 +140,7 @@ export class LoginComponent implements OnInit {
       console.log("Sincronizando productos locales al carrito del backend...");
 
       for (const product of products) {
-        const cartContent = new CartContent(product.id, product.total);
+        const cartContent = new CartContent(product.id, product.total, product);
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent);
       }
 

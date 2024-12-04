@@ -11,7 +11,7 @@ namespace Server.Repositories
         public CartContentRepository(FarminhouseContext context) : base(context) { }
         
 
-        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContentDto cartContentDto)
+        public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContent cartContentDto)
         {
             // ESTO SE PUEDE OPTIMIZAR 100%
 
