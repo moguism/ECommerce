@@ -14,8 +14,31 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task AddProductsToShoppingCart(User user, CartContent cartContent)
+        public async Task AddProductsToShoppingCart(User user, CartContent cartContent, bool add)
         {
+            CartContent existingCartContent = user.ShoppingCart.CartContent.FirstOrDefault(c => c.ProductId == cartContent.ProductId);
+            if (existingCartContent != null)
+            {
+                Product p = existingCartContent.Product;
+                if(cartContent.Quantity > p.Stock || cartContent.Quantity <= 0)
+                {
+                    return;
+                }
+                
+                if(add)
+                {
+                    existingCartContent.Quantity += cartContent.Quantity;
+                }
+                else
+                {
+                    existingCartContent.Quantity = cartContent.Quantity;
+                }
+                
+                _unitOfWork.CartContentRepository.Update(existingCartContent);
+                await _unitOfWork.SaveAsync();
+                return;
+            }
+            
             Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
             if (product == null || cartContent.Quantity > product.Stock || cartContent.Quantity <= 0)
             {
