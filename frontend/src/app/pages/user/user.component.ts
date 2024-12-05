@@ -94,6 +94,7 @@ export class UserComponent implements OnInit {
     if (newName && newEmail && newAddress && newPassword && this.user) {
       if (newName.value != "") {
         this.user.name = newName.value
+        this.userService.userName = newName.value
       }
       if(newEmail.value != ""){
         this.user.email = newEmail.value

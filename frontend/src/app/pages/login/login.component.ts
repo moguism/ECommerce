@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { Product } from '../../models/product';
 import { CartContent } from '../../models/cart-content';
+import { UserService } from '../../services/user.service';
 //import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
@@ -18,7 +19,9 @@ import { CartContent } from '../../models/cart-content';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
-  constructor(private apiService: ApiService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private router: Router, 
+    private formBuilder: FormBuilder, private userService : UserService) {
+
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       name: ['', Validators.required],
@@ -92,6 +95,7 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
         await this.rememberFunction()
+        this.userService.userName = this.name
       }
       else {
         alert("Los datos introducidos no son correctos")
@@ -125,6 +129,10 @@ export class LoginComponent implements OnInit {
       this.router.navigateByUrl("user")
       await this.getShoppingCart()
     }
+
+
+    this.userService.userName = this.name
+    console.log("USuario : "  + this.userService.userName)
   }
 
   async getShoppingCart() {
@@ -156,6 +164,8 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.signUpPath, user);
       if (this.apiService.jwt != "") {
         await this.rememberFunction()
+        this.userService.userName = this.name
+
       }
     }else {
         alert("Campos inválidos.");

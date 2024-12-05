@@ -1,6 +1,8 @@
 .main{
     min-height: 100vh;
 }
+
+
 .information{
     display: flex;
     flex-direction: row;
@@ -141,6 +143,7 @@ hr{
 #payment-window
 {
     width: 100%;
+    height: 100%;
 }
 
 #load {
