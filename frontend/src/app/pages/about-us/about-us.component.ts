@@ -39,7 +39,12 @@ init3Dscene() {
     antialias: true,
     alpha: true
 });
-this.renderer.setSize(500, 500);
+if(screen.width <= 500){
+  this.renderer.setSize(300,300);
+}
+else{
+  this.renderer.setSize(500, 500);
+}
     if (this.objeto3d?.nativeElement) {
       this.objeto3d.nativeElement.appendChild(this.renderer.domElement);
     }
