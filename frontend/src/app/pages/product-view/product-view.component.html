@@ -5,6 +5,11 @@
 
     @if(product)
     {
+            <div class="alert-div-none" id="alert-div">
+                <button class="alert-div-button" (click)="close_alert()">X</button>
+                <h2 class="alert-div-text">{{div_text}}</h2>
+            </div>
+
             <div class="products">
                 <div class="products-image">
                     <img class="image" [src]="product.image.replace('images/images/images/images/', '/images/')" alt="Imagen">
