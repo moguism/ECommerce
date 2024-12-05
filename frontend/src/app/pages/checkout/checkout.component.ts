@@ -36,8 +36,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addressToSend: string = "0x9af71A6E4d25e16B56f944fbB59c9c67DecbFFD2"; //Café para mauricio
   showLoading: boolean = false
 
-  sessionId: string = "";
-
   constructor(private shoppingCartService: ShoppingCartService, private apiService: ApiService,
     private router: Router, private activatedRoute: ActivatedRoute,
     private stripeService: StripeService, private blockchainService: BlockchainService) {
@@ -83,10 +81,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async goToAfterCheckout() {
-    await this.refreshOrder()
-    if (this.sessionId != "") {
-      this.router.navigateByUrl("after-checkout?session_id=" + this.sessionId)
-    }
+    this.router.navigateByUrl("after-checkout?temporalId=" + this.id)
   }
 
   async embeddedCheckout() {
@@ -143,12 +138,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   async refreshOrder() {
     console.log("Mandando petición...")
     const response = await this.apiService.get("TemporalOrder/refresh", { "id": this.id })
-    if (response.data) {
-      const data: any = response.data
-      if (data.hashOrSession) {
-        this.sessionId = data.hashOrSession
-      }
-    }
     console.log("RESPUESTA XD: ", response)
   }
 

@@ -91,6 +91,14 @@ namespace Server.Controllers
                     return null;
                 }
 
+                long price = Int64.Parse(newProduct.Price);
+                int stock = Int32.Parse(newProduct.Stock);
+
+                if (stock < 0 || price < 5)
+                {
+                    return null;
+                }
+
                 Product product = _productService.ToEntity(newProduct);
                 switch (newProduct.CategoryName)
                 {
@@ -133,6 +141,14 @@ namespace Server.Controllers
                     return null;
                 }
 
+                long price = Int64.Parse(productToUpdate.Price);
+                int stock = Int32.Parse(productToUpdate.Stock);
+
+                if (stock < 0 || price < 5)
+                {
+                    return null;
+                }
+
                 Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
@@ -142,8 +158,8 @@ namespace Server.Controllers
                 //product = _productMapper.ToEntity(productToUpdate);
                 product.Name = productToUpdate.Name;
                 product.Description = productToUpdate.Description;
-                product.Price = Int64.Parse(productToUpdate.Price);
-                product.Stock = Int32.Parse(productToUpdate.Stock);
+                product.Price = price;
+                product.Stock = stock;
                 
                 switch (productToUpdate.CategoryName)
                 {

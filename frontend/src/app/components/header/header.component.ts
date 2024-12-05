@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
 
       const result = await this.apiService.get<ShoppingCart>("ShoppingCart", {}, 'json');
       const shoppingCart: ShoppingCart | null = result.data
-      if(shoppingCart?.cartContent.length)
+      if (shoppingCart?.cartContent.length)
         this.shoppingCartService.contProduct = shoppingCart?.cartContent.length
       console.log(this.contProducts)
     }
@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit {
           console.log("ftyghujiok  --" + shoppingCartProducts.cartContent.length)
           localStorage.setItem("contProducts", cont.toString())
         }
-      } 
+      }
 
     }
 
@@ -119,40 +119,43 @@ export class HeaderComponent implements OnInit {
   }
 
   closeMenu() {
-    this.buttonChange = true;
-    const redVisibleElements = document.getElementsByClassName("redVisible");
-    const textVisibleElements = document.querySelectorAll(".textVisible");
-    const blackVisibleDiv = document.getElementById("blackVisible");
-    const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
-    document.getElementById("logo")?.classList.remove("not-display");
-    const screenWidth = window.innerWidth;
+    try {
+      this.buttonChange = true;
+      const redVisibleElements = document.getElementsByClassName("redVisible");
+      const textVisibleElements = document.querySelectorAll(".textVisible");
+      const blackVisibleDiv = document.getElementById("blackVisible");
+      const undisplaydropdown = document.getElementsByClassName("undisplay-dropdown");
+      document.getElementById("logo")?.classList.remove("not-display");
+      const screenWidth = window.innerWidth;
 
-    if (this.jwt != "") {
-      undisplaydropdown[0].className = "dropdown";
-    }
+      if (this.jwt != "") {
+        undisplaydropdown[0].className = "dropdown";
+      }
 
-    if (screenWidth > 400) {
+      if (screenWidth > 400) {
+        for (let i = 0; i < redVisibleElements.length; i++) {
+          redVisibleElements[i].className = "red";
+        }
+        textVisibleElements.forEach((textVisible) => {
+          textVisible.className = "text";
+        });
+        if (blackVisibleDiv) {
+          blackVisibleDiv.id = "black";
+        }
+      }
+
       for (let i = 0; i < redVisibleElements.length; i++) {
         redVisibleElements[i].className = "red";
       }
       textVisibleElements.forEach((textVisible) => {
         textVisible.className = "text";
       });
+
       if (blackVisibleDiv) {
         blackVisibleDiv.id = "black";
       }
     }
-
-    for (let i = 0; i < redVisibleElements.length; i++) {
-      redVisibleElements[i].className = "red";
-    }
-    textVisibleElements.forEach((textVisible) => {
-      textVisible.className = "text";
-    });
-
-    if (blackVisibleDiv) {
-      blackVisibleDiv.id = "black";
-    }
+    catch (error) { }
   }
 
   @HostListener('window:resize')

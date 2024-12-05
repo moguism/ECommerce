@@ -15,11 +15,6 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int id)
-        {
-            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
-        }
-
         // ESTO Y LO SIGUIENTE CREO QUE ESTÁ DANDO POR CULO
         public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
@@ -33,6 +28,10 @@ namespace Server.Services
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
                 Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                if (product == null || product.Stock - productToBuy.Quantity < 0)
+                {
+                    return null;
+                }
                 productToBuy.ProductId = product.Id;
                 productToBuy.PurchasePrice = product.Price;
                 product.Stock -= productToBuy.Quantity;
@@ -52,6 +51,11 @@ namespace Server.Services
         public async Task<TemporalOrder> CreateTemporalOrder(User user, bool quick, TemporalOrderDto temporalOrderDto)
         {
             Wishlist wishlist = await CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
+
+            if(wishlist == null)
+            {
+                return null;
+            }
 
             //La añade a la base de datos
             TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder
@@ -93,27 +97,8 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<TemporalOrder> GetBySessionId(string sessionid)
+        public async Task<Order> CreateOrderFromTemporal(TemporalOrder temporalOrder, User user, int paymentType)
         {
-            TemporalOrder order = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(sessionid);
-            return order;
-        }
-
-        public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
-        {
-            Order existingOrder = user.Orders.FirstOrDefault(o => o.HashOrSession.Equals(hashOrSessionOrder));
-            if (existingOrder != null)
-            {
-                return existingOrder;
-            }
-
-            //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.HashOrSession.Equals(hashOrSessionTemporal));
-            if (temporalOrder == null)
-            {
-                return null;
-            }
-
             Order order = new Order
             {
                 CreatedAt = DateTime.UtcNow,
@@ -121,7 +106,7 @@ namespace Server.Services
                 //La misma wishlist que la ultima orden temporal que ha realizado el usuario
                 WishlistId = temporalOrder.WishlistId,
                 UserId = user.Id,
-                HashOrSession = hashOrSessionOrder
+                HashOrSession = temporalOrder.HashOrSession
             };
 
             //Elimina el carrito si se ha hecho la compra con sesión iniciada           
@@ -167,11 +152,11 @@ namespace Server.Services
             return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
         }
 
-        public async Task<User> GetUserFromStringWithTemporalButProducts(string stringId)
+        public async Task<User> GetMinimumWithCart(string stringId)
         {
 
             // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoWithTemporalButProducts(Int32.Parse(stringId));
+            return await _unitOfWork.UserRepository.GetMinimumWithCart(Int32.Parse(stringId));
         }
 
         public async Task<User> GetUserFromString(string stringId)

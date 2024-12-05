@@ -63,12 +63,10 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public async Task<User> GetAllInfoWithTemporalButProducts(int id)
+        public async Task<User> GetMinimumWithCart(int id)
         {
             return await GetQueryable()
                 .Include(user => user.ShoppingCart)
-                .Include(user => user.TemporalOrders)
-                    .ThenInclude(t => t.Wishlist)
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 

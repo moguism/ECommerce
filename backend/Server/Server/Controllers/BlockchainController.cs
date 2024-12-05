@@ -17,13 +17,11 @@ namespace Server.Controllers;
 public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
-    private readonly TemporalOrderService _temporalOrderService;
     private readonly EmailService _emailService;
 
-    public BlockchainController(BlockchainService blockchainService, TemporalOrderService temporalOrderService, EmailService emailService)
+    public BlockchainController(BlockchainService blockchainService, EmailService emailService)
     {
         _blockchainService = blockchainService;
-        _temporalOrderService = temporalOrderService;
         _emailService = emailService;
     }
 
@@ -59,7 +57,7 @@ public class BlockchainController : ControllerBase
         if(data.Euros >= total)
         {
             temporalOrder.HashOrSession = ethereumTransaction.Value;
-            await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+            await _blockchainService.UpdateTemporalOrder(temporalOrder);
         }
         else
         {
@@ -82,7 +80,7 @@ public class BlockchainController : ControllerBase
         bool done = await _blockchainService.CheckTransactionAsync(data);
         if(done == true)
         {
-            Order order = await _temporalOrderService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
+            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
 
             if(order == null)
             {
@@ -97,20 +95,11 @@ public class BlockchainController : ControllerBase
         return null;
     }
 
-    private async Task<User> GetAuthorizedUser(bool all = false)
+    private async Task<User> GetAuthorizedUser()
     {
         // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
-
-        // Pilla el usuario de la base de datos
-        if (!all)
-        {
-            return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
-        }
-        else
-        {
-            return await _temporalOrderService.GetUserFromString(idString);
-        }
+        return await _blockchainService.GetUserFromStringWithTemporal(idString);
     }
 }

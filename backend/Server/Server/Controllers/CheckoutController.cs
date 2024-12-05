@@ -1,3 +1,4 @@
+using Bogus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,19 +23,6 @@ public class CheckoutController : ControllerBase
         _temporalOrderService = temporalOrderService;
         _emailService = emailService;
     }
-
-    /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
-
-        return _cartContentMapper.ToEntity(cartContentDtos, shoppingCart);
-    }*/
-
 
     //Iniciar Sesión de Pago (Modo Embebido)
     [Authorize]
@@ -121,30 +109,35 @@ public class CheckoutController : ControllerBase
 
     //Verifica el estado de la sesión
     [Authorize]
-    [HttpGet("status/{sessionId}")]
-    public async Task<Order> SessionStatus(string sessionId)
+    [HttpGet("status/{temporalOrderId}")]
+    public async Task<Order> SessionStatus(int temporalOrderId)
     {
-        // Jose ayer dijo de que pasen el id de la orden temporal, pero creo que no me compensa...
-        // ... como está ahora mismo, borra la temporalOrder cuando se crea la orden definitiva
-        // Además, devuelve la orden completa si ya existe
-        SessionService sessionService = new SessionService();
-        Session session = await sessionService.GetAsync(sessionId);
         User user = await GetAuthorizedUser(false);
-        if (user == null) 
+        if (user == null)
         {
-        Unauthorized("Usuario no autenticado.");
+            Unauthorized("Usuario no autenticado.");
         }
 
-        if (session.PaymentStatus == "paid")
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(temporalOrderId);
+        if (temporalOrder == null)
         {
-            Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user, 1);
-            if (session.CustomerEmail != null)
-            {
-                await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
-            }
-            return order;
+            return null;
         }
-        return null;
+
+        SessionService sessionService = new SessionService();
+        Session session = await sessionService.GetAsync(temporalOrder.HashOrSession);
+
+        if (session == null || session.PaymentStatus != "paid")
+        {
+            return null;
+        }
+
+        Order order = await _temporalOrderService.CreateOrderFromTemporal(temporalOrder, user, 1);
+        if (session.CustomerEmail != null)
+        {
+            await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
+        }
+        return order;
     }
 
     private async Task<User> GetAuthorizedUser(bool products = true)
@@ -159,7 +152,7 @@ public class CheckoutController : ControllerBase
         }
         else
         {
-            return await _temporalOrderService.GetUserFromStringWithTemporalButProducts(idString);
+            return await _temporalOrderService.GetMinimumWithCart(idString);
         }
         
     }
