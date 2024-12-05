@@ -21,7 +21,6 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
   user: User | null = null
   lastOrder: Order | null = null
-  private method: string = ""
   id: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
@@ -34,7 +33,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit(): Promise<void> {
-    const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
+    const id = this.activatedRoute.snapshot.queryParamMap.get('temporalId') as unknown as string;
     if (id != null && id != "") {
       this.id = id
       await this.createOrder()

@@ -36,32 +36,13 @@ public class TemporalOrderRepository : Repository<TemporalOrder, int>
             .ThenInclude(product => product.Product)
             .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
     }
-    public async Task<TemporalOrder> GetFullTemporalOderByIdWithoutUser(int id)
+
+    public async Task<TemporalOrder> GetFullTemporalOrderByHash(string hash)
     {
-        return await GetQueryable()
+        return await GetQueryable(false)
             .Include(temporalOrder => temporalOrder.Wishlist)
             .Include(temporalOrder => temporalOrder.Wishlist.Products)
             .ThenInclude(product => product.Product)
-            .FirstOrDefaultAsync(temporalOrder => temporalOrder.Id == id);
-    }
-
-    public async Task<TemporalOrder> GetFullTemporalOderByHashOrSession(string id)
-    {
-        return await GetQueryable()
-            .Include(temporalOrder => temporalOrder.Wishlist)
-            .Include(temporalOrder => temporalOrder.Wishlist.Products)
-            .ThenInclude(product => product.Product)
-            .FirstOrDefaultAsync(temporalOrder => temporalOrder.HashOrSession.Equals(id));
-    }
-
-    public async Task<IEnumerable<TemporalOrder>> GetExpiredOrders(DateTime currentTime)
-    {
-        return await GetQueryable()
-            .Where(temporalOrder => temporalOrder.ExpirationDate <= currentTime)
-            .Include(temporalOrder => temporalOrder.Wishlist)
-            .ThenInclude(w => w.Products)
-            .ThenInclude(p => p.Product)
-            .AsNoTracking()
-            .ToListAsync();
+            .FirstOrDefaultAsync(temporalOrder => temporalOrder.HashOrSession == hash);
     }
 }
