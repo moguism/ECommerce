@@ -127,7 +127,7 @@ public class CheckoutController : ControllerBase
         SessionService sessionService = new SessionService();
         Session session = await sessionService.GetAsync(temporalOrder.HashOrSession);
 
-        if (session == null || session.PaymentStatus != "paid")
+        if (session == null || !session.PaymentStatus.Equals("paid", StringComparison.OrdinalIgnoreCase))
         {
             return null;
         }
