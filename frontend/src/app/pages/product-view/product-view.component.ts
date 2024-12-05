@@ -11,6 +11,7 @@ import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
 import { ShoppingCart } from '../../models/shopping-cart';
+import Swal from 'sweetalert2';
 
 
 // Pipe Import
@@ -140,7 +141,7 @@ export class ProductViewComponent implements OnInit {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(product.id, this.count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
-      const result = await this.apiService.post<ShoppingCart>("ShoppingCart/addProductOrChangeQuantity", cartContent)
+      const result = await this.apiService.post<ShoppingCart>("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add" : true })
 
       if(result.data){
         const dataRaw : any =  result.data
@@ -154,20 +155,19 @@ export class ProductViewComponent implements OnInit {
         this.shoppingCartService.contProduct = this.shoppingCart?.cartContent.length
       }
     }
-    var alert_div = document.getElementById("alert-div");
-    this.div_text = "Producto añadido al carrito correctamente";
-    alert_div?.classList.remove("alert-div-none");
-    alert_div?.classList.add("alert-div");
     
     //this.shoppingCartService.getShoppingCartCount()
     
   }
-
-  close_alert(){
-    var alert_div = document.getElementById("alert-div");
-    alert_div?.classList.remove("alert-div");
-    alert_div?.classList.add("alert-div-none");
+  mostraralert(){
+    Swal.fire({
+      title: 'Producto añadido',
+      text: 'Se ha añadido el producto correctamente',
+      icon: 'success',
+      confirmButtonText: 'Salir'
+    })
   }
+
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();

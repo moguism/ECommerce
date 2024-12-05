@@ -40,9 +40,10 @@ export class ApiService {
     return this.sendRequest<T>(request$);
   }
 
-  async post<T = void>(path: string, body: Object = {}): Promise<Result<T>> {
+  async post<T = void>(path: string, body: Object = {}, params: any = {}): Promise<Result<T>> {
     const url = `${this.BASE_URL}${path}`;
     const request$ = this.http.post(url, body, {
+      params: new HttpParams({ fromObject: params }),
       headers: this.getHeader(null),
       observe: 'response',
       responseType: 'text'

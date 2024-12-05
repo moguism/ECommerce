@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^4.10.0",
     "ngx-stripe": "^18.1.0",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.14.5",
     "three": "^0.171.0",
     "tslib": "^2.3.0",
     "web3": "^4.15.0",
