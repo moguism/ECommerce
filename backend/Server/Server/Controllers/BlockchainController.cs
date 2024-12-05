@@ -82,7 +82,7 @@ public class BlockchainController : ControllerBase
         bool done = await _blockchainService.CheckTransactionAsync(data);
         if(done == true)
         {
-            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
+            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user , 2);
 
             if(order == null)
             {

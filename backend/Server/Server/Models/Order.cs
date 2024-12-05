@@ -17,4 +17,12 @@ public class Order
     public Wishlist Wishlist { get; set; }
 
     public string HashOrSession { get; set; }
+
+    public long Total { get; set; }
+    public decimal TotalETH { get; set; } 
+
+
 }
+
+
+

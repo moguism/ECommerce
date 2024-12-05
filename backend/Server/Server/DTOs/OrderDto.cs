@@ -1,4 +1,5 @@
 ﻿using Server.Models;
+using System.Numerics;
 
 namespace Server.DTOs
 {
@@ -10,5 +11,9 @@ namespace Server.DTOs
         public int UserId { get; set; }
        
         public IEnumerable<CartContentDto> Products { get; set; } = new List<CartContentDto>();
+        
+        public long Total { get; set; }
+        public decimal TotalETH { get; set; }
+
     }
 }
