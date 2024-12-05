@@ -63,13 +63,24 @@ public class BlockchainService
         return ethereumService.CheckTransactionAsync(data.Hash, data.From, data.To, data.Value);
     }
 
-    public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
+    public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user ,  int paymentType)
     {
         TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByHash(hashOrSessionTemporal);
         if (temporalOrder == null)
         {
             return null;
         }
+
+        //Total price €
+        long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice);
+        decimal totalPriceEuros = totalPriceCents / 100;
+
+        //ETH price
+        CoinGeckoApi coinGeckoApi = new CoinGeckoApi();
+        decimal ethEurPrice = await coinGeckoApi.GetEthereumPriceAsync();
+
+        decimal totalEthPrice = totalPriceEuros / ethEurPrice;
+
 
         Order order = new Order
         {
@@ -78,7 +89,10 @@ public class BlockchainService
             //La misma wishlist que la ultima orden temporal que ha realizado el usuario
             WishlistId = temporalOrder.WishlistId,
             UserId = user.Id,
-            HashOrSession = hashOrSessionOrder
+            HashOrSession = hashOrSessionOrder,
+            Total = totalPriceCents,
+            TotalETH = totalEthPrice
+
         };
 
         //Elimina el carrito si se ha hecho la compra con sesión iniciada           
@@ -94,12 +108,6 @@ public class BlockchainService
         //Order en la base de datos
         Order saveOrder = await _unitOfWork.OrderRepository.InsertAsync(order);
 
-        /*saveOrder.Wishlist = temporalOrder.Wishlist;
-        _unitOfWork.OrderRepository.Update(saveOrder);
-
-        //Añade la orden a la lista de ordenes del usuario
-        user.Orders.Add(saveOrder);
-        _unitOfWork.UserRepository.Update(user);*/
 
         saveOrder.Wishlist = temporalOrder.Wishlist;
 
@@ -110,23 +118,6 @@ public class BlockchainService
         return saveOrder;
     }
 
-    /*public async Task UpdateTemporalOrder(TemporalOrder temporalOrder)
-    {
-        _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
-        await _unitOfWork.SaveAsync();
-    }
-
-    public async Task<User> GetUserFromStringWithTemporal(string stringId)
-    {
-        // Pilla el usuario de la base de datos
-        return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
-    }
-
-    public async Task<User> GetUserFromStringWithoutCart(string stringId)
-    {
-        // Pilla el usuario de la base de datos
-        return await _unitOfWork.UserRepository.GetAllInfoWithoutCart(Int32.Parse(stringId));
-    }*/
 
     // Definición del ABI de ERC-20
     private static readonly string ERC20ABI = """

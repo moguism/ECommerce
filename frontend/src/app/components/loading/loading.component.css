@@ -3,9 +3,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 .text
 {
     text-align: center;
+}
+@media (max-width: 850px) {
+    .text{
+        font-size: 1.5rem;
+    }
+    img{
+        width: 80%;
+    }
 }

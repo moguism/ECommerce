@@ -27,11 +27,16 @@
 
         </div>
 
+
         <div class="final-price">
             <h1>Resumen</h1>
             <div class="final-price-price">
                 <h2>Total:</h2>
-                <h2>{{totalprice() | eurosToCents}}</h2>
+                <h2>{{lastOrder.total | eurosToCents}}</h2>
+                @if (lastOrder.paymentTypeId == 2) {
+                    <h2>Total ETH:</h2>
+                    <h2>{{lastOrder.totalETH}} ETH</h2>
+                }
             </div>
             <hr>
         </div>
