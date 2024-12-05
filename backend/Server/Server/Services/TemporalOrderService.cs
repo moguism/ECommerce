@@ -15,52 +15,54 @@ namespace Server.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<TemporalOrder> GetFullTemporalOrderByUserId(int id)
-        {
-            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(id);
-        }
-
         // ESTO Y LO SIGUIENTE CREO QUE ESTÁ DANDO POR CULO
         public async Task<Wishlist> CreateNewWishList(IEnumerable<CartContentDto> products)
         {
             Wishlist wishlist = new Wishlist();
 
             ProductsToBuyMapper productsToBuyMapper = new ProductsToBuyMapper();
-            IEnumerable<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products);
-
-            Wishlist newWishlist = await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
-
-            await _unitOfWork.SaveAsync();
+            IList<ProductsToBuy> productsToBuyList = productsToBuyMapper.ToEntity(products).ToArray();
 
             // Asignar el Id de la wishlist a los productos después de guardar
-            foreach (var product in productsToBuyList)
+            foreach (ProductsToBuy productToBuy in productsToBuyList)
             {
                 // Asignamos correctamente el Id de la wishlist a cada producto
-                product.WishlistId = newWishlist.Id;
-                Product realProduct = await _unitOfWork.ProductRepository.GetByIdAsync(product.ProductId);
-                product.ProductId = realProduct.Id;
-                product.PurchasePrice = realProduct.Price;
-                realProduct.Stock -= product.Quantity;
-                _unitOfWork.ProductRepository.Update(realProduct);
-                await _unitOfWork.ProductsToBuyRepository.InsertAsync(product);
+                Product product = await _unitOfWork.ProductRepository.GetByIdAsync(productToBuy.ProductId);
+                if (product == null || product.Stock - productToBuy.Quantity < 0)
+                {
+                    return null;
+                }
+                productToBuy.ProductId = product.Id;
+                productToBuy.PurchasePrice = product.Price;
+                product.Stock -= productToBuy.Quantity;
+                _unitOfWork.ProductRepository.Update(product);
             }
+
+            wishlist.Products = productsToBuyList;
+
+            await _unitOfWork.WishlistRepository.InsertAsync(wishlist);
 
             await _unitOfWork.SaveAsync();
 
             // Devolver la wishlist creada
-            return newWishlist;
+            return wishlist;
         }
 
         public async Task<TemporalOrder> CreateTemporalOrder(User user, bool quick, TemporalOrderDto temporalOrderDto)
         {
             Wishlist wishlist = await CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
 
+            if(wishlist == null)
+            {
+                return null;
+            }
+
             //La añade a la base de datos
             TemporalOrder order = await _unitOfWork.TemporalOrderRepository.InsertAsync(new TemporalOrder
             {
                 UserId = user.Id,
                 WishlistId = wishlist.Id,
-                ExpirationDate = DateTime.UtcNow,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(5),
                 Quick = quick
             });
 
@@ -95,27 +97,8 @@ namespace Server.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<TemporalOrder> GetBySessionId(string sessionid)
+        public async Task<Order> CreateOrderFromTemporal(TemporalOrder temporalOrder, User user, int paymentType)
         {
-            TemporalOrder order = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOderByHashOrSession(sessionid);
-            return order;
-        }
-
-        public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
-        {
-            Order existingOrder = user.Orders.FirstOrDefault(o => o.HashOrSession.Equals(hashOrSessionOrder));
-            if (existingOrder != null)
-            {
-                return existingOrder;
-            }
-
-            //Recoge la ultima orden temporal del usuario
-            TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.HashOrSession.Equals(hashOrSessionTemporal));
-            if (temporalOrder == null)
-            {
-                return null;
-            }
-
             Order order = new Order
             {
                 CreatedAt = DateTime.UtcNow,
@@ -123,7 +106,7 @@ namespace Server.Services
                 //La misma wishlist que la ultima orden temporal que ha realizado el usuario
                 WishlistId = temporalOrder.WishlistId,
                 UserId = user.Id,
-                HashOrSession = hashOrSessionOrder
+                HashOrSession = temporalOrder.HashOrSession
             };
 
             //Elimina el carrito si se ha hecho la compra con sesión iniciada           
@@ -155,6 +138,19 @@ namespace Server.Services
             return saveOrder;
         }
 
+        public async Task<TemporalOrder> GetLastTemporalOrder(int userId)
+        {
+
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(userId);
+        }
+
+        public async Task<User> GetMinimumUser(string stringId)
+        {
+
+            // Pilla el usuario de la base de datos
+            return await _unitOfWork.UserRepository.GetByIdAsync(Int32.Parse(stringId));
+        }
+
         public async Task<User> GetUserFromStringWithTemporal(string stringId)
         {
 
@@ -162,11 +158,11 @@ namespace Server.Services
             return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
         }
 
-        public async Task<User> GetUserFromString(string stringId)
+        public async Task<User> GetMinimumWithCart(string stringId)
         {
 
             // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
+            return await _unitOfWork.UserRepository.GetMinimumWithCart(Int32.Parse(stringId));
         }
     }
 }

@@ -91,6 +91,14 @@ namespace Server.Controllers
                     return null;
                 }
 
+                long price = Int64.Parse(newProduct.Price);
+                int stock = Int32.Parse(newProduct.Stock);
+
+                if (stock < 0 || price < 5)
+                {
+                    return null;
+                }
+
                 Product product = _productService.ToEntity(newProduct);
                 switch (newProduct.CategoryName)
                 {
@@ -100,7 +108,7 @@ namespace Server.Controllers
                     case "Verduras":
                         product.CategoryId = 2;
                         break;
-                    case "Carne":
+                    case "Carnes":
                         product.CategoryId = 3;
                         break;
                     default:
@@ -109,7 +117,7 @@ namespace Server.Controllers
 
                 ImageService imageService = new ImageService();
 
-                product.Image = await imageService.InsertAsync(newProduct.Image);
+                product.Image = "/" + await imageService.InsertAsync(newProduct.Image);
                 Product savedProduct = await _productService.InsertProduct(product);
                 return _productService.ToDto(savedProduct);
             }
@@ -133,6 +141,14 @@ namespace Server.Controllers
                     return null;
                 }
 
+                long price = Int64.Parse(productToUpdate.Price);
+                int stock = Int32.Parse(productToUpdate.Stock);
+
+                if (stock < 0 || price < 5)
+                {
+                    return null;
+                }
+
                 Product product = await _productService.GetProductById(Int32.Parse(productToUpdate.Id));
                 if (product == null)
                 {
@@ -142,8 +158,8 @@ namespace Server.Controllers
                 //product = _productMapper.ToEntity(productToUpdate);
                 product.Name = productToUpdate.Name;
                 product.Description = productToUpdate.Description;
-                product.Price = Int64.Parse(productToUpdate.Price);
-                product.Stock = Int32.Parse(productToUpdate.Stock);
+                product.Price = price;
+                product.Stock = stock;
                 
                 switch (productToUpdate.CategoryName)
                 {
@@ -153,7 +169,7 @@ namespace Server.Controllers
                     case "Verduras":
                         product.CategoryId = 2;
                         break;
-                    case "Carne":
+                    case "Carnes":
                         product.CategoryId = 3;
                         break;
                     default:
@@ -163,7 +179,7 @@ namespace Server.Controllers
                 if (productToUpdate.Image != null)
                 {
                     ImageService imageService = new ImageService();
-                    product.Image = await imageService.InsertAsync(productToUpdate.Image);
+                    product.Image = "/" + await imageService.InsertAsync(productToUpdate.Image);
                 }
                 
                 await _productService.UpdateProduct(product);

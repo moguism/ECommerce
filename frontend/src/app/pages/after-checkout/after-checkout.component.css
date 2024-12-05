@@ -188,9 +188,23 @@ hr {
         flex-direction: column;
     }
     .final-price h1{
-        font-size: 35px;
+        font-size: 20px;
     }
     .final-price-price{
+        font-size: 15px;
+    }
+    #title{
+        font-size: 0.5rem;
+    }
+    .purchased-products-image{
+        width: 150px;
+        height: 150px;
+        margin: 5%;
+    }
+    .purchased-products-information h2{
         font-size: 20px;
+    }
+    .purchased-products-information h3{
+        font-size: 15px;
     }
 }

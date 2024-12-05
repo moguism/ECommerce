@@ -43,7 +43,6 @@ namespace Server.Controllers
             return temporalOrder;
         }
 
-
         [Authorize]
         [HttpPost("newTemporalOrder")]
         public async Task<TemporalOrder> CreateTemporal([FromBody] TemporalOrderDto temporalOrderDto)
@@ -56,6 +55,12 @@ namespace Server.Controllers
 
             //Añade una nueva orden temporal con los datos del usuario
             TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,temporalOrderDto.Quick, temporalOrderDto);
+
+            if(order == null)
+            {
+                return null;
+            }
+
             order.User = null;
             return order;
 

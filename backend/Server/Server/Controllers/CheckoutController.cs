@@ -1,3 +1,4 @@
+using Bogus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,29 +24,16 @@ public class CheckoutController : ControllerBase
         _emailService = emailService;
     }
 
-    /*public async Task<IEnumerable<CartContent>> GetCartContent(IEnumerable<CartContentDto> cartContentDtos, User user) {
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        ShoppingCart shoppingCart = await _shoppingCartService.GetShoppingCartByUserIdAsync(user.Id, true);
-
-        return _cartContentMapper.ToEntity(cartContentDtos, shoppingCart);
-    }*/
-
-
     //Iniciar Sesión de Pago (Modo Embebido)
     [Authorize]
     [HttpPost("embedded")]
     public async Task<ActionResult> EmbededCheckout([FromBody] int temporalOrderId)
     {
-        User user = await GetAuthorizedUser();
+       User user = await GetMinimumUser();
         if (user == null)
             Unauthorized("Usuario no autenticado.");
 
-        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.Id == temporalOrderId);
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(temporalOrderId);
 
         if (temporalOrder == null)
         {
@@ -121,47 +109,53 @@ public class CheckoutController : ControllerBase
 
     //Verifica el estado de la sesión
     [Authorize]
-    [HttpGet("status/{sessionId}")]
-    public async Task<Order> SessionStatus(string sessionId)
+    [HttpGet("status/{temporalOrderId}")]
+    public async Task<Order> SessionStatus(int temporalOrderId)
     {
-        SessionService sessionService = new SessionService();
-        Session session = await sessionService.GetAsync(sessionId);
-        User user = await GetAuthorizedUser();
-        if (user == null) 
+        User user = await GetAuthorizedUserWithCart();
+        if (user == null)
         {
-        Unauthorized("Usuario no autenticado.");
+            Unauthorized("Usuario no autenticado.");
         }
 
-        if (session.PaymentStatus == "paid")
+        TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(temporalOrderId);
+        if (temporalOrder == null)
         {
-            Order order = await _temporalOrderService.CreateOrderFromTemporal(sessionId, sessionId, user, 1);
-            if (session.CustomerEmail != null)
-            {
-                await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
-            }
-            return order;
+            return null;
         }
-        return null;
+
+        SessionService sessionService = new SessionService();
+        Session session = await sessionService.GetAsync(temporalOrder.HashOrSession);
+
+        if (session == null || session.PaymentStatus != "paid")
+        {
+            return null;
+        }
+
+        Order order = await _temporalOrderService.CreateOrderFromTemporal(temporalOrder, user, 1);
+        if (session.CustomerEmail != null)
+        {
+            await _emailService.CreateEmailUser(user, order.Wishlist, order.PaymentTypeId);
+        }
+        return order;
     }
 
-    
+    private async Task<User> GetAuthorizedUserWithCart()
+    {
+        string idString = GetStringId();
+        return await _temporalOrderService.GetMinimumWithCart(idString);
+    }
 
-
-    private async Task<User> GetAuthorizedUser(bool all = false)
+    private string GetStringId()
     {
         // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
-
-        // Pilla el usuario de la base de datos
-        if(!all)
-        {
-            return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
-        }
-        else
-        {
-            return await _temporalOrderService.GetUserFromString(idString);
-        }
-        
+        return idString;
+    }
+    private async Task<User> GetMinimumUser()
+    {
+        User user = await _temporalOrderService.GetMinimumUser(GetStringId());
+        return user;
     }
 }

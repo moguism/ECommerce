@@ -21,8 +21,8 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
   user: User | null = null
   lastOrder: Order | null = null
-  private method: string = ""
   id: string = ""
+  error: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private userService: UserService, private activatedRoute: ActivatedRoute, private shoppingCartService : ShoppingCartService) {
@@ -34,7 +34,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
 
   async ngOnInit(): Promise<void> {
-    const id = this.activatedRoute.snapshot.queryParamMap.get('session_id') as unknown as string;
+    const id = this.activatedRoute.snapshot.queryParamMap.get('temporalId') as unknown as string;
     if (id != null && id != "") {
       this.id = id
       await this.createOrder()
@@ -57,6 +57,11 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
   async createOrder() {
     const orderResult = await this.apiService.get("checkout/status/" + this.id)
+    if(!orderResult.success)
+    {
+      alert("Ha ocurrido un error")
+      this.error = orderResult.statusCode.toString()
+    }
     if (orderResult.data) {
       this.lastOrder = orderResult.data
     }
