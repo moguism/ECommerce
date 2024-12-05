@@ -182,6 +182,7 @@ export class ShoppingCartComponent implements OnInit {
       const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(this.productsToBuy, false))
       console.log("ORDEN TEMPORAL: ", result)
       this.goToCheckout(result)
+      localStorage.removeItem("goToCheckout")
     }
     else {
       localStorage.setItem("goToCheckout", "true")
@@ -192,7 +193,6 @@ export class ShoppingCartComponent implements OnInit {
   // Esta función solo debería servir para el carrito local
   async createDirectPayment() {
     this.getLocalStorageCart()
-    localStorage.removeItem("goToCheckout")
     const cartContents: CartContent[] = []
     for (const product of this.shoppingCartProducts) {
       const cartContent = new CartContent(product.id, product.total, product)
