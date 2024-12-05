@@ -208,6 +208,8 @@ export class UserComponent implements OnInit {
       {
         await this.productService.updateProduct(newProduct)
       }
+
+      alert("Producto subido correctamente")
       
       await this.getAllProducts()
       this.closeForm();

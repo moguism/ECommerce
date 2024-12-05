@@ -9,12 +9,13 @@ import { NgIf } from '@angular/common';
 import { Product } from '../../models/product';
 import { CartContent } from '../../models/cart-content';
 import { UserService } from '../../services/user.service';
+import { HeaderComponent } from '../../components/header/header.component';
 //import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
