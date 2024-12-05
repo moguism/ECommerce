@@ -32,7 +32,7 @@ public class OrderController : ControllerBase
             return null;
         }
 
-        return user.Orders;
+        return user.Orders.OrderByDescending(o => o.CreatedAt);
 
     }
 

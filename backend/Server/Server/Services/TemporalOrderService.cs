@@ -99,6 +99,10 @@ namespace Server.Services
 
         public async Task<Order> CreateOrderFromTemporal(TemporalOrder temporalOrder, User user, int paymentType)
         {
+            //Total price €
+            long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice * p.Quantity);
+            decimal totalPriceEuros = totalPriceCents / 100;
+
             Order order = new Order
             {
                 CreatedAt = DateTime.UtcNow,
@@ -106,7 +110,8 @@ namespace Server.Services
                 //La misma wishlist que la ultima orden temporal que ha realizado el usuario
                 WishlistId = temporalOrder.WishlistId,
                 UserId = user.Id,
-                HashOrSession = temporalOrder.HashOrSession
+                HashOrSession = temporalOrder.HashOrSession,
+                Total = totalPriceCents,
             };
 
             //Elimina el carrito si se ha hecho la compra con sesión iniciada           

@@ -89,6 +89,8 @@ namespace Server.Controllers
                 return;
             }
 
+            string role = user.Role;
+
             if(user.Id != updatedUser.Id)
             {
                 user = await _userService.GetUserByIdAsync(updatedUser.Id);
@@ -102,7 +104,7 @@ namespace Server.Controllers
             user.Address = updatedUser.Address;
             user.Name = updatedUser.Name;
 
-            if(user.Role.Equals("Admin") && (updatedUser.Role.Equals("Admin") || updatedUser.Role.Equals("User")))
+            if(role.Equals("Admin") && (updatedUser.Role.Equals("Admin") || updatedUser.Role.Equals("User")))
             {
                 user.Role = updatedUser.Role;
             }

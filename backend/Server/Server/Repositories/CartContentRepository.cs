@@ -13,31 +13,14 @@ namespace Server.Repositories
 
         public async Task AddProductosToCartAsync(ShoppingCart shoppingCart, CartContent cartContentDto)
         {
-            // ESTO SE PUEDE OPTIMIZAR 100%
-
-            CartContent cartContent = shoppingCart.CartContent.FirstOrDefault(c => c.ProductId == cartContentDto.ProductId);
-
-            //Si el producto no estaba añadido al carrito, añade uno nuevo
-            if (cartContent == null)
+            await InsertAsync(new CartContent
             {
-                await InsertAsync(new CartContent
-                {
-                    ProductId = cartContentDto.ProductId,
-                    Quantity = cartContentDto.Quantity,
-                    ShoppingCartId = shoppingCart.Id,
-                    //Product = _context.Products.FirstOrDefault(p => p.Id == cartContentDto.ProductId),w
-                    //ShoppingCart = _context.ShoppingCart.FirstOrDefault(c => c.Id == shoppingCart.Id)
-                });
-            }
-            else
-            {
-                //Se pasa el la cantidad del producto
-                cartContent.Quantity = cartContentDto.Quantity;
-
-                Update(cartContent);
-            }
-
-
+                ProductId = cartContentDto.ProductId,
+                Quantity = cartContentDto.Quantity,
+                ShoppingCartId = shoppingCart.Id,
+                //Product = _context.Products.FirstOrDefault(p => p.Id == cartContentDto.ProductId),w
+                //ShoppingCart = _context.ShoppingCart.FirstOrDefault(c => c.Id == shoppingCart.Id)
+            });
         }
 
 
