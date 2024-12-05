@@ -8,6 +8,8 @@ import { Order } from '../models/order';
 })
 export class UserService {
 
+  userName : string = ""
+
   constructor(private api: ApiService) { 
 
   }
@@ -16,6 +18,7 @@ export class UserService {
     const result = await this.api.get("User/authorizedUser", {}, 'json');
     if(result.data){
       const user: User = result.data;
+      this.userName = user.name
       return user;
     }
     return null;

@@ -3,6 +3,9 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
 import { ShoppingCart } from '../../models/shopping-cart';
+import { UserService } from '../../services/user.service';
+import { any } from 'three/webgpu';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +22,8 @@ export class HeaderComponent implements OnInit {
 
   contProducts: Number | undefined = 0
 
-  constructor(private apiService: ApiService, private router: Router, public shoppingCartService: ShoppingCartService) {
+  constructor(private apiService: ApiService, private router: Router, 
+    public shoppingCartService: ShoppingCartService, public userService : UserService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -37,6 +41,16 @@ export class HeaderComponent implements OnInit {
       if (shoppingCart?.cartContent.length)
         this.shoppingCartService.contProduct = shoppingCart?.cartContent.length
       console.log(this.contProducts)
+
+      //Si inicia sesión, actualiza el nombre del header
+      if (this.userService.userName == "") {
+        console.log("No tiene nombre");
+        const user : User | null = await this.userService.getUser()
+        console.log("Nuevo nombre : ", this.userService.userName); 
+
+      }
+      
+
     }
     else {
       const productsRaw = localStorage.getItem("shoppingCart");

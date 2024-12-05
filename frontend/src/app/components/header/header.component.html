@@ -16,7 +16,7 @@
         <h2 class="text" (click)="goToRoute('about-us')">Sobre Nosotros</h2>
 
         @if(jwt != ""){
-            <h2 class="text-welcome">Bienvenido, {{ name }}</h2>
+            <h2 class="text-welcome">Bienvenido, {{ userService.userName }}</h2>
             <h2 class="text" (click)="goToRoute('shopping-cart')"><i id="cart" class="fa-solid fa-cart-shopping"></i><span class="quantity">{{ shoppingCartService.contProduct }}</span></h2>
             <div class="dropdown" (click)="showAndClose()">
                 @if(dropdownChange){
