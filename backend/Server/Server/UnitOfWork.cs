@@ -14,7 +14,6 @@ public class UnitOfWork
     private UserRepository _userRepository;
     private CategoryRepository _categoryRepository;
 
-    //Nuevas tablas
     private ShoppingCartRepository _shoppingCartRepository;
     private TemporalOrderRepository _temporalOrderRepository;
     private CartContentRepository _cartContentRepository;
@@ -31,7 +30,6 @@ public class UnitOfWork
     public UserRepository UserRepository => _userRepository ??= new UserRepository(_context);
     public CategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_context);
 
-    //Nuevas tablas
     public ShoppingCartRepository ShoppingCartRepository => _shoppingCartRepository ??= new ShoppingCartRepository(_context);
     public TemporalOrderRepository TemporalOrderRepository => _temporalOrderRepository ??= new TemporalOrderRepository(_context);
     public CartContentRepository CartContentRepository => _cartContentRepository ??= new CartContentRepository(_context);
