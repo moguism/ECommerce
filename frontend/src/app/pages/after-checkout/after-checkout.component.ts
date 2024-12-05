@@ -22,6 +22,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
   user: User | null = null
   lastOrder: Order | null = null
   id: string = ""
+  error: string = ""
 
   constructor(private productService: ProductService, private apiService: ApiService,
     private userService: UserService, private activatedRoute: ActivatedRoute, private shoppingCartService : ShoppingCartService) {
@@ -56,6 +57,11 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
 
   async createOrder() {
     const orderResult = await this.apiService.get("checkout/status/" + this.id)
+    if(!orderResult.success)
+    {
+      alert("Ha ocurrido un error")
+      this.error = orderResult.statusCode.toString()
+    }
     if (orderResult.data) {
       this.lastOrder = orderResult.data
     }

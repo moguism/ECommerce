@@ -1,5 +1,8 @@
 <app-header></app-header>
 <div class="body">
+    @if (error != "") {
+        <p>Código de error: {{ error }}</p>
+    }
     @if (lastOrder)
     {
 
