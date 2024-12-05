@@ -30,6 +30,33 @@
     border-radius: 8px;
 }
 
+.alert-div{
+    transition: 3s;
+    background-color: white;
+    position: absolute;
+    display: block;
+    width: 30%;
+    min-height: 200px;
+    left: 35%;
+    top: 20%;
+    padding: 20px;
+    text-align: center;
+}
+
+.alert-div-none{
+    transition: 3s;
+    display: none;
+}
+
+.alert-div-button{
+    position: relative;
+    left: 45%;
+}
+
+.alert-div-text{
+    margin-top: 15%;
+}
+
 .products-description {
     padding: 2%;
     display: flex;

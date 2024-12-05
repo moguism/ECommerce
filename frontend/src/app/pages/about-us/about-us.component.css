@@ -163,6 +163,12 @@ p {
 {
     display: none;
 }
+#objeto3d{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 @media (max-width: 900px) {
     .section

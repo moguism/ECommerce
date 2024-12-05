@@ -31,7 +31,8 @@ export class ProductViewComponent implements OnInit {
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
-  shoppingCart: ShoppingCart | null = null
+  shoppingCart: ShoppingCart | null = null;
+  div_text: String = "Prueba";
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
 
@@ -66,7 +67,10 @@ export class ProductViewComponent implements OnInit {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 
     if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
-      alert("No has hecho ningun comentario");
+      var alert_div = document.getElementById("alert-div");
+      this.div_text = "No has hecho ningun comentario";
+      alert_div?.classList.remove("alert-div-none");
+      alert_div?.classList.add("alert-div");
     } else {
       const newReview = new NewReview(reviewTextElement.value, this.product.id, new Date().toISOString());
 
@@ -99,7 +103,10 @@ export class ProductViewComponent implements OnInit {
 
   async addToCart(product: Product) {
     if (this.count <= 0) {
-      alert("Cantidad no válida")
+      var alert_div = document.getElementById("alert-div");
+      this.div_text = "Candidad no válida";
+      alert_div?.classList.remove("alert-div-none");
+      alert_div?.classList.add("alert-div");
       return
     }
 
@@ -147,10 +154,19 @@ export class ProductViewComponent implements OnInit {
         this.shoppingCartService.contProduct = this.shoppingCart?.cartContent.length
       }
     }
+    var alert_div = document.getElementById("alert-div");
+    this.div_text = "Producto añadido al carrito correctamente";
+    alert_div?.classList.remove("alert-div-none");
+    alert_div?.classList.add("alert-div");
     
-    alert("Producto añadido al carrito correctamente")
     //this.shoppingCartService.getShoppingCartCount()
     
+  }
+
+  close_alert(){
+    var alert_div = document.getElementById("alert-div");
+    alert_div?.classList.remove("alert-div");
+    alert_div?.classList.add("alert-div-none");
   }
 
   ngOnDestroy(): void {
