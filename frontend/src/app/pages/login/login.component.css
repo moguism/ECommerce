@@ -205,6 +205,7 @@ font-family: "Open Sans", sans-serif;
     }
     .remember{
         width: 100%;
+        padding-left: 5%;
     }
     .container-welcome h3{
         font-size: 20px;
@@ -214,16 +215,16 @@ font-family: "Open Sans", sans-serif;
 @media (max-width: 550px){
     .container-welcome .welcome{
         align-items: normal;
-        padding: 0 30px;
-    }
-    .button{
-        width: 130px;
+        padding: 0 35px;
     }
 }
 
 @media (max-width: 410px){
     .container-welcome .welcome{
-        padding: 0 15px;
+        padding: 0 20px;
+    }
+    .button{
+        width: 130px;
     }
 }
 
