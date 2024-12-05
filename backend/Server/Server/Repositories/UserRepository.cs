@@ -39,19 +39,6 @@ namespace Server.Repositories
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public async Task<User> GetAllWithBasicInfo(int id)
-        {
-            return await GetQueryable()
-                .Include(user => user.ShoppingCart)
-                .Include(user => user.Orders)
-                    .ThenInclude(order => order.Wishlist)
-                    .ThenInclude(wishList => wishList.Products)
-                    .ThenInclude(product => product.Product)
-                .Include(user => user.TemporalOrders)
-                    .ThenInclude(t => t.Wishlist)
-                .FirstOrDefaultAsync(user => user.Id == id);
-        }
-
         public async Task<User> GetAllInfoWithTemporal(int id)
         {
             return await GetQueryable()
@@ -60,6 +47,16 @@ namespace Server.Repositories
                     .ThenInclude(t => t.Wishlist)
                     .ThenInclude(w => w.Products)
                     .ThenInclude (product => product.Product)    
+                .FirstOrDefaultAsync(user => user.Id == id);
+        }
+
+        public async Task<User> GetAllInfoWithoutCart(int id)
+        {
+            return await GetQueryable()
+                .Include(user => user.TemporalOrders)
+                    .ThenInclude(t => t.Wishlist)
+                    .ThenInclude(w => w.Products)
+                    .ThenInclude(product => product.Product)
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 

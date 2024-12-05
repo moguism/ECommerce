@@ -65,14 +65,7 @@ public class BlockchainService
 
     public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
     {
-        Order existingOrder = user.Orders.FirstOrDefault(o => o.HashOrSession.Equals(hashOrSessionOrder));
-        if (existingOrder != null)
-        {
-            return existingOrder;
-        }
-
-        //Recoge la ultima orden temporal del usuario
-        TemporalOrder temporalOrder = user.TemporalOrders.FirstOrDefault(t => t.HashOrSession.Equals(hashOrSessionTemporal));
+        TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByHash(hashOrSessionTemporal);
         if (temporalOrder == null)
         {
             return null;
@@ -117,7 +110,7 @@ public class BlockchainService
         return saveOrder;
     }
 
-    public async Task UpdateTemporalOrder(TemporalOrder temporalOrder)
+    /*public async Task UpdateTemporalOrder(TemporalOrder temporalOrder)
     {
         _unitOfWork.TemporalOrderRepository.Update(temporalOrder);
         await _unitOfWork.SaveAsync();
@@ -128,6 +121,12 @@ public class BlockchainService
         // Pilla el usuario de la base de datos
         return await _unitOfWork.UserRepository.GetAllInfoWithTemporal(Int32.Parse(stringId));
     }
+
+    public async Task<User> GetUserFromStringWithoutCart(string stringId)
+    {
+        // Pilla el usuario de la base de datos
+        return await _unitOfWork.UserRepository.GetAllInfoWithoutCart(Int32.Parse(stringId));
+    }*/
 
     // Definición del ABI de ERC-20
     private static readonly string ERC20ABI = """

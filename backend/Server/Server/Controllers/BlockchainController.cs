@@ -18,11 +18,13 @@ public class BlockchainController : ControllerBase
 {
     private readonly BlockchainService _blockchainService;
     private readonly EmailService _emailService;
+    private readonly TemporalOrderService _temporalOrderService;
 
-    public BlockchainController(BlockchainService blockchainService, EmailService emailService)
+    public BlockchainController(BlockchainService blockchainService, EmailService emailService, TemporalOrderService temporalOrderService)
     {
         _blockchainService = blockchainService;
         _emailService = emailService;
+        _temporalOrderService = temporalOrderService;
     }
 
     [HttpGet]
@@ -36,7 +38,7 @@ public class BlockchainController : ControllerBase
     [HttpPost("transaction")]
     public async Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
     {
-        User user = await GetAuthorizedUser();
+        User user = await GetMinimumUser();
         if(user == null)
         {
             return null;
@@ -46,7 +48,7 @@ public class BlockchainController : ControllerBase
 
         EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
 
-        TemporalOrder temporalOrder = user.TemporalOrders.OrderBy(temporalOrder => temporalOrder.Id).LastOrDefault();
+        TemporalOrder temporalOrder = await _temporalOrderService.GetLastTemporalOrder(user.Id);
         if (temporalOrder == null)
         {
             return null;
@@ -57,7 +59,7 @@ public class BlockchainController : ControllerBase
         if(data.Euros >= total)
         {
             temporalOrder.HashOrSession = ethereumTransaction.Value;
-            await _blockchainService.UpdateTemporalOrder(temporalOrder);
+            await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
         }
         else
         {
@@ -71,7 +73,7 @@ public class BlockchainController : ControllerBase
     [HttpPost("check")]
     public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
-        User user = await GetAuthorizedUser();
+        User user = await GetAuthorizedUserWithCart();
         if(user == null)
         {
             return null;
@@ -95,11 +97,22 @@ public class BlockchainController : ControllerBase
         return null;
     }
 
-    private async Task<User> GetAuthorizedUser()
+    private async Task<User> GetAuthorizedUserWithCart()
+    {
+        string idString = GetStringId();
+        return await _temporalOrderService.GetMinimumWithCart(idString);
+    }
+
+    private string GetStringId()
     {
         // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
-        return await _blockchainService.GetUserFromStringWithTemporal(idString);
+        return idString;
+    }
+    private async Task<User> GetMinimumUser()
+    {
+        User user = await _temporalOrderService.GetMinimumUser(GetStringId());
+        return user;
     }
 }

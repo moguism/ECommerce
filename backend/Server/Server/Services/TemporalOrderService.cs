@@ -138,6 +138,12 @@ namespace Server.Services
             return saveOrder;
         }
 
+        public async Task<TemporalOrder> GetLastTemporalOrder(int userId)
+        {
+
+            return await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByUserId(userId);
+        }
+
         public async Task<User> GetMinimumUser(string stringId)
         {
 
@@ -157,13 +163,6 @@ namespace Server.Services
 
             // Pilla el usuario de la base de datos
             return await _unitOfWork.UserRepository.GetMinimumWithCart(Int32.Parse(stringId));
-        }
-
-        public async Task<User> GetUserFromString(string stringId)
-        {
-
-            // Pilla el usuario de la base de datos
-            return await _unitOfWork.UserRepository.GetAllInfoById(Int32.Parse(stringId));
         }
     }
 }

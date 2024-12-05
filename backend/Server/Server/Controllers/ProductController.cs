@@ -108,7 +108,7 @@ namespace Server.Controllers
                     case "Verduras":
                         product.CategoryId = 2;
                         break;
-                    case "Carne":
+                    case "Carnes":
                         product.CategoryId = 3;
                         break;
                     default:
@@ -169,7 +169,7 @@ namespace Server.Controllers
                     case "Verduras":
                         product.CategoryId = 2;
                         break;
-                    case "Carne":
+                    case "Carnes":
                         product.CategoryId = 3;
                         break;
                     default:

@@ -112,7 +112,7 @@ public class CheckoutController : ControllerBase
     [HttpGet("status/{temporalOrderId}")]
     public async Task<Order> SessionStatus(int temporalOrderId)
     {
-        User user = await GetAuthorizedUser(false);
+        User user = await GetAuthorizedUserWithCart();
         if (user == null)
         {
             Unauthorized("Usuario no autenticado.");
@@ -140,25 +140,15 @@ public class CheckoutController : ControllerBase
         return order;
     }
 
-    private async Task<User> GetAuthorizedUser(bool products = true)
+    private async Task<User> GetAuthorizedUserWithCart()
     {
-        // Pilla el usuario autenticado según ASP
         string idString = GetStringId();
-
-        // Pilla el usuario de la base de datos
-        if(products)
-        {
-            return await _temporalOrderService.GetUserFromStringWithTemporal(idString);
-        }
-        else
-        {
-            return await _temporalOrderService.GetMinimumWithCart(idString);
-        }
-        
+        return await _temporalOrderService.GetMinimumWithCart(idString);
     }
 
     private string GetStringId()
     {
+        // Pilla el usuario autenticado según ASP
         System.Security.Claims.ClaimsPrincipal currentUser = this.User;
         string idString = currentUser.Claims.First().ToString().Substring(3); // 3 porque en las propiedades sale "id: X", y la X sale en la tercera posición
         return idString;
