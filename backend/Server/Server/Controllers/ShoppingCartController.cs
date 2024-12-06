@@ -65,12 +65,7 @@ namespace Server.Controllers
             }
 
             await _shoppingCartService.AddProductsToShoppingCart(user, cartContent, add);
-
-            if(add)
-            {
-                return user.ShoppingCart.CartContent.Count;
-            }
-            return user.ShoppingCart.CartContent.Count + 1;
+            return user.ShoppingCart.CartContent.Count;
         }
 
         [Authorize]
