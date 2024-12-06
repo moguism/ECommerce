@@ -53,6 +53,8 @@ namespace Server.Services
             await _unitOfWork.CartContentRepository.AddProductosToCartAsync(user.ShoppingCart, cartContent);
 
             await _unitOfWork.SaveAsync();
+
+            user.ShoppingCart.CartContent.Add(new CartContent()); // Para que devuelva uno más de cantidad si no existía previamente
         }
 
 
