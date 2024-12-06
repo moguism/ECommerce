@@ -41,10 +41,9 @@
         }
         
         @if(order.paymentTypeId == 1){
-
         <h3 class="order-price">Método de pago: <b>Tarjeta</b> | <span class="order-price-total">Total pagado: <b>{{order.total | eurosToCents}}</b></span></h3>
         }@else {
-        <h3 class="order-price">Método de pago: <b>Ethereum</b> | <span class="order-price-total">Total pagado: <b>{{order.total}}</b></span> | <span class="order-price-total">Total pagado: <b>{{order.totalETH}}</b></span></h3>
+        <h3 class="order-price">Método de pago: <b>Ethereum</b> | <span class="order-price-total">Total pagado: <b>{{order.total | eurosToCents}}</b></span> | <b>{{order.totalETH}} ETH</b></h3>
         }
 
     </div>
