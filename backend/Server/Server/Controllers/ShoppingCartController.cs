@@ -43,19 +43,34 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("addProductOrChangeQuantity")]
-        public async Task<ShoppingCart> AddProductosToShoppingCart([FromBody] CartContent cartContent, [FromQuery] bool add)
+        public async Task<int> AddProductosToShoppingCart([FromBody] CartContent cartContent, [FromQuery] bool add)
         {
 
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return null;
+                return 0;
+            }
+
+            if (cartContent.Quantity <= 0)
+            {
+                return 0;
+            }
+
+            ShoppingCart cart = user.ShoppingCart;
+
+            if(cart == null)
+            {
+                return 0;
             }
 
             await _shoppingCartService.AddProductsToShoppingCart(user, cartContent, add);
 
-            return user.ShoppingCart;
-
+            if(add)
+            {
+                return user.ShoppingCart.CartContent.Count;
+            }
+            return user.ShoppingCart.CartContent.Count + 1;
         }
 
         [Authorize]

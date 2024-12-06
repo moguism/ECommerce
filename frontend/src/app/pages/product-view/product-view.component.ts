@@ -32,7 +32,6 @@ export class ProductViewComponent implements OnInit {
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
-  shoppingCart: ShoppingCart | null = null;
   div_text: String = "Prueba";
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
@@ -141,18 +140,10 @@ export class ProductViewComponent implements OnInit {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(product.id, this.count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
-      const result = await this.apiService.post<ShoppingCart>("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add" : true })
+      const result = await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add" : true })
 
       if(result.data){
-        const dataRaw : any =  result.data
-        this.shoppingCart = JSON.parse(dataRaw)
-      }
-
-      //Contador en local storage del número de productos en el carrito
-      if (this.shoppingCart?.cartContent) {
-        var cont = this.shoppingCart?.cartContent.length
-        console.log("Carrito " + cont)
-        this.shoppingCartService.contProduct = this.shoppingCart?.cartContent.length
+        this.shoppingCartService.contProduct = parseInt(result.data)
       }
     }
     
