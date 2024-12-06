@@ -96,7 +96,6 @@ export class LoginComponent implements OnInit {
       await this.apiService.post(this.loginPath, login)
       if (this.apiService.jwt != "") {
         await this.rememberFunction()
-        this.userService.userName = this.name
       }
       else {
         alert("Los datos introducidos no son correctos")
