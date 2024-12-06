@@ -24,9 +24,9 @@ namespace Server.Repositories
         }
 
 
-        public async Task RemoveProductFromCartAsync(int productId)
+        public void RemoveProductFromCartAsync(User user, int productId)
         {
-            CartContent cartContent = await _context.CartContent.FirstOrDefaultAsync(c => c.ProductId == productId);
+            CartContent cartContent = user.ShoppingCart.CartContent.FirstOrDefault(c => c.ProductId == productId);
             if(cartContent == null)
             {
                 return;

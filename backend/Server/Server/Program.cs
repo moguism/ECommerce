@@ -84,8 +84,6 @@ namespace Server
             builder.Services.AddScoped<OrderMapper>();
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<ImageService>();
-            builder.Services.AddScoped<CategoryService>();
-
 
             //builder.Services.AddHostedService<CleanTemporalOrdersService>();
             // Aqui esta la clave privada
@@ -201,14 +199,14 @@ namespace Server
                     PasswordService passwordService = new PasswordService();
                     // Crear usuarios de ejemplo
                     var user = new User { Name = builder.Configuration["AdminUser:Name"], Email = builder.Configuration["AdminUser:Email"], Password = passwordService.Hash(builder.Configuration["AdminUser:Password"]), Role = builder.Configuration["AdminUser:Role"], Address = builder.Configuration["AdminUser:Address"] };
-
                     // Asegurarse de que los usuarios están añadidos al contexto
                     dbContext.Users.Add(user);
+
                     dbContext.SaveChanges();
 
-                    // Guardar cambios en la base de datos
-                    dbContext.SaveChanges();
+                    dbContext.ShoppingCart.Add(new ShoppingCart() { UserId = 1 });
 
+                    dbContext.SaveChanges();
                 }
             }
 

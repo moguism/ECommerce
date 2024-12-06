@@ -15,26 +15,13 @@ public class ShoppingCartMapper
 
     public ShoppingCartDto ToDto(ShoppingCart shoppingCart)
     {
-
-        return new ShoppingCartDto
+        ShoppingCartDto cartDto = new ShoppingCartDto
         {
             Id = shoppingCart.Id,
-            User = shoppingCart.User,
+            UserId = shoppingCart.User.Id,
             CartContent = shoppingCart.CartContent,
         };
-    }
 
-
-    public ShoppingCart ToEntity(ShoppingCartDto shoppingCartDto)
-    {
-        return new ShoppingCart
-        {
-            Id = shoppingCartDto.Id,
-            UserId = shoppingCartDto.User.Id,
-            User = shoppingCartDto.User,
-            CartContent = shoppingCartDto.CartContent
-        };
-    }
-
-   
+        return cartDto;
+    }   
 }

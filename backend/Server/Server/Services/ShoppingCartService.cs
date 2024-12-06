@@ -20,17 +20,20 @@ namespace Server.Services
             if (existingCartContent != null)
             {
                 Product p = existingCartContent.Product;
-                if(cartContent.Quantity > p.Stock || cartContent.Quantity <= 0)
-                {
-                    return;
-                }
-                
                 if(add)
                 {
+                    if (cartContent.Quantity + existingCartContent.Quantity > p.Stock)
+                    {
+                        return;
+                    }
                     existingCartContent.Quantity += cartContent.Quantity;
                 }
                 else
                 {
+                    if (cartContent.Quantity > p.Stock)
+                    {
+                        return;
+                    }
                     existingCartContent.Quantity = cartContent.Quantity;
                 }
                 
@@ -38,24 +41,16 @@ namespace Server.Services
                 await _unitOfWork.SaveAsync();
                 return;
             }
-            
+
+            // Si no existía previamente            
             Product product = await _unitOfWork.ProductRepository.GetByIdAsync(cartContent.ProductId);
-            if (product == null || cartContent.Quantity > product.Stock || cartContent.Quantity <= 0)
+            if (product == null || cartContent.Quantity > product.Stock)
             {
                 return;
             }
 
-            ShoppingCart cart = user.ShoppingCart;
-
-            //Si el usuario es nuevo y no tenía carrito, le crea uno nuevo
-            if (cart == null)
-            {
-                cart = await _unitOfWork.ShoppingCartRepository.CreateShoppingCartAsync(user);
-                await _unitOfWork.SaveAsync();
-            }
-
             //añade el producto a este
-            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(cart, cartContent);
+            await _unitOfWork.CartContentRepository.AddProductosToCartAsync(user.ShoppingCart, cartContent);
 
             await _unitOfWork.SaveAsync();
         }
@@ -63,7 +58,7 @@ namespace Server.Services
 
         public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
-            await _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(productId);
+            _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(user, productId);
             await _unitOfWork.SaveAsync();
         }
 

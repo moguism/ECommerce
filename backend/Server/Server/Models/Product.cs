@@ -24,8 +24,4 @@ public class Product
     public Category Category { get; set; }
 
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-    public ICollection<CartContent> CartContents { get; set; } = new List<CartContent>();
-
-
 }

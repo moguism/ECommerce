@@ -98,17 +98,9 @@ public class UserService
 
     public async Task<User> InsertUser(User user)
     {
+        user.ShoppingCart = new ShoppingCart();
         User newUser = await _unitOfWork.UserRepository.InsertAsync(user);
         await _unitOfWork.SaveAsync();
-
-        ShoppingCart cart = new ShoppingCart()
-        {
-            UserId = user.Id,
-        };
-
-        await _unitOfWork.ShoppingCartRepository.InsertAsync(cart);
-        await _unitOfWork.SaveAsync();
-
         return newUser;
     }
 
