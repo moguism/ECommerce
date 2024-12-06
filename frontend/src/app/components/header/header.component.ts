@@ -73,8 +73,8 @@ export class HeaderComponent implements OnInit {
 
   async deleteToken() {
     this.apiService.deleteToken();
-    await this.router.navigateByUrl("");
-    window.location.reload();
+    await this.router.navigateByUrl("login");
+    window.location.reload()
   }
 
   goToRoute(route: string) {

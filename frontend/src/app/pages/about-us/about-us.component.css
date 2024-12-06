@@ -32,6 +32,10 @@
     justify-content: center;
 }
 
+.patata{
+    width: 100%;
+}
+
 .content-box {
     margin: 20px;
     width: 50%;
@@ -51,6 +55,16 @@
     width: 80%;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.contact{
+    text-align: center;
+    margin: 20px;
+    margin-left: 30%;
+    width: 40%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .title1 {
@@ -163,6 +177,12 @@ p {
 {
     display: none;
 }
+#objeto3d{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 @media (max-width: 900px) {
     .section
@@ -177,5 +197,12 @@ p {
     }
     .image-box{
         width: 100%;
+    }
+}
+
+@media (max-width: 600px){
+    .contact{
+        width: 80%;
+        margin-left: 10%;
     }
 }

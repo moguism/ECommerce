@@ -5,6 +5,7 @@
 
     @if(product)
     {
+            
             <div class="products">
                 <div class="products-image">
                     <img class="image" [src]="product.image.replace('images/images/images/images/', '/images/')" alt="Imagen">
@@ -27,7 +28,7 @@
                             <button class="button-mas" (click)="sumar()">+</button>
                         </div>
                         <div class="products-description-anadir">
-                            <button class="anadir" (click)="addToCart(product)">Añadir al carrito</button>
+                            <button class="anadir" (click)="addToCart(product)" (click)="mostraralert()">Añadir al carrito</button>
                         </div>
                     }
                 </div>

@@ -11,6 +11,7 @@ import { NewReview } from '../../models/new-review';
 import { ReviewService } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
 import { ShoppingCart } from '../../models/shopping-cart';
+import Swal from 'sweetalert2';
 
 
 // Pipe Import
@@ -31,7 +32,7 @@ export class ProductViewComponent implements OnInit {
   product: Product | null = null;
   routeParamMap$: Subscription | null = null;
   //prductReviews: Review[] = []
-  shoppingCart: ShoppingCart | null = null
+  div_text: String = "Prueba";
 
   constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
 
@@ -66,7 +67,10 @@ export class ProductViewComponent implements OnInit {
     const reviewTextElement = document.getElementById("review-text") as HTMLTextAreaElement | null; //Elemento del textArea
 
     if (reviewTextElement == null || reviewTextElement?.value.trim() === "" || this.product == null) {
-      alert("No has hecho ningun comentario");
+      var alert_div = document.getElementById("alert-div");
+      this.div_text = "No has hecho ningun comentario";
+      alert_div?.classList.remove("alert-div-none");
+      alert_div?.classList.add("alert-div");
     } else {
       const newReview = new NewReview(reviewTextElement.value, this.product.id, new Date().toISOString());
 
@@ -99,7 +103,10 @@ export class ProductViewComponent implements OnInit {
 
   async addToCart(product: Product) {
     if (this.count <= 0) {
-      alert("Cantidad no válida")
+      var alert_div = document.getElementById("alert-div");
+      this.div_text = "Candidad no válida";
+      alert_div?.classList.remove("alert-div-none");
+      alert_div?.classList.add("alert-div");
       return
     }
 
@@ -133,25 +140,25 @@ export class ProductViewComponent implements OnInit {
       localStorage.removeItem("shoppingCart")
       const cartContent = new CartContent(product.id, this.count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
-      const result = await this.apiService.post<ShoppingCart>("ShoppingCart/addProductOrChangeQuantity", cartContent)
+      const result = await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add" : true })
 
       if(result.data){
-        const dataRaw : any =  result.data
-        this.shoppingCart = JSON.parse(dataRaw)
-      }
-
-      //Contador en local storage del número de productos en el carrito
-      if (this.shoppingCart?.cartContent) {
-        var cont = this.shoppingCart?.cartContent.length
-        console.log("Carrito " + cont)
-        this.shoppingCartService.contProduct = this.shoppingCart?.cartContent.length
+        this.shoppingCartService.contProduct = parseInt(result.data)
       }
     }
     
-    alert("Producto añadido al carrito correctamente")
     //this.shoppingCartService.getShoppingCartCount()
     
   }
+  mostraralert(){
+    Swal.fire({
+      title: 'Producto añadido',
+      text: 'Se ha añadido el producto correctamente',
+      icon: 'success',
+      confirmButtonText: 'Salir'
+    })
+  }
+
 
   ngOnDestroy(): void {
     this.routeParamMap$?.unsubscribe();

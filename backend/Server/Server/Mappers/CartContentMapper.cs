@@ -9,8 +9,6 @@ public class CartContentMapper
 
     public CartContentDto ToDto(CartContent cartContent)
     {
-
-
         return new CartContentDto
         {
             ProductId = cartContent.ProductId,
@@ -26,17 +24,4 @@ public class CartContentMapper
             Quantity = cartContentDto.Quantity,
         };
     }
-
-    public IEnumerable<CartContent> ToEntity(IEnumerable<CartContentDto> cartContentDtos)
-    {
-        List<CartContent> result = new List<CartContent>();
-        foreach(CartContentDto cartContent in cartContentDtos)
-        {
-            result.Add(ToEntity(cartContent));
-        }
-        return result;
-    }
-
-
-
 }
