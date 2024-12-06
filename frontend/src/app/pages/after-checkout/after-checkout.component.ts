@@ -69,6 +69,7 @@ export class AfterCheckoutComponent implements OnInit, OnDestroy {
     }
     if (orderResult.data) {
       this.lastOrder = orderResult.data
+      this.shoppingCartService.contProduct = 0
     }
   }
 
