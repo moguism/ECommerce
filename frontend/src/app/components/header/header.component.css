@@ -145,6 +145,12 @@ h1{
 }
 
 /* Responsive */
+@media (min-width: 2000px){
+    .logo{
+        width: 4%;
+    }
+}
+
 @media (max-width: 1100px){
     .dropdown{
         width: 15%;
