@@ -231,7 +231,11 @@ export class ShoppingCartComponent implements OnInit {
     for (const product of this.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
-    return totalcount;
+    if(totalcount<5000 && totalcount>0){
+      return totalcount+300;
+    }else{
+      return totalcount;
+    }
   }
   sumar(index: number) {
     const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);

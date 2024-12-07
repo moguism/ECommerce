@@ -110,7 +110,15 @@
     background-position: top center;
     text-align: center;
 }
+@keyframes homeanimate {
+    from {
+        transform: scale(1, 1);
+    }
 
+    to {
+        transform: scale(1.25, 1.25);
+    }
+}
 .final-content{
     width: 20vw;
     height: 20vw;
@@ -120,11 +128,10 @@
     background-position: center;
     cursor: pointer;
     margin-bottom: 5%;
-}
-
-.final-content:hover{
-    width: 22vw;
-    height: 22vw;
+    animation-name: homeanimate;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 .activate-text{
