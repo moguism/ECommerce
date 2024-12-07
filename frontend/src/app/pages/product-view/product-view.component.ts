@@ -35,13 +35,11 @@ export class ProductViewComponent implements OnInit {
   //prductReviews: Review[] = []
   div_text: String = "Prueba";
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, 
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService,
     private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
-    //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
     this.getProduct()
-    //this.makeReviews()
   }
 
   async getProduct() {
@@ -89,15 +87,16 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  
+  //Actualiza el contador del producto cuando se actualiza en el componente
+  onCountChange(newCount: number) {
+    this.count = newCount;
+  }
+
+
   async addToCart(product: Product) {
-    if (this.count <= 0) {
-      var alert_div = document.getElementById("alert-div");
-      this.div_text = "Candidad no válida";
-      alert_div?.classList.remove("alert-div-none");
-      alert_div?.classList.add("alert-div");
-      return
-    }
+
+    const count = this.count;
+
 
     if (this.apiService.jwt == "") {
       let allProducts: Product[] = []
@@ -107,16 +106,18 @@ export class ProductViewComponent implements OnInit {
         const index = allProducts.findIndex(p => p.id === product.id);
         let newProduct = product
         if (index != -1) {
-          newProduct = allProducts[index]
-          newProduct.total += this.count
+          // Si el producto ya existe en el carrito, se actualiza la cantidad
+          newProduct = allProducts[index];
+          newProduct.total += count;
         }
         else {
-          newProduct.total = 1
-          allProducts.push(product)
+          //Si es un nuevo producto lo añade con la cantidad asignada
+          newProduct.total = count;
+          allProducts.push(product);
         }
       }
       else {
-        product.total = this.count
+        product.total = count
         allProducts.push(product)
       }
       localStorage.setItem("shoppingCart", JSON.stringify(allProducts))
@@ -127,19 +128,21 @@ export class ProductViewComponent implements OnInit {
     }
     else {
       localStorage.removeItem("shoppingCart")
-      const cartContent = new CartContent(product.id, this.count, product)
+      const cartContent = new CartContent(product.id, count, product)
       // Envía el objeto `cartContent` directamente, sin envolverlo en un objeto con clave `cartContent`
-      const result = await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add" : true })
+      const result = await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent, { "add": true })
 
-      if(result.data){
+      if (result.data) {
         this.shoppingCartService.contProduct = parseInt(result.data)
       }
     }
-    
+
     //this.shoppingCartService.getShoppingCartCount()
-    
+
   }
-  mostraralert(){
+
+
+  mostraralert() {
     Swal.fire({
       title: 'Producto añadido',
       text: 'Se ha añadido el producto correctamente',

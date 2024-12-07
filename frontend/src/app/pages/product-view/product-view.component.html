@@ -23,12 +23,8 @@
                     @if(product.stock > 0)
                     {
                         <div >
-                            <!--
-                            <button class="button-menos" (click)="restar()">-</button>
-                            <p class="count">{{count}}</p>
-                            <button class="button-mas" (click)="sumar()">+</button>
-                            -->
-                            <app-quantity-modifier [productId]="product.id" [count]="1"></app-quantity-modifier>
+       
+                            <app-quantity-modifier [productId]="product.id" [count]="count" (countChange)="onCountChange($event)"> </app-quantity-modifier>
 
                         </div>
                         <div class="add-products-description">
