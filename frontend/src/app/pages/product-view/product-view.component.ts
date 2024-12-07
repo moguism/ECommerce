@@ -12,16 +12,17 @@ import { ReviewService } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
 import { ShoppingCart } from '../../models/shopping-cart';
 import Swal from 'sweetalert2';
-
+import { ShoppingCartService } from '../../services/shopping-cart.service';
+import { QuantityModifierComponent } from '../../components/quantity-modifier/quantity-modifier.component';
 
 // Pipe Import
 import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
-import { ShoppingCartService } from '../../services/shopping-cart.service';
+
 
 @Component({
   selector: 'app-product-view',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CommonModule, CorrectDatePipe],
+  imports: [HeaderComponent, FormsModule, CommonModule, CorrectDatePipe, QuantityModifierComponent],
   //providers: [{provide: LOCALE_ID, useValue: 'es'}],
   templateUrl: './product-view.component.html',
   styleUrl: './product-view.component.css'
@@ -34,7 +35,8 @@ export class ProductViewComponent implements OnInit {
   //prductReviews: Review[] = []
   div_text: String = "Prueba";
 
-  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
+  constructor(private productService: ProductService, private activatedRoute: ActivatedRoute, private apiService: ApiService, 
+    private reviewService: ReviewService, private shoppingCartService: ShoppingCartService) { }
 
   ngOnInit(): void {
     //const id = this.activatedRoute.snapshot.paramMap.get('id') as unknown as number;
@@ -87,20 +89,7 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-  sumar() {
-    if (this.product) {
-      if (this.count + 1 <= this.product?.stock) {
-        this.count++;
-      }
-    }
-  }
-  restar() {
-    if (this.count > 0) {
-      this.count--
-    }
-  }
-
-
+  
   async addToCart(product: Product) {
     if (this.count <= 0) {
       var alert_div = document.getElementById("alert-div");

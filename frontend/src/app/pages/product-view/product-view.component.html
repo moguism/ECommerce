@@ -22,12 +22,16 @@
                     </div>
                     @if(product.stock > 0)
                     {
-                        <div class="products-description-anadir">
+                        <div >
+                            <!--
                             <button class="button-menos" (click)="restar()">-</button>
                             <p class="count">{{count}}</p>
                             <button class="button-mas" (click)="sumar()">+</button>
+                            -->
+                            <app-quantity-modifier [productId]="product.id" [count]="1"></app-quantity-modifier>
+
                         </div>
-                        <div class="products-description-anadir">
+                        <div class="add-products-description">
                             <button class="anadir" (click)="addToCart(product)" (click)="mostraralert()">Añadir al carrito</button>
                         </div>
                     }
