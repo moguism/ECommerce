@@ -138,6 +138,7 @@ p {
     align-items: center;
     justify-content: center;
     gap: 10%;
+    width: 100%;
 }
 
 .team-person-photo{
@@ -154,7 +155,7 @@ p {
     width: 50%;
 }
 .team-person-information-description{
-    width: 100%;
+    width: 90%;
 }
 
 .prank
