@@ -70,7 +70,7 @@ namespace Server.Controllers
 
 
         [Authorize]
-        [HttpPost("saveCart")]
+        [HttpPost("save")]
         public async Task SaveShoppingCart([FromBody] List<CartContent> cartContent)
         {
 

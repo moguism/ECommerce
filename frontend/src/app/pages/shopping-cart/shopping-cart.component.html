@@ -41,7 +41,11 @@
                         <button class="basket-products-information-Button" (click)="changeQuantity(product)"><i class="fa-solid fa-arrows-rotate"></i></button>
                         <input class="basket-products-information-functions-input" [id]="product.id" type="number" [value]="product.total">
                         -->
-                        <app-quantity-modifier [productId]="product.id" [count]="product.total"> </app-quantity-modifier>
+                        <app-quantity-modifier 
+                        [productId]="product.id" 
+                        [count]="product.total"   
+                        (countChange)="onCountChange($event)">
+                        </app-quantity-modifier>
 
 
                     </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
+import { CartContent } from '../models/cart-content';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,8 @@ export class ShoppingCartService {
   total: number = 0
   contProduct : number = 0
   shoppingCartProducts: Product[] = []
+  productsToBuy: CartContent[] = [];
+
 
 
 
@@ -23,6 +26,7 @@ export class ShoppingCartService {
     if (productsRaw) {
       this.shoppingCartProducts = JSON.parse(productsRaw);
     }
+
   }
 
 

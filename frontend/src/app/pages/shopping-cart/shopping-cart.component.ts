@@ -22,11 +22,11 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   productsToBuy: CartContent[] = [];
 
 
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, 
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router,
     public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
-    
+
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
@@ -35,18 +35,47 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     else {
       this.shoppingCartService.getShoppingCart();
     }
-      
-  }
-
-
-  ngOnDestroy(): void {
-      
-    
-
 
   }
 
-  
+
+  async ngOnDestroy(): Promise<void> {
+    //Guarda los cambios del carrito
+    if (this.apiService.jwt == "") {
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts));
+    }
+    else{
+
+      var cart : CartContent[] = []
+
+      this.shoppingCartService.shoppingCartProducts.forEach(product => {
+        cart.push(new CartContent(product.id,product.total,product))
+      });
+
+      await this.apiService.post("ShoppingCart/save", cart)
+
+    }
+
+
+  }
+
+  saveShoppingCart(): void{
+
+  }
+
+
+
+  //Actualiza el contador del producto cuando se actualiza en el componente
+  async onCountChange(event: { productId: number, newCount: number }) {
+    const { productId, newCount } = event;
+
+    const p = this.shoppingCartService.findProductInArray(productId);
+    if (p) {
+      p.total = newCount;
+    }
+
+
+  }
 
   async changeQuantity(product: Product) {
     const input = document.getElementById(product.id.toString()) as HTMLInputElement
@@ -76,7 +105,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
 
 
   async pay(method: string) {
