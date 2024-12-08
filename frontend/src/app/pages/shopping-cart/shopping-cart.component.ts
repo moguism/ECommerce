@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -18,7 +18,7 @@ import { QuantityModifierComponent } from '../../components/quantity-modifier/qu
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
-export class ShoppingCartComponent implements OnInit {
+export class ShoppingCartComponent implements OnInit, OnDestroy {
   productsToBuy: CartContent[] = [];
 
 
@@ -36,6 +36,14 @@ export class ShoppingCartComponent implements OnInit {
       this.shoppingCartService.getShoppingCart();
     }
       
+  }
+
+
+  ngOnDestroy(): void {
+      
+    
+
+
   }
 
   
