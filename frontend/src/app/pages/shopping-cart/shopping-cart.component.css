@@ -33,6 +33,7 @@
 
 }
 .basket{
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -86,11 +87,25 @@
 }
 
 .basket-products-information {
-    display: grid;
-    grid-template-columns: 60% 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;   
     font-size: 1.2rem;
 }
 
+.basket-products-information-price{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left; 
+}
+
+
+.basket-products-information-quantity-modifier{
+     width: 100%;
+}
 
 
 .basket-products-information-Button{
