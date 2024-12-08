@@ -41,25 +41,8 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   async ngOnDestroy(): Promise<void> {
     //Guarda los cambios del carrito
-    if (this.apiService.jwt == "") {
-      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts));
-    }
-    else{
+    await this.shoppingCartService.saveShoppingCart()
 
-      var cart : CartContent[] = []
-
-      this.shoppingCartService.shoppingCartProducts.forEach(product => {
-        cart.push(new CartContent(product.id,product.total,product))
-      });
-
-      await this.apiService.post("ShoppingCart/save", cart)
-
-    }
-
-
-  }
-
-  saveShoppingCart(): void{
 
   }
 

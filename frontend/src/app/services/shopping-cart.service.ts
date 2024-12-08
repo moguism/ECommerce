@@ -63,6 +63,23 @@ export class ShoppingCartService {
 
   }
 
+  async saveShoppingCart(): Promise<void>{
+    //Guarda los cambios del carrito
+    if (this.apiService.jwt == "") {
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+    }
+    else{
+
+      var cart : CartContent[] = []
+
+      this.shoppingCartProducts.forEach(product => {
+        cart.push(new CartContent(product.id,product.total,product))
+      });
+
+      await this.apiService.post("ShoppingCart/save", cart)
+
+    }
+  }
 
   async deleteProduct(productId: number) {
     const index = this.shoppingCartProducts.findIndex(product => product.id === productId);

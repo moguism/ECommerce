@@ -142,7 +142,6 @@ export class ProductViewComponent implements OnInit {
 
   }
 
-
   mostraralert() {
     Swal.fire({
       title: 'Producto añadido',
