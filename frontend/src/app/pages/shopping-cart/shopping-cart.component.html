@@ -9,16 +9,16 @@
 
     <div id="cartCounter">
         <h2 class="cartCounter-title">Mi carrito</h2>
-        @if(shoppingCartProducts.length == 1){
-            <h4 class="cartCounter-info">{{shoppingCartProducts.length}} artículo</h4>
+        @if(shoppingCartService.shoppingCartProducts.length == 1){
+            <h4 class="cartCounter-info">{{shoppingCartService.shoppingCartProducts.length}} artículo</h4>
         }
         @else {
-            <h4 class="cartCounter-info">{{shoppingCartProducts.length}} artículos</h4>
+            <h4 class="cartCounter-info">{{shoppingCartService.shoppingCartProducts.length}} artículos</h4>
         }
     </div>
     <div class="information">
         <div class="basket">
-            @for (product of shoppingCartProducts; track product.id){
+            @for (product of shoppingCartService.shoppingCartProducts; track product.id){
             <div class="basket-products">
                 <div class="basket-products-product">
                     <img class="basket-products-image" [src]="product.image.replace('/images//images/', '/images/')" alt="">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="basket-products-information-functions">
-                        <button class="basket-products-information-Button" (click)="deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
+                        <button class="basket-products-information-Button" (click)="shoppingCartService.deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
                         
                         <!--
                         
