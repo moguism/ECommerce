@@ -60,45 +60,13 @@
     color: green;
 }
 
-.products-description-anadir {
+.add-products-description {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.button-menos {
-    background-color: #99C080;
-    width: 25%;
-    height: 38%;
-    border: 1px solid black;
-    border-top-left-radius: 10%;
-    border-bottom-left-radius: 10%;
-    cursor: pointer;
-    font-size: 1.2rem;
-
-}
-
-.count {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid black;
-    height: 34%;
-    width: 25%;
-    font-size: 1.2rem;
-}
-
-.button-mas {
-    background-color: #99C080;
-    font-size: 1.2rem;
-    width: 25%;
-    height: 38%;
-    border: 1px solid black;
-    border-top-right-radius: 10%;
-    border-bottom-right-radius: 10%;
-    cursor: pointer;
-}
 
 .anadir {
     width: 50%;
@@ -247,7 +215,7 @@
         text-align: center;
     }
 
-    .products-description-anadir {
+    .add-products-description {
         width: 100%;
         height: auto;
         align-items: center;

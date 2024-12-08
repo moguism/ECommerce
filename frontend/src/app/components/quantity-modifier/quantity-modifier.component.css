@@ -1,0 +1,30 @@
+.quantity-modifier {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.change-button {
+    background-color: #99C080;
+    width: 25%;
+    height: 38%;
+    border: 1px solid black;
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+    cursor: pointer;
+    font-size: 1.2rem;
+
+}
+
+
+.count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    height: 34%;
+    width: 25%;
+    font-size: 1.2rem;
+}

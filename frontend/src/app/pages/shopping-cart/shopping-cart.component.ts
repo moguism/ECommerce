@@ -3,18 +3,18 @@ import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
 import { CartContent } from '../../models/cart-content';
-import { HeaderShopComponent } from '../../components/header-shop/header-shop.component';
 import { FormsModule } from '@angular/forms';
 import { EurosToCentsPipe } from '../../pipes/euros-to-cents.pipe';
 import { Router } from '@angular/router';
 import { TemporalOrder } from '../../models/temporal-order';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
+import { QuantityModifierComponent } from '../../components/quantity-modifier/quantity-modifier.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, EurosToCentsPipe],
+  imports: [HeaderComponent, FormsModule, EurosToCentsPipe, QuantityModifierComponent],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
@@ -26,7 +26,9 @@ export class ShoppingCartComponent implements OnInit {
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
+    
     const goToCheckout = localStorage.getItem("goToCheckout")
+    console.log("yctgvtuhbijnokl  --- " + goToCheckout)
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
       return
@@ -34,6 +36,7 @@ export class ShoppingCartComponent implements OnInit {
     else {
       this.getShoppingCart();
     }
+      
   }
 
   getLocalStorageCart() {
@@ -43,7 +46,6 @@ export class ShoppingCartComponent implements OnInit {
       this.shoppingCartProducts = JSON.parse(productsRaw);
     }
   }
-
 
 
   async getShoppingCart() {
@@ -183,7 +185,7 @@ export class ShoppingCartComponent implements OnInit {
       const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(this.productsToBuy, false))
       console.log("ORDEN TEMPORAL: ", result)
       this.goToCheckout(result)
-      localStorage.removeItem("goToCheckout")
+      localStorage.setItem("goToCheckout", "false")
     }
     else {
       localStorage.setItem("goToCheckout", "true")

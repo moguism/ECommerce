@@ -35,8 +35,15 @@
 
                     <div class="basket-products-information-functions">
                         <button class="basket-products-information-Button" (click)="deleteProduct(product.id)"><i class="fa-solid fa-trash"></i></button>
+                        
+                        <!--
+                        
                         <button class="basket-products-information-Button" (click)="changeQuantity(product)"><i class="fa-solid fa-arrows-rotate"></i></button>
                         <input class="basket-products-information-functions-input" [id]="product.id" type="number" [value]="product.total">
+                        -->
+                        <app-quantity-modifier [productId]="product.id" [count]="product.total"> </app-quantity-modifier>
+
+
                     </div>
 
                     
