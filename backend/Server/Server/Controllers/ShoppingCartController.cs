@@ -68,6 +68,32 @@ namespace Server.Controllers
             return user.ShoppingCart.CartContent.Count;
         }
 
+
+        [Authorize]
+        [HttpPost("save")]
+        public async Task SaveShoppingCart([FromBody] List<CartContent> cartContent)
+        {
+
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return;
+            }
+
+
+            ShoppingCart cart = user.ShoppingCart;
+
+            if (cart == null)
+            {
+                return;
+            }
+
+            await _shoppingCartService.SaveShoppingCart(user, cartContent);
+        }
+
+
+
+
         [Authorize]
         [HttpDelete]
         public async Task RemoveProductFromShoppingCart([FromQuery] int productId)

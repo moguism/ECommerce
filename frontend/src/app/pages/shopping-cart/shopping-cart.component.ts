@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -18,76 +18,62 @@ import { QuantityModifierComponent } from '../../components/quantity-modifier/qu
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
-export class ShoppingCartComponent implements OnInit {
-  shoppingCartProducts: Product[] = []
+export class ShoppingCartComponent implements OnInit, OnDestroy {
   productsToBuy: CartContent[] = [];
 
 
-  constructor(private productService: ProductService, private apiService: ApiService, private router: Router, private shoppingCartService: ShoppingCartService) { }
+  constructor(private productService: ProductService, private apiService: ApiService, private router: Router,
+    public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
-    
+
     const goToCheckout = localStorage.getItem("goToCheckout")
-    console.log("yctgvtuhbijnokl  --- " + goToCheckout)
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
       return
     }
     else {
-      this.getShoppingCart();
+      this.shoppingCartService.getShoppingCart();
     }
-      
-  }
 
-  getLocalStorageCart() {
-    //this.shoppingCartProducts = [];
-    const productsRaw = localStorage.getItem("shoppingCart");
-    if (productsRaw) {
-      this.shoppingCartProducts = JSON.parse(productsRaw);
-    }
   }
 
 
-  async getShoppingCart() {
-    //this.shoppingCartService.getShoppingCartCount()
-    this.shoppingCartProducts = [];
-
-    /*if (this.apiService.jwt !== "" && this.shoppingCartProducts.length > 0) {
-      console.log("Sincronizando productos locales al carrito del backend...");
-
-      for (const product of this.shoppingCartProducts) {
-        const cartContent = new CartContent(product.id, product.total);
-        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent);
-      }
-
-      localStorage.removeItem("shoppingCart");
-      
-    }*/
-
-    // Podríamos optimizar esto haciendo que en el login ponga el contenido del carrito en el localStorage, de manera que no tenga que hacer peticiones
-    // Sin embargo, si un admin borra o cambia un producto, cagamos
-    if (this.apiService.jwt !== "") {
-      const result = await this.apiService.get("ShoppingCart", {}, 'json');
-      if (result.data) {
-        const data: any = result.data;
-        const cartContent: any[] = data.cartContent;
-        for (const product of cartContent) {
-          let p = product.product
-          p.total = product.quantity
-          p = this.shoppingCartService.addCorrectPath(p)
-          this.shoppingCartProducts.push(p);
-        }
-      }
-      console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
-
-      
+  async ngOnDestroy(): Promise<void> {
+    //Guarda los cambios del carrito
+    if (this.apiService.jwt == "") {
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts));
     }
-    else {
-      this.getLocalStorageCart();
+    else{
+
+      var cart : CartContent[] = []
+
+      this.shoppingCartService.shoppingCartProducts.forEach(product => {
+        cart.push(new CartContent(product.id,product.total,product))
+      });
+
+      await this.apiService.post("ShoppingCart/save", cart)
+
     }
 
-    
-    this.shoppingCartService.contProduct = this.shoppingCartProducts.length
+
+  }
+
+  saveShoppingCart(): void{
+
+  }
+
+
+
+  //Actualiza el contador del producto cuando se actualiza en el componente
+  async onCountChange(event: { productId: number, newCount: number }) {
+    const { productId, newCount } = event;
+
+    const p = this.shoppingCartService.findProductInArray(productId);
+    if (p) {
+      p.total = newCount;
+    }
+
 
   }
 
@@ -105,67 +91,41 @@ export class ShoppingCartComponent implements OnInit {
 
     if (input) {
       if (this.apiService.jwt == "") {
-        const p = this.findProductInArray(product.id)
+        const p = this.shoppingCartService.findProductInArray(product.id)
         p.total = parseInt(input.value);
-        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts));
       }
       else {
         localStorage.removeItem("shoppingCart")
 
         const cartContent = new CartContent(product.id, parseInt(input.value), product)
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
-        this.getShoppingCart()
+        this.shoppingCartService.getLocalStorageCart()
       }
     }
   }
 
-  async deleteProduct(productId: number) {
-    const index = this.shoppingCartProducts.findIndex(product => product.id === productId);
 
-    if (index !== -1) {
-      const product = this.shoppingCartProducts[index];
 
-      if (product.total > 1) {
-        product.total -= 1;
-      } else {
-        this.shoppingCartProducts.splice(index, 1);
-      }
-
-      if (this.apiService.jwt == "") {
-        this.deleteFromArray(product, false)
-      }
-      else {
-        await this.apiService.delete("ShoppingCart", { productId })
-        this.getShoppingCart()
-      }
-    }
-
-  }
-
-  findProductInArray(id: number): Product {
-    const index = this.shoppingCartProducts.findIndex(product => product.id === id);
-    const product = this.shoppingCartProducts[index];
-    return product;
-  }
 
   async pay(method: string) {
 
 
-    if (this.shoppingCartProducts.length == 0) {
+    if (this.shoppingCartService.shoppingCartProducts.length == 0) {
       alert("No hay nada que pagar, bobolón")
       return
     }
-    for (const product of this.shoppingCartProducts) {
+    for (const product of this.shoppingCartService.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.deleteFromArray(product, true)
+          this.shoppingCartService.deleteFromArray(product, true)
           return
         }
       }
       else {
-        this.deleteFromArray(product, true)
+        this.shoppingCartService.deleteFromArray(product, true)
         return
       }
 
@@ -195,9 +155,9 @@ export class ShoppingCartComponent implements OnInit {
 
   // Esta función solo debería servir para el carrito local
   async createDirectPayment() {
-    this.getLocalStorageCart()
+    this.shoppingCartService.getLocalStorageCart()
     const cartContents: CartContent[] = []
-    for (const product of this.shoppingCartProducts) {
+    for (const product of this.shoppingCartService.shoppingCartProducts) {
       const cartContent = new CartContent(product.id, product.total, product)
       cartContents.push(cartContent)
     }
@@ -219,18 +179,10 @@ export class ShoppingCartComponent implements OnInit {
     }
   }
 
-  deleteFromArray(product: Product, showAlert: boolean) {
-    const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
-    this.shoppingCartProducts.splice(index, 1);
-    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
-    if (showAlert) {
-      alert("Uno o varios productos han sido eliminados por falta de stock")
-    }
-  }
 
   totalprice() {
     let totalcount = 0;
-    for (const product of this.shoppingCartProducts) {
+    for (const product of this.shoppingCartService.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
     if(totalcount<5000 && totalcount>0){
@@ -239,6 +191,9 @@ export class ShoppingCartComponent implements OnInit {
       return totalcount;
     }
   }
+
+  /*
+
   sumar(index: number) {
     const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
     this.shoppingCartProducts[quantity].total++;
@@ -249,6 +204,7 @@ export class ShoppingCartComponent implements OnInit {
       this.shoppingCartProducts[quantity].total--;
     }
   }
+    */
 
 
 

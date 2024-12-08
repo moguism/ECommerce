@@ -88,7 +88,8 @@ export class ProductViewComponent implements OnInit {
   }
 
   //Actualiza el contador del producto cuando se actualiza en el componente
-  onCountChange(newCount: number) {
+  async onCountChange(event: { productId: number, newCount: number }) {
+    const { productId, newCount } = event;
     this.count = newCount;
   }
 

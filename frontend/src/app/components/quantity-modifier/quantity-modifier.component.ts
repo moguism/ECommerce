@@ -13,7 +13,7 @@ export class QuantityModifierComponent implements OnInit {
 
   @Input() productId!: number;
   @Input() count!: number;
-  @Output() countChange = new EventEmitter<number>();
+  @Output() countChange = new EventEmitter<{ productId: number; newCount: number }>();
 
   product: Product | null = null;
 
@@ -38,7 +38,7 @@ export class QuantityModifierComponent implements OnInit {
     if (this.product) {
       if (this.count + 1 <= this.product?.stock) {
         this.count++;
-        this.countChange.emit(this.count);
+        this.countChange.emit({ productId: this.productId, newCount: this.count });
       }
     }
   }
@@ -46,7 +46,7 @@ export class QuantityModifierComponent implements OnInit {
   restar() {
     if (this.count > 1) {
       this.count--
-      this.countChange.emit(this.count); 
+      this.countChange.emit({ productId: this.productId, newCount: this.count });
     }
   }
 

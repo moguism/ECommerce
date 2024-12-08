@@ -58,6 +58,25 @@ namespace Server.Services
         }
 
 
+        public async Task SaveShoppingCart(User user, List<CartContent> cartContents)
+        {
+
+            //Guarda los cambios del carrito del usuario
+            foreach (var cartContent in cartContents)
+            {
+
+                await AddProductsToShoppingCart(user,cartContent,false);
+
+            }
+
+
+            await _unitOfWork.SaveAsync();
+        }
+
+
+
+
+
         public async Task RemoveProductFromShoppingCart(User user, int productId)
         {
             _unitOfWork.CartContentRepository.RemoveProductFromCartAsync(user, productId);
