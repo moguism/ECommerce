@@ -39,14 +39,12 @@ public class BlockchainController : ControllerBase
     public async Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
     {
         User user = await GetMinimumUser();
-        if(user == null)
+        if (user == null)
         {
             return null;
         }
 
         data.NetworkUrl = HttpUtility.UrlDecode(data.NetworkUrl);
-
-        EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
 
         TemporalOrder temporalOrder = await _temporalOrderService.GetLastTemporalOrder(user.Id);
         if (temporalOrder == null)
@@ -55,16 +53,20 @@ public class BlockchainController : ControllerBase
         }
 
         decimal total = temporalOrder.Wishlist.Products.Sum(product => product.PurchasePrice / 100m);
-
-        if(data.Euros >= total)
-        {
-            temporalOrder.HashOrSession = ethereumTransaction.Value;
-            await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
-        }
-        else
+        if (data.Euros < total)
         {
             return null;
         }
+
+        if (total < 50)
+        {
+            data.Euros += 3;
+        }
+
+        EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
+
+        temporalOrder.HashOrSession = ethereumTransaction.Value;
+        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
 
         return ethereumTransaction;
     }
