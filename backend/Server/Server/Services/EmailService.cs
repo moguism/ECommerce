@@ -41,6 +41,7 @@ namespace Server.Services
             string subject = "Envio de la compra realizada";
             StringBuilder body = new StringBuilder();
             body.AppendLine("<html> <h1 style='text-align: center;'>QUÉ BISHO GRACIAS POR COMPRAR</h1> <table style='border-collapse: collapse; width: 100%;'><tr style='text-align: center;'><td style=' border: solid 1px black; background-color: #99C080;'>Nombre</td><td style=' border: solid 1px black; background-color: #99C080;'>Imagen</td><td style=' border: solid 1px black; background-color: #99C080;'>Precio</td><td style=' border: solid 1px black; background-color: #99C080;'>Cantidad</td><td style=' border: solid 1px black; background-color: #99C080;'>Suma</td></tr>");
+           
             foreach (ProductsToBuy products in productsorder.Products)
             {
                 decimal price = 0;
@@ -51,8 +52,16 @@ namespace Server.Services
                 body.AppendLine($"<tr style='text-align: center;'><td>{oneproduct.Name}</td><td><img style='width: 100%; max-width: 100px; height: 100px; border-radius: 5px;' src='https://farminhouse.runasp.net{oneproduct.Image}'></td><td>{price}€</td><td>{products.Quantity}</td><td>{totalpricequantity}€</td></tr>");
                 totalprice += products.Quantity * oneproduct.Price;
             }
-            body.AppendLine("</table></html>");
+            body.AppendLine("</table>");
+            if (totalprice < 5000)
+            {
+                body.AppendLine("<h2 style='text-align: center;'>Coste de envio: 3€</h2>");
+                body.AppendLine($"<h2 style='text-align: center;'>Su pedido ha costado: {(totalprice+300)/100}€</h2>");
+            }
+            else
+            {
             body.AppendLine($"<h2 style='text-align: center;'>Su pedido ha costado: {totalprice / 100}€</h2>");
+            }
             if (paymetId == 1)
             {
                 body.AppendLine($"<h3 style='text-align: center;'>Metodo de pago: Tarjeta</h3>");

@@ -6,6 +6,9 @@
     <p class="user-data"><b>Correo: </b>{{user.email}}</p>
     <p class="user-data"><b>Dirección: </b>{{user.address}}</p>
     <p class="user-data"><b>Rol: </b>{{user.role}}</p>
+    @if(user.role=="Admin"){
+        <button class="btn-data" [routerLink]="'/adminstration'" >Vista admin</button>
+    }
     <button class="btn-data" (click)="formState = 'editData'">Editar datos del usuario</button>
     @if (formState == 'editData') {
     <div class="modal">
@@ -24,6 +27,7 @@
         </form>
     </div>
     }
+
     <h2>Listado de pedidos</h2>
     @if(orders.length != 0 && orders){
     @for (order of orders; track order.id){
@@ -53,92 +57,4 @@
     <h3>No se realizó ningun pedido</h3>
     }
 
-    }
-
-    @if (user?.role == "Admin") {
-    <div class="admin-menu">
-        <a (click)="changeElementShowing('users')">Usuarios</a>
-        <a (click)="changeElementShowing('products')">Productos</a>
-    </div>
-
-    @if (elementShowing == "users") {
-    @for (users of allUsers; track users.id) {
-    <div class="user">
-        <p><b>Nombre:</b> {{ users.name }}</p>
-        <p><b>Correo electrónico:</b> {{ users.email }}</p>
-        <p><b>Rol:</b> {{ users.role }}</p>
-        <button class="custom-button" (click)="showEditRoleForm(users)">Modificar rol</button>
-        <button class="custom-button" (click)="deleteUser(users.id)">Eliminar usuario</button>
-    </div>
-    }
-    @empty {
-    <p>No se han encontrado usuarios</p>
-    }
-    }
-
-    <!-- Formulario para editar rol -->
-    @if (formState == "editRole") {
-    <div class="modal">
-        <h3>Modificar rol</h3>
-        <form>
-            <label for="newRole">Nuevo rol:</label>
-            <select id="newRole" [(ngModel)]="editRoleValue" name="newRole" required>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-            </select>
-            <button type="submit" (click)="submitEditRole()">Guardar</button>
-            <button type="button" (click)="closeForm()">Cancelar</button>
-        </form>
-    </div>
-    }
-
-    @else if (elementShowing == "products") {
-    <br><button class="custom-button" (click)="showCreateProductForm()">Crear nuevo producto</button><br><br>
-    @for (product of allProducts; track product.id) {
-    <div class="product">
-        <img [src]="product.image.replace('images//images/', '/images/')" alt="{{ product.name }}" class="product-image" />
-        <p><b>ID:</b> {{ product.id }}</p>
-        <p><b>Nombre:</b> {{ product.name }}</p>
-        <p><b>Precio:</b> {{ product.price | eurosToCents }}</p>
-        <p><b>Stock:</b> {{ product.stock }}</p>
-        <p><b>Categoría:</b> {{ product.category.name | translate}}</p>
-        <button class="custom-button" (click)="showEditProductForm(product.id)">Editar producto</button>
-        <!--<button (click)="deleteProduct(product.id)">Eliminar producto</button>-->
-    </div>
-    }
-    @empty {
-    <p>Cargando productos...</p>
-    }
-
-    <!-- Formulario para crear producto (faltan más datos) -->
-    @if (formState == "createProduct" || formState == "modifyProduct") {
-    <div class="modal">
-        <h3>Datos a introducir: </h3>
-        <form>
-            <label for="productName">Nombre del producto:</label>
-            <input type="text" id="productName" [(ngModel)]="newProductName" name="productName" required />
-            <label for="productPrice">Precio:</label>
-            <input type="number" step="0.01" id="productPrice" [(ngModel)]="newProductPrice" name="productPrice"
-                pattern="[0-9]" required />
-            <label for="productCategory">Categoría:</label>
-            <!--<input type="text" id="productCategory" [(ngModel)]="newProductCategory" name="productCategory" required />-->
-            <select id="productCategory" [(ngModel)]="newProductCategory" name="newCategory" required>
-                <option value="Frutas">Frutas</option>
-                <option value="Verduras">Verduras</option>
-                <option value="Carnes">Carnes</option>
-            </select>
-            <label for="productStock">Stock del producto:</label>
-            <input type="number" id="productStock" [(ngModel)]="newProductStock" name="productStock" pattern="[0-9]"
-                required />
-            <label for="productCategory">Descripcion del producto:</label>
-            <input type="text" id="productDescription" [(ngModel)]="newproductDescription" name="productDescription"
-                required />
-            <label for="productImage">Foto del producto:</label>
-            <input type="file" accept="image/png, image/jpeg, image/jpg" required (change)="onFileSelected($event)">
-            <button type="submit" (click)="submitCreateProduct()">Subir datos</button>
-            <button type="button" (click)="closeForm()">Cancelar</button>
-        </form>
-    </div>
-    }
-    }
     }

@@ -73,7 +73,11 @@ public class BlockchainService
 
         //Total price €
         long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice);
-        decimal totalPriceEuros = totalPriceCents / 100;
+        if (totalPriceCents < 5000)
+        {
+            totalPriceCents += 300;
+        }
+        decimal totalPriceEuros = totalPriceCents / 100m;
 
         //ETH price
         CoinGeckoApi coinGeckoApi = new CoinGeckoApi();

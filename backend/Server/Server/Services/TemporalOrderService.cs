@@ -101,7 +101,10 @@ namespace Server.Services
         {
             //Total price €
             long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice * p.Quantity);
-            decimal totalPriceEuros = totalPriceCents / 100;
+            if (totalPriceCents < 5000) {
+                totalPriceCents += 300;
+            }
+            
 
             Order order = new Order
             {
