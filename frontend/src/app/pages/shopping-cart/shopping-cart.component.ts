@@ -86,32 +86,25 @@ export class ShoppingCartComponent implements OnInit {
     const index = this.shoppingCartService.shoppingCartProducts.findIndex(product => product.id === productId);
 
     if (index !== -1) {
-      const product = this.shoppingCartService.shoppingCartProducts[index];
+      this.shoppingCartService.shoppingCartProducts.splice(index, 1);
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts))
 
-      if (product.total > 1) {
-        product.total -= 1;
-      } else {
-        this.shoppingCartService.shoppingCartProducts.splice(index, 1);
-      }
-
-      if (this.apiService.jwt == "") {
-        this.deleteFromArray(product, false)
-      }
-      else {
+      if (this.apiService.jwt != "") {
         await this.apiService.delete("ShoppingCart", { productId })
         this.shoppingCartService.getShoppingCart()
       }
     }
   }
 
-  deleteFromArray(product: Product, showAlert: boolean) {
+  /*deleteFromArray(product: Product, showAlert: boolean) {
     const index = this.shoppingCartService.shoppingCartProducts.findIndex(p => p.id === product.id);
+    console.log("ÌNDICE: ", index)
     this.shoppingCartService.shoppingCartProducts.splice(index, 1);
     localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts))
     if (showAlert) {
       alert("Uno o varios productos han sido eliminados por falta de stock")
     }
-  }
+  }*/
 
 
   async pay(method: string) {

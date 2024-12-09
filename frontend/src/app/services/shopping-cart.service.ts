@@ -8,14 +8,10 @@ import { CartContent } from '../models/cart-content';
   providedIn: 'root'
 })
 export class ShoppingCartService {
-
-  total: number = 0
-  contProduct: number = 0
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
 
-
-
+  contProduct = 0
 
   constructor(private apiService: ApiService) { }
 
@@ -23,8 +19,10 @@ export class ShoppingCartService {
   getLocalStorageCart() {
     //this.shoppingCartProducts = [];
     const productsRaw = localStorage.getItem("shoppingCart");
+    console.log(productsRaw)
     if (productsRaw) {
       this.shoppingCartProducts = JSON.parse(productsRaw);
+      this.contProduct = this.shoppingCartProducts.length
     }
 
   }
@@ -70,15 +68,11 @@ export class ShoppingCartService {
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
 
-
+      this.contProduct = this.shoppingCartProducts.length
     }
     else {
       this.getLocalStorageCart();
     }
-
-
-    this.contProduct = this.shoppingCartProducts.length
-
   }
 
   async uploadCart(products: Product[], add: boolean) {
@@ -115,8 +109,6 @@ export class ShoppingCartService {
         await this.apiService.delete("ShoppingCart", { productId })
         await this.getShoppingCart()
       }
-
-      this.contProduct -= 1
     }
 
   }
@@ -136,19 +128,19 @@ export class ShoppingCartService {
     if (showAlert) {
       alert("Uno o varios productos han sido eliminados por falta de stock")
     }
+    this.contProduct -= 1
   }
 
 
 
 
-  async getShoppingCartCount() {
+  /*async getShoppingCartCount() {
     // Si quisiésemos podríamos recorrer el Array e ir sumando las cantidades con un for, ya como veáis
     if (this.apiService.jwt != "" && this.apiService.jwt != null) {
       const result = await this.apiService.get("ShoppingCart", {}, 'json');
       if (result.data) {
         const data: any = result.data;
         console.log("DATA MONDONGO: ", data)
-        this.total = data.cartContent.length
       }
     }
     else {
@@ -156,10 +148,9 @@ export class ShoppingCartService {
       if (cart) {
         const cartObject = JSON.parse(cart)
         console.log("CART OBJECT: ", cartObject)
-        this.total = cartObject.length
       }
     }
-  }
+  }*/
 
   addCorrectPath(product: Product) {
     product.image = environment.imageRouteBasic + product.image
