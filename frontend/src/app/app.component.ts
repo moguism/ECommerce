@@ -23,9 +23,16 @@ export class AppComponent implements OnInit {
 
 
   //Guarda el carrito cuando cierra la página
-  @HostListener('window:beforeunload', ['$event'])
-  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> {
-    await this.shoppingCartService.saveShoppingCart();
+  @HostListener('window:beforeunload', ['$event']) 
+  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> 
+  {
+     const confirmationMessage = "Guardando el carrito..."; 
+     event.returnValue = confirmationMessage; 
+     
+     // Establece el mensaje de confirmación 
+     await this.shoppingCartService.saveShoppingCart(); 
+
+     
   }
 
 }
