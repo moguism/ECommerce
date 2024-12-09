@@ -46,6 +46,8 @@ public class BlockchainController : ControllerBase
 
         data.NetworkUrl = HttpUtility.UrlDecode(data.NetworkUrl);
 
+        EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
+
         TemporalOrder temporalOrder = await _temporalOrderService.GetLastTemporalOrder(user.Id);
         if (temporalOrder == null)
         {
@@ -53,20 +55,16 @@ public class BlockchainController : ControllerBase
         }
 
         decimal total = temporalOrder.Wishlist.Products.Sum(product => product.PurchasePrice / 100m);
-        if (data.Euros < total)
+
+        if (data.Euros >= total)
+        {
+            temporalOrder.HashOrSession = ethereumTransaction.Value;
+            await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
+        }
+        else
         {
             return null;
         }
-
-        if (total < 50)
-        {
-            data.Euros += 3;
-        }
-
-        EthereumTransaction ethereumTransaction = await _blockchainService.GetEthereumInfoAsync(data);
-
-        temporalOrder.HashOrSession = ethereumTransaction.Value;
-        await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
 
         return ethereumTransaction;
     }
@@ -76,17 +74,17 @@ public class BlockchainController : ControllerBase
     public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
         User user = await GetAuthorizedUserWithCart();
-        if(user == null)
+        if (user == null)
         {
             return null;
         }
 
         bool done = await _blockchainService.CheckTransactionAsync(data);
-        if(done == true)
+        if (done == true)
         {
-            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user , 2);
+            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
 
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }
