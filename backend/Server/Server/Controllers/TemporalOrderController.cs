@@ -35,7 +35,7 @@ namespace Server.Controllers
             }
 
             TemporalOrder temporalOrder = await _temporalOrderService.GetFullTemporalOrderById(id);
-            if(temporalOrder == null)
+            if (temporalOrder == null)
             {
                 return null;
             }
@@ -54,9 +54,9 @@ namespace Server.Controllers
             }
 
             //Añade una nueva orden temporal con los datos del usuario
-            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user,temporalOrderDto.Quick, temporalOrderDto);
+            TemporalOrder order = await _temporalOrderService.CreateTemporalOrder(user, temporalOrderDto.Quick, temporalOrderDto);
 
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }

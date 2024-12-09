@@ -1,4 +1,4 @@
-<app-header [name]="user?.name || 'NULL'"></app-header>
+<app-header [name]="userService.userName"></app-header>
 <div class="user-data-container">
     <h2>Inicio de sesión y seguridad</h2>
     @if(user){

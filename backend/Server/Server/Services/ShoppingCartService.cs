@@ -58,14 +58,14 @@ namespace Server.Services
         }
 
 
-        public async Task SaveShoppingCart(User user, List<CartContent> cartContents)
+        public async Task SaveShoppingCart(User user, List<CartContent> cartContents, bool add)
         {
 
             //Guarda los cambios del carrito del usuario
             foreach (var cartContent in cartContents)
             {
 
-                await AddProductsToShoppingCart(user,cartContent,false);
+                await AddProductsToShoppingCart(user,cartContent,add);
 
             }
 
