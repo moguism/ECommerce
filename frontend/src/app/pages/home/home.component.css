@@ -120,7 +120,7 @@
 .centered-image-stop{
     transition: 2s;
     position: fixed;
-    top: 35%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 999;
@@ -289,7 +289,7 @@
         width: 32%;
     }
     .centered-image-stop{
-        top: 60%;
+        top: 40%;
     }
 }
 
@@ -307,6 +307,15 @@
     #third-animated-section {
         font-size: 12px;
         width: 30%;
+    }
+    .centered-image-stop{
+        top: 45%;
+    }
+}
+
+@media (max-width: 600px){
+    .centered-image-stop{
+        top: 65%;
     }
 }
 
