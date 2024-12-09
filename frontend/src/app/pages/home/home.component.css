@@ -3,8 +3,18 @@
     flex-direction: column;
 }
 
-.centered-image {
+@keyframes centered-image-movement{
+    from{
+        transform: translate(-50%,-50px);
+    }
+    to{
+        transform: translate(-50%,50px);
+    }
+}
+
+.centered-image::before {
     transition: 2s;
+    content: '';
     position: fixed;
     top: 50%;
     left: 50%;
@@ -14,14 +24,19 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
     background-image: url("../../../../public/truck1.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.centered-image-2 {
+.centered-image-2::before {
     transition: 2s;
+    content: '';
     position: fixed;
     top: 50%;
     left: 50%;
@@ -31,14 +46,19 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
     background-image: url("../../../../public/truck2.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.centered-image-3 {
+.centered-image-3::before {
     transition: 2s;
+    content: '';
     position: fixed;
     top: 50%;
     left: 50%;
@@ -48,14 +68,19 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
     background-image: url("../../../../public/truck3.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.centered-image-4 {
+.centered-image-4::before {
     transition: 2s;
+    content: '';
     position: fixed;
     top: 50%;
     left: 50%;
@@ -65,14 +90,19 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
     background-image: url("../../../../public/truck4.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.centered-image-5 {
+.centered-image-5::before {
     transition: 2s;
+    content: '';
     position: fixed;
     top: 50%;
     left: 50%;
@@ -82,16 +112,21 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
-    background-image: url("../../../../public/truck5.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    background-image: url("../../../../public/truck5.png");
 }
 
-.centered-image-stop{
+.centered-image-stop::before {
+    content: '';
     transition: 2s;
     position: fixed;
-    top: 35%;
+    top: 20%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 999;
@@ -99,10 +134,19 @@
     height: 15vw;
     max-width: 200px;
     max-height: 200px;
-    background-image: url("../../../../public/truck6.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    animation-name: centered-image-movement;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    background-image: url("../../../../public/truck6.png");
+}
+
+.not-display
+{
+    z-index: -1;
 }
 
 @keyframes textAnimation {
@@ -239,6 +283,7 @@
 }*/
 
 /* RESPONSIVE */
+
 @media (max-width: 1160px) {
     #animated-section {
         font-size: 18px;
@@ -255,7 +300,7 @@
         width: 32%;
     }
     .centered-image-stop{
-        top: 60%;
+        top: 40%;
     }
 }
 
@@ -273,6 +318,15 @@
     #third-animated-section {
         font-size: 12px;
         width: 30%;
+    }
+    .centered-image-stop{
+        top: 45%;
+    }
+}
+
+@media (max-width: 600px){
+    .centered-image-stop{
+        top: 65%;
     }
 }
 

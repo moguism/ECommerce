@@ -18,7 +18,7 @@ import { QuantityModifierComponent } from '../../components/quantity-modifier/qu
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
-export class ShoppingCartComponent implements OnInit, OnDestroy {
+export class ShoppingCartComponent implements OnInit {
   productsToBuy: CartContent[] = [];
 
 
@@ -26,7 +26,11 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
-
+    if(localStorage.getItem("sync"))
+    {
+      await this.shoppingCartService.syncronizeCart()
+      localStorage.removeItem("sync")
+    }
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
@@ -37,16 +41,6 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     }
 
   }
-
-
-  async ngOnDestroy(): Promise<void> {
-    //Guarda los cambios del carrito
-    await this.shoppingCartService.saveShoppingCart()
-
-
-  }
-
-
 
   //Actualiza el contador del producto cuando se actualiza en el componente
   async onCountChange(event: { productId: number, newCount: number }) {
