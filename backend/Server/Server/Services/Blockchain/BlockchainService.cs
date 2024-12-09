@@ -63,7 +63,7 @@ public class BlockchainService
         return ethereumService.CheckTransactionAsync(data.Hash, data.From, data.To, data.Value);
     }
 
-    public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user ,  int paymentType)
+    public async Task<Order> CreateOrderFromTemporal(string hashOrSessionOrder, string hashOrSessionTemporal, User user, int paymentType)
     {
         TemporalOrder temporalOrder = await _unitOfWork.TemporalOrderRepository.GetFullTemporalOrderByHash(hashOrSessionTemporal);
         if (temporalOrder == null)
@@ -72,7 +72,7 @@ public class BlockchainService
         }
 
         //Total price €
-        long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice);
+        long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice * p.Quantity);
         decimal totalPriceEuros = totalPriceCents / 100;
 
         //ETH price

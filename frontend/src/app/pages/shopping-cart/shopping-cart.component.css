@@ -33,6 +33,7 @@
 
 }
 .basket{
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -56,7 +57,7 @@
     border-radius: 8px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
 
-
+    margin: 2%;
     align-items:first center;
     justify-content: center;
     height: 100%;
@@ -86,11 +87,25 @@
 }
 
 .basket-products-information {
-    display: grid;
-    grid-template-columns: 60% 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;   
     font-size: 1.2rem;
 }
 
+.basket-products-information-price{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left; 
+}
+
+
+.basket-products-information-quantity-modifier{
+     width: 100%;
+}
 
 
 .basket-products-information-Button{

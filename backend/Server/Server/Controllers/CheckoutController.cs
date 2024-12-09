@@ -41,10 +41,12 @@ public class CheckoutController : ControllerBase
         }
 
         var lineItems = new List<SessionLineItemOptions>();
+        long totalamount = 0;
 
         foreach (ProductsToBuy cartContent in temporalOrder.Wishlist.Products)
         {
             var product = cartContent.Product;
+            
             // Crea un SessionLineItemOptions para cada producto en el carrito
             var lineItem = new SessionLineItemOptions
             {
@@ -63,9 +65,28 @@ public class CheckoutController : ControllerBase
             };
 
             lineItems.Add(lineItem);
+            totalamount += product.Price * cartContent.Quantity;
 
         }
+        if (totalamount < 5000)
+        {
+            var shippingLineItem = new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    Currency = "eur",
+                    UnitAmount = (long)(3 * 100), 
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = "Costo de Envío",
+                        Description = "Envío estándar"
+                    }
+                },
+                Quantity = 1
+            };
 
+            lineItems.Add(shippingLineItem);
+        }
         // Configurar la sesión de pago con los LineItems del carrito
         SessionCreateOptions options = new SessionCreateOptions
         {

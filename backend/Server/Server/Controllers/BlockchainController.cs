@@ -39,7 +39,7 @@ public class BlockchainController : ControllerBase
     public async Task<EthereumTransaction> CreateTransaction([FromBody] CreateTransactionRequest data)
     {
         User user = await GetMinimumUser();
-        if(user == null)
+        if (user == null)
         {
             return null;
         }
@@ -56,7 +56,7 @@ public class BlockchainController : ControllerBase
 
         decimal total = temporalOrder.Wishlist.Products.Sum(product => product.PurchasePrice / 100m);
 
-        if(data.Euros >= total)
+        if (data.Euros >= total)
         {
             temporalOrder.HashOrSession = ethereumTransaction.Value;
             await _temporalOrderService.UpdateTemporalOrder(temporalOrder);
@@ -74,17 +74,17 @@ public class BlockchainController : ControllerBase
     public async Task<Order> CheckTransactionAsync([FromBody] CheckTransactionRequest data)
     {
         User user = await GetAuthorizedUserWithCart();
-        if(user == null)
+        if (user == null)
         {
             return null;
         }
 
         bool done = await _blockchainService.CheckTransactionAsync(data);
-        if(done == true)
+        if (done == true)
         {
-            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user , 2);
+            Order order = await _blockchainService.CreateOrderFromTemporal(data.Hash, data.Value, user, 2);
 
-            if(order == null)
+            if (order == null)
             {
                 return null;
             }
