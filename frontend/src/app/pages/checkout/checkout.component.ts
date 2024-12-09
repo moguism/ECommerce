@@ -127,11 +127,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     for (const product of this.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
-    if(totalcount<5000){
-      return totalcount+300;
-    }else{
-      return totalcount;
-    }
+    return totalcount;
   }
 
   startAutoRefresh() {

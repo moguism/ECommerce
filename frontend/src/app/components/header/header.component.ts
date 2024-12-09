@@ -69,7 +69,6 @@ export class HeaderComponent implements OnInit {
   }
 
   async deleteToken() {
-    await this.shoppingCartService.saveShoppingCart()
     this.apiService.deleteToken();
     await this.router.navigateByUrl("login");
     window.location.reload()

@@ -53,15 +53,9 @@ namespace Server.Services
                 totalprice += products.Quantity * oneproduct.Price;
             }
             body.AppendLine("</table>");
-            if (totalprice < 5000)
-            {
-                body.AppendLine("<h2 style='text-align: center;'>Coste de envio: 3€</h2>");
-                body.AppendLine($"<h2 style='text-align: center;'>Su pedido ha costado: {(totalprice+300)/100}€</h2>");
-            }
-            else
-            {
+            
             body.AppendLine($"<h2 style='text-align: center;'>Su pedido ha costado: {totalprice / 100}€</h2>");
-            }
+            
             if (paymetId == 1)
             {
                 body.AppendLine($"<h3 style='text-align: center;'>Metodo de pago: Tarjeta</h3>");

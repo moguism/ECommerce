@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -191,11 +191,7 @@ export class ShoppingCartComponent implements OnInit {
     for (const product of this.shoppingCartService.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
-    if(totalcount<5000 && totalcount>0){
-      return totalcount+300;
-    }else{
-      return totalcount;
-    }
+    return totalcount;
   }
 
   /*
@@ -211,16 +207,5 @@ export class ShoppingCartComponent implements OnInit {
     }
   }
     */
-
-
-
-  //Guarda el carrito cuando cierra la página
-  @HostListener('window:beforeunload', ['$event'])
-  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> {
-    await this.shoppingCartService.saveShoppingCart();
-  }
-
-
-
 
 }

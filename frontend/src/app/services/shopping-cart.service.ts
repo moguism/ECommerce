@@ -81,26 +81,6 @@ export class ShoppingCartService {
 
   }
 
-  async saveShoppingCart(): Promise<void> {
-    localStorage.setItem("sync", "true")
-    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
-    //Guarda los cambios del carrito
-    /*if (this.apiService.jwt == "") {
-      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
-    }
-    else{
-
-      var cart : CartContent[] = []
-
-      this.shoppingCartProducts.forEach(product => {
-        cart.push(new CartContent(product.id,product.total,product))
-      });
-
-      await this.apiService.post("ShoppingCart/save", cart)
-
-    }*/
-  }
-
   async uploadCart(products: Product[], add: boolean) {
     var cart: CartContent[] = []
 
@@ -108,7 +88,12 @@ export class ShoppingCartService {
       cart.push(new CartContent(product.id, product.total, product))
     });
 
-    await this.apiService.post("ShoppingCart/save", cart, {"add" : add})
+    const result = await this.apiService.post("ShoppingCart/save", cart, {"add" : add})
+    if(result.data)
+    {
+      const data: any = result.data
+      this.contProduct = data
+    }
   }
 
   async deleteProduct(productId: number) {
@@ -128,8 +113,10 @@ export class ShoppingCartService {
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })
-        this.getShoppingCart()
+        await this.getShoppingCart()
       }
+
+      this.contProduct -= 1
     }
 
   }

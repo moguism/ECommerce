@@ -71,13 +71,13 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("save")]
-        public async Task SaveShoppingCart([FromBody] List<CartContent> cartContent, [FromQuery] bool add)
+        public async Task<int> SaveShoppingCart([FromBody] List<CartContent> cartContent, [FromQuery] bool add)
         {
 
             User user = await GetAuthorizedUser();
             if (user == null)
             {
-                return;
+                return 0;
             }
 
 
@@ -85,10 +85,11 @@ namespace Server.Controllers
 
             if (cart == null)
             {
-                return;
+                return 0;
             }
 
             await _shoppingCartService.SaveShoppingCart(user, cartContent, add);
+            return user.ShoppingCart.CartContent.Count;
         }
 
 
