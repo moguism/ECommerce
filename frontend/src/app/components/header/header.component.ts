@@ -38,9 +38,10 @@ export class HeaderComponent implements OnInit {
 
       const result = await this.apiService.get<ShoppingCart>("ShoppingCart", {}, 'json');
       const shoppingCart: ShoppingCart | null = result.data
-      if (shoppingCart?.cartContent.length)
+      if (shoppingCart?.cartContent){
         this.shoppingCartService.contProduct = shoppingCart?.cartContent.length
-      console.log(this.contProducts)
+        console.log("Actualizado contador " + this.contProducts)
+      }
 
       //Si inicia sesión, actualiza el nombre del header
       if (this.userService.userName == "") {
@@ -64,10 +65,6 @@ export class HeaderComponent implements OnInit {
       }
 
     }
-
-
-
-
 
   }
 
