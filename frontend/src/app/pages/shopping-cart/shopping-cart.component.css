@@ -103,10 +103,15 @@
 }
 
 
-.basket-products-information-quantity-modifier{
-     width: 100%;
+.basket-products-information-quantity-modifier {
+    width: 100%;
+    display: flex;
+    align-items: center; 
 }
 
+.quantity-modifier{
+    width: 100%;
+}
 
 .basket-products-information-Button{
     width: 50px;
