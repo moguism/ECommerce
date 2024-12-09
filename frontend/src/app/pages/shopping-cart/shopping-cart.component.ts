@@ -18,7 +18,7 @@ import { QuantityModifierComponent } from '../../components/quantity-modifier/qu
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
-export class ShoppingCartComponent implements OnInit {
+export class ShoppingCartComponent implements OnInit, OnDestroy {
   productsToBuy: CartContent[] = [];
 
 
@@ -26,8 +26,6 @@ export class ShoppingCartComponent implements OnInit {
     public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
-    
-
     if(localStorage.getItem("sync"))
     {
       await this.shoppingCartService.syncronizeCart(false)
@@ -42,6 +40,10 @@ export class ShoppingCartComponent implements OnInit {
       this.shoppingCartService.getShoppingCart();
     }
 
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    await this.shoppingCartService.saveShoppingCart()
   }
 
   //Actualiza el contador del producto cuando se actualiza en el componente
