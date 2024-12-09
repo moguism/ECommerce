@@ -1,7 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService } from './services/api.service';
-import { ShoppingCartService } from './services/shopping-cart.service';
 
 @Component({
   selector: 'app-root',
@@ -14,16 +12,9 @@ import { ShoppingCartService } from './services/shopping-cart.service';
 export class AppComponent implements OnInit {
   title = 'frontend';
 
-  constructor(private shoppingCartService: ShoppingCartService) {}
-
-  @HostListener('window:beforeunload', ['$event'])
-  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> {
-    await this.shoppingCartService.saveShoppingCart();
-  }
-
-
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     console.log(window.ethereum);
+
   }
 
 }

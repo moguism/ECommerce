@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
 import { ApiService } from '../../services/api.service';
@@ -189,6 +189,13 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   }
     */
 
+
+
+  //Guarda el carrito cuando cierra la página
+  @HostListener('window:beforeunload', ['$event'])
+  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> {
+    await this.shoppingCartService.saveShoppingCart();
+  }
 
 
 
