@@ -9,12 +9,11 @@ import { Router } from '@angular/router';
 import { TemporalOrder } from '../../models/temporal-order';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
-import { QuantityModifierComponent } from '../../components/quantity-modifier/quantity-modifier.component';
 
 @Component({
   selector: 'app-shopping-cart',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, EurosToCentsPipe, QuantityModifierComponent],
+  imports: [HeaderComponent, FormsModule, EurosToCentsPipe],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css'
 })
@@ -77,12 +76,42 @@ export class ShoppingCartComponent implements OnInit {
 
         const cartContent = new CartContent(product.id, parseInt(input.value), product)
         await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
-        this.shoppingCartService.getLocalStorageCart()
+        this.shoppingCartService.getShoppingCart()
       }
     }
   }
 
 
+  async deleteProduct(productId: number) {
+    const index = this.shoppingCartService.shoppingCartProducts.findIndex(product => product.id === productId);
+
+    if (index !== -1) {
+      const product = this.shoppingCartService.shoppingCartProducts[index];
+
+      if (product.total > 1) {
+        product.total -= 1;
+      } else {
+        this.shoppingCartService.shoppingCartProducts.splice(index, 1);
+      }
+
+      if (this.apiService.jwt == "") {
+        this.deleteFromArray(product, false)
+      }
+      else {
+        await this.apiService.delete("ShoppingCart", { productId })
+        this.shoppingCartService.getShoppingCart()
+      }
+    }
+  }
+
+  deleteFromArray(product: Product, showAlert: boolean) {
+    const index = this.shoppingCartService.shoppingCartProducts.findIndex(p => p.id === product.id);
+    this.shoppingCartService.shoppingCartProducts.splice(index, 1);
+    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts))
+    if (showAlert) {
+      alert("Uno o varios productos han sido eliminados por falta de stock")
+    }
+  }
 
 
   async pay(method: string) {
