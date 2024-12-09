@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
       return;
     }
     this.jwt = this.apiService.jwt;
-    await this.shoppingCartService.getShoppingCart()
+    await this.shoppingCartService.getShoppingCartCount()
     if (this.jwt != "") {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)

@@ -22,6 +22,26 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpGet("total")]
+        public async Task<int> GetShoppingCartTotal()
+        {
+            User user = await GetAuthorizedUser();
+            if (user == null)
+            {
+                return 0;
+            }
+
+            ShoppingCart shoppingCart = user.ShoppingCart;
+            if (shoppingCart == null)
+            {
+                return 0;
+            }
+
+            ShoppingCartMapper shoppingCartMapper = new ShoppingCartMapper();
+            return shoppingCart.CartContent.Count;
+        }
+
+        [Authorize]
         [HttpGet]
         public async Task<ShoppingCartDto> GetShoppingCart()
         {

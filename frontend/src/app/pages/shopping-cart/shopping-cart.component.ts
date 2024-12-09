@@ -19,8 +19,6 @@ import Swal from 'sweetalert2';
   styleUrl: './shopping-cart.component.css'
 })
 export class ShoppingCartComponent implements OnInit {
-  productsToBuy: CartContent[] = [];
-
 
   constructor(private productService: ProductService, private apiService: ApiService, private router: Router,
     public shoppingCartService: ShoppingCartService) { }
@@ -36,9 +34,9 @@ export class ShoppingCartComponent implements OnInit {
       await this.createDirectPayment();
       return
     }
-    /*else {
+    else {
       this.shoppingCartService.getShoppingCart();
-    }*/
+    }
 
   }
 
@@ -110,7 +108,7 @@ export class ShoppingCartComponent implements OnInit {
 
 
   async pay(method: string) {
-
+    const productsToBuy : CartContent[] = []
 
     if (this.shoppingCartService.shoppingCartProducts.length == 0) {
       alert("No hay nada que pagar, bobolón")
@@ -118,18 +116,16 @@ export class ShoppingCartComponent implements OnInit {
     }
     for (const product of this.shoppingCartService.shoppingCartProducts) {
       const newProduct = await this.productService.getById(product.id)
+      console.log("NEW PRODUCT: ", newProduct)
+      console.log("OLD PRODUCT: ", product)
       if (newProduct) {
-        const difference = newProduct.stock - product.stock;
+        const difference = newProduct.stock - product.total;
+        console.log("DIFERENCIA: ", difference)
         if (difference < 0) {
           await this.shoppingCartService.deleteFromArray(product)
           this.shoppingCartService.mostraralert()
           return
         }
-      }
-      else {
-        await this.shoppingCartService.deleteFromArray(product)
-        this.shoppingCartService.mostraralert()
-        return
       }
 
       //Añade productos a lista de los productos que el usuario quiere comprar
@@ -139,13 +135,13 @@ export class ShoppingCartComponent implements OnInit {
         Product: product // Usar `product.stock` si `product.total` no existe
       };
 
-      this.productsToBuy.push(orderProduct)
+      productsToBuy.push(orderProduct)
 
     }
 
     localStorage.setItem("method", method)
     if (this.apiService.jwt != "") {
-      const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(this.productsToBuy, false))
+      const result = await this.apiService.post("TemporalOrder/newTemporalOrder", new TemporalOrder(productsToBuy, false))
       console.log("ORDEN TEMPORAL: ", result)
       this.goToCheckout(result)
       localStorage.setItem("goToCheckout", "false")

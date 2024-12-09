@@ -45,12 +45,22 @@ export class ShoppingCartService {
     }
   }
 
+  async getShoppingCartCount()
+  {
+    const response = await this.apiService.get("ShoppingCart/total")
+    //console.log("RESPONSE: ", response)
+    if(response.data)
+    {
+      //console.log("DATAAAAAAAAAAAAAAA", response.data)
+      const data : any = response.data
+      this.contProduct = data
+    }
+  }
+
 
   async getShoppingCart() {
 
     this.shoppingCartProducts = [];
-
-
 
     // Podríamos optimizar esto haciendo que en el login ponga el contenido del carrito en el localStorage, de manera que no tenga que hacer peticiones
     // Sin embargo, si un admin borra o cambia un producto, cagamos
@@ -59,10 +69,8 @@ export class ShoppingCartService {
       if (result.data) {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
-        console.log("CART CONTEEEEEEEEEEEEEEENT", cartContent)
         for (const product of cartContent) {
           let p: Product = product.product
-          console.log("PRODUCTOOOOOOOOOOOOO", p)
           if (p.stock <= 0) {
             await this.deleteFromArray(p)
             this.mostraralert()
