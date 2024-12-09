@@ -30,7 +30,7 @@ export class ShoppingCartComponent implements OnInit {
 
     if(localStorage.getItem("sync"))
     {
-      await this.shoppingCartService.syncronizeCart()
+      await this.shoppingCartService.syncronizeCart(false)
       localStorage.removeItem("sync")
     }
     const goToCheckout = localStorage.getItem("goToCheckout")
