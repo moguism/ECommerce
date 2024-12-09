@@ -26,6 +26,8 @@ export class ShoppingCartComponent implements OnInit {
     public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
+    
+
     if(localStorage.getItem("sync"))
     {
       await this.shoppingCartService.syncronizeCart()
@@ -44,6 +46,7 @@ export class ShoppingCartComponent implements OnInit {
 
   //Actualiza el contador del producto cuando se actualiza en el componente
   async onCountChange(event: { productId: number, newCount: number }) {
+    console.log(this.shoppingCartService.isSaved)
     const { productId, newCount } = event;
 
     const p = this.shoppingCartService.findProductInArray(productId);
@@ -51,39 +54,10 @@ export class ShoppingCartComponent implements OnInit {
       p.total = newCount;
     }
 
+    this.shoppingCartService.isSaved = false
+    console.log("no guardado")
 
   }
-
-  async changeQuantity(product: Product) {
-    const input = document.getElementById(product.id.toString()) as HTMLInputElement
-    if (input && parseInt(input.value) <= 0) {
-      alert("Cantidad no válida")
-      return
-    }
-
-    if (parseInt(input.value) > product.stock) {
-      alert("No hay stock suficiente")
-      return
-    }
-
-    if (input) {
-      if (this.apiService.jwt == "") {
-        const p = this.shoppingCartService.findProductInArray(product.id)
-        p.total = parseInt(input.value);
-        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts));
-      }
-      else {
-        localStorage.removeItem("shoppingCart")
-
-        const cartContent = new CartContent(product.id, parseInt(input.value), product)
-        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent)
-        this.shoppingCartService.getLocalStorageCart()
-      }
-    }
-  }
-
-
-
 
   async pay(method: string) {
 
@@ -168,30 +142,6 @@ export class ShoppingCartComponent implements OnInit {
       return totalcount;
     }
   }
-
-  /*
-
-  sumar(index: number) {
-    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
-    this.shoppingCartProducts[quantity].total++;
-  }
-  restar(index: number) {
-    const quantity = this.shoppingCartProducts.findIndex(product => product.id === index);
-    if (this.shoppingCartProducts[quantity].total > 0) {
-      this.shoppingCartProducts[quantity].total--;
-    }
-  }
-    */
-
-
-
-  //Guarda el carrito cuando cierra la página
-  @HostListener('window:beforeunload', ['$event'])
-  async handleBeforeUnload(event: BeforeUnloadEvent): Promise<void> {
-    await this.shoppingCartService.saveShoppingCart();
-  }
-
-
 
 
 }

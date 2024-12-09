@@ -13,9 +13,7 @@ export class ShoppingCartService {
   contProduct: number = 0
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
-
-
-
+  isSaved: boolean = true
 
   constructor(private apiService: ApiService) { }
 
@@ -31,9 +29,8 @@ export class ShoppingCartService {
 
   async syncronizeCart() {
     const productsRaw = localStorage.getItem("shoppingCart");
-    let products : Product[] = []
-    if (productsRaw == null) 
-    {
+    let products: Product[] = []
+    if (productsRaw == null) {
       return
     }
     products = JSON.parse(productsRaw);
@@ -82,23 +79,28 @@ export class ShoppingCartService {
   }
 
   async saveShoppingCart(): Promise<void> {
-    localStorage.setItem("sync", "true")
-    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
-    //Guarda los cambios del carrito
-    /*if (this.apiService.jwt == "") {
-      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+
+    if (!this.isSaved) {
+      //Guarda los cambios del carrito
+      if (this.apiService.jwt == "") {
+        localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
+      }
+      else {
+
+        var cart: CartContent[] = []
+
+        this.shoppingCartProducts.forEach(product => {
+          cart.push(new CartContent(product.id, product.total, product))
+        });
+
+        await this.apiService.post("ShoppingCart/save", cart)
+
+      }
     }
-    else{
 
-      var cart : CartContent[] = []
+    console.log("carrito guardado")
 
-      this.shoppingCartProducts.forEach(product => {
-        cart.push(new CartContent(product.id,product.total,product))
-      });
-
-      await this.apiService.post("ShoppingCart/save", cart)
-
-    }*/
+    this.isSaved = true
   }
 
   async uploadCart(products: Product[]) {
