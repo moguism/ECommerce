@@ -6,10 +6,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { Product } from '../../models/product';
-import { CartContent } from '../../models/cart-content';
 import { UserService } from '../../services/user.service';
 import { HeaderComponent } from '../../components/header/header.component';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 //import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
@@ -21,7 +20,7 @@ import { HeaderComponent } from '../../components/header/header.component';
 })
 export class LoginComponent implements OnInit {
   constructor(private apiService: ApiService, private router: Router, 
-    private formBuilder: FormBuilder, private userService : UserService) {
+    private formBuilder: FormBuilder, private userService : UserService, private shoppingCartService: ShoppingCartService) {
 
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -127,33 +126,12 @@ export class LoginComponent implements OnInit {
     else
     {
       this.router.navigateByUrl("user")
-      await this.getShoppingCart()
+      await this.shoppingCartService.syncronizeCart()
     }
 
 
     this.userService.userName = this.name
     console.log("USuario : "  + this.userService.userName)
-  }
-
-  async getShoppingCart() {
-    const productsRaw = localStorage.getItem("shoppingCart");
-    let products : Product[] = []
-    if (productsRaw == null) 
-    {
-      return
-    }
-    products = JSON.parse(productsRaw);
-
-    if (this.apiService.jwt !== "" && products.length > 0) {
-      console.log("Sincronizando productos locales al carrito del backend...");
-
-      for (const product of products) {
-        const cartContent = new CartContent(product.id, product.total, product);
-        await this.apiService.post("ShoppingCart/addProductOrChangeQuantity", cartContent);
-      }
-
-      localStorage.removeItem("shoppingCart");
-    }
   }
 
   async registerUser(): Promise<void> {
