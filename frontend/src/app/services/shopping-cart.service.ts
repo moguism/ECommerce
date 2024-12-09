@@ -10,7 +10,7 @@ import { CartContent } from '../models/cart-content';
 export class ShoppingCartService {
 
   total: number = 0
-  contProduct : number = 0
+  contProduct: number = 0
   shoppingCartProducts: Product[] = []
   productsToBuy: CartContent[] = [];
 
@@ -29,12 +29,30 @@ export class ShoppingCartService {
 
   }
 
+  async syncronizeCart(add: boolean) {
+    const productsRaw = localStorage.getItem("shoppingCart");
+    let products : Product[] = []
+    if (productsRaw == null) 
+    {
+      return
+    }
+    products = JSON.parse(productsRaw);
+
+    if (this.apiService.jwt !== "" && products.length > 0) {
+      console.log("Sincronizando productos locales al carrito del backend...");
+
+      await this.uploadCart(products, add)
+
+      localStorage.removeItem("shoppingCart");
+    }
+  }
+
 
   async getShoppingCart() {
 
     this.shoppingCartProducts = [];
 
-   
+
 
     // Podríamos optimizar esto haciendo que en el login ponga el contenido del carrito en el localStorage, de manera que no tenga que hacer peticiones
     // Sin embargo, si un admin borra o cambia un producto, cagamos
@@ -52,20 +70,22 @@ export class ShoppingCartService {
       }
       console.log("CARRITO SINCRONIZADO: ", this.shoppingCartProducts);
 
-      
+
     }
     else {
       this.getLocalStorageCart();
     }
 
-    
+
     this.contProduct = this.shoppingCartProducts.length
 
   }
 
-  async saveShoppingCart(): Promise<void>{
+  async saveShoppingCart(): Promise<void> {
+    localStorage.setItem("sync", "true")
+    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
     //Guarda los cambios del carrito
-    if (this.apiService.jwt == "") {
+    /*if (this.apiService.jwt == "") {
       localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts));
     }
     else{
@@ -78,7 +98,17 @@ export class ShoppingCartService {
 
       await this.apiService.post("ShoppingCart/save", cart)
 
-    }
+    }*/
+  }
+
+  async uploadCart(products: Product[], add: boolean) {
+    var cart: CartContent[] = []
+
+    products.forEach(product => {
+      cart.push(new CartContent(product.id, product.total, product))
+    });
+
+    await this.apiService.post("ShoppingCart/save", cart, {"add" : add})
   }
 
   async deleteProduct(productId: number) {
@@ -124,34 +154,28 @@ export class ShoppingCartService {
 
 
 
-  async getShoppingCartCount()
-  {
+  async getShoppingCartCount() {
     // Si quisiésemos podríamos recorrer el Array e ir sumando las cantidades con un for, ya como veáis
-    if(this.apiService.jwt != "" && this.apiService.jwt != null)
-      {
-        const result = await this.apiService.get("ShoppingCart", {}, 'json');
-        if(result.data)
-        {
-          const data: any = result.data;
-          console.log("DATA MONDONGO: ", data)
-          this.total = data.cartContent.length
-        }
+    if (this.apiService.jwt != "" && this.apiService.jwt != null) {
+      const result = await this.apiService.get("ShoppingCart", {}, 'json');
+      if (result.data) {
+        const data: any = result.data;
+        console.log("DATA MONDONGO: ", data)
+        this.total = data.cartContent.length
       }
-      else
-      {
-        const cart = localStorage.getItem("shoppingCart")
-        if(cart)
-        {
-          const cartObject = JSON.parse(cart)
-          console.log("CART OBJECT: ", cartObject)
-          this.total = cartObject.length
-        }
+    }
+    else {
+      const cart = localStorage.getItem("shoppingCart")
+      if (cart) {
+        const cartObject = JSON.parse(cart)
+        console.log("CART OBJECT: ", cartObject)
+        this.total = cartObject.length
       }
+    }
   }
 
-  addCorrectPath(product : Product)
-  {
-    product.image = environment.imageRouteBasic + product.image 
+  addCorrectPath(product: Product) {
+    product.image = environment.imageRouteBasic + product.image
     return product
   }
 }

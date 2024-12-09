@@ -13,9 +13,6 @@ import { CorrectDatePipe } from '../../pipes/correct-date.pipe';
 import { Product } from '../../models/product';
 import { Order } from '../../models/order';
 import { ProductsToBuy } from '../../models/products-to-buy';
-import { TranslatePipe } from '../../pipes/translate.pipe';
-import { Category } from '../../models/category';
-import { ProductToInsert } from '../../models/product-to-insert';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 
@@ -24,13 +21,13 @@ import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe, TranslatePipe,CommonModule,RouterLink],
+  imports: [HeaderComponent, FormsModule, CorrectDatePipe, EurosToCentsPipe,CommonModule,RouterLink],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
   providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
+  constructor(public userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
   }
 
 
