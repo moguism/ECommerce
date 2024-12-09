@@ -136,11 +136,7 @@ export class ShoppingCartComponent implements OnInit {
     for (const product of this.shoppingCartService.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
-    if(totalcount<5000 && totalcount>0){
-      return totalcount+300;
-    }else{
       return totalcount;
-    }
   }
 
 
