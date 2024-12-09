@@ -27,12 +27,6 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     
-
-    if(localStorage.getItem("sync"))
-    {
-      await this.shoppingCartService.syncronizeCart()
-      localStorage.removeItem("sync")
-    }
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
