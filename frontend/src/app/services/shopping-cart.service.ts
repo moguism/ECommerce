@@ -130,8 +130,10 @@ export class ShoppingCartService {
       }
       else {
         await this.apiService.delete("ShoppingCart", { productId })
-        this.getShoppingCart()
+        await this.getShoppingCart()
       }
+
+      this.total -= 1
     }
 
   }
