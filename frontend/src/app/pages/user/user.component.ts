@@ -27,7 +27,7 @@ import { ApiService } from '../../services/api.service';
   providers:[DecimalPipe]
 })
 export class UserComponent implements OnInit {
-  constructor(private userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
+  constructor(public userService: UserService, private productService: ProductService,private decimalPipe:DecimalPipe, private router: Router, private api : ApiService) {
   }
 
 
