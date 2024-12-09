@@ -126,7 +126,7 @@ export class LoginComponent implements OnInit {
     else
     {
       this.router.navigateByUrl("user")
-      await this.shoppingCartService.syncronizeCart()
+      await this.shoppingCartService.syncronizeCart(true)
     }
 
 

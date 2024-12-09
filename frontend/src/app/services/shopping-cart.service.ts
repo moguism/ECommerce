@@ -29,7 +29,7 @@ export class ShoppingCartService {
 
   }
 
-  async syncronizeCart() {
+  async syncronizeCart(add: boolean) {
     const productsRaw = localStorage.getItem("shoppingCart");
     let products : Product[] = []
     if (productsRaw == null) 
@@ -41,7 +41,7 @@ export class ShoppingCartService {
     if (this.apiService.jwt !== "" && products.length > 0) {
       console.log("Sincronizando productos locales al carrito del backend...");
 
-      await this.uploadCart(products)
+      await this.uploadCart(products, add)
 
       localStorage.removeItem("shoppingCart");
     }
@@ -101,14 +101,14 @@ export class ShoppingCartService {
     }*/
   }
 
-  async uploadCart(products: Product[]) {
+  async uploadCart(products: Product[], add: boolean) {
     var cart: CartContent[] = []
 
     products.forEach(product => {
       cart.push(new CartContent(product.id, product.total, product))
     });
 
-    await this.apiService.post("ShoppingCart/save", cart)
+    await this.apiService.post("ShoppingCart/save", cart, {"add" : add})
   }
 
   async deleteProduct(productId: number) {
