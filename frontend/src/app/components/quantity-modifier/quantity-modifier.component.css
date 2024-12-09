@@ -3,6 +3,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    height: auto;
 }
 
 
@@ -11,13 +12,19 @@
     width: 25%;
     height: 38%;
     border: 1px solid black;
-    border-top-left-radius: 10%;
-    border-bottom-left-radius: 10%;
     cursor: pointer;
     font-size: 1.2rem;
-
 }
 
+.change-button-more {
+    border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%;
+}
+
+.change-button-less {
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+}
 
 .count {
     display: flex;
