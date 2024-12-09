@@ -52,7 +52,7 @@ namespace Server.Services
         {
             Wishlist wishlist = await CreateNewWishList(temporalOrderDto.CartContentDtos);// Añade a la nueva wislist los productos que el usuario quire comprar
 
-            if(wishlist == null)
+            if (wishlist == null)
             {
                 return null;
             }
@@ -101,10 +101,7 @@ namespace Server.Services
         {
             //Total price €
             long totalPriceCents = temporalOrder.Wishlist.Products.Sum(p => p.PurchasePrice * p.Quantity);
-            if (totalPriceCents < 5000) {
-                totalPriceCents += 300;
-            }
-            
+            decimal totalPriceEuros = totalPriceCents / 100;
 
             Order order = new Order
             {
@@ -121,7 +118,7 @@ namespace Server.Services
             if (!temporalOrder.Quick)
             {
                 ShoppingCart shoppingCart = user.ShoppingCart;
-                if(shoppingCart != null)
+                if (shoppingCart != null)
                 {
                     await _unitOfWork.CartContentRepository.DeleteByIdShoppingCartAsync(shoppingCart);
                 }

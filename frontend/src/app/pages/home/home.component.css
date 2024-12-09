@@ -5,10 +5,10 @@
 
 @keyframes centered-image-movement{
     from{
-        transform: translate(-50%,-50px);
+        transform: translate(-50%,-10%);
     }
     to{
-        transform: translate(-50%,50px);
+        transform: translate(-50%,10%);
     }
 }
 
@@ -299,7 +299,7 @@
         font-size: 16px;
         width: 32%;
     }
-    .centered-image-stop{
+    .centered-image-stop::before{
         top: 40%;
     }
 }
@@ -319,13 +319,13 @@
         font-size: 12px;
         width: 30%;
     }
-    .centered-image-stop{
+    .centered-image-stop::before{
         top: 45%;
     }
 }
 
 @media (max-width: 600px){
-    .centered-image-stop{
+    .centered-image-stop::before{
         top: 65%;
     }
 }
@@ -346,7 +346,7 @@
         width: 27%;
     }
 
-    .centered-image-stop{
+    .centered-image-stop::before{
         top: 70%;
     }
 }

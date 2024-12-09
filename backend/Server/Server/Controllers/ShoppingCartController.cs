@@ -71,7 +71,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("save")]
-        public async Task SaveShoppingCart([FromBody] List<CartContent> cartContent)
+        public async Task SaveShoppingCart([FromBody] List<CartContent> cartContent, [FromQuery] bool add)
         {
 
             User user = await GetAuthorizedUser();
@@ -88,7 +88,7 @@ namespace Server.Controllers
                 return;
             }
 
-            await _shoppingCartService.SaveShoppingCart(user, cartContent);
+            await _shoppingCartService.SaveShoppingCart(user, cartContent, add);
         }
 
 
