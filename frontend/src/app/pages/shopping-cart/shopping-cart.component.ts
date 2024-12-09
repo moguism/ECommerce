@@ -26,7 +26,11 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     public shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit(): Promise<void> {
-    
+    if(localStorage.getItem("sync"))
+    {
+      await this.shoppingCartService.syncronizeCart(false)
+      localStorage.removeItem("sync")
+    }
     const goToCheckout = localStorage.getItem("goToCheckout")
     if (this.apiService.jwt != "" && goToCheckout && goToCheckout == "true") {
       await this.createDirectPayment();
@@ -134,11 +138,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     for (const product of this.shoppingCartService.shoppingCartProducts) {
       totalcount += product.total * product.price;
     }
-    if(totalcount<5000 && totalcount>0){
-      return totalcount+300;
-    }else{
       return totalcount;
-    }
   }
 
 
