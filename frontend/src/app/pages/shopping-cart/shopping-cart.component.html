@@ -58,7 +58,11 @@
                 <h3>Total:</h3>
                 <h3>{{totalprice()| eurosToCents}}</h3>
             </div>
-            
+            <div class="final-price-price">
+            @if(totalprice() < 5000 ){
+                <h3>Coste de enivo: 3.00€</h3>
+            }
+            </div>
             <hr>
 
             <div class="final-price-buttons">
