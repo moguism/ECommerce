@@ -147,7 +147,8 @@ export class ProductViewComponent implements OnInit {
       title: 'Producto añadido',
       text: 'Se ha añadido el producto correctamente',
       icon: 'success',
-      confirmButtonText: 'Salir'
+      showConfirmButton: false,
+      timer: 1000
     })
   }
 

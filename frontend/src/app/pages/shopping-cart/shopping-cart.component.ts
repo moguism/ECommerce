@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { TemporalOrder } from '../../models/temporal-order';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ShoppingCartService } from '../../services/shopping-cart.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -35,9 +36,9 @@ export class ShoppingCartComponent implements OnInit {
       await this.createDirectPayment();
       return
     }
-    else {
+    /*else {
       this.shoppingCartService.getShoppingCart();
-    }
+    }*/
 
   }
 
@@ -88,6 +89,7 @@ export class ShoppingCartComponent implements OnInit {
     if (index !== -1) {
       this.shoppingCartService.shoppingCartProducts.splice(index, 1);
       localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartService.shoppingCartProducts))
+      this.shoppingCartService.contProduct -= 1
 
       if (this.apiService.jwt != "") {
         await this.apiService.delete("ShoppingCart", { productId })
@@ -119,12 +121,14 @@ export class ShoppingCartComponent implements OnInit {
       if (newProduct) {
         const difference = newProduct.stock - product.stock;
         if (difference < 0) {
-          this.shoppingCartService.deleteFromArray(product, true)
+          await this.shoppingCartService.deleteFromArray(product)
+          this.shoppingCartService.mostraralert()
           return
         }
       }
       else {
-        this.shoppingCartService.deleteFromArray(product, true)
+        await this.shoppingCartService.deleteFromArray(product)
+        this.shoppingCartService.mostraralert()
         return
       }
 

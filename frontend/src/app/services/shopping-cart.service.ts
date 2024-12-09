@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { Product } from '../models/product';
 import { environment } from '../../environments/environment';
 import { CartContent } from '../models/cart-content';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +30,8 @@ export class ShoppingCartService {
 
   async syncronizeCart(add: boolean) {
     const productsRaw = localStorage.getItem("shoppingCart");
-    let products : Product[] = []
-    if (productsRaw == null) 
-    {
+    let products: Product[] = []
+    if (productsRaw == null) {
       return
     }
     products = JSON.parse(productsRaw);
@@ -59,8 +59,15 @@ export class ShoppingCartService {
       if (result.data) {
         const data: any = result.data;
         const cartContent: any[] = data.cartContent;
+        console.log("CART CONTEEEEEEEEEEEEEEENT", cartContent)
         for (const product of cartContent) {
-          let p = product.product
+          let p: Product = product.product
+          console.log("PRODUCTOOOOOOOOOOOOO", p)
+          if (p.stock <= 0) {
+            await this.deleteFromArray(p)
+            this.mostraralert()
+            continue
+          }
           p.total = product.quantity
           p = this.addCorrectPath(p)
           this.shoppingCartProducts.push(p);
@@ -82,37 +89,12 @@ export class ShoppingCartService {
       cart.push(new CartContent(product.id, product.total, product))
     });
 
-    const result = await this.apiService.post("ShoppingCart/save", cart, {"add" : add})
-    if(result.data)
-    {
+    const result = await this.apiService.post("ShoppingCart/save", cart, { "add": add })
+    if (result.data) {
       const data: any = result.data
       this.contProduct = data
     }
   }
-
-  async deleteProduct(productId: number) {
-    const index = this.shoppingCartProducts.findIndex(product => product.id === productId);
-
-    if (index !== -1) {
-      const product = this.shoppingCartProducts[index];
-
-      if (product.total > 1) {
-        product.total -= 1;
-      } else {
-        this.shoppingCartProducts.splice(index, 1);
-      }
-
-      if (this.apiService.jwt == "") {
-        this.deleteFromArray(product, false)
-      }
-      else {
-        await this.apiService.delete("ShoppingCart", { productId })
-        await this.getShoppingCart()
-      }
-    }
-
-  }
-
 
   findProductInArray(id: number): Product {
     const index = this.shoppingCartProducts.findIndex(product => product.id === id);
@@ -121,18 +103,28 @@ export class ShoppingCartService {
   }
 
 
-  deleteFromArray(product: Product, showAlert: boolean) {
+  async deleteFromArray(product: Product) {
+    console.log("BORRANDO ESTE PRODUCTO: ", product.id)
+    if (this.apiService.jwt != "") {
+      const id = product.id
+      await this.apiService.delete("ShoppingCart", { "productId" : id })
+    }
     const index = this.shoppingCartProducts.findIndex(p => p.id === product.id);
-    this.shoppingCartProducts.splice(index, 1);
-    localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
-    if (showAlert) {
-      alert("Uno o varios productos han sido eliminados por falta de stock")
+    if (index != -1) {
+      this.shoppingCartProducts.splice(index, 1);
+      localStorage.setItem("shoppingCart", JSON.stringify(this.shoppingCartProducts))
     }
     this.contProduct -= 1
   }
 
-
-
+  mostraralert() {
+    Swal.fire({
+      title: 'Ha ocurrido un error',
+      text: 'Ya no hay stock del producto',
+      icon: 'error',
+      confirmButtonText: 'Salir'
+    })
+  }
 
   /*async getShoppingCartCount() {
     // Si quisiésemos podríamos recorrer el Array e ir sumando las cantidades con un for, ya como veáis

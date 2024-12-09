@@ -31,9 +31,7 @@ export class HeaderComponent implements OnInit {
     if (this.jwt != "") {
       this.name = JSON.parse(window.atob(this.jwt.split('.')[1])).name;
       console.log("EL NOMBRE ES: ", this.name)
-
-      console.log("PRUEBA: ", localStorage.getItem("shoppingCart"))
-
+      
       //Si inicia sesión, actualiza el nombre del header
       if (this.userService.userName == "") {
         console.log("No tiene nombre");
